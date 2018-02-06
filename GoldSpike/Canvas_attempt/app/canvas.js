@@ -52,3 +52,16 @@ PIXI.loader.add("img/bunny.png").load(function(){
   }
   app.stage.addChild(sprite);
 });
+
+function MoveFor(DIR, LEN){
+  var right = 0, down = 0;
+  switch  (DIR){
+    case "UP": down -= LEN; break;
+    case "DOWN": down += LEN; break;
+    case "LEFT": right -= LEN; break;
+    case "RIGHT": right += LEN; break;
+    default: 
+  }
+  sprite.x += right;
+  sprite.y += down;
+}

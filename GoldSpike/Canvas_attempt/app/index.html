@@ -6,22 +6,29 @@
     <script type="text/javascript" src="../res/pixi.js"> </script>
     <script type="text/javascript" src="../res/blockly/blockly_compressed.js"> </script>
     <script type="text/javascript" src="../res/blockly/blocks_compressed.js"> </script>
+    <script type="text/javascript" src="../res/blockly/javascript_compressed.js"> </script>
     <script type="text/javascript" src="../res/blockly/msg/js/en.js"> </script>
   </head>
   <body>
     <h1>This is canvas test for Electron and Pixi</h1>
     <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+    <button onclick="RunCode()">Run!</button>
 
-    <xml id="toolbox" style="display: none">
-      <block type="controls_if"></block>
-      <block type="logic_compare"></block>
-      <block type="controls_repeat_ext"></block>
-      <block type="math_number"></block>
-      <block type="math_arithmetic"></block>
-      <block type="text"></block>
-      <block type="text_print"></block>
+    <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+      <block type="test_block">
+        <field name="DIR">UP</field>
+        <field name="LEN">50</field>
+      </block>
+      <block type="loop_test"></block>
+      <block type="math_number">
+        <field name="NUM">0</field>
+      </block>
     </xml>
+    <xml xmlns="http://www.w3.org/1999/xhtml" id="workspaceBlocks" style="display:none">
+      <variables></variables>
+    </xml>
+
   </body>
-    <script type="text/javascript" src="canvas.js"> </script>
-    <script type="text/javascript" src="block-coding.js"> </script>
+  <script type="text/javascript" src="canvas.js"> </script>
+  <script type="text/javascript" src="block-coding.js"> </script>
 </html>
