@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas Test</title>
+    <script type="text/javascript" src="../res/pixi.js"> </script>
+  </head>
+  <body>
+    <h1>This is canvas test for Electron and Pixi</h1>
+  </body>
+  <script type="text/javascript">
+  var app = new PIXI.Application({ 
+    width: 256,         // default: 800
+    height: 256,        // default: 600
+    antialias: true,    // default: false
+    transparent: false, // default: false
+    resolution: 1,      // default: 1
+    backgroundColor: 0x1099bb
+  }
+  
+);
+  document.body.appendChild(app.view);
+
+  </script>
+</html>
