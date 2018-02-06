@@ -4,66 +4,24 @@
     <meta charset="UTF-8">
     <title>Canvas Test</title>
     <script type="text/javascript" src="../res/pixi.js"> </script>
+    <script type="text/javascript" src="../res/blockly/blockly_compressed.js"> </script>
+    <script type="text/javascript" src="../res/blockly/blocks_compressed.js"> </script>
+    <script type="text/javascript" src="../res/blockly/msg/js/en.js"> </script>
   </head>
   <body>
     <h1>This is canvas test for Electron and Pixi</h1>
+    <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+
+    <xml id="toolbox" style="display: none">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="controls_repeat_ext"></block>
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
+      <block type="text"></block>
+      <block type="text_print"></block>
+    </xml>
   </body>
-  <script type="text/javascript">
-  /*global PIXI*/
-  var app = new PIXI.Application({ 
-    width: 256,         // default: 800
-    height: 256,        // default: 600
-    antialias: true,    // default: false
-    transparent: false, // default: false
-    resolution: 1,      // default: 1
-    backgroundColor: 0x000000
-  }
-  
-);
-  document.body.appendChild(app.view);
-  
-  //var texture = PIXI.utils.TextureCache["img/bunny.png"];
-  var sprite;
-  var data;
-  PIXI.loader.add("img/bunny.png").load(function(){
-    sprite = new PIXI.Sprite(PIXI.loader.resources["img/bunny.png"].texture);
-    sprite.anchor.set(0.5);
-    sprite.x = app.screen.width / 2;
-    sprite.y = app.screen.height / 2;
-    
-    // Opt-in to interactivity
-    sprite.interactive = true;
-
-    // Shows hand cursor
-    sprite.buttonMode = true;
-    
-    sprite
-        .on('pointerdown', onDragStart)
-        .on('pointerup', onDragEnd)
-        .on('pointerupoutside', onDragEnd)
-        .on('pointermove', onDragMove);
-        
-    var onDrag = false;    
-    
-    function onDragStart(event) {
-        onDrag = true;
-        data = event.data;
-    }
-    
-    function onDragEnd() {
-        onDrag = false;
-    }
-    
-    function onDragMove() {
-        if (onDrag) {
-            var newPosition = data.getLocalPosition(sprite.parent);
-            sprite.x = newPosition.x;
-            sprite.y = newPosition.y;
-        }
-    }
-    app.stage.addChild(sprite);
-  });
-  
-
-  </script>
+    <script type="text/javascript" src="canvas.js"> </script>
+    <script type="text/javascript" src="block-coding.js"> </script>
 </html>
