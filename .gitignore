@@ -1,0 +1,8 @@
+#directories
+AliceAdventure/bower_components
+AliceAdventure/node_modules
+AliceAdventure/dist
+
+#files
+*.tgz
+*.log
