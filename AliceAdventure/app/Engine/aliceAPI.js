@@ -83,8 +83,8 @@ function Inventory() {
         }else { //go back to inventory
                 console.log("3");
                 
-                console.log(tool.position.x);
-                console.log(tool.position.y);
+                //console.log(tool.position.x);
+                //console.log(tool.position.y);
                 tool.x = tool.inventPos.x;
                 tool.y = tool.inventPos.y;
         }
@@ -104,10 +104,10 @@ function onDragEnd() {
     this.dragging = false;
     this.data = null;
     
-    //option 1:
-    if(myInventory) {
+    //option 1: ???? not right
+    if(myGame.inventory) {
         console.log("drag end");
-        myInventory.inventoryUse(this);
+        myGame.inventory.inventoryUse(this);
     }  
 }
 
@@ -170,3 +170,52 @@ function hitTestRectangle(r1, r2) {
   //`hit` will be either `true` or `false`
   return hit;
 };
+
+
+function GameManager() {
+    this.inventory = new Inventory();
+    this.currentSceneindex = -1;
+    
+    this.init = function() {
+        this.app = new Application(800, 600, {backgroundColor : 0x1099bb});
+        document.body.appendChild(this.app.view);
+    }
+    
+    this.addScene = function(scene) {
+        this.app.stage.addChild(scene);
+        this.currentSceneindex = 0;
+        scene.visible = false;
+    }
+    
+    this.nextScene = function() {
+        this.app.stage.getChildAt(this.currentSceneindex).visible = false;
+        this.currentSceneindex++;
+        
+        if(this.currentSceneindex >= this.app.stage.children.length)
+            return;
+        
+        var currentScene = this.app.stage.getChildAt(this.currentSceneindex);
+        if(currentScene) {
+            currentScene.visible = true;
+        }
+    }
+    
+    this.gameEnd = function() {
+        
+    }
+    
+    
+//    this.changeToScene = function(scene) {
+//    }
+
+    
+    this.start = function() {
+        var currentScene = this.app.stage.getChildAt(this.currentSceneindex);
+        console.log("in start");
+        //console.log(currentScene);
+        currentScene.visible = true;
+    }
+    
+}
+
+
