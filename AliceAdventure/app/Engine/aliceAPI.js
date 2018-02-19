@@ -10,23 +10,35 @@ var Application = PIXI.Application;
 //    TextStyle = PIXI.TextStyle;
 //
 
-function Inventory() {
+function Inventory(game) {
     //tools container
+    this.game = game;
+    this.inventory_w = game.inventoryWidth;
+    this.inventory_size = game.inventorySize;
+    this.magic_scale = 30;
+    
     this.container = new PIXI.Container();
-    
     this.objectList = [];
-    this.objx= 60;
     
-    //active:
-    //this.activeIndex = -1;
+    this.baseX= game.screenWidth + this.inventory_w / 2;
+    this.baseY = game.screenHeight / this.inventory_size / 2;
     
-    //scroll
-    this.getNewY = function() {
-        return y = 60 + this.objectList.length*120;
+    //init//
+    var inventoryContainer = new PIXI.Container();
+    
+    for(var i = 0; i < 5; i++) {
+        var inventBack = PIXI.Sprite.fromImage('assets/alice/inventory.png');
+        inventBack.x = game.screenWidth;
+        inventBack.y = i*this.inventory_w;
+        inventoryContainer.addChild(inventBack); 
     }
     
+    this.game.app.stage.addChild(inventoryContainer); 
+    
+    ////////functions//////////
     this.scaleDown = function(tool) {
-        
+        tool.scale.set(1);
+        tool.scale.set((this.inventory_w - this.magic_scale)/tool.width);
         
     }
     
@@ -63,9 +75,10 @@ function Inventory() {
     this.update = function() {
         var len  = this.objectList.length;
         for(var i = 0; i < len ; i++) {
-            this.objectList[i].x = this.objx;
-            this.objectList[i].y = 60 + i*120;
-            this.objectList[i].inventPos = {x:this.objx, y:60 + i*120}
+            this.objectList[i].x = this.baseX;
+            this.objectList[i].y = this.baseY + i * this.inventory_w;
+            this.objectList[i].inventPos = {x:this.objectList[i].x,
+                                            y:this.objectList[i].y}
         }
     }
     
@@ -78,17 +91,18 @@ function Inventory() {
         {
                 console.log("2");
                 tool.use();
-                tool.visible = false; ///???
+                //tool.visible = false; ///???
                 this.remove(tool);
         }else { //go back to inventory
                 console.log("3");
-                
-                //console.log(tool.position.x);
-                //console.log(tool.position.y);
                 tool.x = tool.inventPos.x;
                 tool.y = tool.inventPos.y;
         }
     
+    }
+    
+    this.clearUp= function() {
+       this.objectList = []; 
     }
      
 }
@@ -118,6 +132,64 @@ function onDragMove() {
         this.y = newPosition.y;
     }
 }
+
+
+
+
+
+function GameManager() {
+    
+    this.currentSceneindex = -1;
+    
+    this.init = function(width,height,invent_size) {
+        if(invent_size == 0)
+            invent_size = 5;
+        
+        this.screenWidth = width;
+        this.screenHeight = height;
+        this.inventorySize = invent_size;
+        this.inventoryWidth = height/invent_size
+        
+        this.app = new Application(this.screenWidth + this.inventoryWidth, height, {backgroundColor : 0x1099bb});
+        document.body.appendChild(this.app.view);
+        this.inventory = new Inventory(this);
+        this.currentSceneindex = 1; // 0: inventory 1:...
+    }
+    
+    this.addScene = function(scene) {
+        this.app.stage.addChild(scene);
+        scene.visible = false;
+    }
+    
+    this.nextScene = function() {
+        
+        this.app.stage.getChildAt(this.currentSceneindex).visible = false;
+        this.currentSceneindex++;
+        
+        //console.log(this.app.stage.children.length);
+        
+        if(this.currentSceneindex >= this.app.stage.children.length)
+            return;
+        
+        var currentScene = this.app.stage.getChildAt(this.currentSceneindex);
+        if(currentScene) {
+            currentScene.visible = true;
+            this.inventory.clearUp();
+        }
+    }
+    
+    this.gameEnd = function() {
+        
+    }
+    
+    this.start = function() {
+        var currentScene = this.app.stage.getChildAt(this.currentSceneindex);
+        console.log("in start");
+        currentScene.visible = true;
+    }
+    
+}
+
 
 
 function hitTestRectangle(r1, r2) {
@@ -170,52 +242,4 @@ function hitTestRectangle(r1, r2) {
   //`hit` will be either `true` or `false`
   return hit;
 };
-
-
-function GameManager() {
-    this.inventory = new Inventory();
-    this.currentSceneindex = -1;
-    
-    this.init = function() {
-        this.app = new Application(800, 600, {backgroundColor : 0x1099bb});
-        document.body.appendChild(this.app.view);
-    }
-    
-    this.addScene = function(scene) {
-        this.app.stage.addChild(scene);
-        this.currentSceneindex = 0;
-        scene.visible = false;
-    }
-    
-    this.nextScene = function() {
-        this.app.stage.getChildAt(this.currentSceneindex).visible = false;
-        this.currentSceneindex++;
-        
-        if(this.currentSceneindex >= this.app.stage.children.length)
-            return;
-        
-        var currentScene = this.app.stage.getChildAt(this.currentSceneindex);
-        if(currentScene) {
-            currentScene.visible = true;
-        }
-    }
-    
-    this.gameEnd = function() {
-        
-    }
-    
-    
-//    this.changeToScene = function(scene) {
-//    }
-
-    
-    this.start = function() {
-        var currentScene = this.app.stage.getChildAt(this.currentSceneindex);
-        console.log("in start");
-        //console.log(currentScene);
-        currentScene.visible = true;
-    }
-    
-}
-
 
