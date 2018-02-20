@@ -1,0 +1,35 @@
+{"game" : [
+	{"scene1":{
+		"name": "scene1",
+		"objects":[
+			{"key":{
+				"src": "'assets/key.png'",
+				"anchor" : "0.5",
+				"scale" : "1",
+				"interactive" : "true",
+				"buttonMode" : "true",
+				"pos":["myGame.app.screen.width / 3","myGame.app.screen.height / 3"],			
+				"name":"key",
+				"target" : "door",
+				"funct" : [ "use", ["x"],"this.target.interact();this.visible = false;console.log('done');"],
+				"funct" : [ "onClick", [], "myGame.inventory.add(this);"]			
+							
+				}
+			},
+			{"door":{
+				"src": "'assets/door.png'",
+				"Interactive":"true",
+				"scale" : "1",
+				"interactive" : "true",
+				"buttonMode" : "true",
+				"pos":["myGame.app.screen.width / 3","myGame.app.screen.height / 3"],			
+				"name":"door",
+				"nextTextureSrc": "'assets/treasure.png'"
+				}
+			}
+			
+		],
+		}
+	}
+	]
+}
