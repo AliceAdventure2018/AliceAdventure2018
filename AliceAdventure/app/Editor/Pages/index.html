@@ -30,15 +30,15 @@
           <td>active</td>
           <td><input type="checkbox" v-model='bindObj.sprite.visible'/></td>
         </tr>
-        <!--tr v-for='property in bindObj.properties'>
-          <td>{{ property }}</td>
-          <td><input v-model='property'/></td>
-        </tr-->
+        <tr v-for='property in bindObj.properties'>
+          <td>{{ property[0] }}</td>
+          <td><input v-model='property[1]'/></td>
+        </tr>
       </table>
       <p v-else>Please select an object</p>
     </div>
-    <div id="list_view">
+    <!--div id="list_view">
       <h3>List view</h3>
-    </div>
+    </div-->
   </body>
 </html>

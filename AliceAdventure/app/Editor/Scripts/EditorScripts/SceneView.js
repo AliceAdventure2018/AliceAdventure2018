@@ -32,7 +32,10 @@ SceneView.prototype.InitView = function(_element){
 
 SceneView.prototype.AddObject = function(_object){
 	// test
-	let _obj = new SceneObject("Bunny", this.app.screen.width / 2, this.app.screen.height / 2, true, {age: 8});
+	let _obj = new SceneObject("Bunny", this.app.screen.width / 2, this.app.screen.height / 2, true, [
+		['height', 8], 
+		['weight', 2]
+	]);
 	this.app.stage.addChild(_obj.sprite);
 	// TODO: add to GameProperties.SceneObjectList
 };
