@@ -2,13 +2,14 @@
 
 const PIXI = require('../../../Resources/pixi');
 const Debug = require('./Debug');
+const GameProperties = require('./GameProperties');
 const Event = require('./Event');
 
 // class
 var SceneObject;
 
 // variables
-SceneObject = function(_name = "untitled", _x = 0, _y = 0, _active = true, _properties = {}){
+SceneObject = function(_name = "untitled", _x = 0, _y = 0, _active = true, _properties = []){
 	this.name = _name;
 	this.properties = _properties;
 	this.selectAllowed = true;
@@ -62,7 +63,6 @@ SceneObject.prototype.EditDefinedProperty = function(_name, _value){
 		Debug.LogError("Invalid property name: " + _name + "for object " + this.name);
 		return;
 	}
-	// TODO: update visual
 };
 
 SceneObject.prototype.EditUserProperty = function(_name, _value){
@@ -74,6 +74,19 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 	this.properties[_name] = _value;
 	// TODO
 };
+
+SceneObject.prototype.AddUserProperty = function(_name, _value){
+	this.properties.push([_name, _value]);
+}
+
+SceneObject.prototype.GetUserProperty = function(_name){
+	for (var i in this.properties){
+		if (this.properties[i][0] == _name){
+			return this.properties[i][1];
+		}
+	}
+	return undefined;
+}
 
 SceneObject.prototype.SelectOff = function(){
 	this.sprite.alpha = 1;
