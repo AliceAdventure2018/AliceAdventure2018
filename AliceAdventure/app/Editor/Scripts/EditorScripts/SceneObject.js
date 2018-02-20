@@ -2,6 +2,7 @@
 
 const PIXI = require('../../../Resources/pixi');
 const Debug = require('./Debug');
+const Event = require('./Event');
 
 // class
 var SceneObject;
@@ -16,8 +17,29 @@ SceneObject = function(_name = "untitled", _x = 0, _y = 0, _active = true, _prop
 	this.sprite.anchor.set(0.5);
 	this.sprite.x = _x;
 	this.sprite.y = _y;
-	// TODO: active
+	this.sprite.visible = _active;
+	this.sprite.interactive = true;
+	this.sprite.on("click", this.SelectOn);
+	console.log("create object finished");
 };
+
+SceneObject.Selection = {
+	objects: [], 
+	set: function(_obj){
+		this.objects = [_obj];
+		Event.Broadcast("update-selected-object");
+	}, 
+	add: function(_obj){
+		this.objects.push(_obj);
+	},
+	remove: function(_obj){
+		// TODO rmv one obj
+	},
+	clear: function(){
+		this.objects = [];
+		Event.Broadcast("update-selected-object");
+	}
+}
 
 // functions
 SceneObject.prototype.EditDefinedProperty = function(_name, _value){
@@ -46,5 +68,16 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 	this.properties[_name] = _value;
 	// TODO
 };
+
+SceneObject.prototype.SelectOff = function(){
+	SceneObject.Selection.clear();
+}
+
+SceneObject.prototype.SelectOn = function(){
+	if (SceneObject.Selection.objects[0] != null){
+		SceneObject.Selection.objects[0].SelectOff();
+	}
+	SceneObject.Selection.set(this);
+}
 
 module.exports = SceneObject;

@@ -7,6 +7,7 @@ GameProperties = function(){};
 // static variables
 GameProperties.SceneList = {};
 GameProperties.SceneObjectList = {};
+//GameProperties.ObjectSelected = null;
 GameProperties.HasInventory = false;
 // other properties
 

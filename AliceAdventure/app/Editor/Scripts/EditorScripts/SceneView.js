@@ -11,6 +11,8 @@ var SceneView;
 // variables
 SceneView = function(_height = -1, _width = -1){
 	View.call(this, "SceneView", _height, _width);
+
+	this.app = null;
 	
 };
 SceneView.prototype = new View();
