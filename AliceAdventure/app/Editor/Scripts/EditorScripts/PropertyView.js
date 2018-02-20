@@ -29,24 +29,23 @@ PropertyView.prototype.InitView = function(){
 	    bindObj: this.BindObject
 	  }
 	});
-	Event.AddListener("update-selected-object", this.UpdateSelectedObject);
+	Event.AddListener("update-selected-object", this, "UpdateSelectedObject");
 	console.log("Init PropertyView finished");
 };
 
 PropertyView.prototype.SetBindObject = function(_sceneObj = null){
-	console.log(_sceneObj);
 	this.BindObject = _sceneObj;
 	if (this.BindObject == null){ // null case
-		this.VModel.shownProperty = false;
+		this.VModel.showProperty = false;
 	} else { 
-		this.VModel.shownProperty = true;
+		this.VModel.showProperty = true;
 		this.VModel.bindObj = this.BindObject;
 	}
 }
 
 PropertyView.prototype.UpdateSelectedObject = function(){
-	console.log(this.SetBindObject);
 	this.SetBindObject(SceneObject.Selection.objects[0]);
+		console.log(this);
 }
 
 module.exports = PropertyView;

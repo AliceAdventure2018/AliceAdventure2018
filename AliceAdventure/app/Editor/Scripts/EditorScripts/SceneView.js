@@ -20,14 +20,19 @@ SceneView.prototype = new View();
 // functions
 SceneView.prototype.InitView = function(_element){
 	View.prototype.InitView.apply(this); // call super method
-	this.app = new PIXI.Application({antialiasing: true, backgroundcolor: 0xFFFFFF});
+	this.app = new PIXI.Application({
+		width: 600,
+		height: 400, 
+		antialiasing: true, 
+		backgroundcolor: 0xFFFFFF
+	});
 	if (!_element) _element = document.getElementById('scene-view');
 	_element.appendChild(this.app.view);
 };
 
 SceneView.prototype.AddObject = function(_object){
 	// test
-	let _obj = new SceneObject("Bunny", this.app.screen.width * Math.random(), this.app.screen.height * Math.random(), true, {});
+	let _obj = new SceneObject("Bunny", this.app.screen.width / 2, this.app.screen.height / 2, true, {age: 8});
 	this.app.stage.addChild(_obj.sprite);
 	// TODO: add to GameProperties.SceneObjectList
 };
