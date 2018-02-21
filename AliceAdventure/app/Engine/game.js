@@ -1,16 +1,20 @@
 var myGame = new GameManager();
 myGame.init(1280,720,5);
 
-// ----------------------------scene1--------------------------------//
+// ----------------------------scene1------------------------------- //
 var scene = new PIXI.Container();
 myGame.addScene(scene);
+
+var scene2 = new PIXI.Container();
+myGame.addScene(scene2);
+
+// ----------------------------------------------------------------- //
 
 var back = PIXI.Sprite.fromImage('assets/alice/room_basic.png');
 back.anchor.set(0.5);
 back.x = myGame.screenWidth / 2;
 back.y = myGame.screenHeight / 2;
 
-back.scene = scene;
 scene.addChild(back);
     
 
@@ -35,7 +39,6 @@ door.onClick = function() {
 }
 
 
-door.scene = scene;
 scene.addChild(door);
 
 
@@ -56,8 +59,7 @@ key.use = function() {
 
 key.use = function() {
     this.target.interact();
-    myGame.inventory.remove(this);
-    //this.visible = false;
+    this.visible = false;
     console.log("done");
 }
 
@@ -66,7 +68,6 @@ key.onClick = function() {
 }
 key.on('pointerdown', key.onClick);
 
-key.scene = scene;
 
 scene.addChild(key);
 
@@ -87,20 +88,18 @@ key2.onClick = function() {
 
 key2.on('pointerdown', key2.onClick);
 
-key2.scene = scene;
 scene.addChild(key2);
 
 
 
 // ----------------------------scene2--------------------------------//
-var scene2 = new PIXI.Container();
-myGame.addScene(scene2);
+
 
 var back2 = PIXI.Sprite.fromImage('assets/alice/backdrop.png');
 back2.anchor.set(0.5);
 back2.x = myGame.screenWidth / 2;
 back2.y = myGame.screenHeight / 2;
-back2.scene = scene2;
+
 scene2.addChild(back2);
 
 var robot = PIXI.Sprite.fromImage('assets/alice/robot.png');
@@ -108,7 +107,7 @@ robot.anchor.set(0.5);
 robot.scale.set(1.4);
 robot.x = myGame.screenWidth / 2;
 robot.y = myGame.screenHeight / 2;
-robot.scene = scene2;
+
 scene2.addChild(robot);
 
 
@@ -117,7 +116,7 @@ paint.anchor.set(0.5);
 paint.x = 300;
 paint.y = 500;
 paint.name = "paint";
-paint.scene = scene2;
+
 scene2.addChild(paint);
 
 
@@ -143,7 +142,7 @@ cone.onClick = function() {
 }
 
 cone.on('pointerdown', cone.onClick);
-cone.scene = scene2;
+
 scene2.addChild(cone);
 
 //////////////////////////////////////////////////////////////

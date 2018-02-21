@@ -10,40 +10,47 @@ var Application = PIXI.Application;
 //    TextStyle = PIXI.TextStyle;
 //
 
-function Inventory(game) {
+function Inventory(game) { //always on the top
     //tools container
     this.game = game;
     this.inventory_w = game.inventoryWidth;
     this.inventory_size = game.inventorySize;
-    this.magic_scale = 30;
+    this.magic_scale = 0.8;
     
-    this.container = new PIXI.Container();
+    //this.container = new PIXI.Container();
     this.objectList = [];
     
     this.baseX= game.screenWidth + this.inventory_w / 2;
     this.baseY = game.screenHeight / this.inventory_size / 2;
     
     //init//
-    var inventoryContainer = new PIXI.Container();
-    
-    for(var i = 0; i < 5; i++) {
+    this.inventoryContainer = new PIXI.Container();
+    this.inventoryBackgroundGrp = new PIXI.Container();
+    for(var i = 0; i < this.inventory_size; i++) {
         var inventBack = PIXI.Sprite.fromImage('assets/alice/inventory.png');
         inventBack.x = game.screenWidth;
         inventBack.y = i*this.inventory_w;
-        inventoryContainer.addChild(inventBack); 
+        this.inventoryBackgroundGrp.addChild(inventBack); 
     }
     
-    this.game.app.stage.addChild(inventoryContainer); 
+    //this.game.app.stage.addChild(inventoryContainer); 
     
     ////////functions//////////
     this.scaleDown = function(tool) {
         tool.scale.set(1);
-        tool.scale.set((this.inventory_w - this.magic_scale)/tool.width);
+        tool.scale.set((this.inventory_w/tool.width) *this.magic_scale);
         
     }
     
     //add
     this.add = function(tool) {
+        
+        //remove tool from the original scene and add to inventory container
+        console.log("scene len " + tool.scene.children.length);
+        this.inventoryContainer.addChild(tool); //[INTERESTING: remove it from the original container]
+        console.log("scene len " + tool.scene.children.length);
+        //tool.scene = this.inventoryContainer;
+        
         //scale down
         this.scaleDown(tool);
         tool.off('pointerdown', tool.onClick);
@@ -56,29 +63,25 @@ function Inventory(game) {
             .on('pointermove', onDragMove);
         
         
-        this.objectList.push(tool);
+        //this.objectList.push(tool);
         this.update();
+        
 
     }
     
     this.remove = function(tool) {
-        var len  = this.objectList.length;
-        for(var i = 0; i < len ; i++) {
-            if(this.objectList[i].name == tool.name) {
-                var removedItem = this.objectList.splice(i, 1);
-                this.update();
-                break;
-            }
-        }
+        this.inventoryContainer.removeChild(tool);
+        this.update();
     }
     
     this.update = function() {
-        var len  = this.objectList.length;
+        var len  = this.inventoryContainer.children.length;
+        console.log("invent len = " + len);
         for(var i = 0; i < len ; i++) {
-            this.objectList[i].x = this.baseX;
-            this.objectList[i].y = this.baseY + i * this.inventory_w;
-            this.objectList[i].inventPos = {x:this.objectList[i].x,
-                                            y:this.objectList[i].y}
+            var child = this.inventoryContainer.getChildAt(i);
+            child.x = this.baseX;
+            child.y = this.baseY + i * this.inventory_w;
+            child.inventPos = {x:child.x, y:child.y}
         }
     }
     
@@ -89,12 +92,10 @@ function Inventory(game) {
     this.inventoryUse = function(tool) {
         if(tool.target && hitTestRectangle(tool,tool.target))
         {
-                console.log("2");
+                //console.log("2");
                 tool.use();
-                //tool.visible = false; ///???
-                this.remove(tool);
         }else { //go back to inventory
-                console.log("3");
+                //console.log("3");
                 tool.x = tool.inventPos.x;
                 tool.y = tool.inventPos.y;
         }
@@ -102,9 +103,11 @@ function Inventory(game) {
     }
     
     this.clearUp= function() {
-       this.objectList = []; 
+       //this.objectList = []; 
+        this.inventoryContainer.removeChildren();
     }
      
+    //return this.inventoryContainer;
 }
 
 function onDragStart(event) {
@@ -120,7 +123,7 @@ function onDragEnd() {
     
     //option 1: ???? not right
     if(myGame.inventory) {
-        console.log("drag end");
+        //console.log("drag end");
         myGame.inventory.inventoryUse(this);
     }  
 }
@@ -152,29 +155,37 @@ function GameManager() {
         
         this.app = new Application(this.screenWidth + this.inventoryWidth, height, {backgroundColor : 0x1099bb});
         document.body.appendChild(this.app.view);
+               
+        
+        this.sceneContainer = new PIXI.Container();
+        this.app.stage.addChild(this.sceneContainer); 
+        
         this.inventory = new Inventory(this);
-        this.currentSceneindex = 1; // 0: inventory 1:...
+
+        this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
+        this.app.stage.addChild(this.inventory.inventoryContainer);
+        this.currentSceneindex = 0; // 0: inventory 1:...
     }
     
     this.addScene = function(scene) {
-        this.app.stage.addChild(scene);
+        this.sceneContainer.addChild(scene);
         scene.visible = false;
     }
     
     this.nextScene = function() {
         
-        this.app.stage.getChildAt(this.currentSceneindex).visible = false;
+        this.sceneContainer.getChildAt(this.currentSceneindex).visible = false;
         this.currentSceneindex++;
         
         //console.log(this.app.stage.children.length);
         
-        if(this.currentSceneindex >= this.app.stage.children.length)
+        if(this.currentSceneindex >= this.sceneContainer.children.length)
             return;
         
-        var currentScene = this.app.stage.getChildAt(this.currentSceneindex);
+        var currentScene = this.sceneContainer.getChildAt(this.currentSceneindex);
         if(currentScene) {
             currentScene.visible = true;
-            this.inventory.clearUp();
+            //this.inventory.clearUp();
         }
     }
     
@@ -183,7 +194,7 @@ function GameManager() {
     }
     
     this.start = function() {
-        var currentScene = this.app.stage.getChildAt(this.currentSceneindex);
+        var currentScene = this.sceneContainer.getChildAt(this.currentSceneindex);
         console.log("in start");
         currentScene.visible = true;
     }
