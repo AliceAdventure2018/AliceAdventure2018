@@ -10,6 +10,7 @@ fs.readFile('./example.json', function read(err, data){
 })
 var sceneList = main.game;
 
+
 function createGame(gameName, width,height,invent_size){
 	return 'var ' + gameName + '= new GameManager();\n' + gameName + '.init(' + width + ',' + height + ',' + invent_size + ');';
 }
@@ -67,6 +68,14 @@ function createFunction(obj, functName, arg, body){
 	return obj + '.' + functName + '= function (' + arg.toString() + '){\n'+ body + '}\n\n';
 }
 
+function createFunctionList(obj, functList){
+	var toReturn = ''; 
+	for (var i in functList){
+		toReturn += createFunction(obj, i[0], i[1], i[2]);
+	}
+	return toReturn;
+}
+
 function translateObj(obj, key, val){
 	var toReturn;
 	switch (key){
@@ -77,7 +86,7 @@ function translateObj(obj, key, val){
 		case "buttonMode" : toReturn = setButtonMode(obj, obj[key]); break;
 		case "pos" : toReturn = setPos(obj, obj[key]); break;
 		case "name": toReturn = setName(obj, obj[key]); break;
-		case "funct" : toReturn = createFunction(obj, obj[key][0], obj[key][1], obj[key][2]); break;
+		case "funct" : toReturn = createFunctionList(obj, obj[key]); break;
 		default:
 		//need to do something else
 			toReturn = "not must-have";
@@ -96,6 +105,16 @@ function readandWriteObjects(obj){
 function readandWriteSceneS(){
 
 }
+
+//Engineer FILE structure:
+//--Asset
+//--Build (created here)
+//	|
+//   --Asset(copy paste), and the generated js file will simply reference the asset folder under the same root
+//	 --pixi
+//   --.....
+
+//-- Editor
 
 function writeFile(dest, string){
     fs.writeFile(dest, string);
