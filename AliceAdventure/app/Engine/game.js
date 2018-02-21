@@ -59,7 +59,7 @@ key.use = function() {
 
 key.use = function() {
     this.target.interact();
-    this.visible = false;
+    myGame.inventory.remove(this);
     console.log("done");
 }
 
@@ -111,6 +111,7 @@ robot.y = myGame.screenHeight / 2;
 scene2.addChild(robot);
 
 
+
 var paint = PIXI.Sprite.fromImage('assets/alice/whitepaint.png');
 paint.anchor.set(0.5);
 paint.x = 300;
@@ -135,11 +136,11 @@ cone.nextTexture = PIXI.Texture.fromImage('assets/alice/whitecone.png');
 cone.use = function() {
     this.setTexture(this.nextTexture);
     myGame.inventory.add(this);
-}
+};
 
 cone.onClick = function() {
     myGame.inventory.add(this);
-}
+};
 
 cone.on('pointerdown', cone.onClick);
 

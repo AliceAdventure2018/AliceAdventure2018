@@ -46,9 +46,9 @@ function Inventory(game) { //always on the top
     this.add = function(tool) {
         
         //remove tool from the original scene and add to inventory container
-        console.log("scene len " + tool.scene.children.length);
+        //console.log("scene len " + tool.scene.children.length);
         this.inventoryContainer.addChild(tool); //[INTERESTING: remove it from the original container]
-        console.log("scene len " + tool.scene.children.length);
+        //console.log("scene len " + tool.scene.children.length);
         //tool.scene = this.inventoryContainer;
         
         //scale down
