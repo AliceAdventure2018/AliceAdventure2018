@@ -1,6 +1,5 @@
 'use strict';
 
-//const Vue = require('../../../Resources/Vue');
 const Event = require('./Event');
 const SceneObject = require('./SceneObject');
 const View = require('./View');
@@ -26,7 +25,13 @@ PropertyView.prototype.InitView = function(){
 	  el: '#property-view',
 	  data: {
 	  	showProperty: false,
+	  	propertyName: "",
 	    bindObj: this.BindObject
+	  }, 
+	  methods:{
+	  	addProperty: function(){
+	  		this.$data.bindObj.AddUserProperty(this.$data.propertyName);
+	  	}
 	  }
 	});
 	Event.AddListener("update-selected-object", this, "UpdateSelectedObject");

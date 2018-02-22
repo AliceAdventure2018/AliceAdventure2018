@@ -30,14 +30,14 @@ SceneView.prototype.InitView = function(_element){
 	_element.appendChild(this.app.view);
 };
 
-SceneView.prototype.AddObject = function(_object){
-	// test
-	let _obj = new SceneObject("Bunny", this.app.screen.width / 2, this.app.screen.height / 2, true, [
-		['height', 8], 
-		['weight', 2]
-	]);
+SceneView.prototype.TestAddObject = function(_objIndex, _x, _y){ // test
+
+	if (_x == undefined) _x = this.app.screen.width / 2;
+	if (_y == undefined) _y = this.app.screen.height / 2;
+
+	var _obj = SceneObject.AddObject(_objIndex, 1, _x, _y);
+	_obj.SelectOn();
 	this.app.stage.addChild(_obj.sprite);
-	// TODO: add to GameProperties.SceneObjectList
 };
 
 module.exports = SceneView;

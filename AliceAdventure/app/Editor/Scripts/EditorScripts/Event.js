@@ -8,7 +8,7 @@ var Event;
 // variables
 Event = function(){};
 
-Event.Events = {};
+Event.Events = {}; // INTERNAL USE
 
 // functions
 Event.Broadcast = function(_event, _parameters){
@@ -17,17 +17,12 @@ Event.Broadcast = function(_event, _parameters){
 	}
 	else {
 		for (var i in Event.Events[_event]){
-			try{
-				Event.Events[_event][i].instance[Event.Events[_event][i].function](_parameters);
-			} catch(e){
-				Debug.LogError("Error in event \"" + _event + "\" function: " + e);
-				//console.log(Event.Events[_event][f]);
-			}
+			Event.Events[_event][i].instance[Event.Events[_event][i].function](_parameters);
 		}
 	}
 }
 
-Event.AddListener = function(_event, _instance, _function){ // TODO: function can not reference like this
+Event.AddListener = function(_event, _instance, _function){
 	if (Event.Events[_event] == undefined){
 		Event.Events[_event] = [];
 	}
