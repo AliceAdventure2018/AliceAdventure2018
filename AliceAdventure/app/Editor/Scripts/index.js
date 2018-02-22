@@ -3,11 +3,12 @@
 const AliceEngine = require('../../Engine/AliceEngine');
 const AliceEditor = require('../Scripts/AliceEditor');
 
-var sceneView, propertyView;
+var sceneView, propertyView, objectListView;
 
 function InitAllViews(){
 	InitSceneView();
 	InitPropertyView();
+	InitObjectListView();
 }
 
 function InitSceneView(){
@@ -20,7 +21,12 @@ function InitPropertyView(){
 	propertyView.InitView();
 }
 
+function InitObjectListView(){
+	objectListView = new AliceEditor.ObjectListView();
+	objectListView.InitView();
+}
+
 function LoadAsset(){ // test
 	if (sceneView == null) return;
-	sceneView.AddObject();
+	sceneView.TestAddObject();
 }

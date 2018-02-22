@@ -7,6 +7,7 @@ const SceneObject = require('./EditorScripts/SceneObject');
 const View = require('./EditorScripts/View');
 const SceneView = require('./EditorScripts/SceneView');
 const PropertyView = require('./EditorScripts/PropertyView');
+const ObjectListView = require('./EditorScripts/ObjectListView');
 
 var AliceEditor;
 
@@ -18,7 +19,8 @@ AliceEditor = (function(){
 		SceneObject: SceneObject,
 		View: View,
 		SceneView: SceneView,
-		PropertyView: PropertyView
+		PropertyView: PropertyView,
+		ObjectListView: ObjectListView
 	};
 })();
 
