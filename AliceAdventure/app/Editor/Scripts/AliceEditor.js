@@ -13,6 +13,7 @@ var AliceEditor;
 
 AliceEditor = (function(){
 	return {
+		ID: require('./EditorScripts/ID'),
 		Debug: Debug, 
 		GameProperties: GameProperties, 
 		Event: Event,

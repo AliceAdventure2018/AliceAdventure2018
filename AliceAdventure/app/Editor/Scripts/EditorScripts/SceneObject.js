@@ -1,6 +1,7 @@
 'use strict';
 
 const PIXI = require('../../../Resources/pixi');
+const ID = require('./ID');
 const Debug = require('./Debug');
 const GameProperties = require('./GameProperties');
 const Event = require('./Event');
@@ -10,6 +11,7 @@ var SceneObject;
 
 // variables
 SceneObject = function(_name = "untitled", _bindScene){
+	this.id = ID.newID; // NEVER MODIFY THIS
 	this.name = _name;
 	this.bindScene = _bindScene;
 

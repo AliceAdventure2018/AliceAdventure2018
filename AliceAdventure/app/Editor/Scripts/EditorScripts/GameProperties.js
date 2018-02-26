@@ -18,6 +18,8 @@ GameProperties.SceneObjectList.Delete = function(_obj){
 	return false;
 }
 
+GameProperties.IDCounter = 0;
+GameProperties.path = "";
 GameProperties.HasInventory = false;
 // other properties
 
