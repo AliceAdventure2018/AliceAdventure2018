@@ -1,0 +1,37 @@
+{
+	"sceneList" : [
+		{
+			"name" : "scene1"
+		},
+		{ 	
+			"name" : " scene2"
+		}
+	],
+	"objectList":[
+				   {
+				   	"id" : "0",
+				   	"name":"key",
+					"src": "'assets/key.png'",
+					"anchor" : "0.5",
+					"scale" : "1",
+					"interactive" : "true",
+					"buttonMode" : "true",
+					"pos":["myGame.app.screen.width / 3","myGame.app.screen.height / 3"],
+					"sceneParent": "scene1",			
+					
+					"target" : "door",
+
+					"funct" :[
+						[ "use", ["x"],"this.target.interact();this.visible = false;console.log('done');"],
+					 	[ "onClick", [], "myGame.inventory.add(this);"]			
+							]
+					}
+				],
+
+	"settings" : 
+	{
+		"resWidth" : "1280",
+		"resHeight" : "720",
+		"inventoryGridNum" : "5"
+	}
+}
