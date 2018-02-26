@@ -4,7 +4,9 @@ var Alice = {
     Object : PIXI.Sprite,
     Container : PIXI.Container,
     Texture: PIXI.Texture,
-    Scene: PIXI.Container
+    Scene: PIXI.Container,
+    Ticker: PIXI.ticker.Ticker,
+    AnimatedObject: PIXI.extras.AnimatedSprite,
 }
 
 
@@ -178,6 +180,8 @@ function GameManager() {
     this.inventory;
     this.sceneManager;
     
+    this.updateProcedures = []; // a list of update function of objects
+    
     this.init = function(width,height,invent_size) {
         if(invent_size == 0)
             invent_size = 5;
@@ -207,10 +211,17 @@ function GameManager() {
     
     
     this.start = function() {
-        //this.currentScene = this.sceneContainer.getChildAt(0);
         console.log("in start");
-        //this.currentScene.visible = true;
         this.sceneManager.start();
+        
+//        this.app.ticker.add(function(delta) {
+//            var len = this.updateProcedures.length;
+//            for(var i = 0; i < len; i++) {
+//                this.updateProcedures[i]();
+//            } 
+//        }
+//        );
+        
     }
     
 }

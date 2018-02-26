@@ -46,7 +46,7 @@ scene.addChild(door);
 var key = Alice.Object.fromImage('assets/alice/key.png');
 key.anchor.set(0.5);
 key.x = 900;
-key.y = 400;
+key.y = 500;
 key.scale.set(0.7);
 key.interactive = true;
 key.buttonMode = true;
@@ -73,24 +73,44 @@ key.on('pointerdown', key.onClick);
 scene.addChild(key);
 
 
-var key2 = Alice.Object.fromImage('assets/alice/cat.png');
-key2.anchor.set(0.5);
-key2.x = 250;
-key2.y = 500;
-key2.scale.set(0.8);
+var cat = Alice.Object.fromImage('assets/alice/cat.png');
+cat.anchor.set(0.5);
+cat.x = 250;
+cat.y = 500;
+cat.scale.set(0.8);
 
-key2.interactive = true;
-key2.buttonMode = true;
-key2.name = "key2";
+cat.interactive = true;
+cat.buttonMode = true;
+cat.name = "key2";
 
-key2.onClick = function() {
+cat.onClick = function() {
     myGame.inventory.add(this);
 }
 
-key2.on('pointerdown', key2.onClick);
+cat.on('pointerdown', cat.onClick);
 
-scene.addChild(key2);
+scene.addChild(cat);
 
+
+var boss = Alice.AnimatedObject.fromImages(['assets/alice/boss/boss3_idle1.png','assets/alice/boss/boss3_idle2.png','assets/alice/boss/boss3_idle3.png','assets/alice/boss/boss3_idle4.png']);
+boss.anchor.set(0.5);
+boss.x = 1000;
+
+boss.y = 200;
+boss.scale.set(0.8);
+boss.animationSpeed = 0.3;
+boss.play();
+boss.update = function(delta) {
+    this.rotation += 0.01 * delta;
+} 
+
+
+scene.addChild(boss);
+
+//update
+myGame.app.ticker.add(function(delta) {
+    boss.rotation += 0.01;
+});
 
 
 // ----------------------------scene2--------------------------------//
