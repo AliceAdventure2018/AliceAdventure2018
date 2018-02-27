@@ -3,7 +3,6 @@
 const PIXI = require('../../../Resources/pixi');
 const View = require('./View');
 const SceneObject = require('./SceneObject');
-const GameProperties = require('./GameProperties');
 
 // class
 var SceneView;

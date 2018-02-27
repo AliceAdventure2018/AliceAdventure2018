@@ -1,11 +1,12 @@
 'use strict';
 
-const AliceEngine = require('../../Engine/AliceEngine');
+//const AliceEngine = require('../../Engine/AliceEngine');
 const AliceEditor = require('../Scripts/AliceEditor');
 
 var sceneView, propertyView, objectListView;
 
 function InitAllViews(){
+	AliceEditor.File.New('testFile');
 	InitSceneView();
 	InitPropertyView();
 	InitObjectListView();
@@ -29,4 +30,20 @@ function InitObjectListView(){
 function LoadAsset(){ // test
 	if (sceneView == null) return;
 	sceneView.TestAddObject();
+}
+
+function NewFile(){
+	AliceEditor.File.New('testNewFile');
+}
+
+function SaveFile(){
+	AliceEditor.File.Save();
+}
+
+function LoadFile(){
+	AliceEditor.File.Load('./testFile');
+}
+
+function CloseFile(){
+	AliceEditor.File.Close();
 }

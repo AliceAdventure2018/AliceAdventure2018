@@ -50,7 +50,6 @@ PropertyView.prototype.SetBindObject = function(_sceneObj = null){
 
 PropertyView.prototype.UpdateSelectedObject = function(){
 	this.SetBindObject(SceneObject.Selection.objects[0]);
-		console.log(this);
 }
 
 module.exports = PropertyView;

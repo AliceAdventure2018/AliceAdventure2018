@@ -22,8 +22,8 @@ ObjectListView.prototype.InitView = function(){
 	this.VModel = new Vue({
 	  el: '#object-list-view',
 	  data: {
-	    sceneList: GameProperties.SceneList, 
-	    objectList: GameProperties.SceneObjectList, 
+	    sceneList: GameProperties.instance.sceneList, 
+	    objectList: GameProperties.instance.sceneObjectList, 
 	    selectedObjects: SceneObject.Selection.objects
 	  }, 
 	  methods: {

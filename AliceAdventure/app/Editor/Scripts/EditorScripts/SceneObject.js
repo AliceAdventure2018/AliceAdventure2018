@@ -10,8 +10,8 @@ const Event = require('./Event');
 var SceneObject;
 
 // variables
-SceneObject = function(_name = "untitled", _bindScene){
-	this.id = ID.newID; // NEVER MODIFY THIS
+SceneObject = function(_id = null, _name = "untitled", _bindScene = null){
+	if (_id == null) this.id = ID.newID; // NEVER MODIFY THIS
 	this.name = _name;
 	this.bindScene = _bindScene;
 
@@ -20,17 +20,19 @@ SceneObject = function(_name = "untitled", _bindScene){
 	this.dragAllowed = true;
 	this.drag = { on: false, eventData: {} };
 	this.sprite = null;
+	this.src = "";
 	this.properties = [];
+
+	GameProperties.AddObject(this);
 };
 
 // static properties
 SceneObject.AddObject = function(_objIndex, _bindScene, _x, _y){
 	// test TODO: should read from objIndex
-	let _obj = new SceneObject("bunny", _bindScene);
+	let _obj = new SceneObject(null, "bunny", _bindScene);
 	_obj.InitSprite("../TestImg/bunny.png", _x, _y);
 	_obj.properties = [];
 
-	GameProperties.SceneObjectList.push(_obj);
 	return _obj;
 };
 
@@ -65,7 +67,7 @@ SceneObject.Selection = {
 // functions
 SceneObject.prototype.InitSprite = function(_url, _x, _y, _scaleX = 1, _scaleY = 1, _visible = true){
 	if (!(this instanceof SceneObject)) return;
-
+	this.src = _url;
 	this.sprite = PIXI.Sprite.fromImage(_url);
 	this.sprite.anchor.set(0.5);
 	this.sprite.x = (typeof _x == "number" ? _x : 0);
@@ -80,7 +82,7 @@ SceneObject.prototype.InitSprite = function(_url, _x, _y, _scaleX = 1, _scaleY =
 };
 
 SceneObject.prototype.DeleteThis = function(){
-	GameProperties.SceneObjectList.Delete(this);
+	GameProperties.DeleteObject(this);
 };
 
 SceneObject.prototype.AddUserProperty = function(_name, _value){

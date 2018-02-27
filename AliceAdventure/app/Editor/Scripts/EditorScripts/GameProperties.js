@@ -2,25 +2,50 @@
 
 // class
 var GameProperties;
-GameProperties = function(){};
+GameProperties = function(){
+	this.sceneList = [];
+	this.sceneObjectList = [];
+	this.settings = {
+		resWidth: 1280, 
+		resHeight: 720, 
+		inventoryGridNum: 5,
+		projectName: "untitled"
+	};
 
-// static variables
+	GameProperties.instance = this;
+};
 
-GameProperties.SceneList = [];
+// singleton
+GameProperties.instance = null;
 
-GameProperties.SceneObjectList = [];
-GameProperties.SceneObjectList.Delete = function(_obj){
-	var i = GameProperties.SceneObjectList.indexOf(_obj);
+// static functions
+GameProperties.AddScene = function(_scene){
+	if (GameProperties.instance == null) return false;
+	GameProperties.instance.sceneList.push(_scene);
+	return true;
+};
+GameProperties.DeleteScene = function(_scene){
+	if (GameProperties.instance == null) return; 
+	var i = GameProperties.instance.sceneList.indexOf(_scene);
 	if (i >= 0){
-		GameProperties.splice(i, 1);
+		GameProperties.instance.sceneList.splice(i, 1);
 		return true;
 	}
 	return false;
-}
-
-GameProperties.IDCounter = 0;
-GameProperties.path = "";
-GameProperties.HasInventory = false;
-// other properties
+};
+GameProperties.AddObject = function(_obj){
+	if (GameProperties.instance == null) return false;
+	GameProperties.instance.sceneObjectList.push(_obj);
+	return true;
+};
+GameProperties.DeleteObject = function(_obj){
+	if (GameProperties.instance == null) return; 
+	var i = GameProperties.instance.sceneObjectList.indexOf(_obj);
+	if (i >= 0){
+		GameProperties.instance.sceneObjectList.splice(i, 1);
+		return true;
+	}
+	return false;
+};
 
 module.exports = GameProperties;
