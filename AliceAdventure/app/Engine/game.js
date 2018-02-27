@@ -104,6 +104,16 @@ boss.update = function(delta) {
     this.rotation += 0.01 * delta;
 } 
 
+boss.interactive = true;
+boss.buttonMode = true;
+
+boss.onClick = function() {
+    myGame.messageBox.startConversation(['Haha','You are here','Get me out of this stupid room!']);
+    console.log("clicked");
+}
+
+boss.on('pointerdown', boss.onClick);
+
 
 scene.addChild(boss);
 

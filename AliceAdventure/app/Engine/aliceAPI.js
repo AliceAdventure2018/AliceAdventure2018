@@ -6,6 +6,7 @@ var Alice = {
     Texture: PIXI.Texture,
     Scene: PIXI.Container,
     Ticker: PIXI.ticker.Ticker,
+    Text: PIXI.Text,
     AnimatedObject: PIXI.extras.AnimatedSprite,
 }
 
@@ -126,8 +127,6 @@ function onDragEnd() {
 
 function SceneManager(game) {
     this.currentScene;
-    this.sceneContainer;
-    this.game;
     
     //init
     this.game = game;
@@ -179,8 +178,9 @@ function GameManager() {
     this.app;
     this.inventory;
     this.sceneManager;
+    this.messageBox;
     
-    this.updateProcedures = []; // a list of update function of objects
+    //this.updateProcedures = []; // a list of update function of objects
     
     this.init = function(width,height,invent_size) {
         if(invent_size == 0)
@@ -197,10 +197,13 @@ function GameManager() {
                
         this.sceneManager = new SceneManager(this);
         this.inventory = new Inventory(this);
-
+        this.messageBox = new MessageBox({x:width,y:height,scale:1,url:'assets/alice/textbox.png',a:1},false);
+        
         this.app.stage.addChild(this.sceneManager.sceneContainer);
         this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
         this.app.stage.addChild(this.inventory.inventoryContainer);
+        this.app.stage.addChild(this.messageBox.holder);
+        //this.messageBox.startConversation(["hahha","lalalala"]);
 
     }
     
@@ -212,22 +215,130 @@ function GameManager() {
     
     this.start = function() {
         console.log("in start");
-        this.sceneManager.start();
-        
-//        this.app.ticker.add(function(delta) {
-//            var len = this.updateProcedures.length;
-//            for(var i = 0; i < len; i++) {
-//                this.updateProcedures[i]();
-//            } 
-//        }
-//        );
-        
+        this.sceneManager.start();     
     }
     
 }
 
 
+function Message(text,style,avatar) {
+    this.text;
+    this.style;
+    this.avatar;
+}
 
+function MessageBox(background,avatarEnable) {
+    console.log(background);
+    
+    
+    this.holder = new Alice.Container();
+    
+    this.backgronud = Alice.Object.fromImage(background.url);
+    this.backgronud.anchor.set(0.5);
+    
+    this.backgronud.x = background.x/2;
+    this.backgronud.y = background.y - 220/2;
+
+    this.backgronud.alpha = 0.8;
+    this.backgronud.scale.set(0.9);
+    
+    
+    this.backgronud.interactive = true;
+    this.backgronud.buttonMode = true;
+    
+    this.messageBuffer = [];
+    this.currentMsgIndex = 0;
+    
+    this.nextConversation = function() {
+        
+        this.currentMsgIndex++;
+        //console.log("next " + this.currentMsgIndex);
+        if(this.currentMsgIndex < this.messageBuffer.length)
+        {
+            this.currentMsg.text = this.messageBuffer[this.currentMsgIndex];
+            //console.log("speak " + this.messageBuffer[this.currentMsgIndex]);
+        } else {
+            this.messageBuffer = [];
+            this.currentMsg.text = "";
+            this.currentMsgIndex = 0;
+            this.holder.visible = false;
+        }
+
+    }
+    
+    this.backgronud.on('pointerdown', messageBoxOnClick);
+    
+    this.holder.addChild(this.backgronud);
+    this.holder.visible = false;
+    
+    
+    this.defaltStyle = new PIXI.TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 20,
+        //fontStyle: 'italic',
+        fontWeight: 'bold',
+        //fill: ['#ffffff', '#00ff99'], // gradient
+//        stroke: '#4a1850',
+//        strokeThickness: 5,
+//        dropShadow: true,
+//        dropShadowColor: '#000000',
+//        dropShadowBlur: 4,
+//        dropShadowAngle: Math.PI / 6,
+//        dropShadowDistance: 6,
+        wordWrap: true,
+        wordWrapWidth: 600
+    });
+    
+
+    this.currentMsg = new PIXI.Text("", this.defaltStyle);
+    this.currentMsg.anchor.set(0.5);
+    this.currentMsg.x = 30;
+    this.currentMsg.y = 180;
+    this.currentMsg.x = this.backgronud.x;
+    this.currentMsg.y = this.backgronud.y;
+    
+    this.holder.addChild(this.currentMsg);
+    
+    this.addMessage = function(msg) {
+        this.messageBuffer.push(msg);
+    }
+    
+    this.addMessages = function(msgs) {
+        this.messageBuffer = msgs;
+    }
+    
+    this.startConversation= function(msgs) {
+        
+        //console.log(msgs);
+        
+        if(this.messageBuffer.length > 0)
+            return;
+        
+        if(!msgs.length)
+            return
+            
+        this.messageBuffer = msgs;
+        
+        this.currentMsgIndex = 0;
+        this.currentMsg.text = this.messageBuffer[this.currentMsgIndex];
+        //console.log(this.currentMsg.text);
+        this.holder.visible = true;
+        
+    }
+}
+
+
+function messageBoxOnClick() {
+    if(myGame.messageBox) {
+        myGame.messageBox.nextConversation();
+    }
+}
+
+
+
+/*
+    2D collision detection
+*/
 function hitTestRectangle(r1, r2) {
 
   //Define the variables we'll need to calculate
