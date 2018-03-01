@@ -1,6 +1,7 @@
 var myGame = new GameManager();
 myGame.init(1280,720,5);
 
+
 // ----------------------------scene1------------------------------- //
 var scene = new Alice.Scene();
 myGame.sceneManager.addScene(scene);
@@ -178,6 +179,7 @@ cone.on('pointerdown', cone.onClick);
 scene2.addChild(cone);
 
 //////////////////////////////////////////////////////////////
+
 
 myGame.start();
 

@@ -151,6 +151,19 @@ function SceneManager(game) {
     }
     
     
+    this.previousScene = function() {
+        var currentSceneIndex = this.sceneContainer.getChildIndex(this.currentScene);
+        this.currentScene.visible = false;
+        
+        if(currentSceneIndex-1 < 0)
+            return;
+        
+        currentSceneIndex --;
+        
+        this.currentScene =  this.sceneContainer.getChildAt(currentSceneIndex);
+        this.currentScene.visible = true; 
+    }
+    
     this.jumpToScene = function(scene) {
         var currentScene = this.sceneContainer.getChildAt(this.currentSceneindex);
         currentScene.visible = false;
@@ -162,6 +175,8 @@ function SceneManager(game) {
         this.currentScene = this.sceneContainer.getChildAt(0);
         this.currentScene.visible = true;
     }
+    
+    
     
 }
 
@@ -204,18 +219,54 @@ function GameManager() {
         this.app.stage.addChild(this.inventory.inventoryContainer);
         this.app.stage.addChild(this.messageBox.holder);
         //this.messageBox.startConversation(["hahha","lalalala"]);
+        
+        
 
     }
     
     
-    this.end = function() {
+    this.awake = function() {
         
+    }
+    
+    
+    this.end = function() {
+        console.log("game end");
+        this.inventory.inventoryBackgroundGrp.visible = false;
+        this.sceneManager.sceneContainer.visible = false;
+        
+        var style = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            fontSize: 45,
+            fontStyle: 'italic',
+            fontWeight: 'bold',
+            fill: ['#ffffff', '#00ff99'], // gradient
+            stroke: '#4a1850',
+            strokeThickness: 5,
+            dropShadow: true,
+            dropShadowColor: '#000000',
+            dropShadowBlur: 4,
+            dropShadowAngle: Math.PI / 6,
+            dropShadowDistance: 6,
+            wordWrap: true,
+            wordWrapWidth: 1300
+        });
+
+        var richText = new PIXI.Text('Mission Complete!', style);
+        richText.anchor.set(0.5);
+        richText.x = 640 + 72;
+        richText.y = 360;
+
+        this.app.stage.addChild(richText);
+        
+
     }
     
     
     this.start = function() {
         console.log("in start");
-        this.sceneManager.start();     
+        this.sceneManager.start();
+        this.awake();
     }
     
 }
@@ -323,7 +374,13 @@ function MessageBox(background,avatarEnable) {
         this.currentMsg.text = this.messageBuffer[this.currentMsgIndex];
         //console.log(this.currentMsg.text);
         this.holder.visible = true;
-        
+    }
+    
+    this.stopConversation= function() {
+            this.messageBuffer = [];
+            this.currentMsg.text = "";
+            this.currentMsgIndex = 0;
+            this.holder.visible = false;
     }
 }
 
@@ -334,6 +391,37 @@ function messageBoxOnClick() {
     }
 }
 
+
+function StateMachine(states) {
+    this.currentState = 0;
+    this.states = states;
+    
+    this.nextState = function() {
+        if(this.currentState + 1 >= this.states.length) {
+            return;
+        }
+        this.currentState ++;
+    }
+    
+    this.getCurrentStateIndex = function() {
+        return this.currentState;
+    }
+    
+    
+    this.getCurrentState = function() {
+        if(this.currentState >= this.states.length) {
+            return null;
+        }
+        return this.states[this.currentState];
+    }
+    
+    this.setState = function(index) {
+        if(index >= this.states.length)
+            return;
+        this.currentState = index;        
+    }
+    
+}
 
 
 /*
