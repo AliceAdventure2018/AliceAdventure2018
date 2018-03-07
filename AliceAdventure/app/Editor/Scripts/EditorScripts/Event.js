@@ -17,18 +17,18 @@ Event.Broadcast = function(_event, _parameters){
 	}
 	else {
 		for (var i in Event.Events[_event]){
-			Event.Events[_event][i].instance[Event.Events[_event][i].function](_parameters);
+			Event.Events[_event][i](_parameters);
 		}
 	}
 }
 
-Event.AddListener = function(_event, _instance, _function){
+Event.AddListener = function(_event, _function){
 	if (Event.Events[_event] == undefined){
 		Event.Events[_event] = [];
 	}
 
-	if (typeof _instance[_function] == 'function')
-		Event.Events[_event].push({instance: _instance, function: _function});
+	if (typeof _function == 'function')
+		Event.Events[_event].push(_function);
 	else
 		Debug.LogError("Parameter added to event \"" + _event + "\" is not a function. ");
 }

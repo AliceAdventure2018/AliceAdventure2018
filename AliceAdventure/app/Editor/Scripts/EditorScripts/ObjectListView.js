@@ -11,7 +11,7 @@ var ObjectListView;
 // variables
 ObjectListView = function(_height = -1, _width = -1){
 	View.call(this, "ObjectListView", _height, _width);	
-	this.VModel = null;
+	this.vModel = null;
 };
 ObjectListView.prototype = new View();
 
@@ -19,12 +19,13 @@ ObjectListView.prototype = new View();
 ObjectListView.prototype.InitView = function(){
 	View.prototype.InitView.apply(this); // call super method
 	// init data binding
-	this.VModel = new Vue({
+	this.vModel = new Vue({
 	  el: '#object-list-view',
 	  data: {
-	    sceneList: GameProperties.instance.sceneList, 
-	    objectList: GameProperties.instance.sceneObjectList, 
-	    selectedObjects: SceneObject.Selection.objects
+	  	showObjectList: false, 
+	    sceneList: null, 
+	    objectList: null, 
+	    selectedObjects: null
 	  }, 
 	  methods: {
 	  	onSelect: function(_obj){
@@ -32,15 +33,25 @@ ObjectListView.prototype.InitView = function(){
 	  	}
 	  }
 	});
+
+	// events
+	Event.AddListener("reload-project", ()=>{this.ReloadView();});
 };
 
-ObjectListView.prototype.SetBindObject = function(_sceneObj = null){
-	this.BindObject = _sceneObj;
-	if (this.BindObject == null){ // null case
-		this.VModel.showProperty = false;
-	} else { 
-		this.VModel.showProperty = true;
-		this.VModel.bindObj = this.BindObject;
+ObjectListView.prototype.ReloadView = function(){
+	View.prototype.ReloadView.apply(this); // call super method
+
+	if (GameProperties.instance == null){
+		this.vModel.showObjectList = false;
+		this.vModel.sceneList = null;
+		this.vModel.objectList = null;
+		this.vModel.selectedObjects = null;
+	} else {
+	  	this.vModel.showObjectList = true; 
+	    this.vModel.sceneList = GameProperties.instance.sceneList; 
+	    this.vModel.objectList = GameProperties.instance.objectList; 
+	    this.vModel.selectedObjects = SceneObject.Selection.objects;
 	}
-}
+};
+
 module.exports = ObjectListView;

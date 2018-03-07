@@ -185,4 +185,6 @@ SceneObject.prototype.OnPointerUp = function(_event){
 	}
 };
 
+Event.AddListener("reload-project", ()=>{SceneObject.Selection.clear();})
+
 module.exports = SceneObject;

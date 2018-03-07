@@ -1,12 +1,13 @@
 'use strict';
 
+const electron = require('electron').remote;
 //const AliceEngine = require('../../Engine/AliceEngine');
 const AliceEditor = require('../Scripts/AliceEditor');
 
 var sceneView, propertyView, objectListView;
 
 function InitAllViews(){
-	AliceEditor.File.New('testFile');
+	//AliceEditor.File.New('testFile');
 	InitSceneView();
 	InitPropertyView();
 	InitObjectListView();
@@ -33,17 +34,17 @@ function LoadAsset(){ // test
 }
 
 function NewFile(){
-	AliceEditor.File.New('testNewFile');
+	AliceEditor.File.NewProject();
 }
 
 function SaveFile(){
-	AliceEditor.File.Save();
+	AliceEditor.File.SaveProject();
 }
 
 function LoadFile(){
-	AliceEditor.File.Load('./testFile');
+	AliceEditor.File.OpenProject();
 }
 
 function CloseFile(){
-	AliceEditor.File.Close();
+	AliceEditor.File.CloseProject();
 }

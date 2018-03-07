@@ -15,16 +15,16 @@ var AliceEditor;
 
 AliceEditor = (function(){
 	return {
-		Debug: Debug, 
-		GameProperties: GameProperties, 
-		Event: Event,
-		SceneObject: SceneObject,
-		Scene: Scene,
-		View: View,
-		SceneView: SceneView,
-		PropertyView: PropertyView,
-		ObjectListView: ObjectListView, 
-		File: File
+		get Debug() {return Debug;}, 
+		get GameProperties() {return GameProperties;}, 
+		get Event() {return Event;},
+		get SceneObject() {return SceneObject;},
+		get Scene() {return Scene;},
+		get View() {return View;},
+		get SceneView (){return SceneView;},
+		get PropertyView() {return PropertyView;},
+		get ObjectListView() {return ObjectListView;}, 
+		get File() {return File;}
 	};
 })();
 

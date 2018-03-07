@@ -4,7 +4,7 @@
 var GameProperties;
 GameProperties = function(){
 	this.sceneList = [];
-	this.sceneObjectList = [];
+	this.objectList = [];
 	this.settings = {
 		resWidth: 1280, 
 		resHeight: 720, 
@@ -35,14 +35,14 @@ GameProperties.DeleteScene = function(_scene){
 };
 GameProperties.AddObject = function(_obj){
 	if (GameProperties.instance == null) return false;
-	GameProperties.instance.sceneObjectList.push(_obj);
+	GameProperties.instance.objectList.push(_obj);
 	return true;
 };
 GameProperties.DeleteObject = function(_obj){
 	if (GameProperties.instance == null) return; 
-	var i = GameProperties.instance.sceneObjectList.indexOf(_obj);
+	var i = GameProperties.instance.objectList.indexOf(_obj);
 	if (i >= 0){
-		GameProperties.instance.sceneObjectList.splice(i, 1);
+		GameProperties.instance.objectList.splice(i, 1);
 		return true;
 	}
 	return false;

@@ -47,10 +47,15 @@
     </div>
     <div id="object-list-view">
       <h3>List view</h3>
-      <div v-on:click="onSelect(object)" v-for="object in objectList">
-      {{ object.name }} 
-      <!--span v-show="object.IsSelected()"> &nbsp;<< </span-->
-      <!-- TODO: change UI if object is selected -->
+      <div v-if="showObjectList">        
+        <div v-on:click="onSelect(object)" v-for="object in objectList">
+          {{ object.name }} 
+        <!--span v-show="object.IsSelected()"> &nbsp;<< </span-->
+        <!-- TODO: change UI if object is selected -->
+        </div>
+      </div>
+      <div v-else>
+        <p> Object list not shown </p>
       </div>
     </div>
   </body>

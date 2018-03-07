@@ -11,8 +11,8 @@ var PropertyView;
 PropertyView = function(_height = -1, _width = -1){
 	View.call(this, "PropertyView", _height, _width);
 
-	this.BindObject = null;
-	this.VModel = null;
+	this.bindObject = null;
+	this.vModel = null;
 	
 };
 PropertyView.prototype = new View();
@@ -21,12 +21,12 @@ PropertyView.prototype = new View();
 PropertyView.prototype.InitView = function(){
 	View.prototype.InitView.apply(this); // call super method
 	// init data binding
-	this.VModel = new Vue({
+	this.vModel = new Vue({
 	  el: '#property-view',
 	  data: {
 	  	showProperty: false,
 	  	propertyName: "",
-	    bindObj: this.BindObject
+	    bindObj: this.bindObject
 	  }, 
 	  methods:{
 	  	addProperty: function(){
@@ -34,17 +34,27 @@ PropertyView.prototype.InitView = function(){
 	  	}
 	  }
 	});
-	Event.AddListener("update-selected-object", this, "UpdateSelectedObject");
+
+	// events
+	Event.AddListener("reload-project", ()=>{this.ReloadView();});
+	Event.AddListener("update-selected-object", ()=>{this.UpdateSelectedObject();});
+	
 	console.log("Init PropertyView finished");
 };
 
+PropertyView.prototype.ReloadView = function(){
+	View.prototype.ReloadView.apply(this); // call super method
+
+	this.SetBindObject(null);
+}
+
 PropertyView.prototype.SetBindObject = function(_sceneObj = null){
-	this.BindObject = _sceneObj;
-	if (this.BindObject == null){ // null case
-		this.VModel.showProperty = false;
+	this.bindObject = _sceneObj;
+	if (this.bindObject == null){ // null case
+		this.vModel.showProperty = false;
 	} else { 
-		this.VModel.showProperty = true;
-		this.VModel.bindObj = this.BindObject;
+		this.vModel.showProperty = true;
+		this.vModel.bindObj = this.bindObject;
 	}
 }
 
