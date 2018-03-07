@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Alice Adventure</title>
+    <script type="text/javascript" src="../../Resources/vue.js"></script>
+    <script type="text/javascript" src="../scripts/index.js"></script>
+  </head>
+  <body onload="InitAllViews()">
+    <button onclick='NewFile()'>New</button>
+    <button onclick='SaveFile()'>Save</button>
+    <button onclick='LoadFile()'>Load</button>
+    <button onclick='CloseFile()'>Close</button>
+    <div id="scene-view">
+      <h3>Scene view</h3>
+      <button onclick="LoadAsset()">Load Asset</button>
+    </div>
+    <div id="property-view">
+      <h3>Property view</h3>
+      <table v-if='showProperty'>
+        <tr>
+          <td>name</td>
+          <td><input v-model='bindObj.name'/></td>
+        </tr>
+        <tr>
+          <td>x</td>
+          <td><input v-model='bindObj.sprite.x'/></td>
+        </tr>
+        <tr>
+          <td>y</td>
+          <td><input v-model='bindObj.sprite.y'/></td>
+        </tr>
+        <tr>
+          <td>active</td>
+          <td><input type="checkbox" v-model='bindObj.sprite.visible'/></td>
+        </tr>
+        <tr v-for='property in bindObj.properties'>
+          <td>{{ property[0] }}</td>
+          <td><input v-model='property[1]'/></td>
+        </tr>
+        <tr>
+          <td><input v-model='propertyName'/></td>
+          <td><button v-on:click="addProperty()">Add property</button></td>
+        </tr>
+      </table>
+      <p v-else>Please select an object</p>
+    </div>
+    <div id="object-list-view">
+      <h3>List view</h3>
+      <div v-if="showObjectList">        
+        <div v-on:click="onSelect(object)" v-for="object in objectList">
+          {{ object.name }} 
+        <!--span v-show="object.IsSelected()"> &nbsp;<< </span-->
+        <!-- TODO: change UI if object is selected -->
+        </div>
+      </div>
+      <div v-else>
+        <p> Object list not shown </p>
+      </div>
+    </div>
+  </body>
+</html>
