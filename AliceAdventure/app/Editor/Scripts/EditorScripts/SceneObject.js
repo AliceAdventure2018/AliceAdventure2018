@@ -19,9 +19,11 @@ SceneObject = function(_id = null, _name = "untitled", _bindScene = null){
 	this.selected = false;
 	this.dragAllowed = true;
 	this.drag = { on: false, eventData: {} };
-	this.sprite = null;
-	this.src = "";
+
 	this.properties = [];
+	this.src = "";
+	this.sprite = null;
+	this.interactable = true;
 
 	GameProperties.AddObject(this);
 };

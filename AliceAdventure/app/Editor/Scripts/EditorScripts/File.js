@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path');
 const electron = require('electron').remote;
+const prompt = require('electron-prompt');
 const fs = require('fs-extra');
 const Debug = require('./Debug');
 const ID = require('./ID');
@@ -22,7 +23,7 @@ File = function(_path, _gameProperties){
 
 File.instance = null;
 
-File.extension = "json"; // the extension for our project
+File.extension = "aap"; // the extension for our project
 
 File.tempDataObj = {
 	sceneList: [],
@@ -37,13 +38,21 @@ File.tempDataObj = {
 	}
 };
 
-File.NewProject = function(_name = "untitled-project", _template = null){ // TODO: load from template
+File.NewProject = function(_template = null){ // TODO: load from template
 	if (File.instance != null){ // have opened proj
 		File.CloseProject();
 	}
-	new File(null, new GameProperties());
-	File.instance.gameProperties.settings.projectName = _name;
-	Event.Broadcast("reload-project");
+	prompt({
+		title: "New project", 
+		label: "Input new project name: ", 
+		value: "untitled-project", 
+	}).then((_name)=>{
+		if (_name != null) {
+			new File(null, new GameProperties());
+			File.instance.gameProperties.settings.projectName = _name;
+			Event.Broadcast("reload-project");
+		}
+	})
 };
 
 File.SaveProject = function(){
@@ -56,8 +65,7 @@ File.SaveProject = function(){
 			title: 'Select folder',  
 			defaultPath: File.instance.gameProperties.settings.projectName, 
 			buttonLabel: 'Select', 
-			filters: [{name: 'AliceAdventureProject', extensions: [File.extension]}], 
-			properties: ['openFile', 'createDirectory']
+			filters: [{ name: 'AliceAdventureProject', extensions: [File.extension] }]
 		}, (_path)=>{ // callback
 			if (_path == null) return;
 			File.SaveToPath(_path);
@@ -66,6 +74,23 @@ File.SaveProject = function(){
 		File.SaveToPath(File.instance.path);
 	}
 };
+
+File.SaveAsNewProject = function(){
+	if (File.instance == null){
+		return;
+	}
+	// open file selecter
+	electron.dialog.showSaveDialog({
+			title: 'Select folder',  
+			defaultPath: File.instance.gameProperties.settings.projectName, 
+			buttonLabel: 'Select', 
+			filters: [{name: 'AliceAdventureProject', extensions: [File.extension]}], 
+			properties: ['openFile', 'createDirectory']
+		}, (_path)=>{ // callback
+			if (_path == null) return;
+			File.SaveToPath(_path);
+		});
+}
 
 File.OpenProject = function(){
 	if (File.instance != null){ // have opened proj
@@ -144,6 +169,9 @@ File.SaveToPath = function(_path){
 
 	// Write JSON file
 	fs.writeJsonSync(File.instance.path, File.tempDataObj, {spaces:'\t', EOL:'\n'});
+
+	// Ensure has Assets folder
+	fs.ensureDir(path.dirname(File.instance.path) + '/Assets/');
 }
 
 File.OpenFromPath = function(_path){
