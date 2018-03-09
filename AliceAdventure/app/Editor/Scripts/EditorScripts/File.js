@@ -123,7 +123,7 @@ File.CloseProject = function(){
 }
 
 File.SaveToPath = function(_path){
-	console.log("save to " + _path);
+	console.log("Save to " + _path);
 	File.instance.path = _path;
 	File.tempDataObj.reset();
 
@@ -140,24 +140,19 @@ File.SaveToPath = function(_path){
 	// ObjectList
 	for (let i in GameProperties.instance.objectList){
 		let _o = GameProperties.instance.objectList[i];
-		console.log(_o.sprite.x);
 		let _d = {
 			id: _o.id, 
 			name: _o.name, 
 			src: _o.src, 
-			anchor: {x: _o.sprite.anchor.x, y: _o.sprite.anchor.y}, 
-			x: _o.sprite.x, 
-			y: _o.sprite.y, 
-			scale: {x: _o.sprite.scale.x, y: _o.sprite.scale.y}, 
-			interactive: true, 
-			buttonMode: true,
-			properties: _o.properties, 
+			pos: {x: Number(_o.sprite.x), y: Number(_o.sprite.y)}, 
+			anchor: {x: Number(_o.sprite.anchor.x), y: Number(_o.sprite.anchor.y)}, 
+			scale: {x: Number(_o.sprite.scale.x), y: Number(_o.sprite.scale.y)}, 
+			active: _o.sprite.visible, 
+			interactive: _o.interactive, 
 			bindScene: _o.bindScene, 
-
-			target: null, 
-
-			funct: []
+			properties: _o.properties, 
 		};
+		console.log(_d);
 		File.tempDataObj.objectList.push(_d);
 	}
 
@@ -195,9 +190,7 @@ File.OpenFromPath = function(_path){
 	// ObjectList
 	for (let i in data.objectList){
 		let _d = data.objectList[i];
-		let _o = new SceneObject(_d.id, _d.name, _d.bindScene);
-		_o.properties = _d.properties;
-		_o.InitSprite(_d.src, _d.x, _d.y, _d.scale.x, _d.scale.y, true);
+		SceneObject.LoadObject(_d);
 	}
 
 	// Settings

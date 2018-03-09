@@ -1,6 +1,7 @@
 'use strict';
 
 const PIXI = require('../../../Resources/pixi');
+const FS = require('fs-extra');
 const ID = require('./ID');
 const Debug = require('./Debug');
 const GameProperties = require('./GameProperties');
@@ -21,22 +22,32 @@ SceneObject = function(_id = null, _name = "untitled", _bindScene = null){
 	this.drag = { on: false, eventData: {} };
 
 	this.properties = [];
-	this.src = "";
+	this.src = "Assets/" + _name + ".png"; // TEST
 	this.sprite = null;
-	this.interactable = true;
+	this.interactive = true;
 
 	GameProperties.AddObject(this);
 };
 
 // static properties
 SceneObject.AddObject = function(_objIndex, _bindScene, _x, _y){
-	// test TODO: should read from objIndex
-	let _obj = new SceneObject(null, "bunny", _bindScene);
-	_obj.InitSprite("../TestImg/bunny.png", _x, _y);
-	_obj.properties = [];
+	// test TODO: should read from objIndex // currently _objIndex is the file name
+	let _path = SceneObject.RootDir + "Assets/" + _objIndex + ".png";
+	let _obj = new SceneObject(null, _objIndex, _bindScene);
+	_obj.InitSprite(_path, {x: _x, y: _y});
 
 	return _obj;
 };
+
+SceneObject.LoadObject = function(_data){
+	console.log(_data);
+	let _o = new SceneObject(_data.id, _data.name, _data.bindScene);
+	_o.interactive = _data.interactive;
+	_o.properties = _data.properties;
+	_o.InitSprite(SceneObject.RootDir + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
+}
+
+SceneObject.RootDir = '../../';
 
 SceneObject.Selection = { 
 	objects: [], // Reference
@@ -67,20 +78,19 @@ SceneObject.Selection = {
 };
 
 // functions
-SceneObject.prototype.InitSprite = function(_url, _x, _y, _scaleX = 1, _scaleY = 1, _visible = true){
+SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = {x: 1, y: 1}, _anchor = {x: 0.5, y: 0.5}, _active = true){
 	if (!(this instanceof SceneObject)) return;
-	this.src = _url;
 	this.sprite = PIXI.Sprite.fromImage(_url);
-	this.sprite.anchor.set(0.5);
-	this.sprite.x = (typeof _x == "number" ? _x : 0);
-	this.sprite.y = (typeof _y == "number" ? _y : 0);
-	this.sprite.scale.set(_scaleX, _scaleY);
-	this.sprite.visible = _visible;
+	this.sprite.x = isNumberOr(_pos.x, 0);
+	this.sprite.y = isNumberOr(_pos.y, 0);
+	this.sprite.scale.set(isNumberOr(_scale.x, 1), isNumberOr(_scale.y, 1));
+	this.sprite.anchor.set(isNumberOr(_anchor.x, 0.5), isNumberOr(_anchor.y, 0.5));
+	this.sprite.visible = _active;
 	this.sprite.interactive = true;
 	this.sprite
-		.on("pointerdown", this.OnPointerDown.bind(this))
-		.on("pointermove", this.OnPointerMove.bind(this))
-		.on("pointerup", this.OnPointerUp.bind(this));
+		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
+		.on("pointermove", (e)=>{this.OnPointerMove(e);})
+		.on("pointerup", (e)=>{this.OnPointerUp(e);});
 };
 
 SceneObject.prototype.DeleteThis = function(){

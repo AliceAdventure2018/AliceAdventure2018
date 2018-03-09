@@ -4,6 +4,20 @@ const electron = require('electron').remote;
 //const AliceEngine = require('../../Engine/AliceEngine');
 const AliceEditor = require('../Scripts/AliceEditor');
 
+// utilities
+function isNumberOr(_value, _default){
+	return (typeof _value == "number" ? _value : _default);
+}
+
+function isBooleanOr(_value, _default){
+	return (typeof _value == "boolean" ? _value : _default);
+}
+
+function isStringOr(_value, _default){
+	return (typeof _value == "string" ? _value : _default);
+}
+
+// variables
 var sceneView, propertyView, objectListView;
 
 function InitAllViews(){
@@ -14,8 +28,7 @@ function InitAllViews(){
 }
 
 function InitSceneView(){
-	sceneView = new AliceEditor.SceneView();
-    sceneView.InitView(document.getElementById('scene-view'));
+    sceneView = AliceEditor.SceneView.NewView('scene-view');
 }
 
 function InitPropertyView(){
@@ -26,11 +39,6 @@ function InitPropertyView(){
 function InitObjectListView(){
 	objectListView = new AliceEditor.ObjectListView();
 	objectListView.InitView();
-}
-
-function LoadAsset(){ // test
-	if (sceneView == null) return;
-	sceneView.TestAddObject();
 }
 
 function NewFile(){

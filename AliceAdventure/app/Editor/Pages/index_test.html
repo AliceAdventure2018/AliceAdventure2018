@@ -13,7 +13,12 @@
     <button onclick='CloseFile()'>Close</button>
     <div id="scene-view">
       <h3>Scene view</h3>
-      <button onclick="LoadAsset()">Load Asset</button>
+      <div v-if='projectLoaded'>
+        <button v-if='projectLoaded' v-on:click="LoadAsset('cat')">Cat</button>
+        <button v-if='projectLoaded' v-on:click="LoadAsset('room_basic')">Room</button>
+        <button v-if='projectLoaded' v-on:click="LoadAsset('door')">Door</button>
+        <button  v-if='projectLoaded' v-on:click="LoadAsset('key')">Key</button>
+      </div>
     </div>
     <div id="property-view">
       <h3>Property view</h3>
@@ -41,6 +46,10 @@
         <tr>
           <td>active</td>
           <td><input type="checkbox" v-model='bindObj.sprite.visible'/></td>
+        </tr>
+        <tr>
+          <td>interactive</td>
+          <td><input type="checkbox" v-model='bindObj.interactive'/></td>
         </tr>
         <tr v-for='property in bindObj.properties'>
           <td>{{ property[0] }}</td>
