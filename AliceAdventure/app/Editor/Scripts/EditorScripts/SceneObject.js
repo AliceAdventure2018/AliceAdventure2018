@@ -30,24 +30,21 @@ SceneObject = function(_id = null, _name = "untitled", _bindScene = null){
 };
 
 // static properties
-SceneObject.AddObject = function(_objIndex, _bindScene, _x, _y){
+SceneObject.AddObject = function(_objInfo, _bindScene, _x, _y){
 	// test TODO: should read from objIndex // currently _objIndex is the file name
-	let _path = SceneObject.RootDir + "Assets/" + _objIndex + ".png";
-	let _obj = new SceneObject(null, _objIndex, _bindScene);
+	let _path = _objInfo.src;
+	let _obj = new SceneObject(null, _objInfo.name, _bindScene);
 	_obj.InitSprite(_path, {x: _x, y: _y});
 
 	return _obj;
 };
 
 SceneObject.LoadObject = function(_data){
-	console.log(_data);
 	let _o = new SceneObject(_data.id, _data.name, _data.bindScene);
 	_o.interactive = _data.interactive;
 	_o.properties = _data.properties;
-	_o.InitSprite(SceneObject.RootDir + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
+	_o.InitSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
 }
-
-SceneObject.RootDir = '../../';
 
 SceneObject.Selection = { 
 	objects: [], // Reference

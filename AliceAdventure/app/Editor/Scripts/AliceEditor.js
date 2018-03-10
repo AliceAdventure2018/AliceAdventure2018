@@ -6,6 +6,7 @@ const Event = require('./EditorScripts/Event');
 const SceneObject = require('./EditorScripts/SceneObject');
 const Scene = require('./EditorScripts/Scene');
 const View = require('./EditorScripts/View');
+const GalleryView = require('./EditorScripts/GalleryView');
 const SceneView = require('./EditorScripts/SceneView');
 const PropertyView = require('./EditorScripts/PropertyView');
 const ObjectListView = require('./EditorScripts/ObjectListView');
@@ -21,6 +22,7 @@ AliceEditor = (function(){
 		get SceneObject() {return SceneObject;},
 		get Scene() {return Scene;},
 		get View() {return View;},
+		get GalleryView() {return GalleryView;}, 
 		get SceneView (){return SceneView;},
 		get PropertyView() {return PropertyView;},
 		get ObjectListView() {return ObjectListView;}, 

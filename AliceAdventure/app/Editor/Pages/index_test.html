@@ -14,10 +14,6 @@
     <div id="scene-view">
       <h3>Scene view</h3>
       <div v-if='projectLoaded'>
-        <button v-if='projectLoaded' v-on:click="LoadAsset('cat')">Cat</button>
-        <button v-if='projectLoaded' v-on:click="LoadAsset('room_basic')">Room</button>
-        <button v-if='projectLoaded' v-on:click="LoadAsset('door')">Door</button>
-        <button  v-if='projectLoaded' v-on:click="LoadAsset('key')">Key</button>
       </div>
     </div>
     <div id="property-view">
@@ -73,6 +69,13 @@
       </div>
       <div v-else>
         <p> Object list not shown </p>
+      </div>
+    </div>
+    <div id="gallery-view">
+      <h3>Gallery view</h3>
+      <div v-for="obj in objects" v-on:click="chooseObj(obj)" style="display: inline">
+        <img v-bind:src="obj.src" height="50px" width="50px" />
+        <span> {{ obj.name }} </span>
       </div>
     </div>
   </body>

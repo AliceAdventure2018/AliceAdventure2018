@@ -38,8 +38,6 @@ PropertyView.prototype.InitView = function(){
 	// events
 	Event.AddListener("reload-project", ()=>{this.ReloadView();});
 	Event.AddListener("update-selected-object", ()=>{this.UpdateSelectedObject();});
-	
-	console.log("Init PropertyView finished");
 };
 
 PropertyView.prototype.ReloadView = function(){

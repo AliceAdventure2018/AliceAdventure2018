@@ -18,13 +18,14 @@ function isStringOr(_value, _default){
 }
 
 // variables
-var sceneView, propertyView, objectListView;
+var sceneView, propertyView, objectListView, galleryView;
 
 function InitAllViews(){
 	//AliceEditor.File.New('testFile');
 	InitSceneView();
 	InitPropertyView();
 	InitObjectListView();
+	InitGalleryView();
 }
 
 function InitSceneView(){
@@ -39,6 +40,10 @@ function InitPropertyView(){
 function InitObjectListView(){
 	objectListView = new AliceEditor.ObjectListView();
 	objectListView.InitView();
+}
+
+function InitGalleryView(){
+	galleryView = AliceEditor.GalleryView.NewView('gallery-view');
 }
 
 function NewFile(){

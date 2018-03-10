@@ -10,8 +10,8 @@ const SceneObject = require('./SceneObject');
 var SceneView;
 
 // variables
-SceneView = function(_height = -1, _width = -1){
-	View.call(this, "SceneView", _height, _width);
+SceneView = function(_bindElementID, _height = -1, _width = -1){
+	View.call(this, "SceneView", _height, _width, _bindElementID);
 
 	this.app = null;
 	this.vModel = null;
@@ -20,15 +20,14 @@ SceneView.prototype = new View();
 
 // static
 SceneView.NewView = function(_elementID){
-	var view = new SceneView();
-	view.InitView(_elementID);
+	var view = new SceneView(_elementID);
+	view.InitView();
 	return view;
 }
 
 // functions
-SceneView.prototype.InitView = function(_elementID){
+SceneView.prototype.InitView = function(){
 	View.prototype.InitView.apply(this); // call super method
-	this.bindElementID = _elementID;
 	// Init data binding
 	this.vModel = new Vue({
 		el: '#scene-view',
@@ -37,9 +36,6 @@ SceneView.prototype.InitView = function(_elementID){
 			assetName: ''
 		}, 
 		methods: {
-			LoadAsset: (_name)=>{
-				this.TestAddObject(_name);
-			}
 		}
 	});
 	// Init app
@@ -53,7 +49,8 @@ SceneView.prototype.InitView = function(_elementID){
 
 
 	// events
-	Event.AddListener('reload-project', ()=>{this.ReloadView();})
+	Event.AddListener('reload-project', ()=>{this.ReloadView();});
+	Event.AddListener('add-gallery-object', (_obj)=>{this.TestAddObject(_obj);});
 };
 
 SceneView.prototype.ReloadView = function(){
@@ -69,8 +66,8 @@ SceneView.prototype.ReloadView = function(){
 	}
 }
 
-SceneView.prototype.TestAddObject = function(_name){ // test
-	var _obj = SceneObject.AddObject(_name, 1, this.app.screen.width / 2, this.app.screen.height / 2);
+SceneView.prototype.TestAddObject = function(_objInfo){ // test
+	var _obj = SceneObject.AddObject(_objInfo, 1, this.app.screen.width / 2, this.app.screen.height / 2);
 	_obj.SelectOn();
 	this.app.stage.addChild(_obj.sprite);
 };
