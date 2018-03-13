@@ -1,8 +1,8 @@
 'use strict';
-const path = require('path');
-const electron = require('electron').remote;
-const prompt = require('electron-prompt');
-const fs = require('fs-extra');
+const PATH = require('path');
+const ELECTRON = require('electron').remote;
+const PROMPT = require('electron-prompt');
+const FS = require('fs-extra');
 const Debug = require('./Debug');
 const ID = require('./ID');
 const GameProperties = require('./GameProperties');
@@ -42,7 +42,7 @@ File.NewProject = function(_template = null){ // TODO: load from template
 	if (File.instance != null){ // have opened proj
 		File.CloseProject();
 	}
-	prompt({
+	PROMPT({
 		title: "New project", 
 		label: "Input new project name: ", 
 		value: "untitled-project", 
@@ -61,7 +61,7 @@ File.SaveProject = function(){
 	}
 	if (File.instance.path == null){ // No path saved
 		// Open file selector
-		electron.dialog.showSaveDialog({
+		ELECTRON.dialog.showSaveDialog({
 			title: 'Select folder',  
 			defaultPath: File.instance.gameProperties.settings.projectName, 
 			buttonLabel: 'Select', 
@@ -80,7 +80,7 @@ File.SaveAsNewProject = function(){
 		return;
 	}
 	// open file selecter
-	electron.dialog.showSaveDialog({
+	ELECTRON.dialog.showSaveDialog({
 			title: 'Select folder',  
 			defaultPath: File.instance.gameProperties.settings.projectName, 
 			buttonLabel: 'Select', 
@@ -98,7 +98,7 @@ File.OpenProject = function(){
 	}
 
 	// Open file selector
-	electron.dialog.showOpenDialog({
+	ELECTRON.dialog.showOpenDialog({
 		title: 'Select project',  
 		defaultPath: '', 
 		buttonLabel: 'Select', 
@@ -149,10 +149,9 @@ File.SaveToPath = function(_path){
 			scale: {x: Number(_o.sprite.scale.x), y: Number(_o.sprite.scale.y)}, 
 			active: _o.sprite.visible, 
 			interactive: _o.interactive, 
-			bindScene: _o.bindScene, 
+			bindScene: _o.bindScene.id, 
 			properties: _o.properties, 
 		};
-		console.log(_d);
 		File.tempDataObj.objectList.push(_d);
 	}
 
@@ -163,17 +162,17 @@ File.SaveToPath = function(_path){
 	File.tempDataObj.projectData.idCounter = ID._counter;
 
 	// Write JSON file
-	fs.writeJsonSync(File.instance.path, File.tempDataObj, {spaces:'\t', EOL:'\n'});
+	FS.writeJsonSync(File.instance.path, File.tempDataObj, {spaces:'\t', EOL:'\n'});
 
 	// Ensure has Assets folder
-	fs.ensureDir(path.dirname(File.instance.path) + '/Assets/');
+	FS.ensureDir(PATH.dirname(File.instance.path) + '/Assets/');
 }
 
 File.OpenFromPath = function(_path){
 
 	// Load JSON file
 	new File(_path, new GameProperties());
-	let data = fs.readJsonSync(_path); 
+	let data = FS.readJsonSync(_path); 
 
 	if (data == null){
 		Debug.LogError("File doesn't exist");
@@ -183,8 +182,7 @@ File.OpenFromPath = function(_path){
 	// SceneList
 	for (let i in data.sceneList){
 		let _d = data.sceneList[i];
-		let _s = new Scene(_d.id, _d.name);
-		// TODO
+		Scene.LoadScene(_d);
 	}
 
 	// ObjectList

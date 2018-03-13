@@ -19,17 +19,17 @@ GalleryView.prototype = new View();
 GalleryView.GalleryObjects = [
 	{
 		index: 0, 
-		src: "../../Assets/room_basic.png", 
+		src: "Assets/room_basic.png", 
 		name: "Room"
 	}, 
 	{
 		index: 1,
-		src: "../../Assets/door.png", 
+		src: "Assets/door.png", 
 		name: "Door"
 	}, 
 	{
 		index: 2, 
-		src: "../../Assets/key.png", 
+		src: "Assets/key.png", 
 		name: "Key"
 	}
 ];
@@ -50,10 +50,7 @@ GalleryView.prototype.InitView = function(){
 	  	objects: GalleryView.GalleryObjects
 	  }, 
 	  methods: {
-	  	chooseObj: (_obj)=>{
-	  		this.objSelected = _obj;
-	  		Event.Broadcast('add-gallery-object', this.objSelected);
-	  	}
+	  	chooseObj: (_obj)=>{ this.ChooseObj(_obj); }
 	  }
 	});
 
@@ -64,5 +61,10 @@ GalleryView.prototype.InitView = function(){
 GalleryView.prototype.ReloadView = function(){
 	View.prototype.ReloadView.apply(this); // call super method
 };
+
+GalleryView.prototype.ChooseObj = function(_obj){
+	this.objSelected = _obj;
+	Event.Broadcast('add-gallery-object', this.objSelected);
+}
 
 module.exports = GalleryView;

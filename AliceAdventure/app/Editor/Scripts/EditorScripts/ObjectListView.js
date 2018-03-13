@@ -28,8 +28,8 @@ ObjectListView.prototype.InitView = function(){
 	    selectedObjects: null
 	  }, 
 	  methods: {
-	  	onSelect: function(_obj){
-	  		_obj.SelectOn();
+	  	onSelect: function(_thing){
+	  		_thing.SelectOn(); // work both for obj and scene
 	  	}
 	  }
 	});

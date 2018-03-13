@@ -14,6 +14,7 @@
     <div id="scene-view">
       <h3>Scene view</h3>
       <div v-if='projectLoaded'>
+      <button v-on:click="addScene">Add Scene</button>
       </div>
     </div>
     <div id="property-view">
@@ -60,11 +61,13 @@
     </div>
     <div id="object-list-view">
       <h3>List view</h3>
-      <div v-if="showObjectList">        
-        <div v-on:click="onSelect(object)" v-for="object in objectList">
-          {{ object.name }} 
-        <!--span v-show="object.IsSelected()"> &nbsp;<< </span-->
-        <!-- TODO: change UI if object is selected -->
+      <div v-if="showObjectList">
+        <div v-on:click="onSelect(scene)" v-for="scene in sceneList"> {{ scene.name }}
+          <div v-on:click="onSelect(object)" v-for="object in objectList" v-if="object.bindScene.id == scene.id">
+          &nbsp; &nbsp; {{ object.name }} 
+          <!--span v-show="object.IsSelected()"> &nbsp;<< </span-->
+          <!-- TODO: change UI if object is selected -->
+          </div>
         </div>
       </div>
       <div v-else>
@@ -74,7 +77,7 @@
     <div id="gallery-view">
       <h3>Gallery view</h3>
       <div v-for="obj in objects" v-on:click="chooseObj(obj)" style="display: inline">
-        <img v-bind:src="obj.src" height="50px" width="50px" />
+        <img v-bind:src="'../../'+obj.src" height="50px" width="50px" />
         <span> {{ obj.name }} </span>
       </div>
     </div>

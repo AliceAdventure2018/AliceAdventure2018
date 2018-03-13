@@ -11,8 +11,9 @@ const Event = require('./Event');
 var SceneObject;
 
 // variables
-SceneObject = function(_id = null, _name = "untitled", _bindScene = null){
-	if (_id == null) this.id = ID.newID; // NEVER MODIFY THIS
+SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = null){
+	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
+	this.id = _id;
 	this.name = _name;
 	this.bindScene = _bindScene;
 
@@ -22,7 +23,7 @@ SceneObject = function(_id = null, _name = "untitled", _bindScene = null){
 	this.drag = { on: false, eventData: {} };
 
 	this.properties = [];
-	this.src = "Assets/" + _name + ".png"; // TEST
+	this.src = _src;
 	this.sprite = null;
 	this.interactive = true;
 
@@ -33,14 +34,14 @@ SceneObject = function(_id = null, _name = "untitled", _bindScene = null){
 SceneObject.AddObject = function(_objInfo, _bindScene, _x, _y){
 	// test TODO: should read from objIndex // currently _objIndex is the file name
 	let _path = _objInfo.src;
-	let _obj = new SceneObject(null, _objInfo.name, _bindScene);
-	_obj.InitSprite(_path, {x: _x, y: _y});
+	let _obj = new SceneObject(null, _objInfo.name, _path, _bindScene);
+	_obj.InitSprite('../../' + _path, {x: _x, y: _y});
 
 	return _obj;
 };
 
-SceneObject.LoadObject = function(_data){
-	let _o = new SceneObject(_data.id, _data.name, _data.bindScene);
+SceneObject.LoadObject = function(_data){ // I AM HERE
+	let _o = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene));
 	_o.interactive = _data.interactive;
 	_o.properties = _data.properties;
 	_o.InitSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);

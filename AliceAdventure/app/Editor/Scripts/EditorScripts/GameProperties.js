@@ -19,6 +19,24 @@ GameProperties = function(){
 GameProperties.instance = null;
 
 // static functions
+GameProperties.GetSceneById = function(_id){
+	if (GameProperties.instance == null) return null;
+	for (let i in GameProperties.instance.sceneList){
+		if (GameProperties.instance.sceneList[i].id == _id){
+			return GameProperties.instance.sceneList[i];
+		}
+	}
+	return null;
+}
+GameProperties.GetObjectById = function(_id){
+	if (GameProperties.instance == null) return null;
+	for (let i in GameProperties.instance.objectList){
+		if (GameProperties.instance.objectList[i].id == _id){
+			return GameProperties.instance.objectList[i];
+		}
+	}
+	return null;
+}
 GameProperties.AddScene = function(_scene){
 	if (GameProperties.instance == null) return false;
 	GameProperties.instance.sceneList.push(_scene);

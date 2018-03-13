@@ -1,8 +1,10 @@
 'use strict';
 
 const PIXI = require('../../../Resources/pixi');
+const PROMPT = require('electron-prompt');
 const GameProperties = require('./GameProperties');
 const Event = require('./Event');
+const Scene = require('./Scene');
 const View = require('./View');
 const SceneObject = require('./SceneObject');
 
@@ -23,7 +25,7 @@ SceneView.NewView = function(_elementID){
 	var view = new SceneView(_elementID);
 	view.InitView();
 	return view;
-}
+};
 
 // functions
 SceneView.prototype.InitView = function(){
@@ -32,10 +34,10 @@ SceneView.prototype.InitView = function(){
 	this.vModel = new Vue({
 		el: '#scene-view',
 		data: {
-			projectLoaded: false,
-			assetName: ''
+			projectLoaded: false
 		}, 
 		methods: {
+			addScene: ()=>{this.AddScene();}
 		}
 	});
 	// Init app
@@ -50,7 +52,7 @@ SceneView.prototype.InitView = function(){
 
 	// events
 	Event.AddListener('reload-project', ()=>{this.ReloadView();});
-	Event.AddListener('add-gallery-object', (_obj)=>{this.TestAddObject(_obj);});
+	Event.AddListener('add-gallery-object', (_obj)=>{this.AddObject(_obj);});
 };
 
 SceneView.prototype.ReloadView = function(){
@@ -60,16 +62,37 @@ SceneView.prototype.ReloadView = function(){
 		this.vModel.projectLoaded = false;
 	} else { // load current project
 		this.vModel.projectLoaded = true;
+		for (let i in GameProperties.instance.sceneList){
+			this.app.stage.addChild(GameProperties.instance.sceneList[i].container);
+		}
 		for (let i in GameProperties.instance.objectList){
-			this.app.stage.addChild(GameProperties.instance.objectList[i].sprite);
+			GameProperties.instance.objectList[i].bindScene.container.addChild(GameProperties.instance.objectList[i].sprite);
 		}
 	}
-}
+};
 
-SceneView.prototype.TestAddObject = function(_objInfo){ // test
-	var _obj = SceneObject.AddObject(_objInfo, 1, this.app.screen.width / 2, this.app.screen.height / 2);
+SceneView.prototype.AddObject = function(_objInfo){ // test
+	if (Scene.Selection.scene == null) return;
+	var _bindScene = Scene.Selection.scene;
+	var _obj = SceneObject.AddObject(_objInfo, _bindScene, this.app.screen.width / 2, this.app.screen.height / 2);
 	_obj.SelectOn();
-	this.app.stage.addChild(_obj.sprite);
+	//this.app.stage.addChild(_obj.sprite);
+	_bindScene.container.addChild(_obj.sprite);
+};
+
+SceneView.prototype.AddScene = function(){
+	var _scene;
+	PROMPT({
+		title: "New scene", 
+		label: "Input scene name: ", 
+		value: "new-scene"
+	}).then((_name)=>{
+		if (_name != null) {
+			_scene = Scene.AddScene(_name);
+			_scene.SelectOn();
+			this.app.stage.addChild(_scene.container);
+		}
+	});
 };
 
 module.exports = SceneView;
