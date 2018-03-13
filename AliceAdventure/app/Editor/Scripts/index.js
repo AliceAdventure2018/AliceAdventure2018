@@ -1,19 +1,35 @@
 'use strict';
 
-const AliceEngine = require('../../Engine/AliceEngine');
+const electron = require('electron').remote;
+//const AliceEngine = require('../../Engine/AliceEngine');
 const AliceEditor = require('../Scripts/AliceEditor');
 
-var sceneView, propertyView, objectListView;
+// utilities
+function isNumberOr(_value, _default){
+	return (typeof _value == "number" ? _value : _default);
+}
+
+function isBooleanOr(_value, _default){
+	return (typeof _value == "boolean" ? _value : _default);
+}
+
+function isStringOr(_value, _default){
+	return (typeof _value == "string" ? _value : _default);
+}
+
+// variables
+var sceneView, propertyView, objectListView, galleryView;
 
 function InitAllViews(){
+	//AliceEditor.File.New('testFile');
 	InitSceneView();
 	InitPropertyView();
 	InitObjectListView();
+	InitGalleryView();
 }
 
 function InitSceneView(){
-	sceneView = new AliceEditor.SceneView();
-    sceneView.InitView(document.getElementById('scene-view'));
+    sceneView = AliceEditor.SceneView.NewView('scene-view');
 }
 
 function InitPropertyView(){
@@ -26,7 +42,22 @@ function InitObjectListView(){
 	objectListView.InitView();
 }
 
-function LoadAsset(){ // test
-	if (sceneView == null) return;
-	sceneView.TestAddObject();
+function InitGalleryView(){
+	galleryView = AliceEditor.GalleryView.NewView('gallery-view');
+}
+
+function NewFile(){
+	AliceEditor.File.NewProject();
+}
+
+function SaveFile(){
+	AliceEditor.File.SaveProject();
+}
+
+function LoadFile(){
+	AliceEditor.File.OpenProject();
+}
+
+function CloseFile(){
+	AliceEditor.File.CloseProject();
 }

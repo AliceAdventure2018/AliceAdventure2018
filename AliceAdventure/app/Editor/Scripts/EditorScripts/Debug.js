@@ -17,8 +17,8 @@ Debug.LogError = function(something){
 	// TODO: Reserved for later output functionality
 }
 
-Debug.LogWarnning = function(something){
-	console.log("WARNNING: " + something);
+Debug.LogWarning = function(something){
+	console.log("WARNING: " + something);
 	// TODO: Reserved for later output functionality
 }
 
