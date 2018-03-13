@@ -95,8 +95,21 @@ SceneObject.prototype.DeleteThis = function(){
 	GameProperties.DeleteObject(this);
 };
 
-SceneObject.prototype.AddUserProperty = function(_name, _value){
-	this.properties.push([_name, _value]);
+SceneObject.prototype.AddUserProperty = function(_key, _type, _value){
+	this.properties.push({
+		key: _key,
+		type: _type, 
+		value: _value
+	});
+};
+
+SceneObject.prototype.GetUserProperty = function(_name){
+	for (var i in this.properties){
+		if (this.properties[i].name == _name){
+			return this.properties[i].value;
+		}
+	}
+	return undefined;
 };
 
 SceneObject.prototype.EditDefinedProperty = function(_name, _value){
@@ -120,22 +133,12 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 		Debug.LogError("Invalid property name: " + _name + "for object " + this.name);
 		return;
 	}
-
-	this.properties[_name] = _value;
-	// TODO
-};
-
-SceneObject.prototype.AddUserProperty = function(_name, _value){
-	this.properties.push([_name, _value]);
-};
-
-SceneObject.prototype.GetUserProperty = function(_name){
-	for (var i in this.properties){
-		if (this.properties[i][0] == _name){
-			return this.properties[i][1];
-		}
+	if (this.properties[_name].type != typeof _value) {
+		Debug.LogError("Invalid type of value: " + _value + "for object " + this.name);
+		return;
 	}
-	return undefined;
+
+	this.properties[_name].value = _value;
 };
 
 SceneObject.prototype.SelectOff = function(){

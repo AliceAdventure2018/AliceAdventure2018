@@ -25,13 +25,13 @@ PropertyView.prototype.InitView = function(){
 	  el: '#property-view',
 	  data: {
 	  	showProperty: false,
-	  	propertyName: "",
-	    bindObj: this.bindObject
+	  	propertyKey: "",
+	  	propertyType: "",
+	  	propertyValue: "", 
+	    bindObj: this.bindObject 
 	  }, 
 	  methods:{
-	  	addProperty: function(){
-	  		this.$data.bindObj.AddUserProperty(this.$data.propertyName);
-	  	}
+	  	addProperty: ()=>{ this.bindObject.AddUserProperty(this.vModel.propertyKey, this.vModel.propertyType, this.vModel.propertyValue); }
 	  }
 	});
 
