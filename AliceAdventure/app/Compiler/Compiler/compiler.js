@@ -2,9 +2,9 @@
 const FileSys = require('./fileSys.js');
 const Parser = require('./simpleParser.js');
 
-function compile(){
+function compile(path){
 	FileSys.ensureAndCreate();
-	var string = Parser.readObjects();
+	var string = Parser('example.json').readObjects();
 	
 	console.log(string);
 

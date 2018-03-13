@@ -12,19 +12,29 @@
 				   	"id" : "0",
 				   	"name":"key",
 					"src": "'assets/key.png'",
-					"anchor" : "0.5",
-					"scale" : "1",
+					"anchor" : {
+						"x": "0.5", 
+						"y": "0.5"
+					},
+					"scale" : {
+						"x": "1", 
+						"y": "2"
+					},
 					"interactive" : "true",
 					"buttonMode" : "true",
-					"pos":["myGame.app.screen.width / 3","myGame.app.screen.height / 3"],
-					"sceneParent": "scene1",			
+					"pos":{ "x" : "myGame.app.screen.width / 3",
+							"y" : "myGame.app.screen.height / 3"},
+							
+					"bindScene": "scene1",
+					"active" : "true",			
 					
-					"target" : "door",
+					"properties":[
+									{"key" : "target",
+									 "value" : "door"}
 
-					"funct" :[
-						[ "use", ["x"],"this.target.interact();this.visible = false;console.log('done');"],
-					 	[ "onClick", [], "myGame.inventory.add(this);"]			
-							]
+									],
+
+					"funct" : ""
 					}
 				],
 
@@ -32,6 +42,7 @@
 	{
 		"resWidth" : "1280",
 		"resHeight" : "720",
-		"inventoryGridNum" : "5"
+		"inventoryGridNum" : "5",
+		"projectName" : "myGame"
 	}
 }
