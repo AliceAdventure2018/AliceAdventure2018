@@ -1,53 +1,225 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Alice Adventure</title>
-    <script type="text/javascript" src="../../Resources/vue.js"></script>
-    <script type="text/javascript" src="../scripts/index.js"></script>
-  </head>
-  <body onload="InitAllViews()">
-    <div id="scene-view">
-      <h3>Scene view</h3>
-      <button onclick="LoadAsset()">Load Asset</button>
-    </div>
-    <div id="property-view">
-      <h3>Property view</h3>
-      <table v-if='showProperty'>
-        <tr>
-          <td>name</td>
-          <td><input v-model='bindObj.name'/></td>
-        </tr>
-        <tr>
-          <td>x</td>
-          <td><input v-model='bindObj.sprite.x'/></td>
-        </tr>
-        <tr>
-          <td>y</td>
-          <td><input v-model='bindObj.sprite.y'/></td>
-        </tr>
-        <tr>
-          <td>active</td>
-          <td><input type="checkbox" v-model='bindObj.sprite.visible'/></td>
-        </tr>
-        <tr v-for='property in bindObj.properties'>
-          <td>{{ property[0] }}</td>
-          <td><input v-model='property[1]'/></td>
-        </tr>
-        <tr>
-          <td><input v-model='propertyName'/></td>
-          <td><button v-on:click="addProperty()">Add property</button></td>
-        </tr>
-      </table>
-      <p v-else>Please select an object</p>
-    </div>
-    <div id="object-list-view">
-      <h3>List view</h3>
-      <div v-on:click="onSelect(object)" v-for="object in objectList">
-      {{ object.name }} 
-      <!--span v-show="object.IsSelected()"> &nbsp;<< </span-->
-      <!-- TODO: change UI if object is selected -->
-      </div>
-    </div>
-  </body>
+<html lang="en">
+<head>
+	<title> Alice's Adventure </title>
+
+  <script type="text/javascript" src="../Scripts/index.js"></script>
+
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="../css/layout.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../Resources/bootstrap.min.css">
+
+	
+
+</head>
+<body>
+	
+		<nav class="navbar  navbar-dark" id="top-navbar">
+				
+		    		<div class="navbar-nav">
+		    			<div class="container-fluid" id="design-code-mode">
+			      			<div class="row">
+		    				<a class="navbar-brand" id="brand" href="#">
+					    	<img src="../src/AliceAdventure_logo.svg" width="30" height="30" alt="">&nbsp; Alice's Adventure
+					  		</a>
+			      		
+			      				<div class="col">
+					      		<button  onclick="switchDesignView()" class="nav-item nav-link" id="design-button" >Design </button>
+					      		</div>
+
+					      		<div class="col">
+					      		<button  onclick="switchCodeView()" class="nav-item nav-link"  id ="code-button" >Code</button>
+					      		</div>
+			      			</div>
+			      		</div>
+		    		</div>
+				
+  		</nav>
+
+  		<script>
+			function switchDesignView() {
+			    var x = document.getElementById("design-view");
+			    var y = document.getElementById("code-view");
+
+			    if (x.style.display === "none" || y.style.display ==="block") {
+			        x.style.display = "block";
+			        y.style.display = "none";
+			    } else {
+			      
+			    }
+			}
+
+			function switchCodeView() {
+			    var y = document.getElementById("design-view");
+			    var x = document.getElementById("code-view");
+
+			    if (x.style.display === "none" || y.style.display ==="block") {
+			        x.style.display = "block";
+			        y.style.display = "none";
+			    } else {
+			      
+			    }
+			}
+		</script>
+
+
+  			<div id="design-view" style="display: block;">
+				<!-- windows in design mode -->
+				<div class="container-fluid" >
+					<div class="row">
+					<div class="col-2" id="gallery">
+					<h6 class="window-title">GALLERY</h6>
+					<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+						<li class="nav-item"><a class="nav-link" id="door-tab"  data-toggle="tab" href="#door-asset" role="tab" aria-expanded="false" aria-controls="door-asset" aria-selected="false">Door</a></li>
+						<li class="nav-item"><a class="nav-link" id="key-tab" data-toggle="tab" href="#key-asset" role="tab" aria-expanded="true" aria-controls="key-asset" aria-selected="false">Key</a></li>
+						<li class="nav-item"><a class="nav-link" id="container-tab"  data-toggle="tab" href="#container-asset" role="tab" aria-expanded="false" aria-controls="container-asset" aria-selected="false">Container</a></li>
+						<li class="nav-item"><a class="nav-link" id="actor-tab" data-toggle="tab" href="#actor-asset" role="tab" aria-expanded="true" aria-controls="actor-asset" aria-selected="false">Actor</a></li>
+						
+					</ul>
+						<div class="tab-content" id="v-pills-tabContent">
+							<div class="tab-pane fade active" id="door-asset" role="tabpanel" aria-labelledby="door-tab">
+							  <div class="assets">
+							    <p>Door. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi q</p>
+							  </div>
+							</div>
+
+							<div class="tab-pane fade" id="key-asset" role="tabpanel" aria-labelledby="key-tab">
+							  <div class="assets">
+							    <p>Key. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi q</p>
+							  </div>
+							</div>
+
+							<div class="tab-pane fade" id="container-asset" role="tabpanel" aria-labelledby="container-tab">
+							  <div class="assets">
+							    <p>Container. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi q</p>
+							  </div>
+							</div>
+
+							<div class="tab-pane fade" id="actor-asset" role="tabpanel" aria-labelledby="actor-tab">
+							  <div class="assets">
+							    <p>Actor. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi q</p>
+							  </div>
+							</div>
+						</div>
+						
+					</div>	
+								
+					
+					<div class="col" id="scene-view">
+					</div>
+
+					<!-- windows in common -->
+					<div class="col-2" id="side-common">
+						<h6 class="window-title">THINGS IN THE SCENE</h6>				
+						<div class="row" id="things-list">
+							
+						</div>
+
+						<h6 class="window-title">GAME ATTRIBUTES</h6>
+						<div class="row" id="game-attribute">
+							
+						</div>
+						<h6 class="window-title">PROPERTIES</h6>
+						<div class="row" id="properties">
+							
+						</div>
+					</div>
+					<!-- windows in common end-->
+
+					</div>
+				</div>
+			</div>
+
+
+			<div id="code-view" style="display: none;">
+  				
+  				<div class="container-fluid">
+  					<div class="row">
+						<div class="col-2" id="code-library">
+							<h6 class="window-title">CODE LIBRARY</h6>
+							<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+						<li class="nav-item"><a class="nav-link" id="door-block"  data-toggle="tab" href="#door-code" role="tab" aria-expanded="false" aria-controls="door-code" aria-selected="false">Door</a></li>
+						<li class="nav-item"><a class="nav-link" id="key-block" data-toggle="tab" href="#key-code" role="tab" aria-expanded="true" aria-controls="key-code" aria-selected="false">Key</a></li>
+						<li class="nav-item"><a class="nav-link" id="container-block"  data-toggle="tab" href="#container-code" role="tab" aria-expanded="false" aria-controls="container-code" aria-selected="false">Container</a></li>
+						<li class="nav-item"><a class="nav-link" id="actor-block" data-toggle="tab" href="#actor-code" role="tab" aria-expanded="true" aria-controls="actor-code" aria-selected="false">Actor</a></li>
+						
+					</ul>
+						<div class="tab-content" id="v-pills-tabContent">
+							<div class="tab-pane fade active" id="door-code" role="tabpanel" aria-labelledby="door-block">
+							  <div class="assets">
+							    <p>Door code block here</p>
+							  </div>
+							</div>
+
+							<div class="tab-pane fade" id="key-code" role="tabpanel" aria-labelledby="key-block">
+							  <div class="assets">
+							    <p>Key code block here</p>
+							  </div>
+							</div>
+
+							<div class="tab-pane fade" id="container-code" role="tabpanel" aria-labelledby="container-block">
+							  <div class="assets">
+							    <p>Container code block here</p>
+							  </div>
+							</div>
+
+							<div class="tab-pane fade" id="actor-code" role="tabpanel" aria-labelledby="actor-block">
+							  <div class="assets">
+							    <p>Actor code block here</p>
+							  </div>
+							</div>
+						</div>
+
+
+						</div>
+						<div class="col">
+
+							<div class="row" id="code-editor">
+							</div>
+					
+							<div class="row" id="preview">
+							</div>
+						</div>
+
+						
+					<div class="col-2" id="side-common">
+						
+						<h6 class="window-title">THINGS IN THE SCENE</h6>			
+						<div class="row" id="things-list">
+							
+						</div>
+						<h6 class="window-title">GAME ATTRIBUTES</h6>
+						<div class="row" id="game-attribute">
+							
+						</div>
+
+						<h6 class="window-title">PROPERTIES</h6>
+						<div class="row" id="properties">
+							
+						</div>
+					</div>
+				
+					</div>
+			</div>
+			</div>
+
+
+		
+
+		
+
+
+	
+
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
+</body>
 </html>

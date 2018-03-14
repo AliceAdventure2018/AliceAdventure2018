@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Alice Adventure</title>
+    <script type="text/javascript" src="../../Resources/vue.js"></script>
+    <script type="text/javascript" src="../scripts/index.js"></script>
+  </head>
+  <body onload="InitAllViews()">
+    <button onclick='NewFile()'>New</button>
+    <button onclick='SaveFile()'>Save</button>
+    <button onclick='LoadFile()'>Load</button>
+    <button onclick='CloseFile()'>Close</button>
+    <div id="scene-view">
+      <h3>Scene view</h3>
+      <div v-if='projectLoaded'>
+      <button v-on:click="addScene">Add Scene</button>
+      </div>
+    </div>
+    <div id="property-view">
+      <h3>Property view</h3>
+      <table v-if='showProperty'>
+        <tr>
+          <td>name</td>
+          <td><input v-model='bindObj.name'/></td>
+        </tr>
+        <tr>
+          <td>x</td>
+          <td><input v-model.number='bindObj.sprite.x'/></td>
+        </tr>
+        <tr>
+          <td>y</td>
+          <td><input v-model.number='bindObj.sprite.y'/></td>
+        </tr>
+        <tr>
+          <td>scale x</td>
+          <td><input v-model.number='bindObj.sprite.scale.x'/></td>
+        </tr>
+        <tr>
+          <td>scale y</td>
+          <td><input v-model.number='bindObj.sprite.scale.y'/></td>
+        </tr>
+        <tr>
+          <td>active</td>
+          <td><input type="checkbox" v-model='bindObj.sprite.visible'/></td>
+        </tr>
+        <tr>
+          <td>interactive</td>
+          <td><input type="checkbox" v-model='bindObj.interactive'/></td>
+        </tr>
+        <tr v-for='property in bindObj.properties'>
+          <td>{{ property.key }}</td>
+          <td><input v-model='property.value'/></td>
+        </tr>
+        <tr>
+          <td><input v-model='propertyKey'/></td>
+          <td><select v-model='propertyType'>
+            <option>string</option>
+            <option>number</option>
+            <option>boolean</option>
+          </select></td>
+          <td><button v-on:click="addProperty()">Add property</button></td>
+        </tr>
+      </table>
+      <p v-else>Please select an object</p>
+    </div>
+    <div id="object-list-view">
+      <h3>List view</h3>
+      <div v-if="showObjectList">
+        <div v-on:click="onSelect(scene)" v-for="scene in sceneList"> {{ scene.name }}
+          <div v-on:click="onSelect(object)" v-for="object in objectList" v-if="object.bindScene.id == scene.id">
+          &nbsp; &nbsp; {{ object.name }} 
+          <!--span v-show="object.IsSelected()"> &nbsp;<< </span-->
+          <!-- TODO: change UI if object is selected -->
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <p> Object list not shown </p>
+      </div>
+    </div>
+    <div id="gallery-view">
+      <h3>Gallery view</h3>
+      <div v-for="obj in objects" v-on:click="chooseObj(obj)" style="display: inline">
+        <img v-bind:src="'../../'+obj.src" height="50px" width="50px" />
+        <span> {{ obj.name }} </span>
+      </div>
+    </div>
+  </body>
+</html>
