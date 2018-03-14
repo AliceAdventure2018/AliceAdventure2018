@@ -1,16 +1,23 @@
 /*global require*/
-//asychronous fs+JSON.parser version
+//sychronous fs+JSON.parser version
 
 'use strict';
 
-const BST = require('./binaryTree.js');
 const fs = require('fs-extra');
-const path = require('path');
+const FileSys = require('./fileSys.js');
 
 var Parser;
-Parser = function(jsonPath){this.path = jsonPath;}
+Parser = function (jsonPath, buildPath){
+	this.json = jsonPath;
+	this.build = buildPath;
 
-Parser.game = fs.readJsonSync(jsonPath);
+
+}
+
+Parser.game = fs.readJsonSync(this.json, {throws: false});
+console.log("......" + Parser.game);
+
+Parser.assetPath = FileSys.merge(this.build, 'Resources/Assets');
 Parser.sceneList = Parser.game.sceneList;
 Parser.objectList = Parser.game.objectList;
 Parser.settings = Parser.game.settings;
@@ -119,6 +126,7 @@ Parser.translateObj_mustHave=function(object, callback){
 		if (typeof (object.name) === "number"){
 			error = "Name of the object cannot be numbers. Must have letters.";
 			callback(error);
+			return false;
 		}else{
 
 			var name = Parser.getNameWithID(object.name, object.id);
@@ -126,18 +134,22 @@ Parser.translateObj_mustHave=function(object, callback){
 			//src
 			if (object.hasOwnProperty(src)){
 
-				if (fs.pathExistsSync(object.src) && object.src.filename.match(/\.(jpg|jpeg|png)$/))
+				if (fs.pathExistsSync(object.src) && object.src.filename && object.src.filename.match(/\.(jpg|jpeg|png)$/))
 				{
 					toReturn += Parser.createPIXIObject(name,object.src);
+					FileSys.copyFileOrFolder(object.src, FileSys.merge(Parser.assetPath, object.src.filename));
+
 
 				}else{
 					error = "File path does not exist or the file extention does not match jpg/jpeg/png.";
-					callback(error);					
+					callback(error);	
+					return false;				
 				}
 			}
 			else{
 				error = "Object does not have a sprite.";
 				callback(error);
+				return false;
 			}
 
 			//anchor
@@ -150,10 +162,12 @@ Parser.translateObj_mustHave=function(object, callback){
 				}else{
 					error = "x and y of anchor must be defined as numbers.";
 					callback(error);
+					return false;
 				}
 			}else{
 				error="Object has not set the anchor.";
 				callback(error);
+				return false;
 			}
 
 			//pos
@@ -166,10 +180,12 @@ Parser.translateObj_mustHave=function(object, callback){
 				}else{
 					error = "x and y of the position must be defined as numbers.";
 					callback(error);
+					return false;
 				}
 			}else{
-				error = "Object has not set the position".;
+				error = "Object has not set the position.";
 				callback(error);
+				return false;
 			}
 
 			//scale
@@ -182,10 +198,12 @@ Parser.translateObj_mustHave=function(object, callback){
 				}else{
 					error = "x and y of the scale must be defined as numbers.";
 					callback(error);
+					return false;
 				}
 			}else{
 				error = "Object has not set the scale.";
 				callback(error);
+				return false;
 			}
 
 			//interactive
@@ -197,10 +215,12 @@ Parser.translateObj_mustHave=function(object, callback){
 				}else{
 					error = "The interactive value of the object must be a boolean.";
 					callback(error);
+					return false;
 				}
 			}else{
 				error = "Object has not set the interativity.";
 				callback(error);
+				return false;
 			}
 
 			//buttonMode
@@ -211,11 +231,14 @@ Parser.translateObj_mustHave=function(object, callback){
 				}else{
 					error = "The buttonMode value of the object must be a boolean.";
 					callback(error);
+					return false;
 				}
 			}else{
 				error = "object has not set the button mode.";
 				callback(error);
+				return false;
 			}
+
 
 			//active
 			if(object.hasOwnProperty(active)){
@@ -224,10 +247,12 @@ Parser.translateObj_mustHave=function(object, callback){
 				}else{
 					error = "The active value of the object must be a boolean.";
 					callback(error);
+					return false;
 				}
 			}else{
 				error = "object has not set the active value.";
 				callback(error);
+				return false;
 			}
 
 			//bindscene
@@ -236,6 +261,7 @@ Parser.translateObj_mustHave=function(object, callback){
 			}else{
 				error = "Object must be added to a scene.";
 				callback(error);
+				return false;
 			}
 
 
@@ -243,12 +269,15 @@ Parser.translateObj_mustHave=function(object, callback){
 	}else{
 		error = "Object must have a name !!"
 		callback(error);
+		return false;
 	}
+
+	return toReturn;
 }
 
 
 //iterate through the objectList
-Parser.readObjects = function(){
+Parser.readObjects = function(callback){
 
 	var toReturn = '\n';
 	var arrayLength = Parser.objectList.length;
@@ -257,11 +286,9 @@ Parser.readObjects = function(){
 		
 		var obj = Parser.objectList[i];
 
-		for (var p in obj){
-			if (obj.hasOwnProperty(p)){
-				toReturn += Parser.translateObj(obj,p);
-			}
-		}
+			toReturn += Parser.translateObj_mustHave(obj, callback) + '\n';
+			
+		
 	}
 	return toReturn;
 }
