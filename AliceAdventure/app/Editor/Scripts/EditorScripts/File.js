@@ -3,6 +3,7 @@ const PATH = require('path');
 const ELECTRON = require('electron').remote;
 const PROMPT = require('electron-prompt');
 const FS = require('fs-extra');
+//const Compiler = require(''); // TODO
 const Debug = require('./Debug');
 const ID = require('./ID');
 const GameProperties = require('./GameProperties');
@@ -120,6 +121,16 @@ File.CloseProject = function(){
 		GameProperties.instance = null;
 		Event.Broadcast("reload-project")
 	}
+}
+
+File.BuildProject = function(){
+	// TODO
+	Debug.LogError("Function not implemented");
+}
+
+File.RunProject = function(){
+	// TODO
+	Debug.LogError("Function not implemented");
 }
 
 File.SaveToPath = function(_path){
