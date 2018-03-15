@@ -8,27 +8,25 @@ const FileSys = require('./fileSys.js');
 
 var Parser;
 Parser = function (jsonPath, buildPath){
-	this.json = jsonPath;
+
 	this.build = buildPath;
+	this.game = fs.readJsonSync(jsonPath);
+
+	this.assetPath = FileSys.merge(this.build, 'Resources/Assets');
+	this.sceneList = this.game.sceneList;
+	this.objectList = this.game.objectList;
+	this.settings = this.game.settings;
 
 
-}
 
-Parser.game = fs.readJsonSync(this.json, {throws: false});
-console.log("......" + Parser.game);
 
-Parser.assetPath = FileSys.merge(this.build, 'Resources/Assets');
-Parser.sceneList = Parser.game.sceneList;
-Parser.objectList = Parser.game.objectList;
-Parser.settings = Parser.game.settings;
-
-Parser.createGame = function(){
+this.createGame = function(){
 	return 'var myGame = new GameManager();\n myGame.init(' + settings.resWidth + ',' 
 															+ settings.resHeight + ',' 
 															+ settings.inventoryGridNum + ');\n';
 }
 
-Parser.createScene= function(sceneName){
+this.createScene= function(sceneName){
 	return 'var ' + sceneName + '= new PIXI.Container();\n' + 'mayGame.addScene(' +  sceneName + ');'; 
 }
 
@@ -41,71 +39,71 @@ Parser.createScene= function(sceneName){
 //src must be a valid path to a image file.
 
 //if youdelete a scene, all the objects within it will be deleted.
-Parser.addObjectToScene= function(obj, sceneParent){
+this.addObjectToScene= function(obj, sceneParent){
 	return sceneParent + '.addChild(' + obj + ');';
 }
 
-Parser.createPIXIObject= function(obj, src){
+this.createPIXIObject= function(obj, src){
 	return 'var '+ obj + '= PIXI.Sprite.fromImage('+src + ');\n';
 }
 //
-Parser.setAnchor=function(obj, anchor){
+this.setAnchor=function(obj, anchor){
 	return obj + '.anchor.set('+anchor.x+', ' + anchor.y+');\n';
 }
 
-Parser.setScale=function(obj, scale){
+this.setScale=function(obj, scale){
 	return obj + '.scale.set(' + scale.x + ', ' + scale.y + ');\n';
 }
 
 //interactive or buttonMode should be boolean
-Parser.setInteractive=function(obj, interactive){
+this.setInteractive=function(obj, interactive){
 	return obj + '.interactive = ' + interactive + ';\n';
 }
 
-Parser.setButtonMode=function(obj, buttonMode){
+this.setButtonMode=function(obj, buttonMode){
 	return obj + '.buttonMode = ' + buttonMode + ';\n';
 }
 
-Parser.getNameWithID=function(obj, id){
+this.getNameWithID=function(obj, id){
 	return obj + id;
 }
 
-Parser.setPos=function(obj, pos){
+this.setPos=function(obj, pos){
 	return obj+'.x = ' + pos.x + ';\n' + obj+'.y = ' + pos.y+';\n';
 }
 
-Parser.setActive=function(obj, active){
+this.setActive=function(obj, active){
 	return obj + '.visible = ' + active + ';\n';
 }
 
 //arg is an array of arguments. It can be empty.
-Parser.createFunction=function(obj, funct){
+this.createFunction=function(obj, funct){
 	
-	return obj + '.' + functName + '= Parser.(' + arg + '){\n'+ body + '}\n\n';
+	return obj + '.' + functName + '= this.(' + arg + '){\n'+ body + '}\n\n';
 }
 
-Parser.createFunctionList=function(obj, functList){
+this.createFunctionList=function(obj, functList){
 
 	var toReturn = ''; 
 	var arrayLength = functList.length;
 	for (let i = 0; i < arrayLength; i++){
-		toReturn += Parser.createFunction(obj, functList[i][0], functList[i][1], functList[i][2]);
+		toReturn += this.createFunction(obj, functList[i][0], functList[i][1], functList[i][2]);
 	}
 	return toReturn;
 }
 
-Parser.createSelfDefinedVar=function(obj, key, value){
+this.createSelfDefinedVar=function(obj, key, value){
 	return obj + '.' + key + ' = ' + value + ';\n';
 }
 
 //return true if the name of the self defined properties 
 // same as src, anchor, scale, interactive, buttonMode, pos, name, sceneParent, ID
-Parser.sameNameAsMustHave = function(key){
+this.sameNameAsMustHave = function(key){
 	return key =='src' || key == 'anchor' || key == 'scale' || key=='interactive' ||key =='buttonMode'
 		|| key =='pos' || key == 'name' || key =='sceneParent' || key == 'id'|| key =='active';
 }
 
-Parser.createPropertyList = function (obj, properties){
+this.createPropertyList = function (obj, properties){
 	
 	var toReturn= '';
 	for (let i = 0; i < properties.length; i++){
@@ -115,7 +113,7 @@ Parser.createPropertyList = function (obj, properties){
 
 
 //
-Parser.translateObj_mustHave=function(object, callback){
+this.translateObj_mustHave=function(object, callback){
 	
 	var error;
 	var toReturn = '';
@@ -129,15 +127,15 @@ Parser.translateObj_mustHave=function(object, callback){
 			return false;
 		}else{
 
-			var name = Parser.getNameWithID(object.name, object.id);
+			var name = this.getNameWithID(object.name, object.id);
 			
 			//src
 			if (object.hasOwnProperty(src)){
 
 				if (fs.pathExistsSync(object.src) && object.src.filename && object.src.filename.match(/\.(jpg|jpeg|png)$/))
 				{
-					toReturn += Parser.createPIXIObject(name,object.src);
-					FileSys.copyFileOrFolder(object.src, FileSys.merge(Parser.assetPath, object.src.filename));
+					toReturn += this.createPIXIObject(name,object.src);
+					FileSys.copyFileOrFolder(object.src, FileSys.merge(this.assetPath, object.src.filename));
 
 
 				}else{
@@ -158,7 +156,7 @@ Parser.translateObj_mustHave=function(object, callback){
 				if (object.anchor.hasOwnProperty(x) && !isNaN(object.anchor) && typeof object.anchor.x === "number"
 					&& object.anchor.hasOwnProperty(y) && !isNaN(object.anchor) && typeof object.anchor.y === "number"){
 
-					toReturn += Parser.setAnchor(name, object.anchor);
+					toReturn += this.setAnchor(name, object.anchor);
 				}else{
 					error = "x and y of anchor must be defined as numbers.";
 					callback(error);
@@ -176,7 +174,7 @@ Parser.translateObj_mustHave=function(object, callback){
 				if (object.pos.hasOwnProperty(x) && !isNaN(object.pos.x) && typeof object.pos.x === "number"
 					&& object.pos.hasOwnProperty(y) && !isNaN(object.pos.y) && typeof object.pos.y === "number"){
 
-						toReturn += Parser.setPos(name, object.pos);
+						toReturn += this.setPos(name, object.pos);
 				}else{
 					error = "x and y of the position must be defined as numbers.";
 					callback(error);
@@ -194,7 +192,7 @@ Parser.translateObj_mustHave=function(object, callback){
 				if (object.scale.hasOwnProperty(x) && !isNaN(object.scale.x) &&  typeof (object.scale.x) === "number"
 					&& object.scale.hasOwnProperty(y) && !isNaN(object.scale.y) && typeof object.scale.y === "number"){
 
-						toReturn += Parser.setScale(name, object.scale);
+						toReturn += this.setScale(name, object.scale);
 				}else{
 					error = "x and y of the scale must be defined as numbers.";
 					callback(error);
@@ -211,7 +209,7 @@ Parser.translateObj_mustHave=function(object, callback){
 
 				if (typeof object.interactive === 'boolean'){
 
-					toReturn += Parser.setInteractive(name, object.interactive);
+					toReturn += this.setInteractive(name, object.interactive);
 				}else{
 					error = "The interactive value of the object must be a boolean.";
 					callback(error);
@@ -227,7 +225,7 @@ Parser.translateObj_mustHave=function(object, callback){
 			if (object.hasOwnProperty(buttonMode)){
 
 				if (typeof object.buttonMode === 'boolean'){
-					toReturn += Parser.setButtonMode(name, object.buttonMode);
+					toReturn += this.setButtonMode(name, object.buttonMode);
 				}else{
 					error = "The buttonMode value of the object must be a boolean.";
 					callback(error);
@@ -243,7 +241,7 @@ Parser.translateObj_mustHave=function(object, callback){
 			//active
 			if(object.hasOwnProperty(active)){
 				if(typeof object.active === 'boolean'){
-					toReturn+= Parser.setActive(name, object.active);
+					toReturn+= this.setActive(name, object.active);
 				}else{
 					error = "The active value of the object must be a boolean.";
 					callback(error);
@@ -257,7 +255,7 @@ Parser.translateObj_mustHave=function(object, callback){
 
 			//bindscene
 			if (object.hasOwnProperty(bindscene)){
-				toReturn+= Parser.addObjectToScene(name, object.bindscene);
+				toReturn+= this.addObjectToScene(name, object.bindscene);
 			}else{
 				error = "Object must be added to a scene.";
 				callback(error);
@@ -277,20 +275,22 @@ Parser.translateObj_mustHave=function(object, callback){
 
 
 //iterate through the objectList
-Parser.readObjects = function(callback){
+this.readObjects = function(callback){
 
 	var toReturn = '\n';
-	var arrayLength = Parser.objectList.length;
+	console.log(this.objectList);
+	var arrayLength = this.objectList.length;
 
 	for (let i = 0; i < arrayLength; i++){
 		
-		var obj = Parser.objectList[i];
+		var obj = this.objectList[i];
 
-			toReturn += Parser.translateObj_mustHave(obj, callback) + '\n';
+			toReturn += this.translateObj_mustHave(obj, callback) + '\n';
 			
 		
 	}
 	return toReturn;
 }
 
+}
 module.exports = Parser;

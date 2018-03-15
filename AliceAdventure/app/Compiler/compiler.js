@@ -8,12 +8,12 @@ function fileSysAlert(e){
 
 function compile(path){
 	var buildDest = FileSys.ensureAndCreate(path,fileSysAlert);
-	var string = Parser(path,buildDest);
+	var parser = new Parser(path,buildDest);
 	
-	//console.log(string);
+	console.log(parser.readObjects(fileSysAlert));
 
 	//var dest = '../build/game.js'
 	//FileSys.writeFile(dest, string)
 }
 
-compile("D:/ETC/18_SP/saves/example.json");
+compile("D:/ETC/18_SP/saves/test.json");
