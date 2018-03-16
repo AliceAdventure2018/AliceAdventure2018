@@ -476,3 +476,4 @@ function hitTestRectangle(r1, r2) {
   return hit;
 };
 
+module.exports = {};
