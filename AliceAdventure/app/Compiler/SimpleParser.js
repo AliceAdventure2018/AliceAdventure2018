@@ -335,9 +335,9 @@ Parser = function (jsonPath, buildPath){
 //========================settings=============
 	this.writeHTML = function (){
 		var dest = FileSys.merge(this.build, 'index.html');
-		var string = '<!doctype html><head> <meta charset="utf-8">' 
-					+'<title>' + this.settings.projectName + '</title>' + 
-					' <body><script src="Resources/pixi.js"></script><script src="Resources/aliceAPI.js"></script><script src="game.js"></script></body>'
+		var string = '<!doctype html>\n<head>\n <meta charset="utf-8">\n' 
+					+'<title>' + this.settings.projectName + '</title> \n</head>\n' + 
+					' <body><script src="Resources/pixi.js">\n</script><script src="Resources/aliceAPI.js">\n</script><script src="game.js">\n</script>\n</body>'
 		FileSys.writeFile(dest, string);
 	}
 
