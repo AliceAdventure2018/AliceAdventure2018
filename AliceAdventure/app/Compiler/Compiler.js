@@ -27,6 +27,7 @@ Compiler = function (path, callback){
 		}
 		FileSys.writeFile(FileSys.merge(this.buildDest, 'game.js'), string);
 	}
+	return true;
 }
 
 module.exports = Compiler;
