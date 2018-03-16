@@ -49,7 +49,6 @@ SceneView.prototype.InitView = function(){
 	});
 	document.getElementById(this.bindElementID).appendChild(this.app.view);
 
-
 	// events
 	Event.AddListener('reload-project', ()=>{this.ReloadView();});
 	Event.AddListener('add-gallery-object', (_obj)=>{this.AddObject(_obj);});
