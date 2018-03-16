@@ -51,10 +51,6 @@ FileSys.folder = function(p){
 	return path.dirname(p);
 }
 
-//need to create a html basic file
-//need to rename the title
-
-
 //return path to the resources folder under build path
 FileSys.ensureAndCreate = function(jsonPath, callback){
 
@@ -67,6 +63,7 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	var buildPath = path.join(jsonPath, 'Build');
 	var resourcesDest = path.join(buildPath, 'Resources');
 
+	var assetSrc = '../Assets';
 	var assetDest = path.join(resourcesDest, 'Assets');
 
 	var aliceAPIDest = path.join(resourcesDest, 'aliceAPI.js');
@@ -91,6 +88,9 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	FileSys.createBuildFolder(assetDest);
 	FileSys.copyFileOrFolder(aliceAPI, aliceAPIDest);
 	FileSys.copyFileOrFolder(pixi, pixiDest);
+
+	FileSys.copyFileOrFolder(FileSys.merge(assetSrc, 'inventory.png'), FileSys.merge(assetDest, 'inventory.png'));
+	FileSys.copyFileOrFolder(FileSys.merge(assetSrc, 'textbox.png'), FileSys.merge(assetDest, 'textbox.png'));
 
 	return buildPath;
 }

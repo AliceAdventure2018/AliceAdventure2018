@@ -26,6 +26,7 @@ Compiler = function (path, callback){
 			return false;
 		}
 		FileSys.writeFile(FileSys.merge(this.buildDest, 'game.js'), string);
+		parser.writeHTML();
 		return true;
 	}
 }

@@ -28,7 +28,7 @@ Parser = function (jsonPath, buildPath){
 		var toReturn = '\n';
 
 		for (let i =0; i < this.sceneList.length; i++){
-			toReturn +='var ' + this.sceneList[i].name + '= new Alice.Scene();\n' + 'mayGame.sceneManager.addScene(' +  this.sceneList[i].name + ');\n'; 
+			toReturn +='var ' + this.getSceneWithID(this.sceneList[i]) + '= new Alice.Scene();\n' + 'myGame.sceneManager.addScene(' +  this.getSceneWithID(this.sceneList[i]) + ');\n'; 
 		}
 
 		return toReturn;
@@ -153,6 +153,7 @@ Parser = function (jsonPath, buildPath){
 					if (fs.pathExistsSync(object.src)&& FileSys.filename(object.src).match(/\.(jpg|jpeg|png)$/) )
 					{	
 						var dest = FileSys.merge(this.assetPath, FileSys.filename(object.src));
+						dest= dest.replace(/\\/g, "/");
 						FileSys.copyFileOrFolder(object.src, dest);
 						toReturn += this.createPIXIObject(name,dest);
 						toReturn += this.setName(name,name);
@@ -313,8 +314,7 @@ Parser = function (jsonPath, buildPath){
 	//iterate through the objectList
 	this.readMustHave = function(callback){
 
-		var toReturn = '\n';
-		
+		var toReturn = '\n';	
 		var arrayLength = this.objectList.length;
 
 		for (let i = 0; i < arrayLength; i++){
@@ -333,8 +333,15 @@ Parser = function (jsonPath, buildPath){
 
 
 //========================settings=============
+	this.writeHTML = function (){
+		var dest = FileSys.merge(this.build, 'index.html');
+		var string = '<!doctype html><head> <meta charset="utf-8">' 
+					+'<title>' + this.settings.projectName + '</title>' + 
+					' <body><script src="Resources/pixi.js"></script><script src="Resources/aliceAPI.js"></script><script src="game.js"></script></body>'
+		FileSys.writeFile(dest, string);
+	}
 
-
+	
 	this.translate = function (callback){
 
 		var toReturn= '\n';
@@ -349,6 +356,8 @@ Parser = function (jsonPath, buildPath){
 		}
 		else toReturn += mustHave;
 
+
+		toReturn += 'myGame.start();'
 		return toReturn;
 	}
 }

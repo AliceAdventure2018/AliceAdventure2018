@@ -27,7 +27,7 @@ function Inventory(game) { //always on the top
     this.inventoryContainer = new PIXI.Container();
     this.inventoryBackgroundGrp = new PIXI.Container();
     for(var i = 0; i < this.inventory_size; i++) {
-        var inventBack = Alice.Object.fromImage('assets/alice/inventory.png');
+        var inventBack = Alice.Object.fromImage('Resources/Assets/inventory.png');
         inventBack.x = game.screenWidth;
         inventBack.y = i*this.inventory_w;
         this.inventoryBackgroundGrp.addChild(inventBack); 
@@ -212,7 +212,7 @@ function GameManager() {
                
         this.sceneManager = new SceneManager(this);
         this.inventory = new Inventory(this);
-        this.messageBox = new MessageBox({x:width,y:height,scale:1,url:'assets/alice/textbox.png',a:1},false);
+        this.messageBox = new MessageBox({x:width,y:height,scale:1,url:'Resources/Assets/textbox.png',a:1},false);
         
         this.app.stage.addChild(this.sceneManager.sceneContainer);
         this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
@@ -476,4 +476,3 @@ function hitTestRectangle(r1, r2) {
   return hit;
 };
 
-module.exports = {};
