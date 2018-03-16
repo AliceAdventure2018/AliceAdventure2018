@@ -3,7 +3,7 @@ const PATH = require('path');
 const ELECTRON = require('electron').remote;
 const PROMPT = require('electron-prompt');
 const FS = require('fs-extra');
-//const Compiler = require(''); // TODO
+const Compiler = require('../../../Compiler/Compiler'); // TODO
 const Debug = require('./Debug');
 const ID = require('./ID');
 const GameProperties = require('./GameProperties');
@@ -124,8 +124,13 @@ File.CloseProject = function(){
 }
 
 File.BuildProject = function(){
-	// TODO
-	Debug.LogError("Function not implemented");
+	if (File.instance == null) return;
+	var compiler = new Compiler(File.instance.path, (_err)=>{ Debug.LogError(_err); });
+	if (compiler.build((_err)=>{ Debug.LogError(_err); })){ // success
+		Debug.Log("Build succeeded")
+	} else { // fail
+		Debug.Log("Build failed with error");
+	}
 }
 
 File.RunProject = function(){
