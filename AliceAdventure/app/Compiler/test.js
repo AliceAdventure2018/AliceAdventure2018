@@ -1,18 +1,10 @@
 
-const FileSys = require('./FileSys.js');
-const Parser = require('./SimpleParser.js');
+const Compiler = require('./Compiler.js');
 
-function fileSysAlert(e){
+function alert(e){
 	console.log(e);
 }
 
-function compile(path){
-	var buildDest = FileSys.ensureAndCreate(path,fileSysAlert);
-	var parser = new Parser(path,buildDest);
-	
-	var string = parser.translate(fileSysAlert);
+var compiler = new Compiler("C:/Users/ruilit/Documents/2018-SP/Alice/test.json",alert);
 
-	FileSys.writeFile(FileSys.merge(buildDest, 'game.js'), string);
-}
-
-compile("C:/Users/ruilit/Documents/2018-SP/Alice/test.json");
+compiler.build(alert);

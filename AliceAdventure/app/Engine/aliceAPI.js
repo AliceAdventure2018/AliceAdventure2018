@@ -220,8 +220,6 @@ function GameManager() {
         this.app.stage.addChild(this.messageBox.holder);
         //this.messageBox.startConversation(["hahha","lalalala"]);
         
-        
-
     }
     
     

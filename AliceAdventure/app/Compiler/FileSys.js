@@ -44,6 +44,10 @@ FileSys.filename = function(absPath){
 	return path.basename(absPath);
 }
 
+FileSys.folder = function(p){
+	return path.dirname(p);
+}
+
 //need to create a html basic file
 //need to rename the title
 
