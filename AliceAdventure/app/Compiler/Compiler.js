@@ -1,6 +1,6 @@
 
-const FileSys = require('./fileSys.js');
-const Parser = require('./simpleParser.js');
+const FileSys = require('./FileSys.js');
+const Parser = require('./SimpleParser.js');
 
 function fileSysAlert(e){
 	console.log(e);

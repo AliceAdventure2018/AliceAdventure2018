@@ -4,7 +4,7 @@
 'use strict';
 
 const fs = require('fs-extra');
-const FileSys = require('./fileSys.js');
+const FileSys = require('./FileSys.js');
 
 var Parser;
 Parser = function (jsonPath, buildPath){
