@@ -63,7 +63,7 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	var buildPath = path.join(jsonPath, 'Build');
 	var resourcesDest = path.join(buildPath, 'Resources');
 
-	var assetSrc = '../Assets';
+	var assetSrc = './Assets';
 	var assetDest = path.join(resourcesDest, 'Assets');
 
 	var aliceAPIDest = path.join(resourcesDest, 'aliceAPI.js');
