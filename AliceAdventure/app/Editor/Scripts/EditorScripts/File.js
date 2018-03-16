@@ -155,6 +155,7 @@ File.SaveToPath = function(_path){
 			id: _o.id, 
 			name: _o.name, 
 			src: _o.src, 
+			//isDefault: _o.isDefault, 
 			pos: {x: Number(_o.sprite.x), y: Number(_o.sprite.y)}, 
 			anchor: {x: Number(_o.sprite.anchor.x), y: Number(_o.sprite.anchor.y)}, 
 			scale: {x: Number(_o.sprite.scale.x), y: Number(_o.sprite.scale.y)}, 

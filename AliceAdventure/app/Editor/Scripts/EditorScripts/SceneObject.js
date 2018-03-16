@@ -15,6 +15,8 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
 	this.id = _id;
 	this.name = _name;
+	this.src = _src;
+	//this.isDefault = true; // TODO
 	this.bindScene = _bindScene;
 
 	this.selectAllowed = true;
@@ -23,7 +25,6 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 	this.drag = { on: false, eventData: {} };
 
 	this.properties = [];
-	this.src = _src;
 	this.sprite = null;
 	this.interactive = true;
 
@@ -36,16 +37,14 @@ SceneObject.AddObject = function(_objInfo, _bindScene, _x, _y){
 	let _path = _objInfo.src;
 	let _obj = new SceneObject(null, _objInfo.name, _path, _bindScene);
 	_obj.InitSprite('../../' + _path, {x: _x, y: _y});
-
 	return _obj;
 };
 
 SceneObject.LoadObject = function(_data){ // I AM HERE
-	let _o = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene));
-	_o.interactive = _data.interactive;
-	_o.properties = _data.properties;
-	_o.InitSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
-}
+	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene));
+	_obj.InitSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
+	return _obj;
+};
 
 SceneObject.Selection = { 
 	objects: [], // Reference
