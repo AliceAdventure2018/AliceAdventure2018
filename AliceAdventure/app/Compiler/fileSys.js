@@ -40,6 +40,10 @@ FileSys.merge = function(p1,p2){
 	return path.join(p1, p2);
 }
 
+FileSys.filename = function(absPath){
+	return path.basename(absPath);
+}
+
 //need to create a html basic file
 //need to rename the title
 

@@ -10,10 +10,9 @@ function compile(path){
 	var buildDest = FileSys.ensureAndCreate(path,fileSysAlert);
 	var parser = new Parser(path,buildDest);
 	
-	console.log(parser.readObjects(fileSysAlert));
+	var string = parser.translate(fileSysAlert);
 
-	//var dest = '../build/game.js'
-	//FileSys.writeFile(dest, string)
+	FileSys.writeFile(FileSys.merge(buildDest, 'game.js'), string);
 }
 
-compile("D:/ETC/18_SP/saves/test.json");
+compile("C:/Users/ruilit/Documents/2018-SP/Alice/test.json");
