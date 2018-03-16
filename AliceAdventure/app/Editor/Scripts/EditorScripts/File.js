@@ -3,7 +3,7 @@ const PATH = require('path');
 const ELECTRON = require('electron').remote;
 const PROMPT = require('electron-prompt');
 const FS = require('fs-extra');
-//const Compiler = require(''); // TODO
+const Compiler = require('../../../Compiler/Compiler'); // TODO
 const Debug = require('./Debug');
 const ID = require('./ID');
 const GameProperties = require('./GameProperties');
@@ -124,8 +124,13 @@ File.CloseProject = function(){
 }
 
 File.BuildProject = function(){
-	// TODO
-	Debug.LogError("Function not implemented");
+	if (File.instance == null) return;
+	var compiler = new Compiler(File.instance.path, (_err)=>{ Debug.LogError(_err); });
+	if (compiler.build((_err)=>{ Debug.LogError(_err); })){ // success
+		Debug.Log("Build succeeded")
+	} else { // fail
+		Debug.Log("Build failed with error");
+	}
 }
 
 File.RunProject = function(){
@@ -155,6 +160,7 @@ File.SaveToPath = function(_path){
 			id: _o.id, 
 			name: _o.name, 
 			src: _o.src, 
+			//isDefault: _o.isDefault, 
 			pos: {x: Number(_o.sprite.x), y: Number(_o.sprite.y)}, 
 			anchor: {x: Number(_o.sprite.anchor.x), y: Number(_o.sprite.anchor.y)}, 
 			scale: {x: Number(_o.sprite.scale.x), y: Number(_o.sprite.scale.y)}, 
