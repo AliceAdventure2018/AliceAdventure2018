@@ -139,7 +139,7 @@ Parser = function (jsonPath, buildPath){
 		if (object.hasOwnProperty("name")&& object.hasOwnProperty("id")){
 
 			if (typeof (object.name) === "number"){
-				error = "Name of the object cannot be numbers. Must have letters.";
+				error = "Name of the object:  " + object.name + " cannot be numbers. Must have letters.";
 				callback(error);
 				return false;
 			}else{
@@ -147,9 +147,9 @@ Parser = function (jsonPath, buildPath){
 				var name = this.getNameWithID(object.name, object.id);
 				
 				//src
+				//check if the path is valid, then copy the picture to the build folder
 				if (object.hasOwnProperty("src")){
 
-					console.log(typeof(object.src));
 					if (fs.pathExistsSync(object.src)&& FileSys.filename(object.src).match(/\.(jpg|jpeg|png)$/) )
 					{	
 						var dest = FileSys.merge(this.assetPath, FileSys.filename(object.src));
@@ -158,16 +158,16 @@ Parser = function (jsonPath, buildPath){
 						toReturn += this.setName(name,name);
 
 					}else{
-						error = "File path does not exist or the file extention does not match jpg/jpeg/png.\n Invalid Path:**********\n" + object.src + '\n';
+						error = "Object: " + object.name + " File path does not exist or the file extention does not match jpg/jpeg/png.\n Invalid Path:**********\n" + object.src + '\n';
 						callback(error);	
 						return false;				
 					}
 				}
 				else{
-					error = "Object does not have a sprite.";
+					error = "Object " + object.name + " does not have a sprite.";
 					callback(error);
 					return false;
-				}
+				}//end src
 
 				//anchor
 				if(object.hasOwnProperty("anchor")){
@@ -177,15 +177,15 @@ Parser = function (jsonPath, buildPath){
 
 						toReturn += this.setAnchor(name, object.anchor);
 					}else{
-						error = "x and y of anchor must be defined as numbers.";
+						error =  "Object " + object.name + ": x and y of anchor must be defined as numbers.";
 						callback(error);
 						return false;
 					}
 				}else{
-					error="Object has not set the anchor.";
+					error="Object " + object.name + " has not set the anchor.";
 					callback(error);
 					return false;
-				}
+				}//end anchor
 
 				//pos
 				if (object.hasOwnProperty("pos")){
@@ -203,7 +203,7 @@ Parser = function (jsonPath, buildPath){
 					error = "Object has not set the position.";
 					callback(error);
 					return false;
-				}
+				}//end pos
 
 				//scale
 				if (object.hasOwnProperty("scale")){
@@ -238,7 +238,7 @@ Parser = function (jsonPath, buildPath){
 					error = "Object has not set the interativity.";
 					callback(error);
 					return false;
-				}
+				}//end interactive
 
 
 

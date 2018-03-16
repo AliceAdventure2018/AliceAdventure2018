@@ -2,7 +2,7 @@
 Blockly.JavaScript['use_object_on_another_object'] = function(block) {
   var value_object_a = Blockly.JavaScript.valueToCode(block, 'object_A', Blockly.JavaScript.ORDER_ATOMIC);
   var statements_then = Blockly.JavaScript.statementToCode(block, 'then');
-  var code = '...;\n';
+  var code = 'when (\n';
   return code;
 };
 
