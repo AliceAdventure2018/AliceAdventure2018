@@ -7,4 +7,4 @@ function alert(e){
 
 var compiler = new Compiler("C:/Users/ruilit/Documents/2018-SP/Alice/test.json",alert);
 
-compiler.build(alert);
+console.log(compiler.build(alert));

@@ -58,6 +58,11 @@ FileSys.folder = function(p){
 //return path to the resources folder under build path
 FileSys.ensureAndCreate = function(jsonPath, callback){
 
+	if (!fs.pathExistsSync(jsonPath)) {
+		callback("json path : "+ jsonPath + ' is not valid\n');
+		return false;
+	}
+
 	jsonPath = path.dirname(jsonPath);
 	var buildPath = path.join(jsonPath, 'Build');
 	var resourcesDest = path.join(buildPath, 'Resources');
