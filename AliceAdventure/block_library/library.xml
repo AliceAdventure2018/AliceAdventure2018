@@ -659,4 +659,48 @@
         <field name="HUE">230</field>
       </block>
     </value>
+  </block><block type="factory_base" id="IL5HNx_g1]`3:_Wz5^pk" deletable="false" movable="false" x="0" y="0">
+    <mutation connections="BOTH"></mutation>
+    <field name="NAME">go_to_scene</field>
+    <field name="INLINE">INT</field>
+    <field name="CONNECTIONS">BOTH</field>
+    <statement name="INPUTS">
+      <block type="input_value" id="~Lv$Fxxc%@}S~J#?JIBl">
+        <field name="INPUTNAME">NAME</field>
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="lYI]}Ija{GANnRYF|.CV">
+            <field name="TEXT">go to scene:</field>
+          </block>
+        </statement>
+        <value name="TYPE">
+          <shadow type="type_null" id="joLHs*]t}ci5?|YsF+6i"></shadow>
+          <block type="type_other" id="s~0^+wWFgFKd$kx9,;Q|">
+            <field name="TYPE">scene</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="@5kC@}0L-vzxw|%vi[wr" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="Ybuo=Xeg+LrSU[~+hQL9" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="TOPTYPE">
+      <shadow type="type_null" id="^@bbeX7;R0cIY=1K;?cx"></shadow>
+    </value>
+    <value name="BOTTOMTYPE">
+      <shadow type="type_null" id="_7}c*pK5cZjpCNJ9{NNR"></shadow>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="hh$I.P/g85=+ySS,4ST%">
+        <mutation colour="#5b67a5"></mutation>
+        <field name="HUE">230</field>
+      </block>
+    </value>
   </block></xml>
