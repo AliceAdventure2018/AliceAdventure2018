@@ -1,6 +1,5 @@
 'use strict';
 
-//const Vue = require('../../../Resources/Vue');
 const Event = require('./Event');
 const SceneObject = require('./SceneObject');
 const View = require('./View');
@@ -9,43 +8,63 @@ const View = require('./View');
 var PropertyView;
 
 // variables
-PropertyView = function(_height = -1, _width = -1){
-	View.call(this, "PropertyView", _height, _width);
+PropertyView = function(_bindElementID, _height = -1, _width = -1){
+	View.call(this, "PropertyView", _height, _width, _bindElementID);
 
-	this.BindObject = null;
-	this.VModel = null;
+	this.bindObject = null;
+	this.vModel = null;
 	
 };
 PropertyView.prototype = new View();
+
+// static
+PropertyView.NewView = function(_elementID){
+	var view = new PropertyView(_elementID);
+	view.InitView();
+	return view;
+};
 
 // functions
 PropertyView.prototype.InitView = function(){
 	View.prototype.InitView.apply(this); // call super method
 	// init data binding
-	this.VModel = new Vue({
-	  el: '#property-view',
+	this.vModel = new Vue({
+	  el: '#' + this.bindElementID,
 	  data: {
 	  	showProperty: false,
-	    bindObj: this.BindObject
+	  	propertyKey: "",
+	  	propertyType: "",
+	  	propertyValue: "", 
+	    bindObj: this.bindObject 
+	  }, 
+	  methods:{
+	  	addProperty: ()=>{ this.bindObject.AddUserProperty(this.vModel.propertyKey, this.vModel.propertyType, this.vModel.propertyValue); }
 	  }
 	});
-	Event.AddListener("update-selected-object", this, "UpdateSelectedObject");
-	console.log("Init PropertyView finished");
+
+	// events
+	Event.AddListener("reload-project", ()=>{this.ReloadView();});
+	Event.AddListener("update-selected-object", ()=>{this.UpdateSelectedObject();});
 };
 
+PropertyView.prototype.ReloadView = function(){
+	View.prototype.ReloadView.apply(this); // call super method
+
+	this.SetBindObject(null);
+}
+
 PropertyView.prototype.SetBindObject = function(_sceneObj = null){
-	this.BindObject = _sceneObj;
-	if (this.BindObject == null){ // null case
-		this.VModel.showProperty = false;
+	this.bindObject = _sceneObj;
+	if (this.bindObject == null){ // null case
+		this.vModel.showProperty = false;
 	} else { 
-		this.VModel.showProperty = true;
-		this.VModel.bindObj = this.BindObject;
+		this.vModel.showProperty = true;
+		this.vModel.bindObj = this.bindObject;
 	}
 }
 
 PropertyView.prototype.UpdateSelectedObject = function(){
 	this.SetBindObject(SceneObject.Selection.objects[0]);
-		console.log(this);
 }
 
 module.exports = PropertyView;
