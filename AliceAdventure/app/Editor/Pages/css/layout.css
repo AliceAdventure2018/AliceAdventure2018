@@ -23,6 +23,12 @@ button{
 
 #setting button:active, #setting button:hover{
     color:#aaa;
+
+}
+
+.btn:focus,.btn:active:focus,.btn.active:focus,
+.btn.focus,.btn:active.focus,.btn.active.focus {
+    outline: none !important;
 }
 
 .window-title{
@@ -33,6 +39,13 @@ button{
 }
 
 
+#add-scene{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+#add-scene-button:focus {outline:none;}
 #close-icon-button:focus {outline:none;}
 #close-button:focus {outline:none;}
 #run-button:focus {outline:none;}
@@ -197,7 +210,7 @@ button{
     top: 40px;
     bottom: 0;
     left: 226px /* 200 + 6*/;
-    right: 0;
+    right: 256px;
     overflow: hidden;
 
     
@@ -207,7 +220,7 @@ button{
     top: 40px;
     bottom: 0;
     left: 226px /* 200 + 6*/;
-    right: 0;
+    right: 256px;
     overflow: hidden;
  
     
@@ -272,7 +285,7 @@ button{
 #design-object-list{
      position: absolute;
     top: 0;
-    bottom: 136px; /* 130 + 6 */
+    bottom: 356px; /* 130 + 6 */
     left: 0;
     right: 0;
     background-color: #fff;
@@ -322,7 +335,7 @@ button{
 #code-object-list{
      position: absolute;
     top: 0;
-    bottom: 136px; /* 130 + 6 */
+    bottom: 356px; /* 130 + 6 */
     left: 0;
     right: 0;
     background-color: #fff;
