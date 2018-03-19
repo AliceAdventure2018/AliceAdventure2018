@@ -1,213 +1,341 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="myApp">
 <head>
 	<title> Alice's Adventure </title>
-
-  <script type="text/javascript" src="../Scripts/index.js"></script>
 
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="css/layout.css">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../../Resources/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script>document.write('<base href="' + document.location + '" />');</script>
+   <script src="http://code.jquery.com/jquery-2.0.3.min.js" data-semver="2.0.3" data-require="jquery"></script>
+   
+	<script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script>
+   <script src="js/app.js"></script>
+    <script src="js/resizer.js"></script>	
 
+    <!-- Import controllers -->
+    <script type="text/javascript" src="../../Resources/vue.js"></script>
+    <script type="text/javascript" src="../scripts/index.js"></script>
 	
 
 </head>
-<body>
+<body ng-controller="MainCtrl" onload="InitAllViews()">
 	
-		<nav class="navbar  navbar-dark" id="top-navbar">
-				
-		    		<div class="navbar-nav">
-		    			<div class="container-fluid" id="design-code-mode">
-			      			<div class="row">
-		    				<a class="navbar-brand" id="brand" href="#">
-					    	<img src="../src/AliceAdventure_logo.svg" width="30" height="30" alt="">&nbsp; Alice's Adventure
-					  		</a>
-			      		
-			      				<div class="col">
-					      		<button  onclick="switchDesignView()" class="nav-item nav-link" id="design-button" >Design </button>
-					      		</div>
+		<nav  id="topnav">
+      <a class="float-left" id="brand" href="#">
+        <img src="./src/AliceAdventure_logo.svg" width="25" height="25" alt="">&nbsp; Alice's Adventure
+       </a>
 
-					      		<div class="col">
-					      		<button  onclick="switchCodeView()" class="nav-item nav-link"  id ="code-button" >Code</button>
-					      		</div>
-			      			</div>
-			      		</div>
-		    		</div>
-				
-  		</nav>
+       
+       <button  onclick="switchDesignView()" class="float-left" id="design-button" >Design </button>
 
-  		<script>
-			function switchDesignView() {
-			    var x = document.getElementById("design-view");
-			    var y = document.getElementById("code-view");
+       <button  onclick="switchCodeView()"  class="float-left"  id ="code-button" >Code</button>
+       <button id="setting-button"  class="float-right" data-toggle="modal" data-target="#setting">
+                   Setting
+        </button>
 
-			    if (x.style.display === "none" || y.style.display ==="block") {
-			        x.style.display = "block";
-			        y.style.display = "none";
-			    } else {
-			      
-			    }
-			}
+        <button onclick="AliceEditor.File.BuildProject()" id="build-button"  class="float-right" >
+                   Build
+        </button>
 
-			function switchCodeView() {
-			    var y = document.getElementById("design-view");
-			    var x = document.getElementById("code-view");
+       <button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
+                   Run
+        </button>
+        <button onclick="AliceEditor.File.SaveProject()" id="save-button"  class="float-right" >
+                   Save
+        </button>
 
-			    if (x.style.display === "none" || y.style.display ==="block") {
-			        x.style.display = "block";
-			        y.style.display = "none";
-			    } else {
-			      
-			    }
-			}
-		</script>
+       
+       
+    </nav>
 
+    <script type="text/javascript">
+      function switchDesignView() {
+          var x = document.getElementById("design-view");
+          var y = document.getElementById("code-view");
 
-  			<div id="design-view" style="display: block;">
-				<!-- windows in design mode -->
-				<div class="container-fluid" >
-					<div class="row">
-					<div class="col-2" id="gallery">
-					<h6 class="window-title">GALLERY</h6>
-					<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          if (x.style.display === "none" || y.style.display ==="block") {
+              x.style.display = "block";
+              y.style.display = "none";
+          } else {
+            
+          }
+      }
 
-						<li class="nav-item"><a class="nav-link" id="door-tab"  data-toggle="tab" href="#door-asset" role="tab" aria-expanded="false" aria-controls="door-asset" aria-selected="false">Door</a></li>
-						<li class="nav-item"><a class="nav-link" id="key-tab" data-toggle="tab" href="#key-asset" role="tab" aria-expanded="true" aria-controls="key-asset" aria-selected="false">Key</a></li>
-						<li class="nav-item"><a class="nav-link" id="container-tab"  data-toggle="tab" href="#container-asset" role="tab" aria-expanded="false" aria-controls="container-asset" aria-selected="false">Container</a></li>
-						<li class="nav-item"><a class="nav-link" id="actor-tab" data-toggle="tab" href="#actor-asset" role="tab" aria-expanded="true" aria-controls="actor-asset" aria-selected="false">Actor</a></li>
-						
-					</ul>
-						<div class="tab-content" id="v-pills-tabContent">
-							<div class="tab-pane fade active" id="door-asset" role="tabpanel" aria-labelledby="door-tab">
-							  <div class="assets">
-							    <p>Door. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi q</p>
-							  </div>
-							</div>
+      function switchCodeView() {
+          var y = document.getElementById("design-view");
+          var x = document.getElementById("code-view");
 
-							<div class="tab-pane fade" id="key-asset" role="tabpanel" aria-labelledby="key-tab">
-							  <div class="assets">
-							    <p>Key. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi q</p>
-							  </div>
-							</div>
+          if (x.style.display === "none" || y.style.display ==="block") {
+              x.style.display = "block";
+              y.style.display = "none";
+          } else {
+            
+          }
+      }
+    </script>
 
-							<div class="tab-pane fade" id="container-asset" role="tabpanel" aria-labelledby="container-tab">
-							  <div class="assets">
-							    <p>Container. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi q</p>
-							  </div>
-							</div>
-
-							<div class="tab-pane fade" id="actor-asset" role="tabpanel" aria-labelledby="actor-tab">
-							  <div class="assets">
-							    <p>Actor. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi q</p>
-							  </div>
-							</div>
-						</div>
-						
-					</div>	
-								
-					
-					<div class="col" id="scene-view">
-					</div>
-
-					<!-- windows in common -->
-					<div class="col-2" id="side-common">
-						<h6 class="window-title">THINGS IN THE SCENE</h6>				
-						<div class="row" id="things-list">
-							
-						</div>
-
-						<h6 class="window-title">GAME ATTRIBUTES</h6>
-						<div class="row" id="game-attribute">
-							
-						</div>
-						<h6 class="window-title">PROPERTIES</h6>
-						<div class="row" id="properties">
-							
-						</div>
-					</div>
-					<!-- windows in common end-->
-
-					</div>
-				</div>
-			</div>
+        <!-- Modal -->
+    <div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="settingLongTitle">Game Attributes</h5>
+            <button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="close-button" data-dismiss="modal">Close</button>
+            <button type="button"  id="save-change-button">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
-			<div id="code-view" style="display: none;">
-  				
-  				<div class="container-fluid">
-  					<div class="row">
-						<div class="col-2" id="code-library">
-							<h6 class="window-title">CODE LIBRARY</h6>
-							<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
-						<li class="nav-item"><a class="nav-link" id="door-block"  data-toggle="tab" href="#door-code" role="tab" aria-expanded="false" aria-controls="door-code" aria-selected="false">Door</a></li>
-						<li class="nav-item"><a class="nav-link" id="key-block" data-toggle="tab" href="#key-code" role="tab" aria-expanded="true" aria-controls="key-code" aria-selected="false">Key</a></li>
-						<li class="nav-item"><a class="nav-link" id="container-block"  data-toggle="tab" href="#container-code" role="tab" aria-expanded="false" aria-controls="container-code" aria-selected="false">Container</a></li>
-						<li class="nav-item"><a class="nav-link" id="actor-block" data-toggle="tab" href="#actor-code" role="tab" aria-expanded="true" aria-controls="actor-code" aria-selected="false">Actor</a></li>
-						
-					</ul>
-						<div class="tab-content" id="v-pills-tabContent">
-							<div class="tab-pane fade active" id="door-code" role="tabpanel" aria-labelledby="door-block">
-							  <div class="assets">
-							    <p>Door code block here</p>
-							  </div>
-							</div>
+    <div id="design-view" style="display: block;">
 
-							<div class="tab-pane fade" id="key-code" role="tabpanel" aria-labelledby="key-block">
-							  <div class="assets">
-							    <p>Key code block here</p>
-							  </div>
-							</div>
+  	<div id="gallery">
+  		<h6 class="window-title">GALLERY</h6>
+      <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
-							<div class="tab-pane fade" id="container-code" role="tabpanel" aria-labelledby="container-block">
-							  <div class="assets">
-							    <p>Container code block here</p>
-							  </div>
-							</div>
+            <li class="nav-item"><a class="nav-link" id="door-tab"  data-toggle="tab" href="#door-asset" role="tab" aria-expanded="false" aria-controls="door-asset" aria-selected="false">Door</a></li>
+            <li class="nav-item"><a class="nav-link" id="key-tab" data-toggle="tab" href="#key-asset" role="tab" aria-expanded="true" aria-controls="key-asset" aria-selected="false">Key</a></li>
+            <li class="nav-item"><a class="nav-link" id="container-tab"  data-toggle="tab" href="#container-asset" role="tab" aria-expanded="false" aria-controls="container-asset" aria-selected="false">Container</a></li>
+            <li class="nav-item"><a class="nav-link" id="actor-tab" data-toggle="tab" href="#actor-asset" role="tab" aria-expanded="true" aria-controls="actor-asset" aria-selected="false">Actor</a></li>
+            
+          </ul>
+            <div class="tab-content" id="v-pills-tabContent">
+              <div class="tab-pane fade active" id="door-asset" role="tabpanel" aria-labelledby="door-tab">
+                <div class="assets">
+                  <ul>
+                  <!-- bind the gallery data -->
+                    <li v-for="obj in objects" v-on:click="chooseObj(obj)"> <div class="asset"><img v-bind:src="'../../'+obj.src"> </div><p v-html='obj.name'></p>
+                    </li>
+                    
+                  </ul>
+                </div>
+              </div>
 
-							<div class="tab-pane fade" id="actor-code" role="tabpanel" aria-labelledby="actor-block">
-							  <div class="assets">
-							    <p>Actor code block here</p>
-							  </div>
-							</div>
-						</div>
+              <div class="tab-pane fade" id="key-asset" role="tabpanel" aria-labelledby="key-tab">
+                <div class="assets">
+                  <ul>
+                    <li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
+                    </li>
+                    
+                  </ul>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="container-asset" role="tabpanel" aria-labelledby="container-tab">
+                <div class="assets">
+                  <ul>
+                    <li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
+                    </li>
+                    
+                  </ul>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="actor-asset" role="tabpanel" aria-labelledby="actor-tab">
+                <div class="assets">
+                  <ul>
+                    <li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
+                    </li>
+                    
+                  </ul>
+                </div>
+              </div>
+            </div>
+  	</div>
+  
+  	<div id="design-content">
+
+  		<div id="design-preview"><h6 class="window-title">PREVIEW</h6></div>
+  
+  		<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6></div>
+  
+  		<div id="design-editor-resizer" 
+  			resizer="horizontal" 
+  			resizer-height="6" 
+  			resizer-top="#design-preview" 
+  			resizer-bottom="#design-editor">
+  		</div>
+  
+  	</div>
+
+    <div id="gallery-resizer" 
+      resizer="vertical-left" 
+      resizer-width="6" 
+      resizer-left="#gallery" 
+      resizer-right="#design-content"
+      resizer-max="400">
+    </div>
+    <div id="design-side-resizer" 
+      resizer="vertical-right" 
+      resizer-width="6" 
+      resizer-left="#design-content" 
+      resizer-right="#design-side-common"
+      resizer-max="400">
+    </div>
+
+    <div id="design-side-common">
+      
+      <div id="design-object-list">
+        <h6 class="window-title">OBJECTS IN THE SCENES</h6>
+
+        <!-- if show object list on -->
+        <ol v-if='showObjectList' class="object-tree">
+        <li v-for="scene in sceneList" v-on:click="onSelect(scene)">
+
+        <!-- loop all scenes and objects -->
+        <label class="object_label" v-html="scene.name"></label>
+        <input type="checkbox" /> 
+          <ol>
+            <li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
+              <label class="object_label" v-html="object.name"></label>
+              <input type="checkbox"/>
+              
+            </li>
+          </ol>
+        </li>
+        <li>
+          <label class="object_label" for="inventory">Inventory</label>
+        </li>
+      </ol>
+
+        
+
+      </div>
+      <div id="design-property">
+        <h6 class="window-title">PROPERTIES</h6>
+        <!-- bind img src -->
+        <div v-if='showProperty' class="property-img-bg"> <img class="property-img" v-bind:src="'../../'+bindObj.src"></div>
+        <!-- bind info -->
+        <div v-if='showProperty' class="property-info">
+          <ul>
+            <li><input v-model='bindObj.name'/></li>
+            <li>
+            <label for="property-input">position </label>
+            <div class="property-input">
+            <label for="pos-x">x:</label> <input id="pos-x" v-model.number='bindObj.sprite.x'>
+             <label for="pos-y">y:</label> <input id="pos-y" v-model.number='bindObj.sprite.y'>
+           </div>
+           </li>
+            <li>
+              scale
+              <div class="property-input">
+                <label for="scale-x"> x:</label> <input id="scale-x" v-model.number='bindObj.sprite.scale.x'>
+             <label for="scale-y">y:</label> <input id="scale-y" v-model.number='bindObj.sprite.scale.y'>
+           </div>
+         </li>
+
+            <li>
+              <input v-model='bindObj.sprite.visible' id ="visible" type="checkbox">
+              <label for="visible">visible</label>
+              
+              
+            </li>
+            <li>
+               <input v-model='bindObj.interactive' id="clickable" type="checkbox">
+            <label for="clickable">interactive</label>
+             
+            </li>
+
+            <!-- user properties -->
+            <li v-for='property in bindObj.properties'>
+              <label for="pos-x">{{ property.key }}:</label> 
+              <input id="pos-x" v-model='property.value'>
+            </li>
+
+          </ul>
+
+        </div>
+      </div>
+      <div id="design-property-resizer" 
+        resizer="horizontal" 
+        resizer-height="6" 
+        resizer-top="#design-object-list" 
+        resizer-bottom="#design-property">
+      </div>
+    </div>
 
 
-						</div>
-						<div class="col">
+  </div> <!-- end of design view -->
 
-							<div class="row" id="code-editor">
-							</div>
-					
-							<div class="row" id="preview">
-							</div>
-						</div>
 
-						
-					<div class="col-2" id="side-common">
-						
-						<h6 class="window-title">THINGS IN THE SCENE</h6>			
-						<div class="row" id="things-list">
-							
-						</div>
-						<h6 class="window-title">GAME ATTRIBUTES</h6>
-						<div class="row" id="game-attribute">
-							
-						</div>
+  <div id="code-view" style="display: none;">
 
-						<h6 class="window-title">PROPERTIES</h6>
-						<div class="row" id="properties">
-							
-						</div>
-					</div>
-				
-					</div>
-			</div>
-			</div>
+    <div id="code-library">
+      
+        <h6 class="window-title">CODE LIBRARY</h6>
+    </div>
+  
+    <div id="code-content">
 
+      <div id="code-preview">
+        <h6 class="window-title">PREVIEW</h6></div>
+  
+      <div id="code-editor">
+        <h6 class="window-title">CODE EDITOR</h6></div>
+  
+      <div id="code-editor-resizer" 
+        resizer="horizontal" 
+        resizer-height="6" 
+        resizer-top="#code-preview" 
+        resizer-bottom="#code-editor">
+      </div>
+  
+    </div>
+
+    <div id="code-library-resizer" 
+      resizer="vertical-left" 
+      resizer-width="6" 
+      resizer-left="#code-library" 
+      resizer-right="#code-content"
+      resizer-max="400">
+    </div>
+    <div id="code-side-resizer" 
+      resizer="vertical-right" 
+      resizer-width="6" 
+      resizer-left="#code-content" 
+      resizer-right="#code-side-common"
+      resizer-max="400">
+    </div>
+
+
+    <div id="code-side-common">
+      
+      <div id="code-object-list">
+       
+        <h6 class="window-title">OBJECTS IN THE SCENES</h6>
+      </div>
+      <div id="code-property">
+
+        <h6 class="window-title">PROPERTIES</h6>
+      </div>
+      <div id="code-property-resizer" 
+        resizer="horizontal" 
+        resizer-height="6" 
+        resizer-top="#code-object-list" 
+        resizer-bottom="#code-property">
+      </div>
+    </div>
+
+
+  </div> <!-- end of code view -->
+
+  	
+  
+  	
 
 		
 
@@ -215,8 +343,7 @@
 
 
 	
-
-
+	
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

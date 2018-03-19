@@ -15,7 +15,7 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
 	this.id = _id;
 	this.name = _name;
-	this.src = _src;
+	this.src = _src; // "Assets/xxx"
 	//this.isDefault = true; // TODO
 	this.bindScene = _bindScene;
 
@@ -154,7 +154,7 @@ SceneObject.prototype.SelectOn = function(_add = false){
 			SceneObject.Selection.objects[0].SelectOff();
 		}
 		SceneObject.Selection.set(this);
-		this.sprite.alpha = 0.7;
+		this.sprite.alpha = 0.7; // TODO
 	}
 };
 

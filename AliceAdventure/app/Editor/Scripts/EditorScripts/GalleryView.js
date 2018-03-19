@@ -45,7 +45,7 @@ GalleryView.prototype.InitView = function(){
 	View.prototype.InitView.apply(this); // call super method
 	// init data binding
 	this.vModel = new Vue({
-	  el: '#gallery-view',
+	  el: '#' + this.bindElementID,
 	  data: {
 	  	objects: GalleryView.GalleryObjects
 	  }, 
