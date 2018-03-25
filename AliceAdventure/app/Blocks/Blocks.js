@@ -14,20 +14,6 @@ Blockly.Blocks['use_object_on_another_object'] = {
   }
 };
 
-Blockly.Blocks['create_object'] = {
-  init: function() {
-    this.appendValueInput("object")
-        .setCheck("Object")
-        .appendField("create object");
-    this.setInputsInline(true);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(120);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
-};
-
 Blockly.Blocks['move_object_into_inventory'] = {
   init: function() {
     this.appendValueInput("object")
@@ -39,74 +25,6 @@ Blockly.Blocks['move_object_into_inventory'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(120);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
-};
-
-Blockly.Blocks['change_variable'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("set variable")
-        .appendField(new Blockly.FieldDropdown([["color","COLOR"]]), "variable list")
-        .appendField("value to")
-        .appendField(new Blockly.FieldTextInput("'white'"), "COLOR_NAME");
-    this.setInputsInline(true);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(165);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
-};
-
-Blockly.Blocks['change_sprite'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("change sprite to")
-        .appendField(new Blockly.FieldDropdown([[{"src":"http://icons.iconarchive.com/icons/jj-maxer/icon-practice/256/taper-cone-icon.png","width":15,"height":15,"alt":"*"},"OPTIONNAME"], [{"src":"http://icon-park.com/imagefiles/traffic_cone_red.png","width":15,"height":15,"alt":"*"},"OPTIONNAME"]]), "NAME");
-    this.setInputsInline(true);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(230);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
-};
-
-Blockly.Blocks['show_variable_sprite'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("Sprite:")
-        .appendField(new Blockly.FieldDropdown([[{"src":"http://icon-park.com/imagefiles/traffic_cone_red.png","width":15,"height":15,"alt":"pic_red_cone_hat.png"},"OPTIONNAME"], [{"src":"http://icons.iconarchive.com/icons/jj-maxer/icon-practice/256/taper-cone-icon.png","width":15,"height":15,"alt":"pic_white_cone_hat.png"},"OPTIONNAME"], ["pic_red_cone_hat.png","OPTIONNAME"], ["pic_white_cone_hat.png","OPTIONNAME"]]), "OPTION");
-    this.setInputsInline(true);
-    this.setColour(300);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
-};
-
-Blockly.Blocks['show_variable_custom_color'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("custom variable")
-        .appendField(new Blockly.FieldTextInput("color"), "COLOR")
-        .appendField(":")
-        .appendField(new Blockly.FieldTextInput("'red'"), "value");
-    this.setInputsInline(true);
-    this.setColour(300);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
-};
-
-Blockly.Blocks['placeholder'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("Something...");
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
   }
