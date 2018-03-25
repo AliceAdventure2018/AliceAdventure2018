@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Alice Adventure</title>
     <script type="text/javascript" src="../../Resources/vue.js"></script>
-    <script type="text/javascript" src="../scripts/index.js"></script>
+    <!--script type="text/javascript" src="../scripts/index.js"></script-->
   </head>
   <body onload="InitAllViews()">
     <div id="scene-view">
@@ -85,5 +85,80 @@
     <div id="run-view">
       <h3>Scene view</h3>
     </div>
+    <div id="interaction-view">
+      <h3>Interaction view</h3>
+      <div v-if='viewEnabled'>
+        <button v-on:click='addInteraction()'>Add Interaction
+        </button>
+        <div v-for='ntra in interactions'> Interaction 
+          <div> &nbsp; Events: 
+            <div v-for='evt in ntra.eventList'> event
+            </div>
+          </div>
+          <div> &nbsp; Reactions: 
+            <div v-for='react in ntra.eventList'> reaction
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+'use strict';
+
+const electron = require('electron').remote;
+//const AliceEngine = require('../../Engine/AliceEngine');
+const AliceEditor = require('../Scripts/AliceEditor');
+
+// utilities
+function isNumberOr(_value, _default){
+  return (typeof _value == "number" ? _value : _default);
+}
+
+function isBooleanOr(_value, _default){
+  return (typeof _value == "boolean" ? _value : _default);
+}
+
+function isStringOr(_value, _default){
+  return (typeof _value == "string" ? _value : _default);
+}
+
+// variables
+var sceneView, propertyView, objectListView, galleryView, runView, interactionView;
+
+function InitAllViews(){
+  AliceEditor.Menu.Init();
+  AliceEditor.Menu.Update();
+  InitSceneView();
+  InitPropertyView();
+  InitObjectListView();
+  InitGalleryView();
+  InitRunView();
+  InitInteractionView();
+}
+
+function InitSceneView(){
+    sceneView = AliceEditor.SceneView.NewView('scene-view');
+}
+
+function InitPropertyView(){
+  propertyView = AliceEditor.PropertyView.NewView('property-view');
+}
+
+function InitObjectListView(){
+  objectListView = AliceEditor.ObjectListView.NewView('object-list-view');
+}
+
+function InitGalleryView(){
+  galleryView = AliceEditor.GalleryView.NewView('gallery-view');
+}
+
+function InitRunView(){
+  //runView = AliceEditor.RunView.NewView('run-view');
+}
+
+function InitInteractionView(){
+  interactionView = AliceEditor.InteractionView.NewView('interaction-view');
+}
+    </script>
   </body>
 </html>

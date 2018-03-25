@@ -26,14 +26,20 @@ File.instance = null;
 
 File.extension = "aap"; // the extension for our project
 
-File.tempDataObj = {
+File.tempJsonObj = {
 	sceneList: [],
 	objectList: [], 
+	interactionList: [],
+	interactionEventList: [],
+	stateList: [],
 	settings: {}, 
 	projectData: {}, 
 	reset: function(){
 		this.sceneList = [];
 		this.objectList = [];
+		this.interactionList = [];
+		this.interactionEventList = [];
+		this.stateList = [];
 		this.settings = {};
 		this.projectData = {};
 	}
@@ -141,7 +147,7 @@ File.RunProject = function(){
 File.SaveToPath = function(_path){
 	console.log("Save to " + _path);
 	File.instance.path = _path;
-	File.tempDataObj.reset();
+	File.tempJsonObj.reset();
 
 	// SceneList
 	for (let i in GameProperties.instance.sceneList){
@@ -150,7 +156,7 @@ File.SaveToPath = function(_path){
 			id: _s.id, 
 			name: _s.name
 		};
-		File.tempDataObj.sceneList.push(_d);
+		File.tempJsonObj.sceneList.push(_d);
 	}
 
 	// ObjectList
@@ -169,17 +175,39 @@ File.SaveToPath = function(_path){
 			bindScene: _o.bindScene.id, 
 			properties: _o.properties, 
 		};
-		File.tempDataObj.objectList.push(_d);
+		File.tempJsonObj.objectList.push(_d);
+	}
+
+	// InteractionList
+	for (let i in GameProperties.instance.interactionList){
+		let ntra = GameProperties.instance.interactionList[i];
+		let _d = {
+			id: ntra.id, 
+			eventIdList: [], 
+			reactionList: [], 
+		};
+		for (let n in ntra.eventList){
+			let evt = ntra.eventList[n];
+			_d.eventIdList.push(evt.id);
+		}
+		for (let n in ntra.reactionList){
+			// TODO
+			let react = ntra.reactionList[n];
+			let react_d = {
+				//type: react.type
+			};
+			_d.reactionList.push(react_d);
+		}
 	}
 
 	// Settings
-	File.tempDataObj.settings = GameProperties.instance.settings;
+	File.tempJsonObj.settings = GameProperties.instance.settings;
 
 	// ProjData
-	File.tempDataObj.projectData.idCounter = ID._counter;
+	File.tempJsonObj.projectData.idCounter = ID._counter;
 
 	// Write JSON file
-	FS.writeJsonSync(File.instance.path, File.tempDataObj, {spaces:'\t', EOL:'\n'});
+	FS.writeJsonSync(File.instance.path, File.tempJsonObj, {spaces:'\t', EOL:'\n'});
 
 	// Ensure has Assets folder
 	FS.ensureDir(PATH.dirname(File.instance.path) + '/Assets/');
