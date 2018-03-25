@@ -8,27 +8,14 @@ var Alice = {
     Ticker: PIXI.ticker.Ticker,
     Text: PIXI.Text,
     AnimatedObject: PIXI.extras.AnimatedSprite,
-    
 }
-
-
-function Condition(description) {
-    this.description = description;
-    this.satisfied = false;
-}
-
-function Interaction() {
-    this.requiredConditionColloection = [];
-    this.reaction = function(){};
-    this.active = true;
-}
-
 
 var baseURL = {
     requireAssets: './Resources/Assets/require/',
     nomalAssets: '../Resources/Assets/'
 }
 
+var requireAssetsBaseUrl = "Assets/"
 
 function Inventory(game) { //always on the top
     //tools container
@@ -217,9 +204,7 @@ function GameManager() {
     this.sceneManager;
     this.messageBox;
     
-    //interaction system
-    this.globalConditions = {};
-    
+    //this.updateProcedures = []; // a list of update function of objects
     
     this.init = function(width,height,invent_size) {
         if(invent_size == 0)
