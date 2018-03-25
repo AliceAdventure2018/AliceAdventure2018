@@ -1,0 +1,509 @@
+
+button{
+
+    border: none; 
+    background: none;
+}
+
+
+
+#topnav button{
+    color:#fff;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+}
+
+
+#topnav button:active, #topnav button:hover{
+    color:#155724;
+}
+
+#setting button:active, #setting button:hover{
+    color:#aaa;
+
+}
+
+.btn:focus,.btn:active:focus,.btn.active:focus,
+.btn.focus,.btn:active.focus,.btn.active.focus {
+    outline: none !important;
+}
+
+.window-title{
+    margin-left: 10px;
+    margin-top: 10px;
+    text-align: left;
+    color:#ffc107;
+}
+
+
+#add-scene{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+#add-scene-button:focus {outline:none;}
+#close-icon-button:focus {outline:none;}
+#close-button:focus {outline:none;}
+#run-button:focus {outline:none;}
+#build-button:focus {outline:none;}
+#save-button:focus {outline:none;}
+#save-change-button:focus {outline:none;}
+#setting-button:focus {outline:none;}
+#design-button:focus {outline:none;}
+#code-button:focus {outline:none;}
+
+#brand{
+    color:#ffc107;
+    margin-top:5px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    margin-right: 25px;
+}
+
+#brand:link{
+    outline: none;
+    text-decoration: none;
+    text-decoration-style: none;
+}
+
+#topnav {
+    background-color: #28a745;
+    display: block;
+    height: 40px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+   
+}
+
+
+.nav-item a {
+
+    color: #28a745;
+    margin-left: 10px;
+    margin-right: 10px;
+
+}
+
+.nav-item a:hover{
+    color: #155724;
+    margin-left: 10px;
+     margin-right: 10px;
+}
+
+.assets{
+    background-color: #eee;
+    margin:10px;
+    height:400px;
+    overflow-y: scroll;
+
+}
+
+#gallery {
+	background-color: #FFF;
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    left: 0;
+    width: 220px;
+   
+}
+
+#gallery ul{
+    padding: 0;
+}
+#gallery li{
+   list-style: none;
+   
+
+}
+
+.assets ul{
+    margin:0;
+}
+
+.assets li{
+    display: inline-block;
+    text-align: center;
+    width: 85px;
+    height: 85px;
+    margin: 0;
+    padding: 0;
+   
+}
+.assets p{
+    margin:0;
+    font-size: 0.7em;
+}
+.assets img{
+   
+   
+    margin: 10px;
+    max-width: 60px;
+    max-height: 60px;
+   
+}
+
+.asset {
+    margin:5px;
+     background-color: #ccc;
+     width:80px;
+     height: 80px;
+}
+
+#door-tab.active{
+    color: #ffffff;
+    background-color: #28a745;
+    
+    width:50%;
+
+    margin-left: 10px;
+     margin-right: 10px;
+
+}
+
+
+#key-tab.active{
+    color: #ffffff;
+    background-color: #28a745;
+     width:50%;
+    margin-left: 10px;
+     margin-right: 10px;
+}
+
+
+#container-tab.active{
+    color: #ffffff;
+    background-color: #28a745;
+     width:50%;
+    margin-left: 10px;
+     margin-right: 10px;
+}
+
+
+#actor-tab.active{
+    color: #ffffff;
+    background-color: #28a745;
+     width:50%;
+    margin-left: 10px;
+     margin-right: 10px;
+}
+
+
+#code-library {
+    background-color: #FFF;
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    left: 0;
+    width: 220px;
+  
+}
+
+#design-content {
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    left: 226px /* 200 + 6*/;
+    right: 256px;
+    overflow: hidden;
+
+    
+}
+#code-content {
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    left: 226px /* 200 + 6*/;
+    right: 256px;
+    overflow: hidden;
+ 
+    
+}
+
+#design-preview {
+    position: absolute;
+    top: 0;
+    bottom: 456px; /* 130 + 6 */
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    overflow: auto;
+}
+
+#code-preview {
+    position: absolute;
+    top: 0;
+    bottom: 456px; /* 130 + 6 */
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    overflow: auto;
+}
+
+#design-editor {
+    position: absolute;
+    height: 450px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+    background-color: #fff;
+}
+#code-editor {
+    position: absolute;
+    height: 450px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+    background-color: #fff;
+}
+#design-side-common{
+    background-color: #EEE;
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    right: 0;
+    width: 250px;
+   /* overflow: auto; */
+}
+#code-side-common{
+    background-color: #FFF;
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    right: 0;
+    width: 250px;
+   /* overflow: auto; */
+}
+#design-object-list{
+     position: absolute;
+    top: 0;
+    bottom: 356px; /* 130 + 6 */
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    /* overflow: auto; */
+}
+
+.object-tree {
+    background-color: #eee;
+    position: relative;
+    overflow: auto;
+     padding: 10px;
+    margin-left:10px;
+    margin-right: 10px;
+    min-height: 220px;
+
+}
+
+.object-tree ol{
+    padding-left: 10px;
+}
+
+.object-tree li {
+   list-style: none;   
+   font-size: 0.8em;
+   margin:0;       /* all list item li dots invisible */
+}
+
+.object-tree li .object_label + input[type=checkbox] {
+      opacity: 0;             /* checkboxes invisible and use no space */
+     }                        /* display: none; is better but fails in ie8 */
+
+.object-tree li .object_label {
+      cursor: pointer;        /* cursor changes when you mouse over this class */
+    }                         /* could add the many user-select: none; commands here */
+
+.object-tree li .object_label + input[type=checkbox] + ol > li
+         {
+            display: none;         /* prevents sublists below unchecked labels from displaying */
+         }
+
+.object-tree li .object_label + input[type=checkbox]:checked + ol > li
+         {
+           display: block;         /* display submenu on click */
+         }
+
+
+#code-object-list{
+     position: absolute;
+    top: 0;
+    bottom: 356px; /* 130 + 6 */
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    /* overflow: auto; */
+}
+#design-property{
+    position: absolute;
+    height: 350px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    overflow: auto;
+}
+
+.property-img {
+    max-width: 70px;
+    max-height: 70px;
+    min-width: 10px;
+    min-height: 10px;
+
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+   
+}
+
+
+.property-img-bg{
+    position: relative;
+    margin-right:10px;
+    margin-left: 10px;
+    top:0;
+
+    height: 90px;
+    background-color: #ccc;
+}
+
+.property-info ul{
+    background-color: #eee;
+    position: relative;
+    
+
+    margin-left:10px;
+    margin-right: 10px;
+    min-height: 150px;
+    padding: 12px;
+}
+
+.property-info li{
+    font-size: 0.8em;
+    list-style: none;
+    
+   padding-bottom: 8px;
+    
+}
+
+
+.property-input{
+    float: right;
+}
+
+.property-info input{
+    width: 30px;
+ 
+    
+}
+
+
+
+.property-info input:focus{
+    outline: none;
+}
+
+#code-property{
+    position: absolute;
+    height: 350px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+     background-color: #fff;
+}
+
+#design-side-resizer{
+    background-color: #EEE;
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    right: 250px;
+    width: 6px;
+    cursor: e-resize;
+}
+
+#code-side-resizer{
+    background-color: #EEE;
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    right: 250px;
+    width: 6px;
+    cursor: e-resize;
+}
+#gallery-resizer {
+	background-color: #EEE;
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    left: 220px;
+    width: 6px;
+    cursor: e-resize;
+}
+#code-library-resizer {
+    background-color: #EEE;
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    left: 220px;
+    width: 6px;
+    cursor: e-resize;
+}
+#design-property-resizer {
+    position: absolute;
+    height: 6px;
+    bottom: 350px;
+    left: 0;
+    right: 0;
+    background-color: #EEE;
+    cursor: n-resize;
+}
+#code-property-resizer {
+    position: absolute;
+    height: 6px;
+    bottom: 350px;
+    left: 0;
+    right: 0;
+    background-color: #EEE;
+    cursor: n-resize;
+}
+#design-editor-resizer {
+    position: absolute;
+    height: 6px;
+    bottom: 450px;
+    left: 0;
+    right: 0;
+    background-color: #EEE;
+    cursor: n-resize;
+}
+#code-editor-resizer {
+    position: absolute;
+    height: 6px;
+    bottom: 450px;
+    left: 0;
+    right: 0;
+    background-color: #EEE;
+    cursor: n-resize;
+}
+
+#gallery-resizer:hover,
+#code-library-resizer:hover,
+#design-side-resizer:hover, 
+#code-side-resizer:hover,
+#design-editor-resizer:hover,
+#code-editor-resizer:hover,
+#design-property-resizer:hover,  
+#code-property-resizer:hover {
+	background-color: #AAA;
+}

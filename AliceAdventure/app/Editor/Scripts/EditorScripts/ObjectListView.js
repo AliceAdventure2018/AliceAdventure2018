@@ -9,18 +9,25 @@ const View = require('./View');
 var ObjectListView;
 
 // variables
-ObjectListView = function(_height = -1, _width = -1){
-	View.call(this, "ObjectListView", _height, _width);	
+ObjectListView = function(_bindElementID, _height = -1, _width = -1){
+	View.call(this, "ObjectListView", _height, _width, _bindElementID);	
 	this.vModel = null;
 };
 ObjectListView.prototype = new View();
+
+// static
+ObjectListView.NewView = function(_elementID){
+	var view = new ObjectListView(_elementID);
+	view.InitView();
+	return view;
+};
 
 // functions
 ObjectListView.prototype.InitView = function(){
 	View.prototype.InitView.apply(this); // call super method
 	// init data binding
 	this.vModel = new Vue({
-	  el: '#object-list-view',
+	  el: '#' + this.bindElementID,
 	  data: {
 	  	showObjectList: false, 
 	    sceneList: null, 

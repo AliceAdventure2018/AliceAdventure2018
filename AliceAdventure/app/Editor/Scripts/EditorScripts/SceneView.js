@@ -32,7 +32,7 @@ SceneView.prototype.InitView = function(){
 	View.prototype.InitView.apply(this); // call super method
 	// Init data binding
 	this.vModel = new Vue({
-		el: '#scene-view',
+		el: '#' + this.bindElementID,
 		data: {
 			projectLoaded: false
 		}, 
@@ -71,6 +71,7 @@ SceneView.prototype.ReloadView = function(){
 };
 
 SceneView.prototype.AddObject = function(_objInfo){ // test
+	console.log(('here good'));
 	if (Scene.Selection.scene == null) return;
 	var _bindScene = Scene.Selection.scene;
 	var _obj = SceneObject.AddObject(_objInfo, _bindScene, this.app.screen.width / 2, this.app.screen.height / 2);

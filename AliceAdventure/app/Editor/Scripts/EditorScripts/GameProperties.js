@@ -6,9 +6,9 @@ GameProperties = function(){
 	this.sceneList = [];
 	this.objectList = [];
 	this.settings = {
-		resWidth: 1280, 
-		resHeight: 720, 
-		inventoryGridNum: 5,
+		resWidth: 600, 
+		resHeight: 400, 
+		inventoryGridNum: 0,
 		projectName: "untitled"
 	};
 

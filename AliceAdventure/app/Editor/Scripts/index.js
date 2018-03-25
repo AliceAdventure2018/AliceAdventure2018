@@ -18,7 +18,7 @@ function isStringOr(_value, _default){
 }
 
 // variables
-var sceneView, propertyView, objectListView, galleryView;
+var sceneView, propertyView, objectListView, galleryView, runView;
 
 function InitAllViews(){
 	AliceEditor.Menu.Init();
@@ -27,22 +27,25 @@ function InitAllViews(){
 	InitPropertyView();
 	InitObjectListView();
 	InitGalleryView();
+	InitRunView();
 }
 
 function InitSceneView(){
-    sceneView = AliceEditor.SceneView.NewView('scene-view');
+    sceneView = AliceEditor.SceneView.NewView('design-editor');
 }
 
 function InitPropertyView(){
-	propertyView = new AliceEditor.PropertyView();
-	propertyView.InitView();
+	propertyView = AliceEditor.PropertyView.NewView('design-property');
 }
 
 function InitObjectListView(){
-	objectListView = new AliceEditor.ObjectListView();
-	objectListView.InitView();
+	objectListView = AliceEditor.ObjectListView.NewView('design-object-list');
 }
 
 function InitGalleryView(){
-	galleryView = AliceEditor.GalleryView.NewView('gallery-view');
+	galleryView = AliceEditor.GalleryView.NewView('gallery');
+}
+
+function InitRunView(){
+	//runView = AliceEditor.RunView.NewView('run-view');
 }
