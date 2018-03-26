@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Alice Adventure</title>
     <script type="text/javascript" src="../../Resources/vue.js"></script>
-    <script type="text/javascript" src="../scripts/index.js"></script>
+    <!--script type="text/javascript" src="../scripts/index.js"></script-->
   </head>
   <body onload="InitAllViews()">
     <div id="scene-view">
@@ -85,5 +85,111 @@
     <div id="run-view">
       <h3>Scene view</h3>
     </div>
+    <div id="interaction-view">
+      <h3>Interaction view</h3>
+      <div v-if='viewEnabled'>
+        <button v-on:click='addInteraction()'> Add Interaction </button>
+        <div v-for='ntra in interactions'> Interaction 
+          <button v-on:click='deleteInteraction(ntra)'> Delete </button>
+          <div> &nbsp; Events: 
+            <div v-for='evt in ntra.eventList'> 
+              <span v-html='evt.name'></span>
+              <button v-on:click='removeEvent(evt, ntra)'> x </button>
+            </div>
+          </div>
+          <div> &nbsp; Reactions: 
+            <div v-for='react in ntra.reactionList'> 
+              <span v-html='react.name'></span>
+              <button v-on:click='deleteReaction(react, ntra)'> x </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="interaction-library-view">
+      <h3> I-library view</h3>
+      <div v-if='viewEnabled'> events: 
+        <button v-on:click='newIEvent()'> + </button>
+        <div v-for='evt in events' v-on:click='addIEventTo(evt, interactionView.vModel.interactions[0])'>
+          &nbsp; <span v-html='evt.name'></span>
+          <button v-on:click='deleteIEvent(evt)'> x </button>
+        </div>
+      </div>
+      <div v-if='viewEnabled'> states: 
+        <button v-on:click='newState()'> + </button>
+        <div v-for='state in states'>
+          &nbsp; <span v-html='state.name'></span>
+          <button v-on:click='deleteState(state)'> x </button>
+        </div>
+      </div>
+      <div v-if='viewEnabled'> reactions: 
+        <div v-for='react in reactions' v-on:click='addIReaction(react, interactionView.vModel.interactions[0], null)'>
+          &nbsp; <span v-html='react.name'></span>
+        </div>
+      </div>
+    </div>
+    <script>
+'use strict';
+
+const electron = require('electron').remote;
+//const AliceEngine = require('../../Engine/AliceEngine');
+const AliceEditor = require('../Scripts/AliceEditor');
+
+// utilities
+function isNumberOr(_value, _default){
+  return (typeof _value == "number" ? _value : _default);
+}
+
+function isBooleanOr(_value, _default){
+  return (typeof _value == "boolean" ? _value : _default);
+}
+
+function isStringOr(_value, _default){
+  return (typeof _value == "string" ? _value : _default);
+}
+
+// variables
+var sceneView, propertyView, objectListView, galleryView, runView, interactionView, iLibraryView;
+
+function InitAllViews(){
+  AliceEditor.Menu.Init();
+  AliceEditor.Menu.Update();
+  InitSceneView();
+  InitPropertyView();
+  InitObjectListView();
+  InitGalleryView();
+  InitRunView();
+  InitInteractionView();
+  InitILibraryView();
+}
+
+function InitSceneView(){
+    sceneView = AliceEditor.SceneView.NewView('scene-view');
+}
+
+function InitPropertyView(){
+  propertyView = AliceEditor.PropertyView.NewView('property-view');
+}
+
+function InitObjectListView(){
+  objectListView = AliceEditor.ObjectListView.NewView('object-list-view');
+}
+
+function InitGalleryView(){
+  galleryView = AliceEditor.GalleryView.NewView('gallery-view');
+}
+
+function InitRunView(){
+  //runView = AliceEditor.RunView.NewView('run-view');
+}
+
+function InitInteractionView(){
+  interactionView = AliceEditor.InteractionView.NewView('interaction-view');
+}
+
+function InitILibraryView(){
+  iLibraryView = AliceEditor.ILibraryView.NewView('interaction-library-view');
+}
+    </script>
   </body>
 </html>
