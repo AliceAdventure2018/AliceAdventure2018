@@ -18,7 +18,7 @@ Interaction = function(_id){
 };
 
 // static
-Interaction.AddNewInteraction = function(){
+Interaction.NewInteraction = function(){
 	let interaction = new Interaction(null);
 	return interaction;
 };
@@ -33,25 +33,32 @@ Interaction.LoadInteraction = function(_data){
 };
 
 // functions
-Interaction.prototype.AddInteractionEvent = function(_ntraEvnt){
-	if (this.eventList.indexOf(_ntraEvnt) >= 0)	{return false;} // Already contains this event
-	this.eventList.push(_ntraEvnt);
+Interaction.prototype.AddIEvent = function(_iEvent){
+	if (this.eventList.indexOf(_iEvent) >= 0)	{return false;} // Already contains this event
+	this.eventList.push(_iEvent);
 	return true;
 };
 
-Interaction.prototype.InsertInteractionReaction = function(_ntraReact, _index = null){
-	//this.reactionList.push(new InteractionReaction(type, obj1, obj2))
-	if (_index == null || _index >= this.reactionList.length) { // push back
-		this.reactionList.push(_ntraReact);
-	} else if (_index <= 0){
-		this.reactionList.unshift(_ntraReact); // push front
-	} else { // insert
-		this.reactionList.splice(_index, 0, _ntraReact);
+Interaction.prototype.RemoveIEvent = function(_iEvent){
+	let i = this.eventList.indexOf(_iEvent);
+	if (i >= 0) { // exist
+
 	}
 };
 
-Interaction.prototype.RemoveInteractionReaction = function(_ntraReact){
-	let i = this.reactionList.indexOf(_ntraReact);
+Interaction.prototype.AddIReaction = function(_iReact, _index = null){
+	//this.reactionList.push(new InteractionReaction(type, obj1, obj2))
+	if (_index == null || _index >= this.reactionList.length) { // push back
+		this.reactionList.push(_iReact);
+	} else if (_index <= 0){
+		this.reactionList.unshift(_iReact); // push front
+	} else { // insert
+		this.reactionList.splice(_index, 0, _iReact);
+	}
+};
+
+Interaction.prototype.DeleteIReaction = function(_iReact){
+	let i = this.reactionList.indexOf(_iReact);
 	if (i >= 0) {
 		this.reactionList.splice(i, 1);
 	}

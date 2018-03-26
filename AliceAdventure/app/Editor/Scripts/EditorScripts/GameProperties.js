@@ -6,7 +6,7 @@ GameProperties = function(){
 	this.sceneList = [];
 	this.objectList = [];
 	this.interactionList = [];
-	this.interactionEventList = [];
+	this.iEventList = [];
 	this.stateList = [];
 	this.settings = {
 		resWidth: 600, 
@@ -53,11 +53,11 @@ GameProperties.GetInteractionById = function(_id){
 	}
 	return null;
 };
-GameProperties.GetInteractionEventById = function(_id){
+GameProperties.GetIEventById = function(_id){
 	if (GameProperties.instance == null) return null;
-	for (let i in GameProperties.instance.interactionEventList){
-		if (GameProperties.instance.interactionEventList[i].id == _id){
-			return GameProperties.instance.interactionEventList[i];
+	for (let i in GameProperties.instance.iEventList){
+		if (GameProperties.instance.iEventList[i].id == _id){
+			return GameProperties.instance.iEventList[i];
 		}
 	}
 	return null;
@@ -117,16 +117,16 @@ GameProperties.DeleteInteraction = function(_ntra){
 	return false;
 };
 
-GameProperties.AddInteractionEvent = function(_ntraEvnt){
+GameProperties.AddIEvent = function(_ntraEvnt){
 	if (GameProperties.instance == null) return false;
-	GameProperties.instance.interactionEventList.push(_ntraEvnt);
+	GameProperties.instance.iEventList.push(_ntraEvnt);
 	return true;
 };
-GameProperties.DeleteInteractionEvent = function(_ntraEvnt){
+GameProperties.DeleteIEvent = function(_ntraEvnt){
 	if (GameProperties.instance == null) return false; 
-	var i = GameProperties.instance.interactionEventList.indexOf(_ntraEvnt);
+	var i = GameProperties.instance.iEventList.indexOf(_ntraEvnt);
 	if (i >= 0){
-		GameProperties.instance.interactionEventList.splice(i, 1);
+		GameProperties.instance.iEventList.splice(i, 1);
 		return true;
 	}
 	return false;

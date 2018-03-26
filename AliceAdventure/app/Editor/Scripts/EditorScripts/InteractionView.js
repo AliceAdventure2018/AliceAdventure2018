@@ -36,7 +36,10 @@ InteractionView.prototype.InitView = function(){
 			interactions: null
 		}, 
 		methods: {
-			addInteraction: ()=>{this.AddNewInteraction();}
+			addInteraction: ()=>{this.AddNewInteraction();}, 
+			deleteInteraction: (ntra)=>{ntra.DeleteThis();}, 
+			removeEvent: (evt, ntra)=>{ntra.RemoveIEvent(evt);}, 
+			deleteReaction: (react, ntra)=>{ntra.DeleteIReaction(react);}
 		}
 	});
 
@@ -58,7 +61,7 @@ InteractionView.prototype.ReloadView = function(){
 
 InteractionView.prototype.AddNewInteraction = function(){
 	if (this.vModel.viewEnabled) {
-		Interaction.AddNewInteraction();
+		Interaction.NewInteraction();
 	}
 };
 
