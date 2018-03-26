@@ -11,18 +11,73 @@ var Alice = {
     
 }
 
+function InteractionSystem(object) {
+    this.clickCollection = new InteractionCollection(0);
+    
+    this.InventoryUse = new InteractionCollection(1);
+    this.InventoryCombine = new InteractionCollection(2);
+    this.InventoryObserve = new InteractionCollection(3);
+    
+
+    object.interactive = true;
+    object.buttonMode = true;
+    object.onClick = function() {
+        object.interactionSystem.clickCollection.react()
+    }
+    object.on('pointerdown', object.onClick);
+    
+    
+}
 
 function Condition(description) {
     this.description = description;
     this.satisfied = false;
 }
 
+function InteractionCollection(type) {
+    this.type = type;
+    //1.click
+    //2.inventory
+    //2.1 A Used on B
+    //2.2 A combined with B
+    //2.3 A is observed
+    this.interactions = [];
+    
+    this.add = function(interation) {
+        //console.log(this.interactions);
+        this.interactions.push(interation);
+    }
+    
+    this.react = function() {
+        //console.log(this.interactions);
+        this.interactions.forEach(function(int) {
+            if(int.checkCondition()) {
+                int.reaction();
+                console.log("react");
+            }
+        })
+    }
+
+}
 
 function Interaction() {
-    this.requiredConditionColloection = [];
-    this.reaction = function(){};
     this.active = true;
+    this.description = "";
+    this.requiredConditions = [];
+    
+    //override
+    this.reaction = function(){};
+    
+    this.checkCondition = function() {
+        console.log("check");
+        var result = true;
+        for(var condition in this.requiredConditions) {
+            result = result && condition.satisfied;
+        }
+        return result;
+    }
 }
+
 
 
 var baseURL = {
@@ -30,6 +85,48 @@ var baseURL = {
     nomalAssets: '../Resources/Assets/'
 }
 
+function InventoryInteractionSystem() {
+    //this.interactionCollection = 
+    //when a is used on b
+    this.interactionMap = {};
+    
+    this.addUseEvent = function(objA, objB, interaction) {
+        if(this.interactionMap.objA == undefined)
+        {
+            this.interactionMap.objA = {};
+            this.interactionMap.objA.objB = [];
+        }
+        
+        if(this.interactionMap.objA.objB == undefined) {
+            this.interactionMap.objA.objB = [];
+        }
+            
+        this.interactionMap.objA.objB.push(interaction);
+    }
+    
+    //this.addCombineEvent 
+    this.useReact = function(A,B) {
+        
+        if(this.interactionMap.A)
+        {
+            if(this.interactionMap.A.B) {
+                console.log("has interaction");
+                this.interactionMap.A.B.forEach(function(int){
+                    if(int.checkCondition()) {
+                        int.reaction();
+                        console.log("use react");
+                        return true;
+                    }
+                });
+                
+            }
+        }
+        
+        return false;
+        
+    }
+    
+}
 
 function Inventory(game) { //always on the top
     //tools container
@@ -53,6 +150,9 @@ function Inventory(game) { //always on the top
         this.inventoryBackgroundGrp.addChild(inventBack); 
     }
     
+    //interaction system
+    this.interactionSystem = new InventoryInteractionSystem();
+        
 
     ////////functions//////////
     this.scaleDown = function(tool) {
@@ -71,6 +171,10 @@ function Inventory(game) { //always on the top
         
         
         tool.off('pointerdown', tool.onClick);
+        tool.onOver = function() {
+            tool.interactionSystem.InventoryObserve.react()
+        }
+        tool.on('rightclick', tool.onOver);
         
         //enable drag and drop
         tool
@@ -99,32 +203,38 @@ function Inventory(game) { //always on the top
         }
     }
     
-    this.inventoryCombine = function() {
-        
-    }
-    
     this.inventoryUse = function(tool) {
-        if(tool && tool.target && hitTestRectangle(tool,tool.target))
-        {
-                //console.log("2");
-                //tool.use(); //[TODO]
-                tool.emit(tool.dropMessage);  
-                //console.log("hola hola");
-            
-        }else { //go back to inventory
-                //console.log("3");
+        var map = this.getCollisionMap(tool);
+        
+        if(map.length > 0) {
+            console.log("map > 0");
+            if(!this.interactionSystem.useReact(tool.name,map.pop().name)) {
                 tool.x = tool.inventPos.x;
                 tool.y = tool.inventPos.y;
+            }
+        }else {
+            tool.x = tool.inventPos.x;
+            tool.y = tool.inventPos.y;
         }
-    
+         
     }
     
     this.clearUp= function() {
         this.inventoryContainer.removeChildren();
     }
     
-    
-     
+    this.getCollisionMap = function(tool) {
+        var collideList = [];
+        var objectsInCurrentScene = this.game.sceneManager.getCurrentScene().children;
+        console.log(objectsInCurrentScene)
+        objectsInCurrentScene.forEach(function(obj) {
+            if(obj.visible && hitTestRectangle(tool,obj)) {
+                console.log(obj.name);
+                collideList.push(obj);
+            }
+        });
+        return collideList;
+    }
 }
 
 function onDragStart(event) {
@@ -159,7 +269,21 @@ function SceneManager(game) {
     //init
     this.game = game;
     this.sceneContainer = new PIXI.Container();
-
+    
+    this.getCurrentScene = function() {
+        return this.currentScene;
+    }
+    
+    this.getSceneByIndex = function(index) {
+        return this.sceneContainer.getChildAt(index);
+    }
+    
+    this.createScenes = function(num) {
+        for(var i = 0; i < num; i++) {
+            var scene = new Alice.Scene();
+            this.addScene(scene);
+        }
+    }
     
     this.addScene = function(scene) {
         this.sceneContainer.addChild(scene);
@@ -225,7 +349,6 @@ function GameManager() {
     
     //interaction system
     this.globalConditions = {};
-    
     
     this.init = function(width,height,invent_size) {
         if(invent_size == 0)
@@ -297,6 +420,9 @@ function GameManager() {
         this.awake();
     }
     
+    this.scene = function(index) {
+        return this.sceneManager.getSceneByIndex(index);
+    }    
 }
 
 
@@ -455,6 +581,10 @@ function StateMachine(states) {
 /*
     2D collision detection
 */
+
+
+
+
 function hitTestRectangle(r1, r2) {
 
   //Define the variables we'll need to calculate

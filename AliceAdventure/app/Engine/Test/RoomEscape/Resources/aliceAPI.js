@@ -8,14 +8,28 @@ var Alice = {
     Ticker: PIXI.ticker.Ticker,
     Text: PIXI.Text,
     AnimatedObject: PIXI.extras.AnimatedSprite,
+    
 }
+
+
+function Condition(description) {
+    this.description = description;
+    this.satisfied = false;
+}
+
+
+function Interaction() {
+    this.requiredConditionColloection = [];
+    this.reaction = function(){};
+    this.active = true;
+}
+
 
 var baseURL = {
     requireAssets: './Resources/Assets/require/',
     nomalAssets: '../Resources/Assets/'
 }
 
-var requireAssetsBaseUrl = "Assets/"
 
 function Inventory(game) { //always on the top
     //tools container
@@ -39,6 +53,7 @@ function Inventory(game) { //always on the top
         this.inventoryBackgroundGrp.addChild(inventBack); 
     }
     
+
     ////////functions//////////
     this.scaleDown = function(tool) {
         tool.scale.set(1);
@@ -53,6 +68,8 @@ function Inventory(game) { //always on the top
         
         //scale down
         this.scaleDown(tool);
+        
+        
         tool.off('pointerdown', tool.onClick);
         
         //enable drag and drop
@@ -105,6 +122,8 @@ function Inventory(game) { //always on the top
     this.clearUp= function() {
         this.inventoryContainer.removeChildren();
     }
+    
+    
      
 }
 
@@ -204,7 +223,9 @@ function GameManager() {
     this.sceneManager;
     this.messageBox;
     
-    //this.updateProcedures = []; // a list of update function of objects
+    //interaction system
+    this.globalConditions = {};
+    
     
     this.init = function(width,height,invent_size) {
         if(invent_size == 0)
