@@ -42,7 +42,7 @@ Interaction.prototype.AddIEvent = function(_iEvent){
 Interaction.prototype.RemoveIEvent = function(_iEvent){
 	let i = this.eventList.indexOf(_iEvent);
 	if (i >= 0) { // exist
-
+		this.eventList.splice(i, 1);
 	}
 };
 
@@ -59,7 +59,7 @@ Interaction.prototype.AddIReaction = function(_iReact, _index = null){
 
 Interaction.prototype.DeleteIReaction = function(_iReact){
 	let i = this.reactionList.indexOf(_iReact);
-	if (i >= 0) {
+	if (i >= 0) { // exist
 		this.reactionList.splice(i, 1);
 	}
 };
