@@ -14,19 +14,13 @@ var Alice = {
 function InteractionSystem(object) {
     this.clickCollection = new InteractionCollection(0);
     
-    this.InventoryUse = new InteractionCollection(1);
-    this.InventoryCombine = new InteractionCollection(2);
-    this.InventoryObserve = new InteractionCollection(3);
-    
-
     object.interactive = true;
     object.buttonMode = true;
     object.onClick = function() {
         object.interactionSystem.clickCollection.react()
     }
     object.on('pointerdown', object.onClick);
-    
-    
+
 }
 
 function Condition(description) {
@@ -34,20 +28,14 @@ function Condition(description) {
     this.satisfied = false;
 }
 
+
 function InteractionCollection(type) {
     this.type = type;
-    //1.click
-    //2.inventory
-    //2.1 A Used on B
-    //2.2 A combined with B
-    //2.3 A is observed
     this.interactions = [];
-    
     this.add = function(interation) {
         //console.log(this.interactions);
         this.interactions.push(interation);
     }
-    
     this.react = function() {
         //console.log(this.interactions);
         this.interactions.forEach(function(int) {
@@ -57,7 +45,6 @@ function InteractionCollection(type) {
             }
         })
     }
-
 }
 
 function Interaction() {
@@ -86,46 +73,57 @@ var baseURL = {
 }
 
 function InventoryInteractionSystem() {
-    //this.interactionCollection = 
-    //when a is used on b
-    this.interactionMap = {};
     
-    this.addUseEvent = function(objA, objB, interaction) {
-        if(this.interactionMap.objA == undefined)
-        {
-            this.interactionMap.objA = {};
-            this.interactionMap.objA.objB = [];
-        }
-        
-        if(this.interactionMap.objA.objB == undefined) {
-            this.interactionMap.objA.objB = [];
-        }
-            
-        this.interactionMap.objA.objB.push(interaction);
+    this.emptySprite = new Alice.Object;
+    this.eventMessageList = {};
+    
+    this.addUsedEvent = function(objA, objB, func) {
+        var eventMessage = objA.name + " is used on " + objB.name;
+        //console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true; 
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
     }
     
-    //this.addCombineEvent 
-    this.useReact = function(A,B) {
+    this.addCombineEvent = function(objA, objB, func) {
+        var eventMessage = objA.name + " is combined with " + objB.name;
+        console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true; 
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
         
-        if(this.interactionMap.A)
-        {
-            if(this.interactionMap.A.B) {
-                console.log("has interaction");
-                this.interactionMap.A.B.forEach(function(int){
-                    if(int.checkCondition()) {
-                        int.reaction();
-                        console.log("use react");
-                        return true;
-                    }
-                });
-                
-            }
-        }
-        
-        return false;
-        
+        eventMessage = objB.name + " is combined with " + objA.name;
+        console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true; 
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
     }
     
+    this.addObserveEvent = function(obj, func) {
+        var eventMessage = obj.name + " is observed";
+        //console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true;
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
+    }
+    
+    this.checkEventExist = function(message) {
+        if(this.eventMessageList[message] == undefined || this.eventMessageList[message] == false) {
+            console.log("not valid");
+            return false;
+        }
+        
+        return true;
+    }
+    
+    this.callEvent = function(message) {
+        this.emptySprite.emit(message);
+    }
+
 }
 
 function Inventory(game) { //always on the top
@@ -171,10 +169,7 @@ function Inventory(game) { //always on the top
         
         
         tool.off('pointerdown', tool.onClick);
-        tool.onOver = function() {
-            tool.interactionSystem.InventoryObserve.react()
-        }
-        tool.on('rightclick', tool.onOver);
+        tool.on('rightclick', function(){myGame.inventory.inventoryObserved(tool)});
         
         //enable drag and drop
         tool
@@ -203,19 +198,38 @@ function Inventory(game) { //always on the top
         }
     }
     
-    this.inventoryUse = function(tool) {
-        var map = this.getCollisionMap(tool);
+    this.inventoryObserved = function(tool) {
+        var message = tool.name + " is observed";
+        if(this.interactionSystem.checkEventExist(message))
+            this.interactionSystem.callEvent(message);
         
-        if(map.length > 0) {
-            console.log("map > 0");
-            if(!this.interactionSystem.useReact(tool.name,map.pop().name)) {
-                tool.x = tool.inventPos.x;
-                tool.y = tool.inventPos.y;
+    }
+    
+    
+    this.inventoryUse = function(tool) {
+        var res = this.getCollisionMap(tool);
+        var sceneCollider = res.scene;
+        var inventoryCollider = res.inventory;
+        
+        if(sceneCollider.length > 0) {
+            var message = tool.name + " is used on " + sceneCollider.pop().name;
+            if(this.interactionSystem.checkEventExist(message)){
+                this.interactionSystem.callEvent(message);
+                return;
             }
-        }else {
-            tool.x = tool.inventPos.x;
-            tool.y = tool.inventPos.y;
         }
+        
+        if(inventoryCollider.length > 0) {
+            var message = tool.name + " is combined with " + inventoryCollider.pop().name;
+            if(this.interactionSystem.checkEventExist(message)){
+                this.interactionSystem.callEvent(message);
+                return;
+            }
+        }
+        
+        
+        tool.x = tool.inventPos.x;
+        tool.y = tool.inventPos.y;
          
     }
     
@@ -223,18 +237,33 @@ function Inventory(game) { //always on the top
         this.inventoryContainer.removeChildren();
     }
     
+    
     this.getCollisionMap = function(tool) {
-        var collideList = [];
+        var SceneCollideList = [];
         var objectsInCurrentScene = this.game.sceneManager.getCurrentScene().children;
-        console.log(objectsInCurrentScene)
+        //console.log(objectsInCurrentScene)
         objectsInCurrentScene.forEach(function(obj) {
             if(obj.visible && hitTestRectangle(tool,obj)) {
                 console.log(obj.name);
-                collideList.push(obj);
+                SceneCollideList.push(obj);
             }
         });
-        return collideList;
+        
+        var InventoryCollideList = [];
+        var objectsInInventory = this.inventoryContainer.children;
+        console.log(objectsInInventory);
+        objectsInInventory.forEach(function(obj) {
+            if(obj.name!=tool.name && obj.visible && hitTestRectangle(tool,obj)) {
+                console.log(obj.name);
+                InventoryCollideList.push(obj);
+            }
+        });
+        
+        console.log(SceneCollideList);
+        console.log(InventoryCollideList);
+        return {scene:SceneCollideList,inventory:InventoryCollideList};
     }
+    
 }
 
 function onDragStart(event) {
@@ -581,10 +610,6 @@ function StateMachine(states) {
 /*
     2D collision detection
 */
-
-
-
-
 function hitTestRectangle(r1, r2) {
 
   //Define the variables we'll need to calculate

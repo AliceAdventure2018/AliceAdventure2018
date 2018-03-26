@@ -36,57 +36,84 @@ key.anchor.set(0.5);
 key.x = 900;
 key.y = 600;
 key.scale.set(0.7);
-
-key.interactionSystem = new InteractionSystem(key);
-
-//interctions editor
-var tempInteraction = new Interaction();
-tempInteraction.reaction = function() {
+key.visible = false;
+key.name = "key";
+key.interactive = true;
+key.buttonMode = true;
+key.on('pointerdown',function() {
     myGame.inventory.add(key);
-}
+})
 
-key.interactionSystem.clickCollection.add(tempInteraction)
-
-tempInteraction = new Interaction();
-tempInteraction.reaction = function() {
-    myGame.messageBox.startConversation(["It is a key"]);
-}
-
-key.interactionSystem.InventoryObserve.add(tempInteraction)
-
-
+//key.interactionSystem = new InteractionSystem(key);
 //
-//key.target = door; // init sequence matters
-//key.dropMessage = "keyDropOnDoor"
+////interctions editor
+//var tempInteraction = new Interaction();
+//tempInteraction.reaction = function() {
+//    myGame.inventory.add(key);
+//}
+//key.interactionSystem.clickCollection.add(tempInteraction)
 //
-//key.on("keyDropOnDoor",function(){
-//    this.target.interact();
-//    myGame.inventory.remove(this);
-//    myGame.messageBox.startConversation(["Nice job! Thank you!"]);
-//});
+//tempInteraction = new Interaction();
+//tempInteraction.reaction = function() {
+//    myGame.messageBox.startConversation(["It is a key"]);
+//}
+
+//key.interactionSystem.InventoryObserve.add(tempInteraction)
+
 
 myGame.scene(0).addChild(key);
 
 
+var cat = Alice.Object.fromImage(baseURL.nomalAssets + 'cat.png');
+cat.anchor.set(0.5);
+cat.x = 250;
+cat.y = 500;
+cat.scale.set(0.8);
+cat.name = "cat";
+cat.interactive = true;
+cat.buttonMode = true;
+cat.on('pointerdown',function() {
+    myGame.inventory.add(cat);
+})
 
-/////
-
-//when key is used on door
-tempInteraction = new Interaction();
-tempInteraction.reaction = function() {
-    myGame.messageBox.startConversation(["opened"]);
-}
-myGame.inventory.interactionSystem.addUseEvent("key","door",tempInteraction);
-
-
-
-
-
-
+myGame.scene(0).addChild(cat);
 
 
-/////
+var slime = Alice.Object.fromImage(baseURL.nomalAssets + 'slime.png');
+slime.anchor.set(0.5);
+slime.x = 500;
+slime.y = 600;
+slime.scale.set(1.2);
+slime.name = "slime";
+slime.interactive = true;
+slime.buttonMode = true;
+slime.on('pointerdown',function() {
+    myGame.inventory.add(slime);
+})
 
+myGame.scene(0).addChild(slime);
+
+
+//register events
+
+myGame.inventory.interactionSystem.addUsedEvent(key,door,function(){
+    door.visible = false;
+    door2.visible = true;
+    myGame.inventory.remove(key);
+});
+
+
+myGame.inventory.interactionSystem.addObserveEvent(key,function(){
+    myGame.messageBox.startConversation(["It is a key"]);
+});
+
+
+myGame.inventory.interactionSystem.addCombineEvent(cat,slime,function(){
+    myGame.inventory.remove(cat);
+    myGame.inventory.remove(slime);
+    key.visible = true;
+    myGame.inventory.add(key);
+});
 
 
 
