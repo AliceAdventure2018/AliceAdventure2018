@@ -11,6 +11,17 @@ var Alice = {
     
 }
 
+function InteractionSystem(object) {
+    this.clickCollection = new InteractionCollection(0);
+    
+    object.interactive = true;
+    object.buttonMode = true;
+    object.onClick = function() {
+        object.interactionSystem.clickCollection.react()
+    }
+    object.on('pointerdown', object.onClick);
+
+}
 
 function Condition(description) {
     this.description = description;
@@ -18,11 +29,42 @@ function Condition(description) {
 }
 
 
-function Interaction() {
-    this.requiredConditionColloection = [];
-    this.reaction = function(){};
-    this.active = true;
+function InteractionCollection(type) {
+    this.type = type;
+    this.interactions = [];
+    this.add = function(interation) {
+        //console.log(this.interactions);
+        this.interactions.push(interation);
+    }
+    this.react = function() {
+        //console.log(this.interactions);
+        this.interactions.forEach(function(int) {
+            if(int.checkCondition()) {
+                int.reaction();
+                console.log("react");
+            }
+        })
+    }
 }
+
+function Interaction() {
+    this.active = true;
+    this.description = "";
+    this.requiredConditions = [];
+    
+    //override
+    this.reaction = function(){};
+    
+    this.checkCondition = function() {
+        console.log("check");
+        var result = true;
+        for(var condition in this.requiredConditions) {
+            result = result && condition.satisfied;
+        }
+        return result;
+    }
+}
+
 
 
 var baseURL = {
@@ -30,6 +72,59 @@ var baseURL = {
     nomalAssets: '../Resources/Assets/'
 }
 
+function InventoryInteractionSystem() {
+    
+    this.emptySprite = new Alice.Object;
+    this.eventMessageList = {};
+    
+    this.addUsedEvent = function(objA, objB, func) {
+        var eventMessage = objA.name + " is used on " + objB.name;
+        //console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true; 
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
+    }
+    
+    this.addCombineEvent = function(objA, objB, func) {
+        var eventMessage = objA.name + " is combined with " + objB.name;
+        console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true; 
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
+        
+        eventMessage = objB.name + " is combined with " + objA.name;
+        console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true; 
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
+    }
+    
+    this.addObserveEvent = function(obj, func) {
+        var eventMessage = obj.name + " is observed";
+        //console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true;
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
+    }
+    
+    this.checkEventExist = function(message) {
+        if(this.eventMessageList[message] == undefined || this.eventMessageList[message] == false) {
+            console.log("not valid");
+            return false;
+        }
+        
+        return true;
+    }
+    
+    this.callEvent = function(message) {
+        this.emptySprite.emit(message);
+    }
+
+}
 
 function Inventory(game) { //always on the top
     //tools container
@@ -53,6 +148,9 @@ function Inventory(game) { //always on the top
         this.inventoryBackgroundGrp.addChild(inventBack); 
     }
     
+    //interaction system
+    this.interactionSystem = new InventoryInteractionSystem();
+        
 
     ////////functions//////////
     this.scaleDown = function(tool) {
@@ -71,6 +169,7 @@ function Inventory(game) { //always on the top
         
         
         tool.off('pointerdown', tool.onClick);
+        tool.on('rightclick', function(){myGame.inventory.inventoryObserved(tool)});
         
         //enable drag and drop
         tool
@@ -99,24 +198,39 @@ function Inventory(game) { //always on the top
         }
     }
     
-    this.inventoryCombine = function() {
+    this.inventoryObserved = function(tool) {
+        var message = tool.name + " is observed";
+        if(this.interactionSystem.checkEventExist(message))
+            this.interactionSystem.callEvent(message);
         
     }
     
-    this.inventoryUse = function(tool) {
-        if(tool && tool.target && hitTestRectangle(tool,tool.target))
-        {
-                //console.log("2");
-                //tool.use(); //[TODO]
-                tool.emit(tool.dropMessage);  
-                //console.log("hola hola");
-            
-        }else { //go back to inventory
-                //console.log("3");
-                tool.x = tool.inventPos.x;
-                tool.y = tool.inventPos.y;
-        }
     
+    this.inventoryUse = function(tool) {
+        var res = this.getCollisionMap(tool);
+        var sceneCollider = res.scene;
+        var inventoryCollider = res.inventory;
+        
+        if(sceneCollider.length > 0) {
+            var message = tool.name + " is used on " + sceneCollider.pop().name;
+            if(this.interactionSystem.checkEventExist(message)){
+                this.interactionSystem.callEvent(message);
+                return;
+            }
+        }
+        
+        if(inventoryCollider.length > 0) {
+            var message = tool.name + " is combined with " + inventoryCollider.pop().name;
+            if(this.interactionSystem.checkEventExist(message)){
+                this.interactionSystem.callEvent(message);
+                return;
+            }
+        }
+        
+        
+        tool.x = tool.inventPos.x;
+        tool.y = tool.inventPos.y;
+         
     }
     
     this.clearUp= function() {
@@ -124,7 +238,32 @@ function Inventory(game) { //always on the top
     }
     
     
-     
+    this.getCollisionMap = function(tool) {
+        var SceneCollideList = [];
+        var objectsInCurrentScene = this.game.sceneManager.getCurrentScene().children;
+        //console.log(objectsInCurrentScene)
+        objectsInCurrentScene.forEach(function(obj) {
+            if(obj.visible && hitTestRectangle(tool,obj)) {
+                console.log(obj.name);
+                SceneCollideList.push(obj);
+            }
+        });
+        
+        var InventoryCollideList = [];
+        var objectsInInventory = this.inventoryContainer.children;
+        console.log(objectsInInventory);
+        objectsInInventory.forEach(function(obj) {
+            if(obj.name!=tool.name && obj.visible && hitTestRectangle(tool,obj)) {
+                console.log(obj.name);
+                InventoryCollideList.push(obj);
+            }
+        });
+        
+        console.log(SceneCollideList);
+        console.log(InventoryCollideList);
+        return {scene:SceneCollideList,inventory:InventoryCollideList};
+    }
+    
 }
 
 function onDragStart(event) {
@@ -159,7 +298,21 @@ function SceneManager(game) {
     //init
     this.game = game;
     this.sceneContainer = new PIXI.Container();
-
+    
+    this.getCurrentScene = function() {
+        return this.currentScene;
+    }
+    
+    this.getSceneByIndex = function(index) {
+        return this.sceneContainer.getChildAt(index);
+    }
+    
+    this.createScenes = function(num) {
+        for(var i = 0; i < num; i++) {
+            var scene = new Alice.Scene();
+            this.addScene(scene);
+        }
+    }
     
     this.addScene = function(scene) {
         this.sceneContainer.addChild(scene);
@@ -225,7 +378,6 @@ function GameManager() {
     
     //interaction system
     this.globalConditions = {};
-    
     
     this.init = function(width,height,invent_size) {
         if(invent_size == 0)
@@ -297,6 +449,9 @@ function GameManager() {
         this.awake();
     }
     
+    this.scene = function(index) {
+        return this.sceneManager.getSceneByIndex(index);
+    }    
 }
 
 
