@@ -1,6 +1,6 @@
 var myGame = new GameManager();
 myGame.init(1280,720,5);
-myGame.sceneManager.createScenes(2);
+myGame.sceneManager.createScenes(3);
 myGame.states = {cat_is_feeded:false}
 
 
@@ -8,6 +8,7 @@ myGame.states = {cat_is_feeded:false}
 myGame.sound.add('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
 myGame.sound.add('meow_happy', baseURL.nomalAssets + 'meow_happy.wav');
 myGame.sound.add('door', baseURL.nomalAssets + 'door.wav');
+myGame.sound.add('win', baseURL.nomalAssets + 'win.wav');
 
 ///-----------------------------------------------------------///
 
@@ -34,7 +35,7 @@ door.on('pointerdown',function() {
 
 myGame.scene(0).addChild(door);
 
-var cat = Alice.Object.fromImage(baseURL.nomalAssets + 'cat.png');
+var cat = Alice.Object.fromImage(baseURL.nomalAssets + 'cat_sad.png');
 cat.anchor.set(0.5);
 cat.x = 250;
 cat.y = 500;
@@ -49,20 +50,29 @@ cat.buttonMode = true;
 cat.on('pointerdown',function() {
     if(!myGame.states.cat_is_feeded)
     {
-        myGame.messageBox.startConversation(["Meow~","Hungry..."]);
+        myGame.messageBox.startConversation(["Meow...","Hungry..."]);
         myGame.sound.play('meow_unhappy');
     }
     
     if(myGame.states.cat_is_feeded)
     {
-        myGame.messageBox.startConversation(["Meow~","Love you~"]);
+        myGame.messageBox.startConversation(["Meow","Love you~"]);
         myGame.sound.play('meow_happy');
     }
-        
-    
 })
 
 myGame.scene(0).addChild(cat);
+
+
+var cat_sad = Alice.Object.fromImage(baseURL.nomalAssets + 'cat.png');
+cat_sad.anchor.set(0.5);
+cat_sad.x = 250;
+cat_sad.y = 500;
+cat_sad.scale.set(0.8);
+cat_sad.name = "cat_sad";
+cat_sad.visible = false;
+myGame.scene(0).addChild(cat_sad);
+
 
 //-------------------------------------------//
 var back2 = Alice.Object.fromImage(baseURL.nomalAssets + 'kitchen.png');
@@ -82,7 +92,7 @@ door2.name = "door2";
 door2.interactive = true;
 door2.buttonMode = true;
 door2.on('pointerdown',function() {
-    PIXI.sound.play('door');
+    myGame.sound.play('door');
     myGame.sceneManager.jumpToScene(0);
 });
 
@@ -151,6 +161,16 @@ knifewithjam.name = "knifewithjam";
 knifewithjam.visible = false;
 myGame.scene(1).addChild(knifewithjam);
 
+
+
+var winScene = Alice.Object.fromImage(baseURL.nomalAssets + 'win.png');
+winScene.anchor.set(0.5);
+winScene.x = myGame.screenWidth / 2;
+winScene.y = myGame.screenHeight / 2;
+winScene.name = "winScene";
+myGame.scene(2).addChild(winScene);
+
+
 //register events
 
 
@@ -174,9 +194,16 @@ myGame.inventory.interactionSystem.addCombineEvent(knifewithjam,bread,function()
 
 myGame.inventory.interactionSystem.addUsedEvent(breadwithjam,cat,function(){
     myGame.states.cat_is_feeded = true;
+    cat.visible = false;
+    cat_sad.visible = true;
     myGame.inventory.remove(breadwithjam);
     myGame.sound.play("meow_happy");
-    myGame.messageBox.startConversation(["Yummy","I love you ~"]);
+    myGame.messageBox.startConversation(["Yummy","I love you ~"],function(){
+        //win game
+        myGame.sound.play('win');
+        myGame.sceneManager.jumpToScene(2);
+        myGame.hideInventory();
+    });
     
 });
 

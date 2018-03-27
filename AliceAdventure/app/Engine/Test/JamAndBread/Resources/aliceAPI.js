@@ -440,8 +440,19 @@ function GameManager() {
         this.app.stage.addChild(this.messageBox.holder);
         //this.messageBox.startConversation(["hahha","lalalala"]);
         
+        //this.winSceneIndex = 0;
+    
     }
     
+    
+    this.showInventory = function() {
+        this.app.renderer.resize(this.screenWidth + this.inventoryWidth,this.screenHeight);
+    }
+    
+    this.hideInventory = function() {
+        this.app.renderer.resize(this.screenWidth,this.screenHeight);
+    }
+
     
     this.awake = function() {
         
@@ -476,8 +487,7 @@ function GameManager() {
         richText.y = 360;
 
         this.app.stage.addChild(richText);
-        
-
+    
     }
     
     
@@ -489,7 +499,15 @@ function GameManager() {
     
     this.scene = function(index) {
         return this.sceneManager.getSceneByIndex(index);
-    }    
+    }
+    
+    
+    
+//    this.win = function() {
+//        this.sceneManager.jumpToScene(this.winSceneIndex);
+//    }
+//    
+    
 }
 
 
@@ -500,9 +518,6 @@ function Message(text,style,avatar) {
 }
 
 function MessageBox(background,avatarEnable) {
-    console.log(background);
-    
-    
     this.holder = new Alice.Container();
     
     this.backgronud = Alice.Object.fromImage(background.url);
@@ -520,6 +535,7 @@ function MessageBox(background,avatarEnable) {
     
     this.messageBuffer = [];
     this.currentMsgIndex = 0;
+    this.callBack = function(){};
     
     this.nextConversation = function() {
         
@@ -530,6 +546,7 @@ function MessageBox(background,avatarEnable) {
             this.currentMsg.text = this.messageBuffer[this.currentMsgIndex];
             //console.log("speak " + this.messageBuffer[this.currentMsgIndex]);
         } else {
+            this.callBack();
             this.messageBuffer = [];
             this.currentMsg.text = "";
             this.currentMsgIndex = 0;
@@ -579,7 +596,7 @@ function MessageBox(background,avatarEnable) {
         this.messageBuffer = msgs;
     }
     
-    this.startConversation= function(msgs) {
+    this.startConversation= function(msgs,func) {
         
         //console.log(msgs);
         
@@ -589,6 +606,9 @@ function MessageBox(background,avatarEnable) {
         if(!msgs.length)
             return
             
+        if(func!=undefined)
+            this.callBack = func;
+        
         this.messageBuffer = msgs;
         
         this.currentMsgIndex = 0;
