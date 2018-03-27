@@ -183,12 +183,14 @@ File.SaveToPath = function(_path){
 		let ntra = GameProperties.instance.interactionList[i];
 		let _d = {
 			id: ntra.id, 
-			eventIDList: [], 
+			eventIndex: ntra.event.model.index, 
+			eventArgs: ntra.event.args,
+			conditionList: [], 
 			reactionList: [], 
 		};
-		for (let n in ntra.eventList){
-			let evt = ntra.eventList[n];
-			_d.eventIDList.push(evt.id);
+		for (let n in ntra.conditionList){
+			let state = ntra.conditionList[n];
+			_d.conditionList.push(state.id);
 		}
 		for (let n in ntra.reactionList){
 			// TODO
@@ -199,18 +201,6 @@ File.SaveToPath = function(_path){
 			_d.reactionList.push(react_d);
 		}
 		File.tempJsonObj.interactionList.push(_d);
-	}
-
-	// eventList
-	for (let i in GameProperties.instance.eventList){
-		let evt = GameProperties.instance.eventList[i];
-		let _d = {
-			id: evt.id, 
-			type: evt.type, 
-			name: evt.name, 
-			args: evt.args
-		};
-		File.tempJsonObj.eventList.push(_d);
 	}
 
 	// settings
