@@ -1,9 +1,7 @@
 'use strict';
 
-const PIXI = require('../../../Resources/pixi');
-const PROMPT = require('electron-prompt');
+const {PIXI, PROMPT, Event} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
-const Event = require('./Event');
 const Scene = require('./Scene');
 const View = require('./View');
 const SceneObject = require('./SceneObject');
@@ -70,8 +68,7 @@ SceneView.prototype.ReloadView = function(){
 	}
 };
 
-SceneView.prototype.AddObject = function(_objInfo){ // test
-	console.log(('here good'));
+SceneView.prototype.AddObject = function(_objInfo){
 	if (Scene.Selection.scene == null) return;
 	var _bindScene = Scene.Selection.scene;
 	var _obj = SceneObject.AddObject(_objInfo, _bindScene, this.app.screen.width / 2, this.app.screen.height / 2);
