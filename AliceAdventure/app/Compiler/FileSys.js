@@ -1,6 +1,9 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const pixi = require.resolve('../Resources/pixi.js');
+const aliceAPI = require.resolve('../Engine/aliceAPI.js');
+
 
 //1) create a build folder. If it already exists, delete all the files within
 //2) copy assets folder to build folder
@@ -48,32 +51,34 @@ FileSys.folder = function(p){
 	return path.dirname(p);
 }
 
-//need to create a html basic file
-//need to rename the title
-
-
 //return path to the resources folder under build path
 FileSys.ensureAndCreate = function(jsonPath, callback){
+
+	if (!fs.pathExistsSync(jsonPath)) {
+		callback("json path : "+ jsonPath + ' is not valid\n');
+		return false;
+	}
 
 	jsonPath = path.dirname(jsonPath);
 	var buildPath = path.join(jsonPath, 'Build');
 	var resourcesDest = path.join(buildPath, 'Resources');
-	//var assetSrc = path.join(jasonPath, 'assets');
+
+	var assetSrc = './Assets';
 	var assetDest = path.join(resourcesDest, 'Assets');
-	var aliceAPISrc = '../Engine/aliceAPI.js';
+
 	var aliceAPIDest = path.join(resourcesDest, 'aliceAPI.js');
-	var pixiSrc = '../Resources/pixi.js';
+
 	var pixiDest = path.join(resourcesDest, 'pixi.js');
 
 	// if (! fs.pathExistSync(assetSrc)){
 	// 	callback("Cannot find the assets folder under saving directory.");
 	// 	return false;
 	// }
-	if (! fs.pathExistsSync(aliceAPISrc)){
+	if (aliceAPI == null){
 		callback("Cannot find aliceAPI.js, which should be under Engine/aliceAPI.js");
 		return false;
 	}
-	if (! fs.pathExistsSync(pixiSrc)){
+	if (pixi == null){
 		callback("Cannot find pixi.js, which should be under Resources/pixi.js");
 		return false;
 	}
@@ -81,8 +86,11 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	FileSys.createBuildFolder(buildPath);
 	FileSys.createBuildFolder(resourcesDest);
 	FileSys.createBuildFolder(assetDest);
-	FileSys.copyFileOrFolder(aliceAPISrc, aliceAPIDest);
-	FileSys.copyFileOrFolder(pixiSrc, pixiDest);
+	FileSys.copyFileOrFolder(aliceAPI, aliceAPIDest);
+	FileSys.copyFileOrFolder(pixi, pixiDest);
+
+	FileSys.copyFileOrFolder(FileSys.merge(assetSrc, 'inventory.png'), FileSys.merge(assetDest, 'inventory.png'));
+	FileSys.copyFileOrFolder(FileSys.merge(assetSrc, 'textbox.png'), FileSys.merge(assetDest, 'textbox.png'));
 
 	return buildPath;
 }

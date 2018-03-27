@@ -10,7 +10,7 @@ myGame.sceneManager.addScene(scene2);
 
 // ----------------------------------------------------------------- //
 
-var back = Alice.Object.fromImage('assets/alice/room_basic.png');
+var back = Alice.Object.fromImage(baseURL.nomalAssets + 'room_basic.png');
 back.anchor.set(0.5);
 back.x = myGame.screenWidth / 2;
 back.y = myGame.screenHeight / 2;
@@ -18,13 +18,13 @@ back.y = myGame.screenHeight / 2;
 scene.addChild(back);
     
 
-var door = Alice.Object.fromImage('assets/alice/door.png');
+var door = Alice.Object.fromImage(baseURL.nomalAssets + 'door.png');
 door.anchor.set(0.5);
 door.x = myGame.screenWidth / 2;
 door.y = myGame.screenHeight / 2 + 5;
 door.scale.set(1);
 door.name = "door";
-door.nextTexture = Alice.Texture.fromImage('assets/alice/door_open.png');
+door.nextTexture = Alice.Texture.fromImage(baseURL.nomalAssets + 'door_open.png');
 
 door.interact = function() {
     this.setTexture(this.nextTexture);
@@ -44,7 +44,7 @@ door.onClick = function() {
 scene.addChild(door);
 
 
-var key = Alice.Object.fromImage('assets/alice/key.png');
+var key = Alice.Object.fromImage(baseURL.nomalAssets + 'key.png');
 key.anchor.set(0.5);
 key.x = 900;
 key.y = 600;
@@ -53,18 +53,25 @@ key.interactive = true;
 key.buttonMode = true;
 key.name = "key";
 key.target = door; // init sequence matters
+key.dropMessage = "keyDropOnDoor"
+
+key.on("keyDropOnDoor",function(){
+    this.target.interact();
+    myGame.inventory.remove(this);
+    myGame.messageBox.startConversation(["Nice job! Thank you!"]);
+});
 
 //user overload methods
 key.use = function() {
     
 }
 
-key.use = function() {
-    this.target.interact();
-    myGame.inventory.remove(this);
-    myGame.messageBox.startConversation(["Nice job! Thank you!"]);
-    //console.log("done");
-}
+//key.use = function() {
+//    this.target.interact();
+//    myGame.inventory.remove(this);
+//    myGame.messageBox.startConversation(["Nice job! Thank you!"]);
+//    //console.log("done");
+//}
 
 key.onClick = function() {
     myGame.inventory.add(this);
@@ -78,7 +85,7 @@ scene.addChild(key);
 //----------------scene 2 ---------------------//
 
 
-var back2 = Alice.Object.fromImage('assets/alice/room_basic.png');
+var back2 = Alice.Object.fromImage(baseURL.nomalAssets + 'room_basic.png');
 back2.anchor.set(0.5);
 back2.x = myGame.screenWidth / 2;
 back2.y = myGame.screenHeight / 2;
@@ -86,13 +93,13 @@ back2.y = myGame.screenHeight / 2;
 scene2.addChild(back2);
 
 
-var door2 = Alice.Object.fromImage('assets/alice/door.png');
+var door2 = Alice.Object.fromImage(baseURL.nomalAssets + 'door.png');
 door2.anchor.set(0.5);
 door2.x = myGame.screenWidth / 2;
 door2.y = myGame.screenHeight / 2 + 5;
 door2.scale.set(1);
 door2.name = "door";
-door2.nextTexture = Alice.Texture.fromImage('assets/alice/door_open.png');
+door2.nextTexture = Alice.Texture.fromImage(baseURL.nomalAssets + 'door_open.png');
 
 door2.interact = function() {
     this.setTexture(this.nextTexture);
@@ -112,7 +119,7 @@ door2.onClick = function() {
 scene2.addChild(door2);
 
 
-var key2 = Alice.Object.fromImage('assets/alice/key.png');
+var key2 = Alice.Object.fromImage(baseURL.nomalAssets + 'key.png');
 key2.anchor.set(0.5);
 key2.x = 400;
 key2.y = 560;
@@ -142,7 +149,7 @@ key2.visible = false;
 
 scene2.addChild(key2);
 
-var cat = Alice.Object.fromImage('assets/alice/cat.png');
+var cat = Alice.Object.fromImage(baseURL.nomalAssets + 'cat.png');
 cat.anchor.set(0.5);
 cat.x = 250;
 cat.y = 500;
@@ -189,7 +196,7 @@ cat.on('pointerdown', cat.onClick);
 scene2.addChild(cat);
 
 
-var slime = Alice.Object.fromImage('assets/slime.png');
+var slime = Alice.Object.fromImage(baseURL.nomalAssets + 'slime.png');
 slime.anchor.set(0.5);
 slime.x = 900;
 slime.y = 600;
