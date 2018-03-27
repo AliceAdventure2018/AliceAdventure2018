@@ -8,54 +8,39 @@ const GameProperties = require('./GameProperties');
 var IEvent;
 
 // variables
-IEvent = function(_id, _type, _name){
-	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
-	this.id = _id;
-	this.type = _type;
-	this.name = _name;
-
-	this.args = {};
-
-	GameProperties.AddIEvent(this);
+IEvent = function(_model, args = []){
+	this.model = _model;
+	this.args = [];
 };
 
 // static
-IEvent.Type = {
-	StateChange: 0, 
-	ObjClick: 1, 
-	ObjUse: 2, 
-	InvCombine: 3, 
-	InvClick: 4, 
-};
-
-IEvent.NewIEvent = function(_type, _name, _args = {}){
-	let iEvent = new IEvent(null, _type, _name);
-	iEvent.InitArgs(_args);
-	return iEvent;
-};
-
-IEvent.LoadIEvent = function(_data){
-	// TODO
-	console.log("function not implemented");
-};
+IEvent.Library = [
+	{
+		index: 0,
+		name: "Click in scene",
+		inputObjNum: 1, 
+		template: "# is clicked"
+	}, 
+	{
+		index: 1,
+		name: "Use in scene",
+		inputObjNum: 2, 
+		template: "# is used on #"
+	}, 
+	{
+		index: 2,
+		name: "Observe in inventory",
+		inputObjNum: 1, 
+		template: "# is observed"
+	}, 
+	{
+		index: 3,
+		name: "Combine in inventory",
+		inputObjNum: 2, 
+		template: "# is combined with #"
+	}, 
+];
 
 // functions
-IEvent.prototype.InitArgs = function(_args){
-	this.args = _args;
-	switch (this.type){
-		case IEvent.Type.StateChange: 
-		case IEvent.Type.ObjClick: 
-		case IEvent.Type.ObjUse: 
-		case IEvent.Type.InvCombine: 
-		case IEvent.Type.InvClick: 
-			break;
-		default: 
-			Debug.LogError("IEvent type not exists");
-	}
-}
-
-IEvent.prototype.DeleteThis = function(){
-	GameProperties.DeleteIEvent(this);
-};
 
 module.exports = IEvent;

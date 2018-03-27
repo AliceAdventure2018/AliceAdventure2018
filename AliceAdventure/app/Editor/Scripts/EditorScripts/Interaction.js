@@ -2,6 +2,7 @@
 
 const ID = require('./ID');
 const GameProperties = require('./GameProperties');
+const IEvent = require('./IEvent');
 
 // class
 var Interaction;
@@ -11,7 +12,8 @@ Interaction = function(_id){
 	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
 	this.id = _id;
 
-	this.eventList = [];
+	this.event = null;
+	this.conditionList = [];
 	this.reactionList = [];
 
 	GameProperties.AddInteraction(this);
@@ -27,22 +29,26 @@ Interaction.LoadInteraction = function(_data){
 	// TODO
 	console.log("function not implemented");
 	//let Interaction = new Interaction(_data.id);
-	//Interaction.eventList = [];
+	//Interaction.conditionList = [];
 	//Interaction.reactionList = [];
 	//return Interaction;
 };
 
 // functions
-Interaction.prototype.AddIEvent = function(_iEvent){
-	if (this.eventList.indexOf(_iEvent) >= 0)	{return false;} // Already contains this event
-	this.eventList.push(_iEvent);
+Interaction.prototype.SetIEvent = function(_model){
+	this.event = new IEvent(_model);
+}
+
+Interaction.prototype.AddCondition = function(_state){
+	if (this.conditionList.indexOf(_state) >= 0) {return false;} // Already contains this event
+	this.conditionList.push(_state);
 	return true;
 };
 
-Interaction.prototype.RemoveIEvent = function(_iEvent){
-	let i = this.eventList.indexOf(_iEvent);
+Interaction.prototype.RemoveCondition = function(_state){
+	let i = this.conditionList.indexOf(_state);
 	if (i >= 0) { // exist
-		this.eventList.splice(i, 1);
+		this.conditionList.splice(i, 1);
 	}
 };
 

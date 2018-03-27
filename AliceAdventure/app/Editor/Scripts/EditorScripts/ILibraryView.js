@@ -2,6 +2,7 @@
 
 const GameProperties = require('./GameProperties');
 const Event = require('./Event');
+const SceneObject = require('./SceneObject');
 const State = require('./State');
 const IEvent = require('./IEvent');
 const IReaction = require('./IReaction');
@@ -33,14 +34,13 @@ ILibraryView.prototype.InitView = function(){
 		el: '#' + this.bindElementID,
 		data: {
 			viewEnabled: false, 
-			events: [], 
+			events: IEvent.Library, 
 			states: [], 
 			reactions: IReaction.Library
 		}, 
 		methods: {
-			addIEventTo: (evt, ntra)=>{ntra.AddIEvent(evt);}, 
-			newIEvent: ()=>{IEvent.NewIEvent(0, 'testEvent');}, 
-			deleteIEvent: (evt)=>{evt.DeleteThis();}, 
+			setIEvent: (evt, ntra)=>{ntra.SetIEvent(evt);}, 
+			addCondition: (state, ntra)=>{ntra.AddCondition(state);},
 			newState: ()=>{State.NewState('testState', false);}, 
 			deleteState: (state)=>{state.DeleteThis();}, 
 			addIReaction: (iReact, ntra, index)=>{ntra.AddIReaction(iReact, index);}
@@ -56,18 +56,10 @@ ILibraryView.prototype.ReloadView = function(){
 
 	if (GameProperties.ProjectLoaded()){
 		this.vModel.viewEnabled = true;
-		this.vModel.events = GameProperties.instance.iEventList;
 		this.vModel.states = GameProperties.instance.stateList;
 	} else {
 		this.vModel.viewEnabled = false;
-		this.vModel.events = [];
 		this.vModel.states = [];
-	}
-};
-
-ILibraryView.prototype.AddNewInteraction = function(){
-	if (this.vModel.viewEnabled) {
-		Interaction.NewInteraction();
 	}
 };
 

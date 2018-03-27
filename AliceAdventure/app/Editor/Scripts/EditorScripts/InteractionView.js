@@ -38,7 +38,7 @@ InteractionView.prototype.InitView = function(){
 		methods: {
 			addInteraction: ()=>{this.AddNewInteraction();}, 
 			deleteInteraction: (ntra)=>{ntra.DeleteThis();}, 
-			removeEvent: (evt, ntra)=>{ntra.RemoveIEvent(evt);}, 
+			removeCondition: (state, ntra)=>{ntra.RemoveCondition(state);}, 
 			deleteReaction: (react, ntra)=>{ntra.DeleteIReaction(react);}
 		}
 	});
