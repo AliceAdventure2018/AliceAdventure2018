@@ -440,8 +440,19 @@ function GameManager() {
         this.app.stage.addChild(this.messageBox.holder);
         //this.messageBox.startConversation(["hahha","lalalala"]);
         
+        //this.winSceneIndex = 0;
+    
     }
     
+    
+    this.showInventory = function() {
+        this.app.renderer.resize(this.screenWidth + this.inventoryWidth,this.screenHeight);
+    }
+    
+    this.hideInventory = function() {
+        this.app.renderer.resize(this.screenWidth,this.screenHeight);
+    }
+
     
     this.awake = function() {
         
@@ -476,8 +487,7 @@ function GameManager() {
         richText.y = 360;
 
         this.app.stage.addChild(richText);
-        
-
+    
     }
     
     
@@ -489,7 +499,15 @@ function GameManager() {
     
     this.scene = function(index) {
         return this.sceneManager.getSceneByIndex(index);
-    }    
+    }
+    
+    
+    
+//    this.win = function() {
+//        this.sceneManager.jumpToScene(this.winSceneIndex);
+//    }
+//    
+    
 }
 
 

@@ -1,6 +1,6 @@
 var myGame = new GameManager();
 myGame.init(1280,720,5);
-myGame.sceneManager.createScenes(2);
+myGame.sceneManager.createScenes(3);
 myGame.states = {cat_is_feeded:false}
 
 
@@ -151,6 +151,16 @@ knifewithjam.name = "knifewithjam";
 knifewithjam.visible = false;
 myGame.scene(1).addChild(knifewithjam);
 
+
+
+var winScene = Alice.Object.fromImage(baseURL.nomalAssets + 'win.png');
+winScene.anchor.set(0.5);
+winScene.x = myGame.screenWidth / 2;
+winScene.y = myGame.screenHeight / 2;
+winScene.name = "winScene";
+myGame.scene(2).addChild(winScene);
+
+
 //register events
 
 
@@ -178,6 +188,8 @@ myGame.inventory.interactionSystem.addUsedEvent(breadwithjam,cat,function(){
     myGame.sound.play("meow_happy");
     myGame.messageBox.startConversation(["Yummy","I love you ~"]);
     
+    myGame.sceneManager.jumpToScene(2);
+    myGame.hideInventory();
 });
 
 //--//
