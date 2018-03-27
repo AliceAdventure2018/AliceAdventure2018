@@ -224,7 +224,7 @@ function Inventory(game) { //always on the top
         
         
         if(inventoryCollider.length > 0) {
-            console.log('1');
+            //console.log('1');
             var message = tool.name + " is combined with " + inventoryCollider.pop().name;
             //console.log(message);
             if(this.interactionSystem.checkEventExist(message)){
@@ -233,12 +233,12 @@ function Inventory(game) { //always on the top
                 this.interactionSystem.callEvent(message);
                 return;
             }
-            console.log('2.5');
+            //console.log('2.5');
         }
-        console.log('3');
+        //console.log('3');
         
         if(sceneCollider.length > 0) {
-            console.log('4');
+            //console.log('4');
             var message = tool.name + " is used on " + sceneCollider.pop().name;
             console.log(message);
             if(this.interactionSystem.checkEventExist(message)){
@@ -246,11 +246,11 @@ function Inventory(game) { //always on the top
                 this.interactionSystem.callEvent(message);
                 return;
             }
-            console.log('6');
+            //console.log('6');
         }
         
         
-        console.log('here');
+        //console.log('here');
         game.sound.play('bad');
         tool.x = tool.inventPos.x;
         tool.y = tool.inventPos.y;
@@ -262,7 +262,8 @@ function Inventory(game) { //always on the top
     }
     
     this.popUp = function(tool) {
-        //this.inventoryContainer.swapChildren(tool,this.inventoryContainer.getChildAt(this.inventoryContainer.length-1));
+        this.inventoryContainer.removeChild(tool);
+        this.inventoryContainer.addChild(tool);
     }
     
     this.getCollisionMap = function(tool) {

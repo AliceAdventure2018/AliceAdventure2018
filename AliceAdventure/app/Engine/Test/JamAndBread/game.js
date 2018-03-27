@@ -175,6 +175,7 @@ myGame.inventory.interactionSystem.addCombineEvent(knifewithjam,bread,function()
 myGame.inventory.interactionSystem.addUsedEvent(breadwithjam,cat,function(){
     myGame.states.cat_is_feeded = true;
     myGame.inventory.remove(breadwithjam);
+    myGame.sound.play("meow_happy");
     myGame.messageBox.startConversation(["Yummy","I love you ~"]);
     
 });
