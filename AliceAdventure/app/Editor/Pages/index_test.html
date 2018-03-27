@@ -91,10 +91,14 @@
         <button v-on:click='addInteraction()'> Add Interaction </button>
         <div v-for='ntra in interactions'> Interaction 
           <button v-on:click='deleteInteraction(ntra)'> Delete </button>
-          <div> &nbsp; Events: 
-            <div v-for='evt in ntra.eventList'> 
-              <span v-html='evt.name'></span>
-              <button v-on:click='removeEvent(evt, ntra)'> x </button>
+          <div> &nbsp; Event: 
+            <span v-if='ntra.event!=null' v-html='ntra.event.model.template'></span>
+            <span v-else> [ ] </span>
+          </div>
+          <div> &nbsp; Conditions: 
+            <div v-for='state in ntra.conditionList'> 
+              <span v-html='state.name'></span>
+              <button v-on:click='removeCondition(state, ntra)'> x </button>
             </div>
           </div>
           <div> &nbsp; Reactions: 
@@ -109,15 +113,13 @@
     <div id="interaction-library-view">
       <h3> I-library view</h3>
       <div v-if='viewEnabled'> events: 
-        <button v-on:click='newIEvent()'> + </button>
-        <div v-for='evt in events' v-on:click='addIEventTo(evt, interactionView.vModel.interactions[0])'>
+        <div v-for='evt in events' v-on:click='setIEvent(evt, interactionView.vModel.interactions[0])'>
           &nbsp; <span v-html='evt.name'></span>
-          <button v-on:click='deleteIEvent(evt)'> x </button>
         </div>
       </div>
       <div v-if='viewEnabled'> states: 
         <button v-on:click='newState()'> + </button>
-        <div v-for='state in states'>
+        <div v-for='state in states' v-on:click='addCondition(state, interactionView.vModel.interactions[0], null)'>
           &nbsp; <span v-html='state.name'></span>
           <button v-on:click='deleteState(state)'> x </button>
         </div>

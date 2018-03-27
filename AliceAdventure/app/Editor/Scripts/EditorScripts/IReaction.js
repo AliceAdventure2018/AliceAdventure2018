@@ -24,7 +24,7 @@ IReaction.InputModel = {
 IReaction.Library = [
 	{
 		index: 0,
-		name: "Change state", 
+		name: "Set state", 
 		inputLength: 2, 
 		inputTypes: [IReaction.InputModel.State, IReaction.InputModel.Checkbox]
 	}, 

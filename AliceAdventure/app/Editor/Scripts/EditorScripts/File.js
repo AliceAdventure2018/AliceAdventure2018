@@ -149,7 +149,7 @@ File.SaveToPath = function(_path){
 	File.instance.path = _path;
 	File.tempJsonObj.reset();
 
-	// SceneList
+	// sceneList
 	for (let i in GameProperties.instance.sceneList){
 		let _s = GameProperties.instance.sceneList[i];
 		let _d = {
@@ -159,7 +159,7 @@ File.SaveToPath = function(_path){
 		File.tempJsonObj.sceneList.push(_d);
 	}
 
-	// ObjectList
+	// objectList
 	for (let i in GameProperties.instance.objectList){
 		let _o = GameProperties.instance.objectList[i];
 		let _d = {
@@ -178,17 +178,17 @@ File.SaveToPath = function(_path){
 		File.tempJsonObj.objectList.push(_d);
 	}
 
-	// InteractionList
+	// interactionList
 	for (let i in GameProperties.instance.interactionList){
 		let ntra = GameProperties.instance.interactionList[i];
 		let _d = {
 			id: ntra.id, 
-			eventIdList: [], 
+			eventIDList: [], 
 			reactionList: [], 
 		};
 		for (let n in ntra.eventList){
 			let evt = ntra.eventList[n];
-			_d.eventIdList.push(evt.id);
+			_d.eventIDList.push(evt.id);
 		}
 		for (let n in ntra.reactionList){
 			// TODO
@@ -198,12 +198,25 @@ File.SaveToPath = function(_path){
 			};
 			_d.reactionList.push(react_d);
 		}
+		File.tempJsonObj.interactionList.push(_d);
 	}
 
-	// Settings
+	// eventList
+	for (let i in GameProperties.instance.eventList){
+		let evt = GameProperties.instance.eventList[i];
+		let _d = {
+			id: evt.id, 
+			type: evt.type, 
+			name: evt.name, 
+			args: evt.args
+		};
+		File.tempJsonObj.eventList.push(_d);
+	}
+
+	// settings
 	File.tempJsonObj.settings = GameProperties.instance.settings;
 
-	// ProjData
+	// projData
 	File.tempJsonObj.projectData.idCounter = ID._counter;
 
 	// Write JSON file

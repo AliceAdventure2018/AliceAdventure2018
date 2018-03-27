@@ -6,13 +6,15 @@ GameProperties = function(){
 	this.sceneList = [];
 	this.objectList = [];
 	this.interactionList = [];
-	this.iEventList = [];
 	this.stateList = [];
 	this.settings = {
 		resWidth: 600, 
 		resHeight: 400, 
 		inventoryGridNum: 0,
 		projectName: "untitled"
+	};
+	this.projectData = {
+		idCounter: 0
 	};
 
 	GameProperties.instance = this;
@@ -49,15 +51,6 @@ GameProperties.GetInteractionById = function(_id){
 	for (let i in GameProperties.instance.interactionList){
 		if (GameProperties.instance.interactionList[i].id == _id){
 			return GameProperties.instance.interactionList[i];
-		}
-	}
-	return null;
-};
-GameProperties.GetIEventById = function(_id){
-	if (GameProperties.instance == null) return null;
-	for (let i in GameProperties.instance.iEventList){
-		if (GameProperties.instance.iEventList[i].id == _id){
-			return GameProperties.instance.iEventList[i];
 		}
 	}
 	return null;
@@ -112,21 +105,6 @@ GameProperties.DeleteInteraction = function(_ntra){
 	var i = GameProperties.instance.interactionList.indexOf(_ntra);
 	if (i >= 0){
 		GameProperties.instance.interactionList.splice(i, 1);
-		return true;
-	}
-	return false;
-};
-
-GameProperties.AddIEvent = function(_ntraEvnt){
-	if (GameProperties.instance == null) return false;
-	GameProperties.instance.iEventList.push(_ntraEvnt);
-	return true;
-};
-GameProperties.DeleteIEvent = function(_ntraEvnt){
-	if (GameProperties.instance == null) return false; 
-	var i = GameProperties.instance.iEventList.indexOf(_ntraEvnt);
-	if (i >= 0){
-		GameProperties.instance.iEventList.splice(i, 1);
 		return true;
 	}
 	return false;
