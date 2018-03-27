@@ -35,8 +35,8 @@ Interaction.LoadInteraction = function(_data){
 };
 
 // functions
-Interaction.prototype.SetIEvent = function(_model){
-	this.event = new IEvent(_model);
+Interaction.prototype.SetIEvent = function(_eventModel){
+	this.event = new IEvent(_eventModel);
 }
 
 Interaction.prototype.AddCondition = function(_state){

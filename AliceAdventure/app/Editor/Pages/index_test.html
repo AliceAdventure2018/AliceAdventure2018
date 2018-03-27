@@ -91,17 +91,17 @@
         <button v-on:click='addInteraction()'> Add Interaction </button>
         <div v-for='ntra in interactions'> Interaction 
           <button v-on:click='deleteInteraction(ntra)'> Delete </button>
-          <div> &nbsp; Event: 
+          <div v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'> &nbsp; Event: 
             <span v-if='ntra.event!=null' v-html='ntra.event.model.template'></span>
             <span v-else> [ ] </span>
           </div>
-          <div> &nbsp; Conditions: 
+          <div v-on:drop='stateDrop(event, ntra)' v-on:dragover='stateDragover(event)'> &nbsp; Conditions: 
             <div v-for='state in ntra.conditionList'> 
               <span v-html='state.name'></span>
               <button v-on:click='removeCondition(state, ntra)'> x </button>
             </div>
           </div>
-          <div> &nbsp; Reactions: 
+          <div v-on:drop='reactionDrop(event, ntra)' v-on:dragover='reactionDragover(event)'> &nbsp; Reactions: 
             <div v-for='react in ntra.reactionList'> 
               <span v-html='react.name'></span>
               <button v-on:click='deleteReaction(react, ntra)'> x </button>
@@ -113,20 +113,20 @@
     <div id="interaction-library-view">
       <h3> I-library view</h3>
       <div v-if='viewEnabled'> events: 
-        <div v-for='evt in events' v-on:click='setIEvent(evt, interactionView.vModel.interactions[0])'>
-          &nbsp; <span v-html='evt.name'></span>
+        <div v-for='em in events' v-on:dragstart='eventDragstart(event, em)' draggable="true">
+          &nbsp; <span v-html='em.name'></span>
         </div>
       </div>
       <div v-if='viewEnabled'> states: 
         <button v-on:click='newState()'> + </button>
-        <div v-for='state in states' v-on:click='addCondition(state, interactionView.vModel.interactions[0], null)'>
+        <div v-for='state in states' v-on:dragstart='stateDragstart(event, state)' draggable="true">
           &nbsp; <span v-html='state.name'></span>
           <button v-on:click='deleteState(state)'> x </button>
         </div>
       </div>
       <div v-if='viewEnabled'> reactions: 
-        <div v-for='react in reactions' v-on:click='addIReaction(react, interactionView.vModel.interactions[0], null)'>
-          &nbsp; <span v-html='react.name'></span>
+        <div v-for='rm in reactions' v-on:dragstart='reactionDragstart(event, rm)' draggable="true">
+          &nbsp; <span v-html='rm.name'></span>
         </div>
       </div>
     </div>
