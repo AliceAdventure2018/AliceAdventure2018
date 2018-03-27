@@ -8,7 +8,7 @@ var Alice = {
     Ticker: PIXI.ticker.Ticker,
     Text: PIXI.Text,
     AnimatedObject: PIXI.extras.AnimatedSprite,
-    
+    Sound: PIXI.sound
 }
 
 function InteractionSystem(object) {
@@ -113,7 +113,7 @@ function InventoryInteractionSystem() {
     
     this.checkEventExist = function(message) {
         if(this.eventMessageList[message] == undefined || this.eventMessageList[message] == false) {
-            console.log("not valid");
+            //console.log("not valid");
             return false;
         }
         
@@ -134,7 +134,6 @@ function Inventory(game) { //always on the top
     this.magic_scale = 0.8;
     
     this.objectList = [];
-    
     this.baseX= game.screenWidth + this.inventory_w / 2;
     this.baseY = game.screenHeight / this.inventory_size / 2;
     
@@ -150,17 +149,25 @@ function Inventory(game) { //always on the top
     
     //interaction system
     this.interactionSystem = new InventoryInteractionSystem();
-        
+    
 
+    //sound
+    game.sound.add('add', baseURL.requireAssets + 'sound/add.wav');
+    game.sound.add('good', baseURL.requireAssets + 'sound/use_good.wav');
+    game.sound.add('bad', baseURL.requireAssets + 'sound/use_bad.wav');
+    
     ////////functions//////////
     this.scaleDown = function(tool) {
         tool.scale.set(1);
-        tool.scale.set((this.inventory_w/tool.width) *this.magic_scale);
+        tool.scale.set((this.inventory_w/tool.width) * this.magic_scale);
         
     }
     
+    
     this.add = function(tool) {
         
+        //this.soundList.add.play();
+        game.sound.play('add');
         //remove tool from the original scene and add to inventory container
         this.inventoryContainer.addChild(tool); //[INTERESTING: remove it from the original container]
         
@@ -177,11 +184,9 @@ function Inventory(game) { //always on the top
         tool
             .on('pointerdown', onDragStart)
             .on('pointerup', onDragEnd)
-            .on('pointerupoutside', onDragEnd)
             .on('pointermove', onDragMove);
-        
-        this.update();
 
+        this.update();
     }
     
     this.remove = function(tool) {
@@ -200,6 +205,7 @@ function Inventory(game) { //always on the top
         }
     }
     
+    
     this.inventoryObserved = function(tool) {
         var message = tool.name + " is observed";
         if(this.interactionSystem.checkEventExist(message))
@@ -209,27 +215,43 @@ function Inventory(game) { //always on the top
     
     
     this.inventoryUse = function(tool) {
+        //console.log(tool.name);
+        
         var res = this.getCollisionMap(tool);
         var sceneCollider = res.scene;
         var inventoryCollider = res.inventory;
         
-        if(sceneCollider.length > 0) {
-            var message = tool.name + " is used on " + sceneCollider.pop().name;
-            if(this.interactionSystem.checkEventExist(message)){
-                this.interactionSystem.callEvent(message);
-                return;
-            }
-        }
+        
         
         if(inventoryCollider.length > 0) {
+            console.log('1');
             var message = tool.name + " is combined with " + inventoryCollider.pop().name;
+            //console.log(message);
             if(this.interactionSystem.checkEventExist(message)){
+                console.log('2');
+                game.sound.play('good');
                 this.interactionSystem.callEvent(message);
                 return;
             }
+            console.log('2.5');
+        }
+        console.log('3');
+        
+        if(sceneCollider.length > 0) {
+            console.log('4');
+            var message = tool.name + " is used on " + sceneCollider.pop().name;
+            console.log(message);
+            if(this.interactionSystem.checkEventExist(message)){
+                console.log('5');
+                this.interactionSystem.callEvent(message);
+                return;
+            }
+            console.log('6');
         }
         
         
+        console.log('here');
+        game.sound.play('bad');
         tool.x = tool.inventPos.x;
         tool.y = tool.inventPos.y;
          
@@ -239,6 +261,9 @@ function Inventory(game) { //always on the top
         this.inventoryContainer.removeChildren();
     }
     
+    this.popUp = function(tool) {
+        //this.inventoryContainer.swapChildren(tool,this.inventoryContainer.getChildAt(this.inventoryContainer.length-1));
+    }
     
     this.getCollisionMap = function(tool) {
         var SceneCollideList = [];
@@ -253,27 +278,39 @@ function Inventory(game) { //always on the top
         
         var InventoryCollideList = [];
         var objectsInInventory = this.inventoryContainer.children;
-        console.log(objectsInInventory);
+        //console.log(objectsInInventory);
         objectsInInventory.forEach(function(obj) {
             if(obj.name!=tool.name && obj.visible && hitTestRectangle(tool,obj)) {
                 console.log(obj.name);
                 InventoryCollideList.push(obj);
             }
         });
+        var sceneObjName = [];
+        SceneCollideList.forEach(function(obj){
+            sceneObjName.push(obj.name);
+        })
         
-        console.log(SceneCollideList);
-        console.log(InventoryCollideList);
+        var invObjName = [];
+        InventoryCollideList.forEach(function(obj){
+            invObjName.push(obj.name);
+        })
+        console.log("sceneObjName:");
+        console.log(sceneObjName);
+        console.log("invObjName:");
+        console.log(invObjName);
+        
         return {scene:SceneCollideList,inventory:InventoryCollideList};
     }
     
 }
 
+
 function onDragStart(event) {
+    myGame.inventory.popUp(this);
     this.data = event.data;
     this.alpha = 0.5;
     this.dragging = true;
 }
-
 
 function onDragMove() {
     if (this.dragging) {
@@ -359,8 +396,6 @@ function SceneManager(game) {
         this.currentScene.visible = true;
     }
     
-    
-    
 }
 
 
@@ -378,8 +413,8 @@ function GameManager() {
     this.sceneManager;
     this.messageBox;
     
-    //interaction system
-    this.globalConditions = {};
+    //sound list
+    this.sound = PIXI.sound;
     
     this.init = function(width,height,invent_size) {
         if(invent_size == 0)

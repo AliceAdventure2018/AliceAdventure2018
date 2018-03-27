@@ -5,6 +5,11 @@ myGame.states = {cat_is_feeded:false}
 
 
 ///------------------------------------------------------------///
+myGame.sound.add('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
+myGame.sound.add('meow_happy', baseURL.nomalAssets + 'meow_happy.wav');
+myGame.sound.add('door', baseURL.nomalAssets + 'door.wav');
+
+///-----------------------------------------------------------///
 
 var back = Alice.Object.fromImage(baseURL.nomalAssets + 'room_basic.png');
 back.anchor.set(0.5);
@@ -23,6 +28,7 @@ door.name = "door";
 door.interactive = true;
 door.buttonMode = true;
 door.on('pointerdown',function() {
+    myGame.sound.play('door');
     myGame.sceneManager.nextScene();
 });
 
@@ -42,10 +48,18 @@ cat.buttonMode = true;
 
 cat.on('pointerdown',function() {
     if(!myGame.states.cat_is_feeded)
+    {
         myGame.messageBox.startConversation(["Meow~","Hungry..."]);
+        myGame.sound.play('meow_unhappy');
+    }
     
     if(myGame.states.cat_is_feeded)
+    {
         myGame.messageBox.startConversation(["Meow~","Love you~"]);
+        myGame.sound.play('meow_happy');
+    }
+        
+    
 })
 
 myGame.scene(0).addChild(cat);
@@ -55,7 +69,7 @@ var back2 = Alice.Object.fromImage(baseURL.nomalAssets + 'kitchen.png');
 back2.anchor.set(0.5);
 back2.x = myGame.screenWidth / 2;
 back2.y = myGame.screenHeight / 2;
-back2.name = "back";
+back2.name = "back2";
 myGame.scene(1).addChild(back2);
 
 
@@ -64,10 +78,11 @@ door2.anchor.set(0.5);
 door2.x = 330;
 door2.y = 390;
 door2.scale.set(0.9);
-door2.name = "door";
+door2.name = "door2";
 door2.interactive = true;
 door2.buttonMode = true;
 door2.on('pointerdown',function() {
+    PIXI.sound.play('door');
     myGame.sceneManager.jumpToScene(0);
 });
 
@@ -87,7 +102,6 @@ knife.on('pointerdown',function() {
 });
 
 myGame.scene(1).addChild(knife);
-
 
 var jam = Alice.Object.fromImage(baseURL.nomalAssets + 'jam.png');
 jam.anchor.set(0.5);
@@ -137,8 +151,8 @@ knifewithjam.name = "knifewithjam";
 knifewithjam.visible = false;
 myGame.scene(1).addChild(knifewithjam);
 
-
 //register events
+
 
 myGame.inventory.interactionSystem.addCombineEvent(knife,jam,function(){
     
@@ -148,7 +162,6 @@ myGame.inventory.interactionSystem.addCombineEvent(knife,jam,function(){
     myGame.inventory.add(knifewithjam);
 
 });
-
 
 myGame.inventory.interactionSystem.addCombineEvent(knifewithjam,bread,function(){
     myGame.inventory.remove(knifewithjam);
