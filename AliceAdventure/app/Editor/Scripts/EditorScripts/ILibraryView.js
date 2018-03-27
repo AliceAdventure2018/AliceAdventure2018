@@ -39,7 +39,9 @@ ILibraryView.prototype.InitView = function(){
 			reactions: IReaction.Library
 		}, 
 		methods: {
-			setIEvent: (evt, ntra)=>{ntra.SetIEvent(evt);}, 
+			eventDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.IEvent, d);},
+			stateDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.State, d);},
+			reactionDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.IReaction, d);},
 			addCondition: (state, ntra)=>{ntra.AddCondition(state);},
 			newState: ()=>{State.NewState('testState', false);}, 
 			deleteState: (state)=>{state.DeleteThis();}, 

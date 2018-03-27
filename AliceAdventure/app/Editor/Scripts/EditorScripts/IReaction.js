@@ -23,13 +23,13 @@ IReaction.InputModel = {
 
 IReaction.Library = [
 	{
-		index: 0,
+		type: 0,
 		name: "Set state", 
 		inputLength: 2, 
 		inputTypes: [IReaction.InputModel.State, IReaction.InputModel.Checkbox]
 	}, 
 	{
-		index: 1,
+		type: 1,
 		name: "Transit scene", 
 		inputLength: 1, 
 		inputTypes: [IReaction.InputModel.Scene]

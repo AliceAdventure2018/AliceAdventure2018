@@ -36,6 +36,12 @@ InteractionView.prototype.InitView = function(){
 			interactions: null
 		}, 
 		methods: {
+			eventDragover: (ev)=>{View.HandleDragover(ev);},
+			eventDrop: (ev, ntra)=>{View.HandleDrop(ev, View.DragInfo.IEvent, (data)=>{ntra.SetIEvent(data);});}, 
+			stateDragover: (ev)=>{View.HandleDragover(ev);},
+			stateDrop: (ev, ntra)=>{View.HandleDrop(ev, View.DragInfo.State, (data)=>{ntra.AddCondition(data);});}, 
+			reactionDragover: (ev)=>{View.HandleDragover(ev);},
+			reactionDrop: (ev, ntra)=>{View.HandleDrop(ev, View.DragInfo.IReaction, (data)=>{ntra.AddIReaction(data);});}, 
 			addInteraction: ()=>{this.AddNewInteraction();}, 
 			deleteInteraction: (ntra)=>{ntra.DeleteThis();}, 
 			removeCondition: (state, ntra)=>{ntra.RemoveCondition(state);}, 
