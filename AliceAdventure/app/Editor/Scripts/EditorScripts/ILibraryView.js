@@ -1,7 +1,7 @@
 'use strict';
 
+const {Event} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
-const Event = require('./Event');
 const SceneObject = require('./SceneObject');
 const State = require('./State');
 const IEvent = require('./IEvent');

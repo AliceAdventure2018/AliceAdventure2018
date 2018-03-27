@@ -1,6 +1,6 @@
 'use strict';
 
-const MENU = require('electron').remote.Menu;
+const {MENU} = require('./Utilities/Utilities');
 const File = require('./File');
 
 var Menu;

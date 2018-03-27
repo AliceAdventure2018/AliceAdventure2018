@@ -1,8 +1,5 @@
 'use strict';
 
-//const ID = require('./ID');
-//const GameProperties = require('./GameProperties');
-
 // class
 var IReaction;
 

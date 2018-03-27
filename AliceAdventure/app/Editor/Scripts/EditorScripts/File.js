@@ -1,13 +1,7 @@
 'use strict';
-const PATH = require('path');
-const ELECTRON = require('electron').remote;
-const PROMPT = require('electron-prompt');
-const FS = require('fs-extra');
+const {PATH, ELECTRON, PROMPT, FS, Debug, ID, Event} = require('./Utilities/Utilities');
 const Compiler = require('../../../Compiler/Compiler'); // TODO
-const Debug = require('./Debug');
-const ID = require('./ID');
 const GameProperties = require('./GameProperties');
-const Event = require('./Event');
 const Scene = require('./Scene');
 const SceneObject = require('./SceneObject');
 

@@ -4,16 +4,19 @@ var AliceEditor;
 
 AliceEditor = (function(){
 	var getModule = function(name) {return require('./EditorScripts/' + name);}
+	var utilities = getModule('Utilities/Utilities');
 	return {
-		get Debug() {return getModule('Debug');}, 
+		get Debug() {return utilities.Debug;}, 
+		get Event() {return utilities.Event;},
+
 		get GameProperties() {return getModule('GameProperties');}, 
-		get Event() {return getModule('Event');},
 		get Scene() {return getModule('Scene');},
 		get SceneObject() {return getModule('SceneObject');},
 		get State() {return getModule('State');},
 		get IEvent() {return getModule('IEvent');},
 		get IReaction() {return getModule('IReaction');},
 		get Interaction() {return getModule('Interaction');},
+		
 		get View() {return getModule('View');},
 		get RunView() {return getModule('RunView');},
 		get GalleryView() {return getModule('GalleryView');}, 
@@ -23,7 +26,7 @@ AliceEditor = (function(){
 		get ILibraryView() {return getModule('ILibraryView');},
 		get InteractionView() {return getModule('InteractionView');}, 
 		get File() {return getModule('File');}, 
-		get Menu() {return getModule('Menu');}
+		get Menu() {return getModule('Menu');},
 	};
 })();
 

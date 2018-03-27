@@ -1,6 +1,6 @@
 'use strict';
 
-const PIXI = require('../../../Resources/pixi');
+const {PIXI} = require('./Utilities/Utilities');
 const View = require('./View');
 
 // class

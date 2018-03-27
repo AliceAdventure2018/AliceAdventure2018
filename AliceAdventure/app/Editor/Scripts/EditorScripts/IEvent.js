@@ -1,7 +1,6 @@
 'use strict';
 
-const Debug = require('./Debug');
-const ID = require('./ID');
+const {Debug, ID} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
 
 // class

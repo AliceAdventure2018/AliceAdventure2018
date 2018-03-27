@@ -1,9 +1,7 @@
 'use strict';
 
-const PIXI = require('../../../Resources/pixi');
-const ID = require('./ID');
+const {PIXI, ID, Event} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
-const Event = require('./Event');
 
 // class
 var Scene;

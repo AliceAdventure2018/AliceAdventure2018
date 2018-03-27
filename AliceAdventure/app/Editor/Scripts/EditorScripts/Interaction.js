@@ -1,6 +1,6 @@
 'use strict';
 
-const ID = require('./ID');
+const {ID} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
 const IEvent = require('./IEvent');
 

@@ -2,7 +2,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const pixi = require.resolve('../Resources/pixi/pixi.js');
-const pixi_sound = require.resolve('../Resources/pixi/pixi-sound.js');
+const pixi_sound = require.resolve('../Resources/pixi/pixi_sound');
 const aliceAPI = require.resolve('../Engine/aliceAPI.js');
 
 
@@ -73,23 +73,26 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	var aliceAPIDest = path.join(resourcesDest, 'aliceAPI.js');
 
 	var pixiDest = path.join(pixiFolder, 'pixi.js');
-	var soundDest = path.join(pixiFolder,'pixi-sound.js');
+	var soundDest = path.join(pixiFolder,'pixi_sound.js');
 	var pixi_sound_map_dest = path.join(pixiFolder, 'pixi-sound.js.map');
-
+	// if (! fs.pathExistSync(assetSrc)){
+	// 	callback("Cannot find the assets folder under saving directory.");
+	// 	return false;
+	// }
 	if (aliceAPI == null){
 		callback("Cannot find aliceAPI.js, which should be under Engine/aliceAPI.js");
 		return false;
 	}
 	if (pixi == null){
-		callback("Cannot find pixi.js, which should be under Resources/pixi/pixi.js");
+		callback("Cannot find pixi.js, which should be under Resources/pixi.js");
 		return false;
 	}
 	if (pixi_sound==null){
-		callback("Cannot find pixi-sound.js, which should be under Resources/pixi/pixi-sound.js");
+		callback("Cannot find pixi-sound.js, which should be under Resources/pixi-sound.js");
 		return false;
 	}
 	if (pixi_sound_map_src ==null){
-		callback("Cannot find the Linker Address Map:pixi-sound.js.map, which should be under Resources/pixi/pixi-sound.js.map");
+		callback("Cannot find the Linker Address Map:pixi-sound.js.map, which should be under Resources/pixi-sound.js.map");
 		return false;
 	}
 
@@ -97,8 +100,6 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	FileSys.createBuildFolder(resourcesDest);
 	FileSys.createBuildFolder(assetDest);
 	FileSys.createBuildFolder(pixiFolder);
-
-	//copy AliceAPI, pixi,pixi-sound.js, pixi-sound.js.map
 	FileSys.copyFileOrFolder(aliceAPI, aliceAPIDest);
 	FileSys.copyFileOrFolder(pixi, pixiDest);
 	FileSys.copyFileOrFolder(pixi_sound, soundDest);
