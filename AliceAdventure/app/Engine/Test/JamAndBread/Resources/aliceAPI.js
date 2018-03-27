@@ -69,7 +69,7 @@ function Interaction() {
 
 var baseURL = {
     requireAssets: './Resources/Assets/require/',
-    nomalAssets: '../Resources/Assets/'
+    nomalAssets: './Resources/Assets/'
 }
 
 function InventoryInteractionSystem() {
