@@ -605,7 +605,10 @@ function MessageBox(background,avatarEnable) {
         
         if(!msgs.length)
             return
-        this.callBack = func;
+            
+        if(func!=undefined)
+            this.callBack = func;
+        
         this.messageBuffer = msgs;
         
         this.currentMsgIndex = 0;
