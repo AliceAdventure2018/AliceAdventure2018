@@ -518,9 +518,6 @@ function Message(text,style,avatar) {
 }
 
 function MessageBox(background,avatarEnable) {
-    console.log(background);
-    
-    
     this.holder = new Alice.Container();
     
     this.backgronud = Alice.Object.fromImage(background.url);
@@ -538,6 +535,7 @@ function MessageBox(background,avatarEnable) {
     
     this.messageBuffer = [];
     this.currentMsgIndex = 0;
+    this.callBack = function(){};
     
     this.nextConversation = function() {
         
@@ -548,6 +546,7 @@ function MessageBox(background,avatarEnable) {
             this.currentMsg.text = this.messageBuffer[this.currentMsgIndex];
             //console.log("speak " + this.messageBuffer[this.currentMsgIndex]);
         } else {
+            this.callBack();
             this.messageBuffer = [];
             this.currentMsg.text = "";
             this.currentMsgIndex = 0;
@@ -597,7 +596,7 @@ function MessageBox(background,avatarEnable) {
         this.messageBuffer = msgs;
     }
     
-    this.startConversation= function(msgs) {
+    this.startConversation= function(msgs,func) {
         
         //console.log(msgs);
         
@@ -606,7 +605,7 @@ function MessageBox(background,avatarEnable) {
         
         if(!msgs.length)
             return
-            
+        this.callBack = func;
         this.messageBuffer = msgs;
         
         this.currentMsgIndex = 0;

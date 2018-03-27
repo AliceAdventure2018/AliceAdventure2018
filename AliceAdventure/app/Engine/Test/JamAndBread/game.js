@@ -8,6 +8,7 @@ myGame.states = {cat_is_feeded:false}
 myGame.sound.add('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
 myGame.sound.add('meow_happy', baseURL.nomalAssets + 'meow_happy.wav');
 myGame.sound.add('door', baseURL.nomalAssets + 'door.wav');
+myGame.sound.add('win', baseURL.nomalAssets + 'win.wav');
 
 ///-----------------------------------------------------------///
 
@@ -82,7 +83,7 @@ door2.name = "door2";
 door2.interactive = true;
 door2.buttonMode = true;
 door2.on('pointerdown',function() {
-    PIXI.sound.play('door');
+    myGame.sound.play('door');
     myGame.sceneManager.jumpToScene(0);
 });
 
@@ -186,10 +187,13 @@ myGame.inventory.interactionSystem.addUsedEvent(breadwithjam,cat,function(){
     myGame.states.cat_is_feeded = true;
     myGame.inventory.remove(breadwithjam);
     myGame.sound.play("meow_happy");
-    myGame.messageBox.startConversation(["Yummy","I love you ~"]);
+    myGame.messageBox.startConversation(["Yummy","I love you ~"],function(){
+        //win game
+        myGame.sound.play('win');
+        myGame.sceneManager.jumpToScene(2);
+        myGame.hideInventory();
+    });
     
-    myGame.sceneManager.jumpToScene(2);
-    myGame.hideInventory();
 });
 
 //--//
