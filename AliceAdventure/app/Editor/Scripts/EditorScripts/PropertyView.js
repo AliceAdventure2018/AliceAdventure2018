@@ -8,8 +8,8 @@ const View = require('./View');
 var PropertyView;
 
 // variables
-PropertyView = function(_height = -1, _width = -1){
-	View.call(this, "PropertyView", _height, _width);
+PropertyView = function(_bindElementID, _height = -1, _width = -1){
+	View.call(this, "PropertyView", _height, _width, _bindElementID);
 
 	this.bindObject = null;
 	this.vModel = null;
@@ -17,12 +17,19 @@ PropertyView = function(_height = -1, _width = -1){
 };
 PropertyView.prototype = new View();
 
+// static
+PropertyView.NewView = function(_elementID){
+	var view = new PropertyView(_elementID);
+	view.InitView();
+	return view;
+};
+
 // functions
 PropertyView.prototype.InitView = function(){
 	View.prototype.InitView.apply(this); // call super method
 	// init data binding
 	this.vModel = new Vue({
-	  el: '#property-view',
+	  el: '#' + this.bindElementID,
 	  data: {
 	  	showProperty: false,
 	  	propertyKey: "",
