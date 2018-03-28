@@ -28,11 +28,13 @@
       <a class="float-left" id="brand" href="#">
         <img src="./src/AliceAdventure_logo.svg" width="25" height="25" alt="">&nbsp; Alice's Adventure
        </a>
-
+<!--
        
        <button  onclick="switchDesignView()" class="float-left" id="design-button" >Design </button>
 
        <button  onclick="switchCodeView()"  class="float-left"  id ="code-button" >Code</button>
+
+   -->
        <button id="setting-button"  class="float-right" data-toggle="modal" data-target="#setting">
                    Setting
         </button>
@@ -105,7 +107,10 @@
 
 
     <div id="first-column">
-   	<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6></div>
+   	<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6>
+   		<div id="add-scene">
+        <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button"> Add Scene</button></div>
+   	</div>
    	
   	<div id="gallery">
   		<h6 class="window-title">GALLERY</h6>
@@ -248,12 +253,13 @@
             </li>
 	      	</ul>
 	      </div>
-	      <div id="state-library"><h6 class="window-title">State</h6>
+	      <div id="state-library"><h6 class="window-title">State</h6><div id="add-state"><button type="button" class="badge badge-pill badge-state-button" id="add-state-button">Add</button></div>
 	      	<ul id="state-list" v-if='viewEnabled'>
 	      		<li v-for='state in states'>
               <span class="badge badge-pill badge-state" v-on:dragstart='stateDragstart(event, state)' draggable="true" v-html='state.name'>Win</span>
-            </li>
+            </li> 
 	      	</ul>
+
 	      </div>
 	      <div id="reaction-library"><h6 class="window-title">Reaction</h6>
 	      	<ul id="reaction-list" v-if='viewEnabled'>

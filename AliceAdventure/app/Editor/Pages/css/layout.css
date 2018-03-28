@@ -26,6 +26,11 @@ button{
 
 }
 
+#add-state-button:active, #add-state-button:hover{
+    background-color:#f9af48 !important;
+    color:#fff;
+}
+
 .btn:focus,.btn:active:focus,.btn.active:focus,
 .btn.focus,.btn:active.focus,.btn.active.focus {
     outline: none !important;
@@ -38,6 +43,11 @@ button{
     color:#ffc107;
 }
 
+#add-scene{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
 
 #add-interaction{
     position: absolute;
@@ -45,6 +55,8 @@ button{
     right: 10px;
 }
 
+#add-state-button:focu s{outline: none;}
+#add-scene-button:focus {outline:none;}
 #add-interaction-button:focus {outline:none;}
 #close-icon-button:focus {outline:none;}
 #close-button:focus {outline:none;}
@@ -237,7 +249,7 @@ button{
     position: absolute;
     
     width: 720px;
-    bottom: 0;
+    bottom: 450px;
     left: 0;
     top:0;
     right: 0;
@@ -263,8 +275,27 @@ button{
     border-color: #aaa;
     background-color: #fff;
 }
-
-.interaction-box ul{
+.event-box{
+    padding:10px;
+    border-radius: 10px;
+    list-style: none;
+    background-color: #eee;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    min-height: 50px;
+}
+.condition-box{
+    padding:10px;
+    border-radius: 10px;
+    list-style: none;
+    background-color: #eee;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    min-height: 100px;
+}
+.reaction-box{
     padding:10px;
     border-radius: 10px;
     list-style: none;
@@ -301,11 +332,13 @@ button{
     color:#fff;
     font-size: 0.8em !important;
 }
+
 .badge-reaction{
     background-color: #28a745;
     color:#fff;
     font-size: 0.8em !important;
 }
+
 #event-list{
     background: #eee;
     border-radius: 10px;
@@ -320,7 +353,29 @@ button{
 #event-list li{
     padding-bottom:5px;
 }
+#state-library h6{
+    display: inline-block;
 
+}
+#add-state{
+    display: inline-block;
+    right: 5px;
+    bottom:0;
+}
+#add-state-button{
+   
+
+    
+    border-style: solid;
+    border-width:thin;
+    margin:5px;
+
+   
+    background-color: #fff;
+    border-color:#f9af48;
+    color:#f9af48;
+    font-size: 0.8em !important;
+}
 #state-list{
     border-radius: 10px;
     background: #eee;
@@ -343,7 +398,7 @@ button{
     list-style: none;
     margin: 10px;
     padding: 10px;
-    max-height: 240px;
+    max-height: 400px;
     overflow: auto;
 
 }
