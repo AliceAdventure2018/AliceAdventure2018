@@ -16,25 +16,25 @@ IEvent = function(_model, args = []){
 IEvent.Library = [
 	{
 		type: 0,
-		name: "Click in scene",
+		name: "Click on A",
 		inputObjNum: 1, 
 		template: "# is clicked"
 	}, 
 	{
 		type: 1,
-		name: "Use in scene",
+		name: "Use A on B",
 		inputObjNum: 2, 
 		template: "# is used on #"
 	}, 
 	{
 		type: 2,
-		name: "Observe in inventory",
+		name: "Observe A",
 		inputObjNum: 1, 
 		template: "# is observed"
 	}, 
 	{
 		type: 3,
-		name: "Combine in inventory",
+		name: "Combine A with B",
 		inputObjNum: 2, 
 		template: "# is combined with #"
 	}, 

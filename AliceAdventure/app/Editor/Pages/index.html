@@ -171,20 +171,29 @@
   
   	<div id="second-column">
   		<div id="interaction-editor"><h6 class="window-title">INTERACTION EDITOR</h6>
-  		<div class="interaction-box">
+  		<div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions'>
   			<h6 class="window-title">Event</h6>
-  			<ul class="event-box">
-  				<li><span class="badge badge-pill badge-event">Click on A</span></li>
+  			<ul class="event-box" v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'>
+  				<li v-if='ntra.event!=null'><span class="badge badge-pill badge-event" v-html='ntra.event.model.template'></span></li>
+          <li v-else><span class="badge badge-pill badge-event">Drag an event here</span></li>
   			</ul>
   			<h6 class="window-title">Condtion</h6>
-  			<ul class="condition-box">
+  			<ul class="condition-box" v-on:drop='stateDrop(event, ntra)' v-on:dragover='stateDragover(event)'>
+          <li v-for='state in ntra.conditionList'>
+            <span class="badge badge-pill badge-condition" v-html='state.name'></span>
+          </li>
   			</ul>
   			<h6 class="window-title">Reaction</h6>
-  			<ul class="reaction-box">
+  			<ul class="reaction-box" v-on:drop='reactionDrop(event, ntra)' v-on:dragover='reactionDragover(event)'>
+          <li v-for='react in ntra.reactionList'>
+            <span class="badge badge-pill badge-reaction" v-html='react.name'></span>
+          </li>
   			</ul>
   		</div>
   			
-      	<div id="add-interaction"><button type="button"  class="btn btn-outline-success btn-sm" id="add-interaction-button" > Add Interaction </button></div>
+      	<div id="add-interaction">
+        <button type="button"  class="btn btn-outline-success btn-sm" id="add-interaction-button" v-on:click='addInteraction()'> Add Interaction </button>
+        </div>
       </div>	
   	</div>
 
@@ -233,33 +242,24 @@
       <div id="interaction-library">
       	<h6 class="window-title">INTERACTION LIBRARY</h6>
 	      <div id="event-library"><h6 class="window-title">Event</h6>
-	      	<ul id="event-list">
-	      		<li><span class="badge badge-pill badge-event">Click on A</span></li>
-	      		<li><span class="badge badge-pill badge-event">Use A on B</span></li>
-	      		<li><span class="badge badge-pill badge-event">Combine A with B</span></li>
-	      		<li><span class="badge badge-pill badge-event">Observe A</span></li>
+	      	<ul id="event-list" v-if='viewEnabled'>
+	      		<li v-for='em in events'>
+              <span class="badge badge-pill badge-event" v-on:dragstart='eventDragstart(event, em)' draggable="true" v-html='em.name'></span>
+            </li>
 	      	</ul>
 	      </div>
 	      <div id="state-library"><h6 class="window-title">State</h6>
-	      	<ul id="state-list">
-	      		<li><span class="badge badge-pill badge-state">Win</span></li>
-	      		<li><span class="badge badge-pill badge-state">Lose</span></li>
-	      		<li><span class="badge badge-pill badge-state">Collected</span></li>
-	      		
+	      	<ul id="state-list" v-if='viewEnabled'>
+	      		<li v-for='state in states'>
+              <span class="badge badge-pill badge-state" v-on:dragstart='stateDragstart(event, state)' draggable="true" v-html='state.name'>Win</span>
+            </li>
 	      	</ul>
 	      </div>
 	      <div id="reaction-library"><h6 class="window-title">Reaction</h6>
-	      	<ul id="reaction-list">
-	      		<li><span class="badge badge-pill badge-reaction">Store in inventory</span></li>
-	      		<li><span class="badge badge-pill badge-reaction">Transition to scene</span></li>
-	      		<li><span class="badge badge-pill badge-reaction">Textbox</span></li>
-	      		<li><span class="badge badge-pill badge-reaction">Play audio</span></li>
-	      		<li><span class="badge badge-pill badge-reaction">Play animation</span></li>
-	      		<li><span class="badge badge-pill badge-reaction">Make invisible</span></li>
-	      		<li><span class="badge badge-pill badge-reaction">Make visible</span></li>
-	      		<li><span class="badge badge-pill badge-reaction">Make clickable</span></li>
-	      		<li><span class="badge badge-pill badge-reaction">Make unclickable</span></li>
-	      		<li><span class="badge badge-pill badge-reaction">Move to scene (x,y)</span></li>
+	      	<ul id="reaction-list" v-if='viewEnabled'>
+	      		<li v-for='rm in reactions'>
+              <span class="badge badge-pill badge-reaction" v-on:dragstart='reactionDragstart(event, rm)' draggable="true" v-html='rm.name'></span>
+            </li>
 	      	</ul>
 	      </div>
       </div>
@@ -300,10 +300,10 @@
             </li>
 
             <!-- user properties -->
-            <li v-for='property in bindObj.properties'>
+            <!--li v-for='property in bindObj.properties'>
               <label for="pos-x">{{ property.key }}:</label> 
               <input id="pos-x" v-model='property.value'>
-            </li>
+            </li-->
 
           </ul>
 
