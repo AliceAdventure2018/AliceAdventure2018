@@ -103,6 +103,10 @@
 
     <div id="design-view" style="display: block;">
 
+
+    <div id="first-column">
+   	<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6></div>
+   	
   	<div id="gallery">
   		<h6 class="window-title">GALLERY</h6>
       <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -156,43 +160,52 @@
               </div>
             </div>
   	</div>
-  
-  	<div id="design-content">
-
-  		<div id="design-preview"><h6 class="window-title">PREVIEW</h6>
-
-      <div id="add-scene"><button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" > Add Scene </button></div>
-      </div>
-  
-  		<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6></div>
-  
-  		<div id="design-editor-resizer" 
+  	<div id="design-editor-resizer" 
   			resizer="horizontal" 
   			resizer-height="6" 
-  			resizer-top="#design-preview" 
-  			resizer-bottom="#design-editor">
-  		</div>
+  			resizer-top="#design-editor" 
+  			resizer-bottom="#gallery"
+  			>
+  	</div>
+  </div>
   
+  	<div id="second-column">
+  		<div id="interaction-editor"><h6 class="window-title">INTERACTION EDITOR</h6>
+  		<div class="interaction-box">
+  			<h6 class="window-title">Event</h6>
+  			<ul class="event-box">
+  				<li><span class="badge badge-pill badge-event">Click on A</span></li>
+  			</ul>
+  			<h6 class="window-title">Condtion</h6>
+  			<ul class="condition-box">
+  			</ul>
+  			<h6 class="window-title">Reaction</h6>
+  			<ul class="reaction-box">
+  			</ul>
+  		</div>
+  			
+      	<div id="add-interaction"><button type="button"  class="btn btn-outline-success btn-sm" id="add-interaction-button" > Add Interaction </button></div>
+      </div>	
   	</div>
 
-    <div id="gallery-resizer" 
+    <div id="first-second-resizer" 
       resizer="vertical-left" 
       resizer-width="6" 
-      resizer-left="#gallery" 
-      resizer-right="#design-content"
-      resizer-max="400">
+      resizer-left="#first-column" 
+      resizer-right="#second-column"
+      resizer-max="720">
     </div>
-    <div id="design-side-resizer" 
+    <div id="second-third-resizer" 
       resizer="vertical-right" 
       resizer-width="6" 
-      resizer-left="#design-content" 
-      resizer-right="#design-side-common"
+      resizer-left="#second-column" 
+      resizer-right="#third-column"
       resizer-max="400">
     </div>
 
-    <div id="design-side-common">
+    <div id="third-column">
       
-      <div id="design-object-list">
+      <div id="design-object-list" style="display: none;" >
         <h6 class="window-title">OBJECTS IN THE SCENES</h6>
 
         <!-- if show object list on -->
@@ -214,10 +227,43 @@
           <label class="object_label" for="inventory">Inventory</label>
         </li>
       </ol>
-
-        
-
       </div>
+
+
+      <div id="interaction-library">
+      	<h6 class="window-title">INTERACTION LIBRARY</h6>
+	      <div id="event-library"><h6 class="window-title">Event</h6>
+	      	<ul id="event-list">
+	      		<li><span class="badge badge-pill badge-event">Click on A</span></li>
+	      		<li><span class="badge badge-pill badge-event">Use A on B</span></li>
+	      		<li><span class="badge badge-pill badge-event">Combine A with B</span></li>
+	      		<li><span class="badge badge-pill badge-event">Observe A</span></li>
+	      	</ul>
+	      </div>
+	      <div id="state-library"><h6 class="window-title">State</h6>
+	      	<ul id="state-list">
+	      		<li><span class="badge badge-pill badge-state">Win</span></li>
+	      		<li><span class="badge badge-pill badge-state">Lose</span></li>
+	      		<li><span class="badge badge-pill badge-state">Collected</span></li>
+	      		
+	      	</ul>
+	      </div>
+	      <div id="reaction-library"><h6 class="window-title">Reaction</h6>
+	      	<ul id="reaction-list">
+	      		<li><span class="badge badge-pill badge-reaction">Store in inventory</span></li>
+	      		<li><span class="badge badge-pill badge-reaction">Transition to scene</span></li>
+	      		<li><span class="badge badge-pill badge-reaction">Textbox</span></li>
+	      		<li><span class="badge badge-pill badge-reaction">Play audio</span></li>
+	      		<li><span class="badge badge-pill badge-reaction">Play animation</span></li>
+	      		<li><span class="badge badge-pill badge-reaction">Make invisible</span></li>
+	      		<li><span class="badge badge-pill badge-reaction">Make visible</span></li>
+	      		<li><span class="badge badge-pill badge-reaction">Make clickable</span></li>
+	      		<li><span class="badge badge-pill badge-reaction">Make unclickable</span></li>
+	      		<li><span class="badge badge-pill badge-reaction">Move to scene (x,y)</span></li>
+	      	</ul>
+	      </div>
+      </div>
+
       <div id="design-property">
         <h6 class="window-title">PROPERTIES</h6>
         <!-- bind img src -->
@@ -266,7 +312,7 @@
       <div id="design-property-resizer" 
         resizer="horizontal" 
         resizer-height="6" 
-        resizer-top="#design-object-list" 
+        resizer-top="#interaction-library" 
         resizer-bottom="#design-property">
       </div>
     </div>
@@ -274,7 +320,7 @@
 
   </div> <!-- end of design view -->
 
-
+<!--
   <div id="code-view" style="display: none;">
 
     <div id="code-library">
@@ -334,7 +380,7 @@
     </div>
 
 
-  </div> <!-- end of code view -->
+  </div>  end of code view -->
 
   	
   
