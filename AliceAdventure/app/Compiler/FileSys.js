@@ -1,7 +1,8 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const pixi = require.resolve('../Resources/pixi.js');
+const pixi = require.resolve('../Resources/pixi/pixi.js');
+const pixi_sound = require.resolve('../Resources/pixi/pixi-sound');
 const aliceAPI = require.resolve('../Engine/aliceAPI.js');
 
 
@@ -65,11 +66,15 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 
 	var assetSrc = './Assets';
 	var assetDest = path.join(resourcesDest, 'Assets');
+	
+	var pixi_sound_map_src = path.join(path.dirname(pixi),'pixi-sound.js.map');
+	var pixiFolder = path.join(resourcesDest, 'pixi');
 
 	var aliceAPIDest = path.join(resourcesDest, 'aliceAPI.js');
 
-	var pixiDest = path.join(resourcesDest, 'pixi.js');
-
+	var pixiDest = path.join(pixiFolder, 'pixi.js');
+	var soundDest = path.join(pixiFolder,'pixi-sound.js');
+	var pixi_sound_map_dest = path.join(pixiFolder, 'pixi-sound.js.map');
 	// if (! fs.pathExistSync(assetSrc)){
 	// 	callback("Cannot find the assets folder under saving directory.");
 	// 	return false;
@@ -82,12 +87,23 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 		callback("Cannot find pixi.js, which should be under Resources/pixi.js");
 		return false;
 	}
+	if (pixi_sound==null){
+		callback("Cannot find pixi-sound.js, which should be under Resources/pixi-sound.js");
+		return false;
+	}
+	if (pixi_sound_map_src ==null){
+		callback("Cannot find the Linker Address Map:pixi-sound.js.map, which should be under Resources/pixi-sound.js.map");
+		return false;
+	}
 
 	FileSys.createBuildFolder(buildPath);
 	FileSys.createBuildFolder(resourcesDest);
 	FileSys.createBuildFolder(assetDest);
+	FileSys.createBuildFolder(pixiFolder);
 	FileSys.copyFileOrFolder(aliceAPI, aliceAPIDest);
 	FileSys.copyFileOrFolder(pixi, pixiDest);
+	FileSys.copyFileOrFolder(pixi_sound, soundDest);
+	FileSys.copyFileOrFolder(pixi_sound_map_src, pixi_sound_map_dest),
 
 	FileSys.copyFileOrFolder(FileSys.merge(assetSrc, 'inventory.png'), FileSys.merge(assetDest, 'inventory.png'));
 	FileSys.copyFileOrFolder(FileSys.merge(assetSrc, 'textbox.png'), FileSys.merge(assetDest, 'textbox.png'));
