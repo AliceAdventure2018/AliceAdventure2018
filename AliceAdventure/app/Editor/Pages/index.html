@@ -109,17 +109,17 @@
     <div id="first-column">
    	<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6>
    		<div id="add-scene">
-        <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button"> Add Scene</button></div>
+        <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene'> Add Scene</button></div>
    	</div>
    	
   	<div id="gallery">
   		<h6 class="window-title">GALLERY</h6>
       <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
-            <li class="nav-item"><a class="nav-link" id="door-tab"  data-toggle="tab" href="#door-asset" role="tab" aria-expanded="false" aria-controls="door-asset" aria-selected="false">Door</a></li>
-            <li class="nav-item"><a class="nav-link" id="key-tab" data-toggle="tab" href="#key-asset" role="tab" aria-expanded="true" aria-controls="key-asset" aria-selected="false">Key</a></li>
-            <li class="nav-item"><a class="nav-link" id="container-tab"  data-toggle="tab" href="#container-asset" role="tab" aria-expanded="false" aria-controls="container-asset" aria-selected="false">Container</a></li>
-            <li class="nav-item"><a class="nav-link" id="actor-tab" data-toggle="tab" href="#actor-asset" role="tab" aria-expanded="true" aria-controls="actor-asset" aria-selected="false">Actor</a></li>
+            <li class="nav-item"><a class="nav-link" id="door-tab"  data-toggle="tab" href="#door-asset" role="tab" aria-expanded="false" aria-controls="door-asset" aria-selected="false">Default</a></li>
+            <li class="nav-item"><a class="nav-link" id="key-tab" data-toggle="tab" href="#key-asset" role="tab" aria-expanded="true" aria-controls="key-asset" aria-selected="false">Other</a></li>
+            <!--li class="nav-item"><a class="nav-link" id="container-tab"  data-toggle="tab" href="#container-asset" role="tab" aria-expanded="false" aria-controls="container-asset" aria-selected="false">Container</a></li>
+            <li class="nav-item"><a class="nav-link" id="actor-tab" data-toggle="tab" href="#actor-asset" role="tab" aria-expanded="true" aria-controls="actor-asset" aria-selected="false">Actor</a></li-->
             
           </ul>
             <div class="tab-content" id="v-pills-tabContent">
@@ -176,22 +176,22 @@
   
   	<div id="second-column">
   		<div id="interaction-editor"><h6 class="window-title">INTERACTION EDITOR</h6>
-  		<div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions'>
+  		<div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' v-on:dblclick='deleteInteraction(ntra)'>
   			<h6 class="window-title">Event</h6>
   			<ul class="event-box" v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'>
   				<li v-if='ntra.event!=null'><span class="badge badge-pill badge-event" v-html='ntra.event.model.template'></span></li>
-          <li v-else><span class="badge badge-pill badge-event">Drag an event here</span></li>
+          <li v-else><span>Drag an event to here</span></li>
   			</ul>
   			<h6 class="window-title">Condtion</h6>
   			<ul class="condition-box" v-on:drop='stateDrop(event, ntra)' v-on:dragover='stateDragover(event)'>
-          <li v-for='state in ntra.conditionList'>
-            <span class="badge badge-pill badge-condition" v-html='state.name'></span>
+          <li v-for='state in ntra.conditionList' v-on:dblclick='removeCondition(state, ntra)'>
+            <span class="badge badge-pill badge-state" v-html='state.name'></span>
           </li>
   			</ul>
   			<h6 class="window-title">Reaction</h6>
   			<ul class="reaction-box" v-on:drop='reactionDrop(event, ntra)' v-on:dragover='reactionDragover(event)'>
-          <li v-for='react in ntra.reactionList'>
-            <span class="badge badge-pill badge-reaction" v-html='react.name'></span>
+          <li v-for='react in ntra.reactionList' v-on:dblclick='deleteReaction(react, ntra)'>
+            <span class="badge badge-pill badge-reaction" v-html='react.template'></span>
           </li>
   			</ul>
   		</div>
@@ -253,10 +253,16 @@
             </li>
 	      	</ul>
 	      </div>
-	      <div id="state-library"><h6 class="window-title">State</h6><div id="add-state"><button type="button" class="badge badge-pill badge-state-button" id="add-state-button">Add</button></div>
+	      <div id="state-library">
+        <h6 class="window-title">State</h6>
+        <div id="add-state"><button type="button" class="badge badge-pill badge-state-button" id="add-state-button" v-on:click='newState()'>Add</button></div>
 	      	<ul id="state-list" v-if='viewEnabled'>
-	      		<li v-for='state in states'>
-              <span class="badge badge-pill badge-state" v-on:dragstart='stateDragstart(event, state)' draggable="true" v-html='state.name'>Win</span>
+	      		<li v-for='state in states' v-on:dblclick='deleteState(state)'>
+              <span class="badge badge-pill badge-state" v-on:dragstart='stateDragstart(event, state)' draggable="true">
+                <span v-html='state.name'></span>
+                &nbsp;&nbsp;
+                <input type="checkbox" v-model='state.value'>
+              </span>
             </li> 
 	      	</ul>
 
