@@ -71,7 +71,7 @@ SceneObject.Selection = {
 };
 
 // functions
-SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = {x: 1, y: 1}, _anchor = {x: 0.5, y: 0.5}, _active = true){
+SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = {x: 0.5, y: 0.5}, _anchor = {x: 0.5, y: 0.5}, _active = true){
 	if (!(this instanceof SceneObject)) return;
 	this.sprite = PIXI.Sprite.fromImage(_url);
 	this.sprite.x = isNumberOr(_pos.x, 0);
@@ -150,7 +150,7 @@ SceneObject.prototype.SelectOn = function(_add = false){
 			SceneObject.Selection.objects[0].SelectOff();
 		}
 		SceneObject.Selection.set(this);
-		this.sprite.alpha = 0.7; // TODO
+		this.sprite.alpha = 0.9; // TODO
 	}
 };
 

@@ -40,11 +40,12 @@ SceneView.prototype.InitView = function(){
 	});
 	// Init app
 	this.app = new PIXI.Application({
-		width: 600,
-		height: 400, 
+		width: 640,
+		height: 360, 
 		antialiasing: true, 
 		backgroundcolor: 0xFFFFFF
 	});
+	//this.app.view.style.margin = "auto";
 	document.getElementById(this.bindElementID).appendChild(this.app.view);
 
 	// events

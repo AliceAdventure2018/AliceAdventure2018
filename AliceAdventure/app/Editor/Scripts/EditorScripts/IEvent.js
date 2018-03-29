@@ -16,27 +16,27 @@ IEvent = function(_model, args = []){
 IEvent.Library = [
 	{
 		type: 0,
-		name: "Click in scene",
+		name: "Click on A",
 		inputObjNum: 1, 
-		template: "# is clicked"
+		template: "<select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> is clicked"
 	}, 
 	{
 		type: 1,
-		name: "Use in scene",
+		name: "Use A on B",
 		inputObjNum: 2, 
-		template: "# is used on #"
+		template: "<select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> is used on <select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select>"
 	}, 
 	{
 		type: 2,
-		name: "Observe in inventory",
+		name: "Observe A",
 		inputObjNum: 1, 
-		template: "# is observed"
+		template: "<select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> is observed"
 	}, 
 	{
 		type: 3,
-		name: "Combine in inventory",
+		name: "Combine A with B",
 		inputObjNum: 2, 
-		template: "# is combined with #"
+		template: "<select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> is combined with <select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select>"
 	}, 
 ];
 

@@ -18,7 +18,13 @@ function isStringOr(_value, _default){
 }
 
 // variables
-var sceneView, propertyView, objectListView, galleryView, runView;
+var sceneView, 
+	propertyView, 
+	objectListView, 
+	galleryView, 
+	runView, 
+	interactionView, 
+	iLibraryView;
 
 function InitAllViews(){
 	AliceEditor.Menu.Init();
@@ -28,6 +34,8 @@ function InitAllViews(){
 	InitObjectListView();
 	InitGalleryView();
 	InitRunView();
+	InitInteractionView();
+	InitILibraryView();
 }
 
 function InitSceneView(){
@@ -48,4 +56,12 @@ function InitGalleryView(){
 
 function InitRunView(){
 	//runView = AliceEditor.RunView.NewView('run-view');
+}
+
+function InitInteractionView(){
+  interactionView = AliceEditor.InteractionView.NewView('interaction-editor');
+}
+
+function InitILibraryView(){
+  iLibraryView = AliceEditor.ILibraryView.NewView('interaction-library');
 }

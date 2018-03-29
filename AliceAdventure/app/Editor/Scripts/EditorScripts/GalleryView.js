@@ -18,18 +18,48 @@ GalleryView.prototype = new View();
 GalleryView.GalleryObjects = [
 	{
 		index: 0, 
-		src: "Assets/room_basic.png", 
-		name: "Room"
+		src: "Assets/kitchen.png", 
+		name: "Kitchen"
 	}, 
 	{
-		index: 1,
+		index: 1, 
 		src: "Assets/door.png", 
 		name: "Door"
 	}, 
 	{
-		index: 2, 
-		src: "Assets/key.png", 
-		name: "Key"
+		index: 2,
+		src: "Assets/knife.png", 
+		name: "Knife"
+	}, 
+	{
+		index: 3, 
+		src: "Assets/jam.png", 
+		name: "Jam"
+	}, 
+	{
+		index: 4, 
+		src: "Assets/knifewithjam.png", 
+		name: "Knife with jam"
+	}, 
+	{
+		index: 5, 
+		src: "Assets/bread.png", 
+		name: "Bread"
+	}, 
+	{
+		index: 6, 
+		src: "Assets/breadwithjam.png", 
+		name: "Bread with jam"
+	}, 
+	{
+		index: 7, 
+		src: "Assets/cat.png", 
+		name: "Cat"
+	}, 
+	{
+		index: 8, 
+		src: "Assets/room_basic.png", 
+		name: "Living room"
 	}
 ];
 

@@ -58,7 +58,7 @@ angular.module('mc.resizer', []).directive('resizer', function($document) {
 
 
         var y = window.innerHeight - event.pageY;
-        if (y > 10 && y < (window.innerHeight - 50)) {
+        if (y > 50 && y < (window.innerHeight - 50)) {
           $element.css({
             bottom: y + 'px'
           });
