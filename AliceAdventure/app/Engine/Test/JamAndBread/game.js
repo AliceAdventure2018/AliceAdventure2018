@@ -50,7 +50,7 @@ cat.buttonMode = true;
 cat.on('pointerdown',function() {
     if(!myGame.states.cat_is_feeded)
     {
-        myGame.messageBox.startConversation(["Meow...","Hungry..."]);
+        myGame.messageBox.startConversation(["Hungry...", "Want a bread with jam.."]);
         myGame.sound.play('meow_unhappy');
     }
     
@@ -62,7 +62,6 @@ cat.on('pointerdown',function() {
 })
 
 myGame.scene(0).addChild(cat);
-
 
 var cat_sad = Alice.Object.fromImage(baseURL.nomalAssets + 'cat.png');
 cat_sad.anchor.set(0.5);

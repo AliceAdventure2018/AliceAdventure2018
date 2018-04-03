@@ -1,6 +1,6 @@
 'use strict';
 
-const {Event} = require('./Utilities/Utilities');
+const {PROMPT, Event} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
 const SceneObject = require('./SceneObject');
 const State = require('./State');
@@ -43,7 +43,7 @@ ILibraryView.prototype.InitView = function(){
 			stateDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.State, d);},
 			reactionDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.IReaction, d);},
 			addCondition: (state, ntra)=>{ntra.AddCondition(state);},
-			newState: ()=>{State.NewState('testState', false);}, 
+			newState: ()=>{this.AddNewState();}, 
 			deleteState: (state)=>{state.DeleteThis();}, 
 			addIReaction: (iReact, ntra, index)=>{ntra.AddIReaction(iReact, index);}
 		}
@@ -64,5 +64,17 @@ ILibraryView.prototype.ReloadView = function(){
 		this.vModel.states = [];
 	}
 };
+
+ILibraryView.prototype.AddNewState = function(){
+	PROMPT({
+		title: "New state", 
+		label: "State name: ", 
+		value: "state_1"
+	}).then((_name)=>{
+		if (_name != null) {
+			State.NewState(_name, false);			
+		}
+	});
+}
 
 module.exports = ILibraryView;
