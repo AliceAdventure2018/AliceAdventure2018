@@ -16,6 +16,7 @@
    <script src="js/app.js"></script>
     <script src="js/resizer.js"></script>	
 
+
     <!-- Import controllers -->
     <script type="text/javascript" src="../../Resources/vue.js"></script>
     <script type="text/javascript" src="../scripts/index.js"></script>
@@ -55,9 +56,9 @@
     </nav>
 
     <script type="text/javascript">
-      function switchDesignView() {
-          var x = document.getElementById("design-view");
-          var y = document.getElementById("code-view");
+      function switchGalleryView() {
+          var x = document.getElementById("gallery");
+          var y = document.getElementById("object-list");
 
           if (x.style.display === "none" || y.style.display ==="block") {
               x.style.display = "block";
@@ -67,9 +68,9 @@
           }
       }
 
-      function switchCodeView() {
-          var y = document.getElementById("design-view");
-          var x = document.getElementById("code-view");
+      function switchListView() {
+          var y = document.getElementById("gallery");
+          var x = document.getElementById("object-list");
 
           if (x.style.display === "none" || y.style.display ==="block") {
               x.style.display = "block";
@@ -107,13 +108,22 @@
 
 
     <div id="first-column">
+   	
+
    	<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6>
    		<div id="add-scene">
         <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button"> Add Scene</button></div>
    	</div>
    	
-  	<div id="gallery">
-  		<h6 class="window-title">GALLERY</h6>
+   	<div id="first-column-second-row">
+
+   		<button  onclick="switchGalleryView()" id="gallery-title"><h6 class="window-title" >GALLERY</h6></button>
+   		<button  onclick="switchListView()" id="object-list-title"><h6 class="window-title" >OBJECT LIST</h6></button>
+
+
+  	<div id="gallery" style="display: block;">
+  		
+  		<div class="tab-list" id="tabList">
       <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
             <li class="nav-item"><a class="nav-link" id="door-tab"  data-toggle="tab" href="#door-asset" role="tab" aria-expanded="false" aria-controls="door-asset" aria-selected="false">Door</a></li>
@@ -122,6 +132,7 @@
             <li class="nav-item"><a class="nav-link" id="actor-tab" data-toggle="tab" href="#actor-asset" role="tab" aria-expanded="true" aria-controls="actor-asset" aria-selected="false">Actor</a></li>
             
           </ul>
+      </div>
             <div class="tab-content" id="v-pills-tabContent">
               <div class="tab-pane fade active" id="door-asset" role="tabpanel" aria-labelledby="door-tab">
                 <div class="assets">
@@ -165,11 +176,43 @@
               </div>
             </div>
   	</div>
+
+  	<div id="object-list" style="display: none;" >
+      
+
+        <!-- if show object list on -->
+        <ol v-if='showObjectList' class="object-tree">
+        <li v-for="scene in sceneList" v-on:click="onSelect(scene)">
+
+        <!-- loop all scenes and objects -->
+        <label class="object_label" v-html="scene.name"></label>
+        <input type="checkbox" /> 
+          <ol>
+            <li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
+              <label class="object_label" v-html="object.name"></label>
+              <input type="checkbox"/>
+              
+            </li>
+          </ol>
+        </li>
+        <li>
+          <label class="object_label" for="inventory">Inventory</label>
+        </li>
+      </ol>
+      </div>
+
+
+
+
+  </div>
+
+
+
   	<div id="design-editor-resizer" 
   			resizer="horizontal" 
   			resizer-height="6" 
   			resizer-top="#design-editor" 
-  			resizer-bottom="#gallery"
+  			resizer-bottom="#first-column-second-row"
   			>
   	</div>
   </div>
@@ -198,6 +241,7 @@
   			
       	<div id="add-interaction">
         <button type="button"  class="btn btn-outline-success btn-sm" id="add-interaction-button" v-on:click='addInteraction()'> Add Interaction </button>
+        <a><img  src="./src/add-interaction.svg" class="svg" width="70" height="70"/></a>
         </div>
       </div>	
   	</div>
@@ -219,30 +263,7 @@
 
     <div id="third-column">
       
-      <div id="design-object-list" style="display: none;" >
-        <h6 class="window-title">OBJECTS IN THE SCENES</h6>
-
-        <!-- if show object list on -->
-        <ol v-if='showObjectList' class="object-tree">
-        <li v-for="scene in sceneList" v-on:click="onSelect(scene)">
-
-        <!-- loop all scenes and objects -->
-        <label class="object_label" v-html="scene.name"></label>
-        <input type="checkbox" /> 
-          <ol>
-            <li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
-              <label class="object_label" v-html="object.name"></label>
-              <input type="checkbox"/>
-              
-            </li>
-          </ol>
-        </li>
-        <li>
-          <label class="object_label" for="inventory">Inventory</label>
-        </li>
-      </ol>
-      </div>
-
+      
 
       <div id="interaction-library">
       	<h6 class="window-title">INTERACTION LIBRARY</h6>
