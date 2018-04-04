@@ -421,7 +421,7 @@ Parser = function (jsonPath, buildPath){
 			else toReturn += result;
 		}
 
-		return toReturn;
+		return toReturn + ");\n";
 
 	}
 
