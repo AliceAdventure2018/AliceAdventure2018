@@ -2,7 +2,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const pixi = require.resolve('../Resources/pixi/pixi.js');
-const pixi_sound = require.resolve('../Resources/pixi/pixi-sound');
+const pixi_sound = require.resolve('../Resources/pixi/pixi_sound');
 const aliceAPI = require.resolve('../Engine/aliceAPI.js');
 
 
@@ -73,7 +73,7 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	var aliceAPIDest = path.join(resourcesDest, 'aliceAPI.js');
 
 	var pixiDest = path.join(pixiFolder, 'pixi.js');
-	var soundDest = path.join(pixiFolder,'pixi-sound.js');
+	var soundDest = path.join(pixiFolder,'pixi_sound.js');
 	var pixi_sound_map_dest = path.join(pixiFolder, 'pixi-sound.js.map');
 	// if (! fs.pathExistSync(assetSrc)){
 	// 	callback("Cannot find the assets folder under saving directory.");

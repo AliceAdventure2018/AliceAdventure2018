@@ -16,6 +16,9 @@ Parser = function (jsonPath, buildPath){
 	this.sceneList = this.game.sceneList;
 	this.objectList = this.game.objectList;
 	this.settings = this.game.settings;
+	this.interactionList=this.game.interactionList;
+	this.stateList = this.game.stateList;
+	this.soundList = this.game.soundList;
 
 
 	this.createGame = function(){
@@ -25,23 +28,50 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	this.createScene= function(){
-		var toReturn = '\n';
+		return 'myGame.sceneManager.createScenes(' +this.sceneList.length + ');\n';
+	}
 
-		for (let i =0; i < this.sceneList.length; i++){
-			toReturn +='var ' + this.getSceneWithID(this.sceneList[i]) + '= new Alice.Scene();\n' + 'myGame.sceneManager.addScene(' +  this.getSceneWithID(this.sceneList[i]) + ');\n'; 
+	//the returned structure is {name_id : value} 
+	this.createStates = function(){
+		var toReturn = 'myGame.states = {'
+		for (let i = 0; i <this.stateList.length; i++){
+			toReturn += stateList[i].name + '_' + stateList[i].id + ' : ' + stateList[i].value + ',\n'
 		}
-
-		return toReturn;
+		return toReturn + '};\n';
 	}
 
-	this.getSceneWithID = function(scene){
-		return scene.name + '_' + scene.id;
+	this.addSound = function(sound){
+		return "myGame.sound.add('" + sound.name+'_'+sound.id +"', '" + sound.src+"');\n";
 	}
-	//return sceneID
-	this.findScene = function(id){
+
+	this.createSoundList = function(callback){
+		var toReturn = '';
+		for (let i = 0; i < this.soundList.length; i++){
+			var sound = soundList[i];
+
+			if (sound.hasOwnProperty(id) && sound.hasOwnProperty(name) && sound.hasOwnProperty(src)){
+
+				if (fs.pathExistsSync(sound.src)&& FileSys.filename(sound.src).match(/\.(wav|mp3)$/)){
+					toReturn += addSound(sound);
+
+				}else{
+					callback("Compiler ERROR: sound {id = " +sound.id + ", name = " + sound.name + "} has INVALID source. Either the path is not correct or the file format is not WAV/MP4.");
+				}
+
+			}else{
+				callback("Compile ERROR: The soundList structure is not complete. It needs id, name , and a valid src path.")
+			}
+
+		}
+	}
+
+	
+	//if the scene is found, return the SCENE INDEX!!!!.
+	//Otherwise, return false;
+	this.findSceneByID = function(id){
 		for (let i =0; i < this.sceneList.length; i++){
-			if (this.sceneList[i].id == id){
-				return this.getSceneWithID(this.sceneList[i]);
+			if (this.sceneList[i].id === id){
+				return i;
 			}
 		}
 		return false;
@@ -54,9 +84,8 @@ Parser = function (jsonPath, buildPath){
 	//*********obj is the (name + id) of the object in the json file********
 	//src must be a valid path to a image file.
 
-	//if youdelete a scene, all the objects within it will be deleted.
-	this.addObjectToScene= function(obj, sceneParent){
-		return sceneParent + '.addChild(' + obj + ');\n';
+	this.addObjectToScene= function(objName, sceneIndex){
+		return 'myGame.scene(' + sceneIndex +  ').addChild(' + objName + ');\n';
 	}
 
 	this.createPIXIObject= function(obj, src){
@@ -93,26 +122,6 @@ Parser = function (jsonPath, buildPath){
 		return obj + '.visible = ' + active + ';\n';
 	}
 
-	//arg is an array of arguments. It can be empty.
-	this.createFunction=function(obj, funct){
-		
-		return obj + '.' + functName + '= this.(' + arg + '){\n'+ body + '}\n\n';
-	}
-
-	this.createFunctionList=function(obj, functList){
-
-		var toReturn = ''; 
-		var arrayLength = functList.length;
-		for (let i = 0; i < arrayLength; i++){
-			toReturn += this.createFunction(obj, functList[i][0], functList[i][1], functList[i][2]);
-		}
-		return toReturn;
-	}
-
-	this.createSelfDefinedVar=function(obj, key, value){
-		return obj + '.' + key + ' = ' + value + ';\n';
-	}
-
 	//return true if the name of the self defined properties 
 	// same as src, anchor, scale, interactive, buttonMode, pos, name, sceneParent, ID
 	this.sameNameAsMustHave = function(key){
@@ -120,16 +129,7 @@ Parser = function (jsonPath, buildPath){
 			|| key =='pos' || key == 'name' || key =='sceneParent' || key == 'id'|| key =='active';
 	}
 
-	this.createPropertyList = function (obj, properties){
-		
-		var toReturn= '';
-		for (let i = 0; i < properties.length; i++){
 
-		}
-	}
-
-
-	//
 	this.translateObj_mustHave=function(object, callback){
 		
 		var error;
@@ -139,7 +139,7 @@ Parser = function (jsonPath, buildPath){
 		if (object.hasOwnProperty("name")&& object.hasOwnProperty("id")){
 
 			if (typeof (object.name) === "number"){
-				error = "Name of the object:  " + object.name + " cannot be numbers. Must have letters.";
+				error = "Compile ERROR: Name of the object:  " + object.name + " cannot be numbers. Must have letters.";
 				callback(error);
 				return false;
 			}else{
@@ -159,13 +159,13 @@ Parser = function (jsonPath, buildPath){
 						toReturn += this.setName(name,name);
 
 					}else{
-						error = "Object: " + object.name + " File path does not exist or the file extention does not match jpg/jpeg/png.\n Invalid Path:**********\n" + object.src + '\n';
+						error = "Compile ERROR: Object: " + object.name + " File path does not exist or the file extention does not match jpg/jpeg/png.\n Invalid Path:**********\n" + object.src + '\n';
 						callback(error);	
 						return false;				
 					}
 				}
 				else{
-					error = "Object " + object.name + " does not have a sprite.";
+					error = "Compile ERROR: Object " + object.name + " does not have a sprite.";
 					callback(error);
 					return false;
 				}//end src
@@ -196,12 +196,12 @@ Parser = function (jsonPath, buildPath){
 
 							toReturn += this.setPos(name, object.pos);
 					}else{
-						error = "x and y of the position must be defined as numbers.";
+						error = "Compile ERROR: x and y of the position must be defined as numbers.";
 						callback(error);
 						return false;
 					}
 				}else{
-					error = "Object has not set the position.";
+					error = "Compile ERROR: Object has not set the position.";
 					callback(error);
 					return false;
 				}//end pos
@@ -214,12 +214,12 @@ Parser = function (jsonPath, buildPath){
 
 							toReturn += this.setScale(name, object.scale);
 					}else{
-						error = "x and y of the scale must be defined as numbers.";
+						error = "Compile ERROR: x and y of the scale must be defined as numbers.";
 						callback(error);
 						return false;
 					}
 				}else{
-					error = "Object has not set the scale.";
+					error = "Compile ERROR: Object has not set the scale.";
 					callback(error);
 					return false;
 				}
@@ -231,12 +231,12 @@ Parser = function (jsonPath, buildPath){
 
 						toReturn += this.setInteractive(name, object.interactive);
 					}else{
-						error = "The interactive value of the object must be a boolean.";
+						error = "Compile ERROR: The interactive value of the object must be a boolean.";
 						callback(error);
 						return false;
 					}
 				}else{
-					error = "Object has not set the interativity.";
+					error = "Compile ERROR: Object has not set the interativity.";
 					callback(error);
 					return false;
 				}//end interactive
@@ -248,12 +248,12 @@ Parser = function (jsonPath, buildPath){
 					if(typeof object.active === 'boolean'){
 						toReturn+= this.setActive(name, object.active);
 					}else{
-						error = "The active value of the object must be a boolean.";
+						error = "Compile ERROR: The active value of the object must be a boolean.";
 						callback(error);
 						return false;
 					}
 				}else{
-					error = "object has not set the active value.";
+					error = "Compile ERROR: object has not set the active value.";
 					callback(error);
 					return false;
 				}//end active
@@ -261,17 +261,15 @@ Parser = function (jsonPath, buildPath){
 				//bindscene
 				if (object.hasOwnProperty("bindScene")){
 
-					var scene = this.findScene(object.bindScene);
-
-					if(!scene){
-						error = 'Cannot find scene which hold ' + object.name + '\n';
-						callback(error);
+					var sceneIndex = findSceneByID(object.bindscene);
+					if (! sceneIndex){
+						callback("Compile ERROR: cannot find scene id = " + sceneID  + ".");
 						return false;
 					}else{
-						toReturn+= this.addObjectToScene(name, scene);
+						toReturn+= this.addObjectToScene(name, sceneIndex);
 					}
 				}else{
-					error = "Object must be added to a scene.";
+					error = "Compile ERROR: Object must be added to a scene.";
 					callback(error);
 					return false;
 				}
@@ -280,7 +278,7 @@ Parser = function (jsonPath, buildPath){
 			}//end name
 
 		}else{
-			error = "Object must have a name !!"
+			error = "Compile ERROR: Object must have a name !!"
 			callback(error);
 			return false;
 		}
@@ -288,27 +286,6 @@ Parser = function (jsonPath, buildPath){
 		return toReturn;
 	}
 
-
-	this.translateObj_NotMustHave = function(object, callback){
-
-		var name = this.getNameWithID(object.name, object.id);
-		if(obj.hasOwnProperty("nextTexture")){
-
-			if (fs.pathExistsSync(object.nextTexture)
-				&& FileSys.filename(object.nextTexture).match(/\.(jpg|jpeg|png)$/))
-					{	
-						var dest = FileSys.merge(this.assetPath,FileSys.filename(object.nextTexture));
-						FileSys.copyFileOrFolder(object.nextTexture, dest);
-						toReturn += name + '.nextTexture = Alice.Texture.fromImage(\''+object.nextTexture + '\');\n';
-
-					}else{
-						error = "Next Texture File path does not exist or the file extention does not match jpg/jpeg/png.";
-						callback(error);	
-						return false;				
-					}
-			}
-		
-	}
 
 
 	//iterate through the objectList
@@ -347,7 +324,9 @@ Parser = function (jsonPath, buildPath){
 		var toReturn= '\n';
 
 		toReturn += "//===============create Game==================\n" + this.createGame();
-		toReturn += "\n//===============create Scenes==================\n" +this.createScene();
+		toReturn += "\n//===============add Sound==================\n" +this.createSoundList();
+		toReturn += "\n//===============create Scene================\n" + this.createScene();
+		toReturn += "\n//===============create States================\n" + this.createStates();
 
 		toReturn += "\n//===============create Objects==================\n";
 		var mustHave = this.readMustHave(callback);
