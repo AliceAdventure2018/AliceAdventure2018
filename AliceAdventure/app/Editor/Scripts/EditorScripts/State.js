@@ -13,8 +13,17 @@ State = function(_id, _name, _val = false){
 	this.name = _name;
 	this.value = _val;
 
-	GameProperties.AddState(this);
+	//GameProperties.AddState(this);
 };
+
+
+State.prototype.toJSONObject = function() {
+    var obj = {};
+    obj.id = this.id;
+    obj.name = this.name;
+    obj.value = this.value;
+    return obj;
+}
 
 // static
 State.NewState = function(_name, _val = false){

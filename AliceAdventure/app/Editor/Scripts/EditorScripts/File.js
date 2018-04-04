@@ -24,7 +24,7 @@ File.tempJsonObj = {
 	sceneList: [],
 	objectList: [], 
 	interactionList: [],
-	interactionEventList: [],
+	//interactionEventList: [],
 	stateList: [],
 	settings: {}, 
 	projectData: {}, 
@@ -32,7 +32,7 @@ File.tempJsonObj = {
 		this.sceneList = [];
 		this.objectList = [];
 		this.interactionList = [];
-		this.interactionEventList = [];
+		//this.interactionEventList = [];
 		this.stateList = [];
 		this.settings = {};
 		this.projectData = {};
@@ -172,37 +172,23 @@ File.SaveToPath = function(_path){
 		File.tempJsonObj.objectList.push(_d);
 	}
 
-	// interactionList
-	for (let i in GameProperties.instance.interactionList){
-		let ntra = GameProperties.instance.interactionList[i];
-		let _d = {
-			id: ntra.id, 
-			eventIndex: ntra.event.model.index, 
-			eventArgs: ntra.event.args,
-			conditionList: [], 
-			reactionList: [], 
-		};
-		for (let n in ntra.conditionList){
-			let state = ntra.conditionList[n];
-			_d.conditionList.push(state.id);
-		}
-		for (let n in ntra.reactionList){
-			// TODO
-			let react = ntra.reactionList[n];
-			let react_d = {
-				//type: react.type
-			};
-			_d.reactionList.push(react_d);
-		}
-		File.tempJsonObj.interactionList.push(_d);
-	}
-
+    //interation
+    GameProperties.instance.interactionList.forEach(function(interaction) {
+        File.tempJsonObj.interactionList.push(interaction.toJSONObject());
+    })
+    
+    GameProperties.instance.stateList.forEach(function(state) {
+        File.tempJsonObj.stateList.push(state.toJSONObject());
+    })
+    
 	// settings
 	File.tempJsonObj.settings = GameProperties.instance.settings;
 
 	// projData
 	File.tempJsonObj.projectData.idCounter = ID._counter;
 
+    console.log(File.tempJsonObj);
+    
 	// Write JSON file
 	FS.writeJsonSync(File.instance.path, File.tempJsonObj, {spaces:'\t', EOL:'\n'});
 
@@ -232,6 +218,8 @@ File.OpenFromPath = function(_path){
 		let _d = data.objectList[i];
 		SceneObject.LoadObject(_d);
 	}
+    
+    //
 
 	// Settings
 	File.instance.gameProperties.resWidth = data.settings.resWidth; 

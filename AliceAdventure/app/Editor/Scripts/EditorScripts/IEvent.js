@@ -7,10 +7,20 @@ const GameProperties = require('./GameProperties');
 var IEvent;
 
 // variables
-IEvent = function(_model, args = []){
+IEvent = function(_model, _type, _args = []){
 	this.model = _model;
-	this.args = [];
+    this.type = _type;
+    this.args = _args;
 };
+
+
+IEvent.prototype.toJSONObject = function() {
+    var obj = {};
+    obj.args = this.args;
+    obj.type = this.type;
+    return obj;
+}
+
 
 // static
 IEvent.Library = [
@@ -18,25 +28,25 @@ IEvent.Library = [
 		type: 0,
 		name: "Click on A",
 		inputObjNum: 1, 
-		template: "<select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> is clicked"
+        template: '<select v-model="ntra.event.args[0]"><option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option></select> is clicked'
 	}, 
 	{
 		type: 1,
 		name: "Use A on B",
 		inputObjNum: 2, 
-		template: "<select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> is used on <select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select>"
+		template: '<select v-model="ntra.event.args[0]"><option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option></select> is used on <select v-model="ntra.event.args[1]"><option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option></select>'
 	}, 
 	{
 		type: 2,
 		name: "Observe A",
 		inputObjNum: 1, 
-		template: "<select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> is observed"
+		template: '<select v-model="ntra.event.args[0]"><option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option></select> is observed'
 	}, 
 	{
 		type: 3,
 		name: "Combine A with B",
 		inputObjNum: 2, 
-		template: "<select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> is combined with <select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select>"
+		template: '<select v-model="ntra.event.args[0]"><option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option></select> is combined with <select v-model="ntra.event.args[1]"><option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option></select>'
 	}, 
 ];
 

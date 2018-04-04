@@ -4,10 +4,15 @@
 var IReaction;
 
 // variables
-IReaction = function(_model){
+IReaction = function(_model, _type = 0, _args = []){
 	this.model = _model;
 
-	this.inputs = [];
+	//this.inputs = [];
+    
+    //Miao Edit
+    this.args = _args;
+    this.type = _type;
+    
 };
 
 // static
@@ -21,6 +26,13 @@ IReaction.InputModel = {
 	Animation: {}, 
 
 };
+
+IReaction.prototype.toJSONObject = function() {
+    var obj = {};
+    obj.type = this.type;
+    obj.args = this.args;
+    return obj;
+}
 
 IReaction.Library = [
 	{
@@ -59,21 +71,21 @@ IReaction.Library = [
 		template: "Make <select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> visible"
 	}, 
 	{
-		type: 4.5,
+		type: 5,
 		name: "Make invisible", 
 		inputLength: 2, 
 		inputTypes: [IReaction.InputModel.Object, IReaction.InputModel.Checkbox],
 		template: "Make <select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> invisible"
 	}, 
 	{
-		type: 5,
+		type: 6,
 		name: "Make interactive", 
 		inputLength: 2, 
 		inputTypes: [IReaction.InputModel.Object, IReaction.InputModel.Checkbox],
 		template: "Make interactive"
 	}, 
 	{
-		type: 5.5,
+		type: 7,
 		name: "Make non-interactive", 
 		inputLength: 2, 
 		inputTypes: [IReaction.InputModel.Object, IReaction.InputModel.Checkbox],
