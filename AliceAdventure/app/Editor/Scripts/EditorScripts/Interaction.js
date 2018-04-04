@@ -42,7 +42,7 @@ Interaction.prototype.toJSONObject = function() {
 // static
 Interaction.NewInteraction = function(){
 	let interaction = new Interaction(null);
-    GameProperties.AddInteraction(this);
+    GameProperties.AddInteraction(interaction);
 	return interaction;
 };
 

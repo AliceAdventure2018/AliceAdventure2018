@@ -79,7 +79,7 @@ SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = 
 	this.sprite.scale.set(isNumberOr(_scale.x, 1), isNumberOr(_scale.y, 1));
 	this.sprite.anchor.set(isNumberOr(_anchor.x, 0.5), isNumberOr(_anchor.y, 0.5));
 	this.sprite.visible = _active;
-	this.sprite.interactive = true;
+	this.sprite.interactive = false;
 	this.sprite
 		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
 		.on("pointermove", (e)=>{this.OnPointerMove(e);})

@@ -27,6 +27,7 @@ File.tempJsonObj = {
 	objectList: [], 
 	interactionList: [],
 	//interactionEventList: [],
+    soundList: [],
 	stateList: [],
 	settings: {}, 
 	projectData: {}, 
@@ -182,6 +183,9 @@ File.SaveToPath = function(_path){
     GameProperties.instance.stateList.forEach(function(state) {
         File.tempJsonObj.stateList.push(state.toJSONObject());
     })
+    
+    //soundList
+    
     
 	// settings
 	File.tempJsonObj.settings = GameProperties.instance.settings;

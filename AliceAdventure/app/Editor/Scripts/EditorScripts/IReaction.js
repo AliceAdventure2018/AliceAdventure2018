@@ -82,7 +82,7 @@ IReaction.prototype.fromJSONObject = function(data) {
             args[1] = data.args[1];
             break;
         case 1:
-            args[0] = GameProperties.GetSceneByIdById(data.args[0]);
+            args[0] = GameProperties.GetSceneById(data.args[0]);
             break;
         case 2:
             args[0] = GameProperties.GetObjectById(data.args[0]);
