@@ -469,7 +469,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 			}else{
 				if (i == conditionList.length -1){
-					toReturn += "(" + state + "==" + value + "){\n";
+					toReturn += "(" + state + "==" + value + ")){\n";
 				}
 				else{
 					toReturn += "(" + state + "==" + value + ") &&";
