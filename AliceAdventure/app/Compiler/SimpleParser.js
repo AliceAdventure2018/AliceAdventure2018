@@ -421,7 +421,7 @@ Parser = function (jsonPath, buildPath){
 			else toReturn += result;
 		}
 
-		return toReturn + ");\n";
+		return toReturn + "\n";
 
 	}
 
@@ -444,7 +444,7 @@ Parser = function (jsonPath, buildPath){
 			if (reactions === false) return false;
 
 			toReturn += event + conditions + reactions + "}\n";
-			if (hasCondition) toReturn += "}\n";
+			if (hasCondition) toReturn += "});\n";
 
 			return toReturn;
 
