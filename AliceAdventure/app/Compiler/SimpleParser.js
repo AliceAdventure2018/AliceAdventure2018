@@ -84,6 +84,9 @@ Parser = function (jsonPath, buildPath){
 
 	function createSoundList(callback){
 		var toReturn = '';
+		
+		//if (!this.soundList) return true;
+
 		for (let i = 0; i < this.soundList.length; i++){
 			var sound = this.soundList[i];
 
