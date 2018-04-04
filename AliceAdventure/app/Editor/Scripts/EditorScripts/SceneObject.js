@@ -7,7 +7,7 @@ const GameProperties = require('./GameProperties');
 var SceneObject;
 
 // variables
-SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = null){
+SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = null, _interative = false){
 	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
 	this.id = _id;
 	this.name = _name;
@@ -22,7 +22,7 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 
 	this.properties = [];
 	this.sprite = null;
-	this.interactive = true;
+	this.interactive = _interative;
 
 	GameProperties.AddObject(this);
 };
@@ -37,7 +37,7 @@ SceneObject.AddObject = function(_objInfo, _bindScene, _x, _y){
 };
 
 SceneObject.LoadObject = function(_data){ // I AM HERE
-	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene));
+	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene), _data.interactive);
 	_obj.InitSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
 	return _obj;
 };
@@ -71,7 +71,7 @@ SceneObject.Selection = {
 };
 
 // functions
-SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = {x: 0.5, y: 0.5}, _anchor = {x: 0.5, y: 0.5}, _active = true){
+SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = {x: 0.5, y: 0.5}, _anchor = {x: 0.5, y: 0.5}, _active = true ){
 	if (!(this instanceof SceneObject)) return;
 	this.sprite = PIXI.Sprite.fromImage(_url);
 	this.sprite.x = isNumberOr(_pos.x, 0);
@@ -79,7 +79,7 @@ SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = 
 	this.sprite.scale.set(isNumberOr(_scale.x, 1), isNumberOr(_scale.y, 1));
 	this.sprite.anchor.set(isNumberOr(_anchor.x, 0.5), isNumberOr(_anchor.y, 0.5));
 	this.sprite.visible = _active;
-	this.sprite.interactive = false;
+	this.sprite.interactive = true;
 	this.sprite
 		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
 		.on("pointermove", (e)=>{this.OnPointerMove(e);})
