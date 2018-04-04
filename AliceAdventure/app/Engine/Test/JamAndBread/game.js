@@ -6,7 +6,6 @@ myGame.sceneManager.createScenes(3);
 myGame.states = {cat_is_feeded:false}
 
 
-
 ///------------------------------------------------------------///
 myGame.sound.add('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
 myGame.sound.add('meow_happy', baseURL.nomalAssets + 'meow_happy.wav');
@@ -53,14 +52,24 @@ cat.buttonMode = true;
 cat.on('pointerdown',function() {
     if(!myGame.states.cat_is_feeded)
     {
-        myGame.messageBox.startConversation(["Hungry...", "Want a bread with jam.."]);
-        myGame.sound.play('meow_unhappy');
+        //show dialog ()
+        //play sound A
+        //show dialog ()
+        //play sound B
+        myGame.messageBox.startConversation(["Hungry...", "Want a bread with jam.."], function() {
+            myGame.sound.play('meow_happy');
+            myGame.messageBox.startConversation(["Can you give me..."], function() {
+                myGame.sound.play('meow_unhappy');
+            });
+            
+        });
     }
     
     if(myGame.states.cat_is_feeded)
     {
-        myGame.messageBox.startConversation(["Meow","Love you~"]);
-        myGame.sound.play('meow_happy');
+        myGame.messageBox.startConversation(["Meow","Love you~"], function() {
+            myGame.sound.play('meow_happy');
+        });
     }
 })
 

@@ -64,6 +64,9 @@ IReaction.prototype.toJSONObject = function() {
         case 7:
             args[0] = this.args[0].id;
             break;
+        case 8:
+            args[0] = this.args[0];
+            break;
         default:
             args = [];
             break;
@@ -101,6 +104,9 @@ IReaction.prototype.fromJSONObject = function(data) {
             break;
         case 7:
             args[0] = GameProperties.GetObjectById(data.args[0]);
+            break;
+        case 8:
+            args[0] = data.args[0];;
             break;
         default:
             args = [];

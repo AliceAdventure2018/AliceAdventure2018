@@ -60,7 +60,13 @@ GalleryView.GalleryObjects = [
 		index: 8, 
 		src: "Assets/room_basic.png", 
 		name: "Living room"
+	},
+    {
+		index: 9, 
+		src: "Assets/win.png", 
+		name: "Win"
 	}
+    
 ];
 
 GalleryView.NewView = function(_elementID){

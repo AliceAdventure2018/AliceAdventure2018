@@ -48,7 +48,7 @@ Interaction.NewInteraction = function(){
 
 Interaction.LoadInteraction = function(_data){
     
-    let eve = new IEvent(null, _data.event.type, [GameProperties.GetObjectById(_data.event.args[0])]);
+    let eve = IEvent.prototype.fromJSONObject(_data.event);
     //console.log(eve)
     
     let reactionList = [];

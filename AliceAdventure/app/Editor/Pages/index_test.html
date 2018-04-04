@@ -206,6 +206,11 @@
                     </select> not interactive
                 </span>
                 
+                <span v-if='react.type == 8'>
+                    Show dialog
+                    <input v-model='react.args[0]'/>
+                </span>
+                
                 <button v-on:click='deleteReaction(react, ntra)'> x </button>
             </div>
           </div>
