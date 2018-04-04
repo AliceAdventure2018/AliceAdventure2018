@@ -2,7 +2,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const pixi = require.resolve('../Resources/pixi/pixi.js');
-const pixi_sound = require.resolve('../Resources/pixi/pixi_sound');
+const pixi_sound = require.resolve('../Resources/pixi/pixi-sound');
 const aliceAPI = require.resolve('../Engine/aliceAPI.js');
 
 
@@ -73,12 +73,13 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	var aliceAPIDest = path.join(resourcesDest, 'aliceAPI.js');
 
 	var pixiDest = path.join(pixiFolder, 'pixi.js');
-	var soundDest = path.join(pixiFolder,'pixi_sound.js');
+	var soundDest = path.join(pixiFolder,'pixi-sound.js');
 	var pixi_sound_map_dest = path.join(pixiFolder, 'pixi-sound.js.map');
-	// if (! fs.pathExistSync(assetSrc)){
-	// 	callback("Cannot find the assets folder under saving directory.");
-	// 	return false;
-	// }
+
+	var requireSrc = path.join(assetSrc, 'require');
+	var requireDest = path.join(assetDest, 'require');
+
+
 	if (aliceAPI == null){
 		callback("Cannot find aliceAPI.js, which should be under Engine/aliceAPI.js");
 		return false;
@@ -100,11 +101,16 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	FileSys.createBuildFolder(resourcesDest);
 	FileSys.createBuildFolder(assetDest);
 	FileSys.createBuildFolder(pixiFolder);
+
+	//copy:
+	//AliceAPI, pixi,pixi-sound, pixi-sound.map, require folder
 	FileSys.copyFileOrFolder(aliceAPI, aliceAPIDest);
 	FileSys.copyFileOrFolder(pixi, pixiDest);
 	FileSys.copyFileOrFolder(pixi_sound, soundDest);
 	FileSys.copyFileOrFolder(pixi_sound_map_src, pixi_sound_map_dest),
+	FileSys.copyFileOrFolder(requireSrc,requireDest);
 
+	//copy inventory and textbox.
 	FileSys.copyFileOrFolder(FileSys.merge(assetSrc, 'inventory.png'), FileSys.merge(assetDest, 'inventory.png'));
 	FileSys.copyFileOrFolder(FileSys.merge(assetSrc, 'textbox.png'), FileSys.merge(assetDest, 'textbox.png'));
 

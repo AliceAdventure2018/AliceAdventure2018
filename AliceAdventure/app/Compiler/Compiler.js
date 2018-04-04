@@ -14,20 +14,21 @@ Compiler = function (path, callback){
 
 
 	//need a callback function to report error
-	this.build = function(callback){
+	this.build = function(call){
 		
 		if (!this.buildDest)return false;
 
 		var parser = new Parser(path,this.buildDest);
-		var string = parser.translate(callback);
+		var string = parser.translate(call);
 
-		if (!string){
+		if (string === false){
 			console.log("Something wrong happened\n");
 			return false;
+		}else{
+			FileSys.writeFile(FileSys.merge(this.buildDest, 'game.js'), string);
+			parser.writeHTML();
+			return true;
 		}
-		FileSys.writeFile(FileSys.merge(this.buildDest, 'game.js'), string);
-		parser.writeHTML();
-		return true;
 	}
 }
 
