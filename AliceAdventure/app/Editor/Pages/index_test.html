@@ -100,32 +100,32 @@
             <span v-if='ntra.event == null'> [ ] </span>
             <span v-else-if='ntra.event.type == 0'>
                 <select v-model="ntra.event.args[0]">
-                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                 </select> is clicked
             </span>
             <span v-else-if='ntra.event.type == 1'>
                 <select v-model="ntra.event.args[0]">
-                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                 </select> 
                 is used on
                 <select v-model="ntra.event.args[1]">
-                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                 </select> 
             </span>
               
             <span v-else-if='ntra.event.type == 2'>
                 <select v-model="ntra.event.args[0]">
-                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                 </select> is observed
             </span>
               
             <span v-else-if='ntra.event.type == 3'>
                 <select v-model="ntra.event.args[0]">
-                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                 </select> 
                 is combined with
                 <select v-model="ntra.event.args[1]">
-                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                 </select> 
             </span>
           </div>
@@ -167,42 +167,42 @@
                 <span v-if='react.type == 2'>
                     Add 
                     <select v-model="react.args[0]">
-                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                     </select> into inventory
                 </span>
                 
                 <span v-if='react.type == 3'>
                     Remove 
                     <select v-model="react.args[0]">
-                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                     </select> out of inventory
                 </span>
                 
                 <span v-if='react.type == 4'>
                     Make 
                     <select v-model="react.args[0]">
-                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                     </select> visible
                 </span>
                 
                 <span v-if='react.type == 5'>
                     Make 
                     <select v-model="react.args[0]">
-                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                     </select> invisible
                 </span>
                 
                 <span v-if='react.type == 6'>
                     Make 
                     <select v-model="react.args[0]">
-                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                     </select> interactive
                 </span>
                 
                 <span v-if='react.type == 7'>
                     Make 
                     <select v-model="react.args[0]">
-                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option>
+                        <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                     </select> not interactive
                 </span>
                 
@@ -222,7 +222,7 @@
       <div v-if='viewEnabled'> states: 
         <button v-on:click='newState()'> + </button>
         <div v-for='state in states' v-on:dragstart='stateDragstart(event, state)' draggable="true">
-          &nbsp; <span v-html='state.name'></span>
+          &nbsp; <span>{{ state.name }}</span>
           <button v-on:click='deleteState(state)'> x </button>
         </div>
       </div>

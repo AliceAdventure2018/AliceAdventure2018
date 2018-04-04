@@ -16,8 +16,30 @@ IEvent = function(_model, _type, _args = []){
 
 IEvent.prototype.toJSONObject = function() {
     var obj = {};
-    obj.args = this.args;
     obj.type = this.type;
+    
+    //switch
+    let args = [];
+    switch(obj.type) {
+        case 0:
+            args[0] = this.args[0].id;
+            break;
+        case 1:
+            args[0] = this.args[0].id;
+            args[1] = this.args[1].id;
+            break;
+        case 2:
+            args[0] = this.args[0].id;
+            break;
+        case 3:
+            args[0] = this.args[0].id;
+            args[1] = this.args[1].id;
+            break;
+        default:
+            break;
+    }
+    
+    obj.args = args;
     return obj;
 }
 

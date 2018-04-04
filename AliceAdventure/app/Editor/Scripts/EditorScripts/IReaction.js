@@ -1,7 +1,10 @@
 'use strict';
 
+const GameProperties = require('./GameProperties');
 // class
 var IReaction;
+
+
 
 // variables
 IReaction = function(_model, _type = 0, _args = []){
@@ -28,10 +31,84 @@ IReaction.InputModel = {
 };
 
 IReaction.prototype.toJSONObject = function() {
-    var obj = {};
+    let obj = {};
     obj.type = this.type;
-    obj.args = this.args;
+    
+    let args = [];
+    switch(obj.type) {
+        case 0:
+            args[0] = this.args[0].id;
+            args[1] = this.args[1];
+            break;
+        case 1:
+            args[0] = this.args[0].id;
+            break;
+        case 2:
+            args[0] = this.args[0].id;
+            break;
+        case 3:
+            args[0] = this.args[0].id;
+            break;
+        case 4:
+            args[0] = this.args[0].id;
+            break;
+            
+        case 5:
+            args[0] = this.args[0].id;
+            break;
+            
+        case 6:
+            args[0] = this.args[0].id;
+            break;
+            
+        case 7:
+            args[0] = this.args[0].id;
+            break;
+        default:
+            args = [];
+            break;
+    }
+    
+    obj.args = args;
+    
     return obj;
+}
+
+IReaction.prototype.fromJSONObject = function(data) {
+    let args = [];
+    switch(data.type) {
+        case 0:
+            args[0] = GameProperties.GetStateById(data.args[0])
+            args[1] = data.args[1];
+            break;
+        case 1:
+            args[0] = GameProperties.GetSceneByIdById(data.args[0]);
+            break;
+        case 2:
+            args[0] = GameProperties.GetObjectById(data.args[0]);
+            break;
+        case 3:
+            args[0] = GameProperties.GetObjectById(data.args[0]);
+            break;
+        case 4:
+            args[0] = GameProperties.GetObjectById(data.args[0]);
+            break;
+        case 5:
+            args[0] = GameProperties.GetObjectById(data.args[0]);
+            break;
+        case 6:
+            args[0] = GameProperties.GetObjectById(data.args[0]);
+            break;
+        case 7:
+            args[0] = GameProperties.GetObjectById(data.args[0]);
+            break;
+        default:
+            args = [];
+            break;
+    }
+    
+    return new IReaction(null,data.type,args);
+    
 }
 
 IReaction.Library = [

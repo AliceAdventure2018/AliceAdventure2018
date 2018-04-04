@@ -33,11 +33,13 @@ State.NewState = function(_name, _val = false){
 
 State.LoadState = function(_data){
 	// TODO
-	console.log("function not implemented");
+	//console.log("function not implemented");
 	//let State = new State(_data.id);
 	//State.eventList = [];
 	//State.reactionList = [];
 	//return State;
+    console.log(_data)
+    GameProperties.AddState(new State(_data.id, _data.name, _data.value));
 };
 
 // functions

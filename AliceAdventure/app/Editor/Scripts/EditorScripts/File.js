@@ -4,6 +4,8 @@ const Compiler = require('../../../Compiler/Compiler'); // TODO
 const GameProperties = require('./GameProperties');
 const Scene = require('./Scene');
 const SceneObject = require('./SceneObject');
+const State = require('./State');
+const Interaction = require('./Interaction');
 
 // class
 var File;
@@ -220,6 +222,18 @@ File.OpenFromPath = function(_path){
 	}
     
     //
+    
+    //stateList
+    data.stateList.forEach(function(state){
+        State.LoadState(state);
+    })
+    
+    
+    //Interaction
+    data.interactionList.forEach(function(interaction){
+        Interaction.LoadInteraction(interaction);
+    })
+    
 
 	// Settings
 	File.instance.gameProperties.resWidth = data.settings.resWidth; 
