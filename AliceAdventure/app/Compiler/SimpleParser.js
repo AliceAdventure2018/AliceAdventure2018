@@ -76,7 +76,7 @@ Parser = function (jsonPath, buildPath){
 	function createStates() {
 		var toReturn = 'myGame.states = {'
 		for (let i = 0; i <this.stateList.length; i++){
-			toReturn += this.stateList[i].name + '_' + this.stateList[i].id + ' : ' + this.stateList[i].value + ',\n'
+			toReturn += this.stateList[i].name + '_' + this.stateList[i].id + ' : ' + this.stateList[i].value + ', '
 		}
 		return toReturn + '};\n';
 	}
@@ -469,10 +469,10 @@ Parser = function (jsonPath, buildPath){
 				return false;
 			}else{
 				if (i == conditionList.length -1){
-					toReturn += "(" + state + "==" + value + ")){\n";
+					toReturn += "(myGame.states." + state + "==" + value + ")){\n";
 				}
 				else{
-					toReturn += "(" + state + "==" + value + ") &&";
+					toReturn += "(myGame.states." + state + "==" + value + ") &&";
 				}
 			}
 		}
