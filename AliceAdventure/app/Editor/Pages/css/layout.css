@@ -7,6 +7,14 @@ button{
 
 
 
+
+.editInPlace {
+    margin-left: 10px;
+    text-align: left;
+    color:#aaa;
+    font-weight:700;
+}
+
 #topnav button{
     color:#fff;
     margin-left: 1%;
@@ -61,7 +69,7 @@ button{
    color:#f9af48;
 }
 #gallery-title h6:selected{
-    
+
 }
 #object-list-title h6:hover{
    color:#f9af48;
@@ -173,6 +181,8 @@ button{
     position: absolute;
     top:40px;
     left: 130px;
+    
+    right: 10px;
     display: inline-block;
 
 }
@@ -182,7 +192,10 @@ button{
     background-color: #eee;
     margin:10px;
     min-height:350px;
+   /* 
     width: 560px;
+*/
+
 
     overflow-y: auto;
 
@@ -321,15 +334,26 @@ button{
     overflow: auto;
 }
 
+
 .interaction-box{
-    min-width: 300px;
-    width:300px;
+    /*min-width: 300px;
+    width: 300px;
+    */
+    display: inline-block;
     border-radius: 10px;
     border-width: thin;
     border-style: solid;
     border-color: #aaa;
     background-color: #fff;
 }
+
+
+.interaction-box span{
+
+    width: 100%;
+
+}
+
 .event-box{
     padding:10px;
     border-radius: 10px;
@@ -348,7 +372,7 @@ button{
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-    min-height: 100px;
+    min-height: 50px;
 }
 .reaction-box{
     padding:10px;
@@ -358,7 +382,7 @@ button{
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-    min-height: 100px;
+    min-height: 50px;
 }
 #interaction-library{
      position: absolute;
@@ -375,6 +399,7 @@ button{
    padding-left:12px !important;
    padding-top: 7px !important;
    padding-bottom: 7px !important;
+   margin-bottom: 5px; /*create gap between actions */
 }
 
 
