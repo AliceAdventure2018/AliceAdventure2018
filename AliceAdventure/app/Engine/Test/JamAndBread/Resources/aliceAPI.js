@@ -142,6 +142,10 @@ function Inventory(game) { //always on the top
     this.inventoryBackgroundGrp = new PIXI.Container();
     for(var i = 0; i < this.inventory_size; i++) {
         var inventBack = Alice.Object.fromImage( baseURL.requireAssets+'inventory.png');
+        
+        //scale
+        var background_scale = this.inventory_w/144;
+        inventBack.scale.set(background_scale);
         inventBack.x = game.screenWidth;
         inventBack.y = i*this.inventory_w;
         this.inventoryBackgroundGrp.addChild(inventBack); 
@@ -417,9 +421,9 @@ function GameManager() {
     //sound list
     this.sound = PIXI.sound;
     
-    this.init = function(width,height,invent_size) {
-        if(invent_size == 0)
-            invent_size = 5;
+    this.init = function(width,height,invent_size = 5) {
+//        if(invent_size == 0)
+//            invent_size = 5;
         
         this.screenWidth = width;
         this.screenHeight = height;

@@ -1,7 +1,10 @@
 var myGame = new GameManager();
-myGame.init(1280,720,5);
+myGame.init(1280,720,8);
+//myGame.init(600,400,5);
+//myGame.init(640,360,5);
 myGame.sceneManager.createScenes(3);
 myGame.states = {cat_is_feeded:false}
+
 
 
 ///------------------------------------------------------------///
