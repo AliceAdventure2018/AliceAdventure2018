@@ -142,6 +142,10 @@ function Inventory(game) { //always on the top
     this.inventoryBackgroundGrp = new PIXI.Container();
     for(var i = 0; i < this.inventory_size; i++) {
         var inventBack = Alice.Object.fromImage( baseURL.requireAssets+'inventory.png');
+        
+        //scale
+        var background_scale = this.inventory_w/144;
+        inventBack.scale.set(background_scale);
         inventBack.x = game.screenWidth;
         inventBack.y = i*this.inventory_w;
         this.inventoryBackgroundGrp.addChild(inventBack); 
@@ -417,9 +421,12 @@ function GameManager() {
     //sound list
     this.sound = PIXI.sound;
     
-    this.init = function(width,height,invent_size) {
-        if(invent_size == 0)
-            invent_size = 5;
+    //lock
+    this.lock = false;
+    
+    this.init = function(width,height,invent_size = 5) {
+//        if(invent_size == 0)
+//            invent_size = 5;
         
         this.screenWidth = width;
         this.screenHeight = height;
@@ -432,7 +439,7 @@ function GameManager() {
                
         this.sceneManager = new SceneManager(this);
         this.inventory = new Inventory(this);
-        this.messageBox = new MessageBox({x:width,y:height,scale:1,url: baseURL.requireAssets+'textbox.png',a:1},false);
+        this.messageBox = new MessageBox({x:width,y:height,scale:1,url: baseURL.requireAssets+'textbox.png',a:1},false, this);
         
         this.app.stage.addChild(this.sceneManager.sceneContainer);
         this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
@@ -517,7 +524,10 @@ function Message(text,style,avatar) {
     this.avatar;
 }
 
-function MessageBox(background,avatarEnable) {
+function MessageBox(background, avatarEnable, game) {
+    
+    this.game = game;
+    
     this.holder = new Alice.Container();
     
     this.backgronud = Alice.Object.fromImage(background.url);
@@ -546,11 +556,11 @@ function MessageBox(background,avatarEnable) {
             this.currentMsg.text = this.messageBuffer[this.currentMsgIndex];
             //console.log("speak " + this.messageBuffer[this.currentMsgIndex]);
         } else {
-            this.callBack();
             this.messageBuffer = [];
             this.currentMsg.text = "";
             this.currentMsgIndex = 0;
             this.holder.visible = false;
+            this.callBack();           
         }
 
     }
@@ -593,18 +603,22 @@ function MessageBox(background,avatarEnable) {
     }
     
     this.addMessages = function(msgs) {
-        this.messageBuffer = msgs;
+        this.messageBuffer = this.messageBuffer.concat(msgs);
     }
     
     this.startConversation= function(msgs,func) {
         
         //console.log(msgs);
         
-        if(this.messageBuffer.length > 0)
-            return;
-        
-        if(!msgs.length)
+        if(msgs.length == 0)
             return
+        
+        if(this.messageBuffer.length > 0) {
+            this.addMessages(msgs);
+            return;
+        }
+        
+        this.game.lock = true;
             
         if(func!=undefined)
             this.callBack = func;
@@ -613,7 +627,6 @@ function MessageBox(background,avatarEnable) {
         
         this.currentMsgIndex = 0;
         this.currentMsg.text = this.messageBuffer[this.currentMsgIndex];
-        //console.log(this.currentMsg.text);
         this.holder.visible = true;
     }
     
@@ -622,6 +635,7 @@ function MessageBox(background,avatarEnable) {
             this.currentMsg.text = "";
             this.currentMsgIndex = 0;
             this.holder.visible = false;
+            this.game.lock = false;
     }
 }
 

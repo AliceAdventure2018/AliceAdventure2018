@@ -8,31 +8,24 @@ const IReaction = require('./IReaction');
 var Interaction;
 
 // variables
-Interaction = function(_id){
+Interaction = function(_id, _event = null, _conditionList = [], _reactionList = []){
 	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
 	this.id = _id;
 
-	this.event = null;
-	this.conditionList = [];
-	this.reactionList = [];
+	this.event = _event;
+	this.conditionList = _conditionList;
+	this.reactionList = _reactionList;
 
-	GameProperties.AddInteraction(this);
+	//GameProperties.AddInteraction(this);
 };
 
 //Miao Edit
 Interaction.prototype.toJSONObject = function() {
-    var obj = {};
+    let obj = {};
     
     obj.id = this.id;
     
     obj.event = this.event.toJSONObject();
-    
-//    obj.conditionList = [];
-//    this.conditionList.forEach(function(cond) {
-//        //console.log(react);
-//        obj.conditionList.push(cond.toJSONObject())
-//    })
-    
     
     obj.conditionList = this.conditionList;
         
@@ -49,16 +42,29 @@ Interaction.prototype.toJSONObject = function() {
 // static
 Interaction.NewInteraction = function(){
 	let interaction = new Interaction(null);
+    GameProperties.AddInteraction(interaction);
 	return interaction;
 };
 
 Interaction.LoadInteraction = function(_data){
-	// TODO
-	console.log("function not implemented");
-	//let Interaction = new Interaction(_data.id);
-	//Interaction.conditionList = [];
-	//Interaction.reactionList = [];
-	//return Interaction;
+    
+    let eve = IEvent.prototype.fromJSONObject(_data.event);
+    //console.log(eve)
+    
+    let reactionList = [];
+//    _data.reactionList.forEach(function(_react){
+//       //let reaction = new IReaction(null,_react.type,);
+//        reactionList.push(IReaction.fromJSONObject(_react));
+//    });
+
+    for(let i in _data.reactionList) {
+        let react = IReaction.prototype.fromJSONObject(_data.reactionList[i]);
+        console.log(react);
+        reactionList.push(react);
+    }
+    
+    GameProperties.AddInteraction(new Interaction(_data.id, eve, _data.conditionList, reactionList));
+
 };
 
 // functions

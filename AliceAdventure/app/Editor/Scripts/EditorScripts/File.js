@@ -4,6 +4,8 @@ const Compiler = require('../../../Compiler/Compiler'); // TODO
 const GameProperties = require('./GameProperties');
 const Scene = require('./Scene');
 const SceneObject = require('./SceneObject');
+const State = require('./State');
+const Interaction = require('./Interaction');
 
 // class
 var File;
@@ -25,6 +27,7 @@ File.tempJsonObj = {
 	objectList: [], 
 	interactionList: [],
 	//interactionEventList: [],
+    soundList: [],
 	stateList: [],
 	settings: {}, 
 	projectData: {}, 
@@ -181,6 +184,9 @@ File.SaveToPath = function(_path){
         File.tempJsonObj.stateList.push(state.toJSONObject());
     })
     
+    //soundList
+    
+    
 	// settings
 	File.tempJsonObj.settings = GameProperties.instance.settings;
 
@@ -220,6 +226,18 @@ File.OpenFromPath = function(_path){
 	}
     
     //
+    
+    //stateList
+    data.stateList.forEach(function(state){
+        State.LoadState(state);
+    })
+    
+    
+    //Interaction
+    data.interactionList.forEach(function(interaction){
+        Interaction.LoadInteraction(interaction);
+    })
+    
 
 	// Settings
 	File.instance.gameProperties.resWidth = data.settings.resWidth; 

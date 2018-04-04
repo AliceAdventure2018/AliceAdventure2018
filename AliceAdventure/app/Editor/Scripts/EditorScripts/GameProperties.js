@@ -7,10 +7,11 @@ GameProperties = function(){
 	this.objectList = [];
 	this.interactionList = [];
 	this.stateList = [];
+    this.soundList = [];
 	this.settings = {
-		resWidth: 600, 
-		resHeight: 400, 
-		inventoryGridNum: 0,
+		resWidth: 640, 
+		resHeight: 360, 
+		inventoryGridNum: 5,
 		projectName: "untitled"
 	};
 	this.projectData = {
