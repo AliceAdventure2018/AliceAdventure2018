@@ -35,7 +35,7 @@ ILibraryView.prototype.InitView = function(){
 		data: {
 			viewEnabled: false, 
 			events: IEvent.Library, 
-			states: [], 
+			states: null, 
 			reactions: IReaction.Library
 		}, 
 		methods: {
@@ -61,7 +61,7 @@ ILibraryView.prototype.ReloadView = function(){
 		this.vModel.states = GameProperties.instance.stateList;
 	} else {
 		this.vModel.viewEnabled = false;
-		this.vModel.states = [];
+		this.vModel.states = null;
 	}
 };
 
@@ -72,7 +72,8 @@ ILibraryView.prototype.AddNewState = function(){
 		value: "state_1"
 	}).then((_name)=>{
 		if (_name != null) {
-			State.NewState(_name, false);			
+			//State.NewState(_name, false);
+            GameProperties.instance.stateList.push(new State(null,_name,false));
 		}
 	});
 }

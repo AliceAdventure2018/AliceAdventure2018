@@ -31,7 +31,10 @@ InteractionView.prototype.InitView = function(){
 		el: '#' + this.bindElementID,
 		data: {
 			viewEnabled: false, 
-			interactions: null
+			interactions: null,
+            objects : null,
+            states : null,
+            scenes : null
 		}, 
 		methods: {
 			eventDragover: (ev)=>{View.HandleDragover(ev);},
@@ -57,9 +60,15 @@ InteractionView.prototype.ReloadView = function(){
 	if (GameProperties.ProjectLoaded()){
 		this.vModel.viewEnabled = true;
 		this.vModel.interactions = GameProperties.instance.interactionList;
+        this.vModel.objects = GameProperties.instance.objectList;
+        this.vModel.states = GameProperties.instance.stateList;
+        this.vModel.scenes = GameProperties.instance.sceneList;
 	} else {
 		this.vModel.viewEnabled = false;
 		this.vModel.interactions = null;
+        this.vModel.objects = null;
+        this.vModel.states = null;
+        this.vModel.scenes = null;
 	}
 };
 
