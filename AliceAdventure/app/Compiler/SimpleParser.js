@@ -102,7 +102,7 @@ Parser = function (jsonPath, buildPath){
 						dest= dest.replace(/\\/g, "/");
 						FileSys.copyFileOrFolder(sound.src, dest);
 
-					toReturn += addSound(sound.name, sound.id, dest);
+					toReturn += addSound(sound.name, sound.id, "./Resources/Assets/" + FileSys.filename(sound.src));
 
 				}else{
 					callback("Compiler ERROR: sound {id = " +sound.id + ", name = " + sound.name + "} has INVALID source: \n" + sound.src + "\nEither the path is not correct or the file format is not WAV/MP4.");
@@ -214,7 +214,7 @@ Parser = function (jsonPath, buildPath){
 						var dest = FileSys.merge(this.assetPath, FileSys.filename(object.src));
 						dest= dest.replace(/\\/g, "/");
 						FileSys.copyFileOrFolder(object.src, dest);
-						toReturn += createPIXIObject(name,dest);
+						toReturn += createPIXIObject(name,"./Resources/Assets/" + FileSys.filename(object.src));
 						toReturn += setName(name,name);
 
 					}else{
