@@ -420,6 +420,8 @@ Parser = function (jsonPath, buildPath){
 	//   7   make UNinteractive [objID]               make object of this ID UNinteractive
 	//   8   play music         [soundID]             play music of this ID
 	//   9   show message box   [string]              show message box 
+	//  10   show inventory     []                    show inventory
+	//  11   hide inventory     []                    show inventory
 	function interactionListParser(callback){
 
 		var toReturn = "";
