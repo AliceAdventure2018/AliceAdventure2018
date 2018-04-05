@@ -68,9 +68,7 @@ button{
 #gallery-title h6:hover{
    color:#f9af48;
 }
-#gallery-title h6:selected{
 
-}
 #object-list-title h6:hover{
    color:#f9af48;
 }
@@ -334,7 +332,19 @@ button{
     overflow: auto;
 }
 
+#interaction-box-close{
 
+    width:15px;
+    height: 15px;
+    float:right;
+    margin-top:7px;
+    margin-right: 7px;
+
+}
+
+#interaction-box-close:hover {
+    opacity:0.5;
+}
 .interaction-box{
     /*min-width: 300px;
     width: 300px;
