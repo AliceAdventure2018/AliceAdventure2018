@@ -469,8 +469,8 @@ function GameManager() {
     this.lock = false;
     
     this.init = function(width,height,invent_size = 5) {
-//        if(invent_size == 0)
-//            invent_size = 5;
+        if(invent_size < 5)
+            invent_size = 5;
         
         this.screenWidth = width;
         this.screenHeight = height;
