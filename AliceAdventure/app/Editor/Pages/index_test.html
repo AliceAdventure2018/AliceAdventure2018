@@ -210,6 +210,13 @@
                     Show dialog
                     <input v-model='react.args[0]'/>
                 </span>
+
+                <span v-if='react.type == 9'>
+                    Play sound
+                    <select v-model="react.args[0]">
+                        <option v-for="sound in sounds" v-html="sound.name" v-bind:value="sound"></option>
+                    </select>
+                </span>
                 
                 <button v-on:click='deleteReaction(react, ntra)'> x </button>
             </div>
@@ -220,7 +227,7 @@
     <div id="interaction-library-view">
       <h3> I-library view</h3>
       <div v-if='viewEnabled'> events: 
-        <div v-for='em in events' v-on:dragstart='eventDragstart(event, em)' draggable="true">
+        <div v-for='em in events' v-on:dragstart='eventDragstart(event, em.type)' draggable="true">
           &nbsp; <span v-html='em.name'></span>
         </div>
       </div>
@@ -232,7 +239,7 @@
         </div>
       </div>
       <div v-if='viewEnabled'> reactions: 
-        <div v-for='rm in reactions' v-on:dragstart='reactionDragstart(event, rm)' draggable="true">
+        <div v-for='rm in reactions' v-on:dragstart='reactionDragstart(event, rm.type)' draggable="true">
           &nbsp; <span v-html='rm.name'></span>
         </div>
       </div>

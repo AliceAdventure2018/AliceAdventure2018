@@ -19,26 +19,6 @@ Interaction = function(_id, _event = null, _conditionList = [], _reactionList = 
 	//GameProperties.AddInteraction(this);
 };
 
-//Miao Edit
-Interaction.prototype.toJSONObject = function() {
-    let obj = {};
-    
-    obj.id = this.id;
-    
-    obj.event = this.event.toJSONObject();
-    
-    obj.conditionList = this.conditionList;
-        
-    obj.reactionList = [];
-    this.reactionList.forEach(function(react) {
-        //console.log(react);
-        obj.reactionList.push(react.toJSONObject())
-    })
-    
-    return obj;
-}
-
-
 // static
 Interaction.NewInteraction = function(){
 	let interaction = new Interaction(null);
@@ -46,40 +26,24 @@ Interaction.NewInteraction = function(){
 	return interaction;
 };
 
-Interaction.LoadInteraction = function(_data){
-    
-    let eve = IEvent.prototype.fromJSONObject(_data.event);
-    //console.log(eve)
-    
+Interaction.LoadInteraction = function(_data){    
+    let eve = IEvent.prototype.fromJsonObject(_data.event);    
     let reactionList = [];
-//    _data.reactionList.forEach(function(_react){
-//       //let reaction = new IReaction(null,_react.type,);
-//        reactionList.push(IReaction.fromJSONObject(_react));
-//    });
-
     for(let i in _data.reactionList) {
-        let react = IReaction.prototype.fromJSONObject(_data.reactionList[i]);
-        console.log(react);
+        let react = IReaction.prototype.fromJsonObject(_data.reactionList[i]);
         reactionList.push(react);
-    }
-    
+    }    
     GameProperties.AddInteraction(new Interaction(_data.id, eve, _data.conditionList, reactionList));
-
 };
 
 // functions
-Interaction.prototype.SetIEvent = function(_eventModel){
+Interaction.prototype.SetIEvent = function(_eventType){
 	//this.event = new IEvent(_eventModel);
-    this.event = new IEvent(_eventModel,_eventModel.type);
+    this.event = new IEvent(_eventType);
 }
 
 Interaction.prototype.AddCondition = function(_state){
-	//if (this.conditionList.indexOf(_state) >= 0) {return false;} // Already contains this event
-	
-    console.log("add condition")
-    console.log(_state.name)
-    
-    //copy
+
     this.conditionList.push({
         id:_state.id,
         name:_state.name,
@@ -97,23 +61,16 @@ Interaction.prototype.RemoveCondition = function(_state){
 	}
 };
 
-//Interaction.prototype.AddIReaction = function(_iReact, _index = null){
-//	//this.reactionList.push(new InteractionReaction(type, obj1, obj2))
-////	if (_index == null || _index >= this.reactionList.length) { // push back
-////		this.reactionList.push(_iReact);
-////	} else if (_index <= 0){
-////		this.reactionList.unshift(_iReact); // push front
-////	} else { // insert
-////		this.reactionList.splice(_index, 0, _iReact);
-////	}
-//    
-//    this.reactionList.push(new InteractionReaction(type))
-//    
-//};
-
-Interaction.prototype.AddIReaction = function(_iReact) {
-    this.reactionList.push(new IReaction(_iReact,_iReact.type));
-}
+Interaction.prototype.AddIReaction = function(_reactType, _index = null){
+    let iReact = new IReaction(_reactType);
+	if (_index == null || _index >= this.reactionList.length) { // push back
+        this.reactionList.push(iReact);
+	} else if (_index <= 0){
+		this.reactionList.unshift(iReact); // push front
+	} else { // insert
+		this.reactionList.splice(_index, 0, iReact);
+	}
+};
 
 Interaction.prototype.DeleteIReaction = function(_iReact){
 	let i = this.reactionList.indexOf(_iReact);
@@ -124,6 +81,21 @@ Interaction.prototype.DeleteIReaction = function(_iReact){
 
 Interaction.prototype.DeleteThis = function(){
 	GameProperties.DeleteInteraction(this);
+};
+
+Interaction.prototype.toJsonObject = function() {
+    let obj = {};
+    
+    obj.id = this.id;    
+    obj.event = this.event.toJsonObject();    
+    obj.conditionList = this.conditionList;        
+    obj.reactionList = [];
+    this.reactionList.forEach(function(react) {
+        //console.log(react);
+        obj.reactionList.push(react.toJsonObject())
+    })
+    
+    return obj;
 };
 
 module.exports = Interaction;

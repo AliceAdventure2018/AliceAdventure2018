@@ -65,6 +65,15 @@ GameProperties.GetStateById = function(_id){
 	}
 	return null;
 };
+GameProperties.GetSoundById = function(_id){
+	if (GameProperties.instance == null) return null;
+	for (let i in GameProperties.instance.soundList){
+		if (GameProperties.instance.soundList[i].id == _id){
+			return GameProperties.instance.soundList[i];
+		}
+	}
+	return null;
+};
 
 GameProperties.AddScene = function(_scene){
 	if (GameProperties.instance == null) return false;
@@ -121,6 +130,21 @@ GameProperties.DeleteState = function(_state){
 	var i = GameProperties.instance.stateList.indexOf(_state);
 	if (i >= 0){
 		GameProperties.instance.stateList.splice(i, 1);
+		return true;
+	}
+	return false;
+};
+
+GameProperties.AddSound = function(_sound){
+	if (GameProperties.instance == null) return false;
+	GameProperties.instance.soundList.push(_sound);
+	return true;
+};
+GameProperties.DeleteSound = function(_sound){
+	if (GameProperties.instance == null) return false; 
+	var i = GameProperties.instance.soundList.indexOf(_sound);
+	if (i >= 0){
+		GameProperties.instance.soundList.splice(i, 1);
 		return true;
 	}
 	return false;

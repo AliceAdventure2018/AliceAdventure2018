@@ -418,10 +418,12 @@ Parser = function (jsonPath, buildPath){
 	//   5   make invisible     [objID]               make object invisible
 	//   6   make interactive   [objID]               make object of this ID interactive
 	//   7   make UNinteractive [objID]               make object of this ID UNinteractive
-	//   8   play music         [soundID]             play music of this ID
-	//   9   show message box   [string]              show message box 
+
+	//   8   show message box   [string]              show message box 
+	//   9   play music         [soundID]             play music of this ID
 	//  10   show inventory     []                    show inventory
 	//  11   hide inventory     []                    show inventory
+
 	function interactionListParser(callback){
 
 		var toReturn = "";
@@ -758,7 +760,8 @@ Parser = function (jsonPath, buildPath){
 
 	}
 
-	function translate_reactionType_8( args, callback){
+
+	function translate_reactionType_9( args, callback){
 		if (args.length == 1){
 
 			var sound = findSoundByID.call(this, args[0]);
@@ -772,14 +775,14 @@ Parser = function (jsonPath, buildPath){
 			}
 
 		}else{
-			callback("JSON Format ERROR: reaction type 8 (make A interactive) should have ONE argument.");
+			callback("JSON Format ERROR: reaction type 8 (play sound) should have ONE argument.");
 			return false;
 		}
 
 	}
 
 	//show message box
-	function translate_reactionType_9( args, callback){
+	function translate_reactionType_8( args, callback){
 		if (args.length == 1){
 	
 			return "myGame.messageBox.startConversation(['" + args[0] + "'], function(){\n";
@@ -955,7 +958,7 @@ Parser = function (jsonPath, buildPath){
 	//return sound_id if found
 	function findSoundByID(ID){
 		for (let i = 0; i < this.soundList.length; i++){
-			if (this.soundList.soundList[i].id == ID){
+			if (this.soundList[i].id == ID){
 				return this.soundList[i].name + '_' + this.soundList[i].id; 
 			}
 		}
