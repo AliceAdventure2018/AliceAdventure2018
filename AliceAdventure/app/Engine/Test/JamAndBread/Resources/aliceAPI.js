@@ -575,12 +575,14 @@ function MessageBox(background, avatarEnable, game) {
     this.backgronud.anchor.set(0.5);
     
     this.backgronud.x = background.x/2;
-    this.backgronud.y = background.y - 220/2;
+    
     
     this.backgronud.alpha = 0.8;
     
-    var scale = 0.95 * (this.game.screenWidth / 1280);
+    var scale = (this.game.screenWidth / 1280);
     this.backgronud.scale.set(scale);
+    
+    this.backgronud.y = background.y - (220 * scale)/2 - 10 * scale;
     
     
     this.backgronud.interactive = true;

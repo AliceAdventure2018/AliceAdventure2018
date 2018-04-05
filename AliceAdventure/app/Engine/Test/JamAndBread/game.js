@@ -1,7 +1,7 @@
 var myGame = new GameManager();
 //myGame.init(1280,720,8);
 //myGame.init(600,400,5);
-myGame.init(1280*3/4,720*3/4,5);
+myGame.init(1280*2/4,720*2/4,5);
 myGame.sceneManager.createScenes(3);
 //myGame.states = {cat_is_feeded:false}
 myGame.initStateManager({cat_is_feeded:false});
@@ -47,12 +47,7 @@ cat.interactive = true;
 cat.buttonMode = true;
 
 cat.on('pointerdown',function() {
-    if(!myGame.states.cat_is_feeded)
-    {
-        //show dialog ()
-        //play sound A
-        //show dialog ()
-        //play sound B
+    
         myGame.sound.play('meow_unhappy');
         myGame.messageBox.startConversation(["Hungry..."], function() {
             myGame.sound.play('meow_unhappy');
@@ -61,15 +56,7 @@ cat.on('pointerdown',function() {
             });
             
         });
-    }
-    
-    if(myGame.states.cat_is_feeded)
-    {
-        myGame.messageBox.startConversation(["Meow","Love you~"], function() {
-            myGame.sound.play('meow_happy');
-        });
-    }
-})
+});
 
 
 myGame.scene(0).addChild(cat);
