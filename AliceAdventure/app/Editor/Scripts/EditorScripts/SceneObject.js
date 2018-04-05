@@ -193,6 +193,22 @@ SceneObject.prototype.OnPointerUp = function(_event){
 	}
 };
 
+SceneObject.prototype.toJsonObject = function(){
+	return {
+		id: this.id, 
+		name: this.name, 
+		src: this.src, 
+		//isDefault: this.isDefault, 
+		pos: {x: Number(this.sprite.x), y: Number(this.sprite.y)}, 
+		anchor: {x: Number(this.sprite.anchor.x), y: Number(this.sprite.anchor.y)}, 
+		scale: {x: Number(this.sprite.scale.x), y: Number(this.sprite.scale.y)}, 
+		active: this.sprite.visible, 
+		interactive: this.interactive, 
+		bindScene: this.bindScene.id, 
+		//properties: _o.properties, 
+	};
+};
+
 Event.AddListener("reload-project", ()=>{SceneObject.Selection.clear();})
 
 module.exports = SceneObject;

@@ -68,7 +68,7 @@ File.SaveProject = function(){
 		ELECTRON.dialog.showSaveDialog({
 			title: 'Select folder',  
 			defaultPath: File.instance.gameProperties.settings.projectName, 
-			buttonLabel: 'Select', 
+			buttonLabel: 'Save', 
 			filters: [{ name: 'AliceAdventureProject', extensions: [File.extension] }]
 		}, (_path)=>{ // callback
 			if (_path == null) return;
@@ -87,7 +87,7 @@ File.SaveAsNewProject = function(){
 	ELECTRON.dialog.showSaveDialog({
 			title: 'Select folder',  
 			defaultPath: File.instance.gameProperties.settings.projectName, 
-			buttonLabel: 'Select', 
+			buttonLabel: 'Save', 
 			filters: [{name: 'AliceAdventureProject', extensions: [File.extension]}], 
 			properties: ['openFile', 'createDirectory']
 		}, (_path)=>{ // callback
@@ -140,16 +140,18 @@ File.RunProject = function(){
 	Debug.LogError("Function not implemented");
 }
 
-File.ImportSound = function(){
+File.ImportSound = function(){ // test
 	ELECTRON.dialog.showOpenDialog({
 		title: 'Import sound',  
 		defaultPath: '', 
 		buttonLabel: 'Import', 
 		filters: [{name: 'Audio file', extensions: ['mp3', 'wav']}], 
-		properties: ['openFile']
+		properties: ['openFile', 'multiSelections']
 	}, (_paths)=>{ // callback
 		if (_paths == null) return;
-		Sound.NewSound(PATH.basename(_paths[0], PATH.extname(_paths[0])), _paths[0]);
+		_paths.forEach((path)=>{ 
+			Sound.NewSound(PATH.basename(path, PATH.extname(path)), path);
+		});
 	});	
 }
 
@@ -159,33 +161,14 @@ File.SaveToPath = function(_path){
 	File.tempJsonObj.reset();
 
 	// sceneList
-	for (let i in GameProperties.instance.sceneList){
-		let _s = GameProperties.instance.sceneList[i];
-		let _d = {
-			id: _s.id, 
-			name: _s.name
-		};
-		File.tempJsonObj.sceneList.push(_d);
-	}
+	GameProperties.instance.sceneList.forEach((scene)=>{
+		File.tempJsonObj.sceneList.push(scene.toJsonObject());
+	});
 
 	// objectList
-	for (let i in GameProperties.instance.objectList){
-		let _o = GameProperties.instance.objectList[i];
-		let _d = {
-			id: _o.id, 
-			name: _o.name, 
-			src: _o.src, 
-			//isDefault: _o.isDefault, 
-			pos: {x: Number(_o.sprite.x), y: Number(_o.sprite.y)}, 
-			anchor: {x: Number(_o.sprite.anchor.x), y: Number(_o.sprite.anchor.y)}, 
-			scale: {x: Number(_o.sprite.scale.x), y: Number(_o.sprite.scale.y)}, 
-			active: _o.sprite.visible, 
-			interactive: _o.interactive, 
-			bindScene: _o.bindScene.id, 
-			//properties: _o.properties, 
-		};
-		File.tempJsonObj.objectList.push(_d);
-	}
+	GameProperties.instance.objectList.forEach((obj)=>{
+		File.tempJsonObj.objectList.push(obj.toJsonObject());
+	});
 
     // interationList
     GameProperties.instance.interactionList.forEach(function(interaction) {
@@ -212,7 +195,7 @@ File.SaveToPath = function(_path){
 	FS.writeJsonSync(File.instance.path, File.tempJsonObj, {spaces:'\t', EOL:'\n'});
 
 	// Ensure has Assets folder
-	FS.ensureDir(PATH.dirname(File.instance.path) + '/Assets/');
+	//FS.ensureDir(PATH.dirname(File.instance.path) + '/Assets/');
 }
 
 File.OpenFromPath = function(_path){
@@ -227,32 +210,39 @@ File.OpenFromPath = function(_path){
 	}
 
 	// SceneList
-	for (let i in data.sceneList){
-		let _d = data.sceneList[i];
-		Scene.LoadScene(_d);
+	if (data.sceneList != null){
+	    data.sceneList.forEach((scene)=>{
+	        Scene.LoadScene(scene);
+	    });
 	}
 
 	// ObjectList
-	for (let i in data.objectList){
-		let _d = data.objectList[i];
-		SceneObject.LoadObject(_d);
+	if (data.objectList != null){
+	    data.objectList.forEach((object)=>{
+	        SceneObject.LoadObject(object);
+	    });
 	}
     
     //stateList
-    data.stateList.forEach(function(state){
-        State.LoadState(state);
-    })
-    
+    if (data.stateList != null){
+	    data.stateList.forEach((state)=>{
+	        State.LoadState(state);
+	    });
+	}
+	    
     // Sound
-    data.soundList.forEach(function(sound){
-    	Sound.LoadSound(sound);
-    });    
+    if (data.soundList != null){
+	    data.soundList.forEach((sound)=>{
+	    	Sound.LoadSound(sound);
+	    });   
+	} 
     
     //Interaction
-    data.interactionList.forEach(function(interaction){
-        Interaction.LoadInteraction(interaction);
-    });
-    
+    if (data.interactionList != null){
+	    data.interactionList.forEach((interaction)=>{
+	        Interaction.LoadInteraction(interaction);
+	    });
+    }
 
 	// Settings
 	File.instance.gameProperties.resWidth = data.settings.resWidth; 

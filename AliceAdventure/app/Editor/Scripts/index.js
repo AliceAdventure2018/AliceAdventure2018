@@ -47,7 +47,7 @@ function InitPropertyView(){
 }
 
 function InitObjectListView(){
-	objectListView = AliceEditor.ObjectListView.NewView('design-object-list');
+	objectListView = AliceEditor.ObjectListView.NewView('object-list');
 }
 
 function InitGalleryView(){

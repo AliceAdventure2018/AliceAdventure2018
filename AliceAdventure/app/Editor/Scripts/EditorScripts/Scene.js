@@ -72,4 +72,11 @@ Scene.prototype.SelectOff = function(){
 	}
 };
 
+Scene.prototype.toJsonObject = function(){
+	return {
+		id: this.id, 
+		name: this.name
+	};
+}
+
 module.exports = Scene;
