@@ -11,8 +11,6 @@ var  Compiler;
 Compiler = function (path, callback){
 	this.buildDest = FileSys.ensureAndCreate(path,callback);
 
-
-
 	//need a callback function to report error
 	this.build = function(call){
 		
