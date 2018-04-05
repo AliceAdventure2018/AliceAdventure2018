@@ -6,6 +6,7 @@ const Scene = require('./Scene');
 const SceneObject = require('./SceneObject');
 const State = require('./State');
 const Interaction = require('./Interaction');
+const Sound = require('./Sound');
 
 // class
 var File;
@@ -26,17 +27,16 @@ File.tempJsonObj = {
 	sceneList: [],
 	objectList: [], 
 	interactionList: [],
-	//interactionEventList: [],
-    soundList: [],
 	stateList: [],
+    soundList: [],
 	settings: {}, 
 	projectData: {}, 
 	reset: function(){
 		this.sceneList = [];
 		this.objectList = [];
 		this.interactionList = [];
-		//this.interactionEventList = [];
 		this.stateList = [];
+		this.soundList = [];
 		this.settings = {};
 		this.projectData = {};
 	}
@@ -118,7 +118,6 @@ File.CloseProject = function(){
 	if (File.instance == null){
 		return; // No project loaded
 	}
-	// TODO: confirm to close unsaved proj
 	if (confirm("Are you sure to close this project? \nUnsaved changes may be lost. ")){ // test
 		File.instance = null;
 		GameProperties.instance = null;
@@ -139,6 +138,19 @@ File.BuildProject = function(){
 File.RunProject = function(){
 	// TODO
 	Debug.LogError("Function not implemented");
+}
+
+File.ImportSound = function(){
+	ELECTRON.dialog.showOpenDialog({
+		title: 'Import sound',  
+		defaultPath: '', 
+		buttonLabel: 'Import', 
+		filters: [{name: 'Audio file', extensions: ['mp3', 'wav']}], 
+		properties: ['openFile']
+	}, (_paths)=>{ // callback
+		if (_paths == null) return;
+		Sound.NewSound(PATH.basename(_paths[0], PATH.extname(_paths[0])), _paths[0]);
+	});	
 }
 
 File.SaveToPath = function(_path){
@@ -170,30 +182,31 @@ File.SaveToPath = function(_path){
 			active: _o.sprite.visible, 
 			interactive: _o.interactive, 
 			bindScene: _o.bindScene.id, 
-			properties: _o.properties, 
+			//properties: _o.properties, 
 		};
 		File.tempJsonObj.objectList.push(_d);
 	}
 
-    //interation
+    // interationList
     GameProperties.instance.interactionList.forEach(function(interaction) {
-        File.tempJsonObj.interactionList.push(interaction.toJSONObject());
-    })
+        File.tempJsonObj.interactionList.push(interaction.toJsonObject());
+    });
     
+    // stateList
     GameProperties.instance.stateList.forEach(function(state) {
-        File.tempJsonObj.stateList.push(state.toJSONObject());
-    })
+        File.tempJsonObj.stateList.push(state.toJsonObject());
+    });
     
-    //soundList
-    
+    // soundList
+    GameProperties.instance.soundList.forEach(function(sound){
+    	File.tempJsonObj.soundList.push(sound.toJsonObject());
+    });
     
 	// settings
 	File.tempJsonObj.settings = GameProperties.instance.settings;
 
 	// projData
 	File.tempJsonObj.projectData.idCounter = ID._counter;
-
-    console.log(File.tempJsonObj);
     
 	// Write JSON file
 	FS.writeJsonSync(File.instance.path, File.tempJsonObj, {spaces:'\t', EOL:'\n'});
@@ -225,18 +238,20 @@ File.OpenFromPath = function(_path){
 		SceneObject.LoadObject(_d);
 	}
     
-    //
-    
     //stateList
     data.stateList.forEach(function(state){
         State.LoadState(state);
     })
     
+    // Sound
+    data.soundList.forEach(function(sound){
+    	Sound.LoadSound(sound);
+    });    
     
     //Interaction
     data.interactionList.forEach(function(interaction){
         Interaction.LoadInteraction(interaction);
-    })
+    });
     
 
 	// Settings

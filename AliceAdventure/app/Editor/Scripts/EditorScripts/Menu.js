@@ -59,7 +59,10 @@ Menu.Init = function(){
 
 			{ type: 'separator'}, 
 			{ label: 'Build project', click(){File.BuildProject();} }, 
-			{ label: 'Run project', click(){File.RunProject();} }
+			{ label: 'Run project', click(){File.RunProject();} }, 
+
+			{ type: 'separator'}, 
+			{ label: 'Import sound', click(){File.ImportSound();} },
 		]
 	}
 }

@@ -16,6 +16,7 @@ AliceEditor = (function(){
 		get IEvent() {return getModule('IEvent');},
 		get IReaction() {return getModule('IReaction');},
 		get Interaction() {return getModule('Interaction');},
+		get Sound() {return getModule('Sound');},
 		
 		get View() {return getModule('View');},
 		get RunView() {return getModule('RunView');},

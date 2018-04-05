@@ -7,69 +7,10 @@ const GameProperties = require('./GameProperties');
 var IEvent;
 
 // variables
-IEvent = function(_model, _type, _args = []){
-	this.model = _model;
+IEvent = function(_type, _args = []){
     this.type = _type;
     this.args = _args;
 };
-
-
-IEvent.prototype.toJSONObject = function() {
-    var obj = {};
-    obj.type = this.type;
-    
-    //switch
-    let args = [];
-    switch(obj.type) {
-        case 0://click
-            args[0] = this.args[0].id;
-            break;
-        case 1://use a on b
-            args[0] = this.args[0].id;
-            args[1] = this.args[1].id;
-            break;
-        case 2://observe a
-            args[0] = this.args[0].id;
-            break;
-        case 3://combine a and b
-            args[0] = this.args[0].id;
-            args[1] = this.args[1].id;
-            break;
-        default:
-            break;
-    }
-    
-    obj.args = args;
-    return obj;
-}
-
-
-IEvent.prototype.fromJSONObject = function(_event) {
-    
-    let args = [];
-    
-    switch(_event.type) {
-        case 0://click
-            args[0] = GameProperties.GetObjectById(_event.args[0]);
-            break;
-        case 1://use a on b
-            args[0] = GameProperties.GetObjectById(_event.args[0]);
-            args[1] = GameProperties.GetObjectById(_event.args[1]);
-            break;
-        case 2://observe a
-            args[0] = GameProperties.GetObjectById(_event.args[0]);
-            break;
-        case 3://combine a and b
-            args[0] = GameProperties.GetObjectById(_event.args[0]);
-            args[1] = GameProperties.GetObjectById(_event.args[1]);
-            break;
-        default:
-            break;
-    }
-
-    return new IEvent(null, _event.type, args);
-    
-}
 
 // static
 IEvent.Library = [
@@ -99,6 +40,64 @@ IEvent.Library = [
 	}, 
 ];
 
-// functions
+IEvent.GetModel = function(type){
+    IEvent.Library.foreach()
+};
 
+// functions
+IEvent.prototype.toJsonObject = function() {
+    var obj = {};
+    obj.type = this.type;
+    
+    //switch
+    let args = [];
+    switch(obj.type) {
+        case 0://click
+            args[0] = this.args[0].id;
+            break;
+        case 1://use a on b
+            args[0] = this.args[0].id;
+            args[1] = this.args[1].id;
+            break;
+        case 2://observe a
+            args[0] = this.args[0].id;
+            break;
+        case 3://combine a and b
+            args[0] = this.args[0].id;
+            args[1] = this.args[1].id;
+            break;
+        default:
+            break;
+    }
+    
+    obj.args = args;
+    return obj;
+}
+
+
+IEvent.prototype.fromJsonObject = function(_event) {    
+    let args = [];
+
+    switch(_event.type) {
+        case 0://click
+            args[0] = GameProperties.GetObjectById(_event.args[0]);
+            break;
+        case 1://use a on b
+            args[0] = GameProperties.GetObjectById(_event.args[0]);
+            args[1] = GameProperties.GetObjectById(_event.args[1]);
+            break;
+        case 2://observe a
+            args[0] = GameProperties.GetObjectById(_event.args[0]);
+            break;
+        case 3://combine a and b
+            args[0] = GameProperties.GetObjectById(_event.args[0]);
+            args[1] = GameProperties.GetObjectById(_event.args[1]);
+            break;
+        default:
+            break;
+    }
+
+    return new IEvent(_event.type, args);
+    
+}
 module.exports = IEvent;
