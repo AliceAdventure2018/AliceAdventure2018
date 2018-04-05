@@ -74,11 +74,15 @@ Parser = function (jsonPath, buildPath){
 
 	//the returned structure is {name_id : value} 
 	function createStates() {
-		var toReturn = 'myGame.states = {'
+		var toReturn = 'myGame.initStateManager({'
 		for (let i = 0; i <this.stateList.length; i++){
-			toReturn += this.stateList[i].name + '_' + this.stateList[i].id + ' : ' + this.stateList[i].value + ', '
+			toReturn += this.stateList[i].name + '_' + this.stateList[i].id + ' : ' + this.stateList[i].value;
+			
+			if (i < this.stateList.length - 1){
+				toReturn += ", ";
+			}
 		}
-		return toReturn + '};\n';
+		return toReturn + '});\n';
 	}
 
 
@@ -393,6 +397,7 @@ Parser = function (jsonPath, buildPath){
 	// 1       Use A on B        2           # is used on #
 	// 2       Observe A         1           # is observed
 	// 3     Combine A with B    2           # is combined with # 
+	// 4     State A -> B        2           # when state A is changed to B 
 	//------------------------------------------------------------
 
 	//--------------------CONDITION-------------------------------
@@ -448,7 +453,7 @@ Parser = function (jsonPath, buildPath){
 			if (reactions === false) return false;
 
 			toReturn += event + conditions + reactions + "\n";
-			if (hasCondition) toReturn += "	}//if statement end\n"; //if statementend
+			if (hasCondition) toReturn += "		}//if statement end\n"; //if statementend
 
 			return toReturn + "}); //interaction end\n";
 
@@ -473,10 +478,10 @@ Parser = function (jsonPath, buildPath){
 				return false;
 			}else{
 				if (i == conditionList.length -1){
-					toReturn += "(myGame.states." + state + "==" + value + ")){\n";
+					toReturn += "(myGame.stateManager.states." + state + "==" + value + ")){\n";
 				}
 				else{
-					toReturn += "(myGame.states." + state + "==" + value + ") &&";
+					toReturn += "(myGame.stateManager.states." + state + "==" + value + ") &&";
 				}
 			}
 		}
@@ -599,7 +604,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "myGame.states." + state + "= " + args[1] + ";\n";
+				return "myGame.stateManager.setStates('" + state + "', " + args[1] + ");\n";
 			}
 
 		}else{
@@ -811,6 +816,15 @@ Parser = function (jsonPath, buildPath){
 
 					if (toReturn === false) return false;
 					else return toReturn;
+				case 4:
+					toReturn = translate_eventType_4.call(this, event.args, callback);
+
+					if (toReturn === false) return false;
+					else return toReturn;
+				default:
+					callback("Unsupported Event Type.");
+					return false;
+
 			}
 		}else{
 			callback("JSON Format ERROR: Event has includes two componets: type and args.");
@@ -889,6 +903,25 @@ Parser = function (jsonPath, buildPath){
 
 		}else{
 			callback("JSON Format ERROR: For event type 3 (Combine A and B) must have TWO arguments.");
+			return false;
+		}
+	}
+
+	//when state A is changed to state B
+	function translate_eventType_4(args, callback){
+		if (args.length == 2){
+			var state = findStateByID.call(this, args[0]);
+
+			if (state === false){
+				callback("Compile ERROR: For event Type 4, cannot find state of id : " + args[0] + ".");
+				return false;
+			}else{
+				return "\n//----------------When State A --> B----------------------\nmyGame.stateManager.addStateEvent( '" + state + "', " + args[1] + ", function(){\n";
+			}
+
+		
+		}else{
+			callback("JSON Format ERROR: For event type 4 (when State A -> B) must have TWO arguments (id, bool).");
 			return false;
 		}
 	}
