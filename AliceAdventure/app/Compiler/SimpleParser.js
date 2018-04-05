@@ -74,16 +74,23 @@ Parser = function (jsonPath, buildPath){
 
 	//the returned structure is {name_id : value} 
 	function createStates() {
-		var toReturn = 'myGame.states = {'
+		var toReturn = 'myGame.initStateManager({'
 		for (let i = 0; i <this.stateList.length; i++){
-			toReturn += this.stateList[i].name + '_' + this.stateList[i].id + ' : ' + this.stateList[i].value + ', '
+			toReturn += this.stateList[i].name + '_' + this.stateList[i].id + ' : ' + this.stateList[i].value;
+			
+			if (i < this.stateList.length - 1){
+				toReturn += ", ";
+			}
 		}
-		return toReturn + '};\n';
+		return toReturn + '});\n';
 	}
 
 
 	function createSoundList(callback){
 		var toReturn = '';
+		
+		//if (!this.soundList) return true;
+
 		for (let i = 0; i < this.soundList.length; i++){
 			var sound = this.soundList[i];
 
@@ -390,6 +397,7 @@ Parser = function (jsonPath, buildPath){
 	// 1       Use A on B        2           # is used on #
 	// 2       Observe A         1           # is observed
 	// 3     Combine A with B    2           # is combined with # 
+	// 4     State A -> B        2           # when state A is changed to B 
 	//------------------------------------------------------------
 
 	//--------------------CONDITION-------------------------------
@@ -409,8 +417,9 @@ Parser = function (jsonPath, buildPath){
 	//   4   make visible       [objID]               make object visible
 	//   5   make invisible     [objID]               make object invisible
 	//   6   make interactive   [objID]               make object of this ID interactive
-	//   7   make UNinteractive [objID]             make object of this ID UNinteractive
+	//   7   make UNinteractive [objID]               make object of this ID UNinteractive
 	//   8   play music         [soundID]             play music of this ID
+	//   9   show message box   [string]              show message box 
 	function interactionListParser(callback){
 
 		var toReturn = "";
@@ -443,10 +452,10 @@ Parser = function (jsonPath, buildPath){
 			var reactions = reactionListParser.call(this, interaction.reactionList,callback);
 			if (reactions === false) return false;
 
-			toReturn += event + conditions + reactions + "}\n";
-			if (hasCondition) toReturn += "}\n";
+			toReturn += event + conditions + reactions + "\n";
+			if (hasCondition) toReturn += "		}//if statement end\n"; //if statementend
 
-			return toReturn + ");\n";
+			return toReturn + "}); //interaction end\n";
 
 
 		}else{
@@ -469,10 +478,10 @@ Parser = function (jsonPath, buildPath){
 				return false;
 			}else{
 				if (i == conditionList.length -1){
-					toReturn += "(myGame.states." + state + "==" + value + ")){\n";
+					toReturn += "(myGame.stateManager.states." + state + "==" + value + ")){\n";
 				}
 				else{
-					toReturn += "(myGame.states." + state + "==" + value + ") &&";
+					toReturn += "(myGame.stateManager.states." + state + "==" + value + ") &&";
 				}
 			}
 		}
@@ -484,13 +493,41 @@ Parser = function (jsonPath, buildPath){
 //-------------------------REACTION------------------------------------------
 	function reactionListParser(reactionList, callback){
 		var toReturn = "";
+		var indentCounter = 1;
+		var messageBoxParenCounter = 0;
 		for (let i = 0; i < reactionList.length; i++){
-			var result = reactionParser.call(this, reactionList[i], callback);
+			var result = reactionParser.call(this,reactionList[i], callback);
+
+			//if messageBox, all the following reaction is included in the call-back function.
+			//console.log("reaction type is " + reactionList[i].type + "\n");
+			if (reactionList[i].type == 9) {
+				messageBoxParenCounter++;
+				indentCounter++;
+			}		
 
 			if (result === false) return false;
-			else toReturn += result;
+			else if (reactionList[i].type == 9) toReturn += indent(indentCounter - 1, "") + result;
+			else toReturn +=  indent(indentCounter, "") + result;
 		}
+
+
+		//message box back paren.
+		//console.log("messageBoxParenCounter : " + messageBoxParenCounter + "\n");
+		for (let j = 0; j < messageBoxParenCounter; j++){
+			toReturn += indent( indentCounter,"") + "});//messageBox end\n";
+			indentCounter--;
+		}
+
 		return toReturn;
+
+	}
+
+	function indent( indentCounter, string){
+		if (indentCounter <= 0){
+			return string;
+		}else{
+			return indent(indentCounter-1, string + "	");
+		}
 
 	}
 
@@ -500,12 +537,12 @@ Parser = function (jsonPath, buildPath){
 
 		switch(type){
 			case 0:
-				toReturn = translate_reactionType_0.call(this, reaction.args, callback);
+				toReturn = translate_reactionType_0.call(this,reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 1:
-				toReturn = translate_reactionType_1.call(this, reaction.args, callback);
+				toReturn = translate_reactionType_1.call(this,reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
@@ -520,27 +557,33 @@ Parser = function (jsonPath, buildPath){
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 4:
-				toReturn = translate_reactionType_4.call(this, reaction.args, callback);
+				toReturn = translate_reactionType_4.call(this,reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 5:
-				toReturn = translate_reactionType_5.call(this, reaction.args, callback);
+				toReturn = translate_reactionType_5.call(this,reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 6:
-				toReturn = translate_reactionType_6.call(this, reaction.args, callback);
+				toReturn = translate_reactionType_6.call(this,reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 7:
-				toReturn = translate_reactionType_7.call(this, reaction.args, callback);
+				toReturn = translate_reactionType_7.call(this,reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 8:
-				toReturn = translate_reactionType_8.call(this, reaction.args, callback);
+				toReturn = translate_reactionType_8.call(this,reaction.args, callback);
+
+				if (toReturn === false) return false;
+				else return toReturn;
+
+			case 9:
+				toReturn = translate_reactionType_9.call(this,reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
@@ -551,7 +594,7 @@ Parser = function (jsonPath, buildPath){
 
 	}
 	//state changer
-	function translate_reactionType_0(args, callback){
+	function translate_reactionType_0( args, callback){
 		if (args.length == 2){
 
 			var state = findStateByID.call(this, args[0]);
@@ -561,7 +604,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "	myGame.states." + state + "= " + args[1] + ";\n";
+				return "myGame.stateManager.setStates('" + state + "', " + args[1] + ");\n";
 			}
 
 		}else{
@@ -572,7 +615,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//transit to scene
-	function translate_reactionType_1(args, callback){
+	function translate_reactionType_1( args, callback){
 		if (args.length == 1){
 
 			var sceneIndex = findSceneByID.call(this, args[0]);
@@ -582,7 +625,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "	myGame.sceneManager.jumpToScene(" + sceneIndex +  ");\n";
+				return "myGame.sceneManager.jumpToScene(" + sceneIndex +  ");\n";
 			}
 
 		}else{
@@ -592,7 +635,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//put into Inventory
-	function translate_reactionType_2(args, callback){
+	function translate_reactionType_2( args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
@@ -602,7 +645,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "	myGame.inventory.add(" + obj +  ");\n";
+				return "myGame.inventory.add(" + obj +  ");\n";
 			}
 
 		}else{
@@ -612,7 +655,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//remove out of inventory
-	function translate_reactionType_3(args, callback){
+	function translate_reactionType_3( args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
@@ -622,7 +665,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "	myGame.inventory.remove(" + obj +  ");\n";
+				return "myGame.inventory.remove(" + obj +  ");\n";
 			}
 
 		}else{
@@ -633,7 +676,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//make visible
-	function translate_reactionType_4(args, callback){
+	function translate_reactionType_4( args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
@@ -643,7 +686,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "	" + obj + ".visible = true;\n";
+				return obj + ".visible = true;\n";
 			}
 
 		}else{
@@ -653,7 +696,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//make invisible
-	function translate_reactionType_5(args, callback){
+	function translate_reactionType_5( args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
@@ -663,7 +706,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "	" + obj + ".visible = false;\n";
+				return obj + ".visible = false;\n";
 			}
 
 		}else{
@@ -673,7 +716,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//make interactive
-	function translate_reactionType_6(args, callback){
+	function translate_reactionType_6( args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
@@ -683,7 +726,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "	" + obj + ".interactive = true;\n";
+				return obj + ".interactive = true;\n";
 			}
 
 		}else{
@@ -693,7 +736,7 @@ Parser = function (jsonPath, buildPath){
 
 	}
 	//make UNinteractive
-	function translate_reactionType_7(args, callback){
+	function translate_reactionType_7( args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
@@ -703,7 +746,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "	" + obj + ".interactive = false;\n";
+				return obj + ".interactive = false;\n";
 			}
 
 		}else{
@@ -713,7 +756,7 @@ Parser = function (jsonPath, buildPath){
 
 	}
 
-	function translate_reactionType_8(args, callback){
+	function translate_reactionType_8( args, callback){
 		if (args.length == 1){
 
 			var sound = findSoundByID.call(this, args[0]);
@@ -723,7 +766,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "	myGame.sound.play('" + sound + "')\n";
+				return "myGame.sound.play('" + sound + "')\n";
 			}
 
 		}else{
@@ -733,6 +776,17 @@ Parser = function (jsonPath, buildPath){
 
 	}
 
+	//show message box
+	function translate_reactionType_9( args, callback){
+		if (args.length == 1){
+	
+			return "myGame.messageBox.startConversation(['" + args[0] + "'], function(){\n";
+
+		}else{
+			callback("JSON Format ERROR: reaction type 9 (show messageBox) should have ONE argument.");
+			return false;
+		}
+	}
 
 //-------------------------EVENT----------------------------------------------
 	function eventParser(event, callback){
@@ -762,6 +816,15 @@ Parser = function (jsonPath, buildPath){
 
 					if (toReturn === false) return false;
 					else return toReturn;
+				case 4:
+					toReturn = translate_eventType_4.call(this, event.args, callback);
+
+					if (toReturn === false) return false;
+					else return toReturn;
+				default:
+					callback("Unsupported Event Type.");
+					return false;
+
 			}
 		}else{
 			callback("JSON Format ERROR: Event has includes two componets: type and args.");
@@ -840,6 +903,25 @@ Parser = function (jsonPath, buildPath){
 
 		}else{
 			callback("JSON Format ERROR: For event type 3 (Combine A and B) must have TWO arguments.");
+			return false;
+		}
+	}
+
+	//when state A is changed to state B
+	function translate_eventType_4(args, callback){
+		if (args.length == 2){
+			var state = findStateByID.call(this, args[0]);
+
+			if (state === false){
+				callback("Compile ERROR: For event Type 4, cannot find state of id : " + args[0] + ".");
+				return false;
+			}else{
+				return "\n//----------------When State A --> B----------------------\nmyGame.stateManager.addStateEvent( '" + state + "', " + args[1] + ", function(){\n";
+			}
+
+		
+		}else{
+			callback("JSON Format ERROR: For event type 4 (when State A -> B) must have TWO arguments (id, bool).");
 			return false;
 		}
 	}
