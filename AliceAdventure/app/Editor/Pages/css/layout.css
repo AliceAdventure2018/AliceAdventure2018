@@ -7,6 +7,14 @@ button{
 
 
 
+
+.editInPlace {
+    margin-left: 10px;
+    text-align: left;
+    color:#aaa;
+    font-weight:700;
+}
+
 #topnav button{
     color:#fff;
     margin-left: 1%;
@@ -15,6 +23,7 @@ button{
     margin-bottom: 5px;
 
 }
+
 
 
 #topnav button:active, #topnav button:hover{
@@ -55,7 +64,20 @@ button{
     right: 10px;
 }
 
-#add-state-button:focu s{outline: none;}
+
+#gallery-title h6:hover{
+   color:#f9af48;
+}
+#gallery-title h6:selected{
+
+}
+#object-list-title h6:hover{
+   color:#f9af48;
+}
+
+#gallery-title:focus{outline: none !important;}
+#object-list-title:focus{outline: none !important;}
+#add-state-button:focus{outline: none;}
 #add-scene-button:focus {outline:none;}
 #add-interaction-button:focus {outline:none;}
 #close-icon-button:focus {outline:none;}
@@ -108,33 +130,76 @@ button{
      margin-right: 10px;
 }
 
-.assets{
-    background-color: #eee;
-    margin:10px;
-    height:400px;
-    overflow-y: scroll;
-
-}
-
-#gallery {
-	background-color: #FFF;
+#first-column-second-row{
+    background-color: #FFF;
     position: absolute;
     height: 450px;
     bottom: 0;
     left: 0;
     width: 720px;
-    overflow: auto;
+}
+/*
+#gallery {
+    background-color: #FFF;
+    position: absolute;
+    height: 450px;
+    bottom: 0;
+    left: 0;
+    width: 720px;
+    
+}
+*/
+#gallery-title{
+    display: inline-block;
+
+}
+#object-list-title{
+    display: inline-block;
 }
 
 #gallery ul{
+   
+
     padding: 0;
 }
+
+
 #gallery li{
    list-style: none;
    
 
 }
 
+#tabList{
+     display: inline-block;
+     position: absolute;
+     top:50px;
+     left:10px;
+     
+}
+#v-pills-tabContent{
+    position: absolute;
+    top:40px;
+    left: 130px;
+    
+    right: 10px;
+    display: inline-block;
+
+}
+
+.assets{
+    border-radius: 10px;
+    background-color: #eee;
+    margin:10px;
+    min-height:350px;
+   /* 
+    width: 560px;
+*/
+
+
+    overflow-y: auto;
+
+}
 .assets ul{
     margin:0;
 }
@@ -161,8 +226,10 @@ button{
    
 }
 
+
 .asset {
-    margin:5px;
+    margin:7px; /* 5px */
+    border-radius: 10px;
      background-color: #ccc;
      width:80px;
      height: 80px;
@@ -172,7 +239,7 @@ button{
     color: #ffffff;
     background-color: #28a745;
     
-    width:50%;
+   
 
     margin-left: 10px;
      margin-right: 10px;
@@ -183,7 +250,7 @@ button{
 #key-tab.active{
     color: #ffffff;
     background-color: #28a745;
-     width:50%;
+     
     margin-left: 10px;
      margin-right: 10px;
 }
@@ -192,7 +259,7 @@ button{
 #container-tab.active{
     color: #ffffff;
     background-color: #28a745;
-     width:50%;
+     
     margin-left: 10px;
      margin-right: 10px;
 }
@@ -201,7 +268,7 @@ button{
 #actor-tab.active{
     color: #ffffff;
     background-color: #28a745;
-     width:50%;
+    /* width:50%;*/
     margin-left: 10px;
      margin-right: 10px;
 }
@@ -267,14 +334,26 @@ button{
     overflow: auto;
 }
 
+
 .interaction-box{
-    max-width: 300px;
+    /*min-width: 300px;
+    width: 300px;
+    */
+    display: inline-block;
     border-radius: 10px;
     border-width: thin;
     border-style: solid;
     border-color: #aaa;
     background-color: #fff;
 }
+
+
+.interaction-box span{
+
+    width: 100%;
+
+}
+
 .event-box{
     padding:10px;
     border-radius: 10px;
@@ -293,7 +372,7 @@ button{
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-    min-height: 100px;
+    min-height: 50px;
 }
 .reaction-box{
     padding:10px;
@@ -303,7 +382,7 @@ button{
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-    min-height: 100px;
+    min-height: 50px;
 }
 #interaction-library{
      position: absolute;
@@ -320,20 +399,28 @@ button{
    padding-left:12px !important;
    padding-top: 7px !important;
    padding-bottom: 7px !important;
+   margin-bottom: 5px; /*create gap between actions */
 }
-.badge-event{
 
+
+.badge-event{
+    min-width: 200px;
+     text-align: left !important;
     background-color: #ef5b34;
     color:#fff;
     font-size: 0.8em !important;
 }
 .badge-state{
+    min-width: 200px;
+     text-align: left !important;
     background-color: #f9af48;
     color:#fff;
     font-size: 0.8em !important;
 }
 
 .badge-reaction{
+    min-width: 200px;
+     text-align: left !important;
     background-color: #28a745;
     color:#fff;
     font-size: 0.8em !important;
@@ -389,6 +476,7 @@ button{
 
 }
 #state-list li{
+
     padding-bottom:5px;
 }
 
@@ -405,24 +493,29 @@ button{
 #reaction-list li{
     padding-bottom:5px;
 }
+
+/*
 #design-object-list{
     position: absolute;
     top: 0;
-    bottom: 356px; /* 130 + 6 */
+    bottom: 356px; 
     left: 0;
     right: 0;
     background-color: #fff;
-    /* overflow: auto; */
+   
 }
+*/
 
 .object-tree {
     background-color: #eee;
     position: relative;
     overflow: auto;
      padding: 10px;
-    margin-left:10px;
-    margin-right: 10px;
-    min-height: 220px;
+     border-radius: 10px;
+    margin-left:20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    min-height: 350px;
 
 }
 
@@ -536,8 +629,9 @@ button{
     position: relative;
     margin-right:10px;
     margin-left: 10px;
+    margin-bottom: 10px;
     top:0;
-
+    border-radius: 10px;
     height: 90px;
     background-color: #ccc;
 }
@@ -545,7 +639,7 @@ button{
 .property-info ul{
     background-color: #eee;
     position: relative;
-    
+    border-radius: 10px;
 
     margin-left:10px;
     margin-right: 10px;
