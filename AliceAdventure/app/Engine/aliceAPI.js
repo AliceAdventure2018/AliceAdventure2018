@@ -483,7 +483,7 @@ function GameManager() {
                
         this.sceneManager = new SceneManager(this);
         this.inventory = new Inventory(this);
-        this.messageBox = new MessageBox({x:width,y:height,scale:1,url: baseURL.requireAssets+'textbox.png',a:1},false, this);
+        this.messageBox = new MessageBox({x:width,y:height,scale:1, url: baseURL.requireAssets+'textbox.png',a:1},false, this);
         
         this.app.stage.addChild(this.sceneManager.sceneContainer);
         this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
@@ -576,9 +576,11 @@ function MessageBox(background, avatarEnable, game) {
     
     this.backgronud.x = background.x/2;
     this.backgronud.y = background.y - 220/2;
-
+    
     this.backgronud.alpha = 0.8;
-    this.backgronud.scale.set(0.9);
+    
+    var scale = 0.95 * (this.game.screenWidth / 1280);
+    this.backgronud.scale.set(scale);
     
     
     this.backgronud.interactive = true;
@@ -614,7 +616,7 @@ function MessageBox(background, avatarEnable, game) {
     
     this.defaltStyle = new PIXI.TextStyle({
         fontFamily: 'Arial',
-        fontSize: 20,
+        fontSize: 20 * scale ,
         //fontStyle: 'italic',
         fontWeight: 'bold',
         //fill: ['#ffffff', '#00ff99'], // gradient
