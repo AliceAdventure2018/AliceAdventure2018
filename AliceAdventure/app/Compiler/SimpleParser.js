@@ -608,7 +608,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "myGame.stateManager.setStates('" + state + "', " + args[1] + ");\n";
+				return "myGame.stateManager.setState('" + state + "', " + args[1] + ");\n";
 			}
 
 		}else{
