@@ -4,7 +4,7 @@ myGame.init(1280,720,8);
 //myGame.init(640,360,5);
 myGame.sceneManager.createScenes(3);
 myGame.states = {cat_is_feeded:false}
-
+myGame.initStateManager({cat_is_feeded:false});
 
 ///------------------------------------------------------------///
 myGame.sound.add('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
@@ -45,9 +45,6 @@ cat.scale.set(0.8);
 cat.name = "cat";
 cat.interactive = true;
 cat.buttonMode = true;
-//cat.state = {
-//    feeded:false
-//};
 
 cat.on('pointerdown',function() {
     if(!myGame.states.cat_is_feeded)
@@ -56,10 +53,11 @@ cat.on('pointerdown',function() {
         //play sound A
         //show dialog ()
         //play sound B
-        myGame.messageBox.startConversation(["Hungry...", "Want a bread with jam.."], function() {
-            myGame.sound.play('meow_happy');
-            myGame.messageBox.startConversation(["Can you give me..."], function() {
-                myGame.sound.play('meow_unhappy');
+        myGame.sound.play('meow_unhappy');
+        myGame.messageBox.startConversation(["Hungry..."], function() {
+            myGame.sound.play('meow_unhappy');
+            myGame.messageBox.startConversation(["Want a bread with jam.."], function() {
+                //myGame.sound.play('meow_unhappy');
             });
             
         });
@@ -72,6 +70,7 @@ cat.on('pointerdown',function() {
         });
     }
 })
+
 
 myGame.scene(0).addChild(cat);
 
@@ -204,19 +203,30 @@ myGame.inventory.interactionSystem.addCombineEvent(knifewithjam,bread,function()
 
 
 myGame.inventory.interactionSystem.addUsedEvent(breadwithjam,cat,function(){
-    myGame.states.cat_is_feeded = true;
+
     cat.visible = false;
     cat_sad.visible = true;
     myGame.inventory.remove(breadwithjam);
     myGame.sound.play("meow_happy");
-    myGame.messageBox.startConversation(["Yummy","I love you ~"],function(){
-        //win game
-        myGame.sound.play('win');
-        myGame.sceneManager.jumpToScene(2);
-        myGame.hideInventory();
+    myGame.messageBox.startConversation(["Yummy","I love you ~"], function(){
+        myGame.stateManager.setState('cat_is_feeded', true)
     });
     
 });
+
+
+//cat.on('pointerdown',function() {
+//    myGame.stateManager.setState('cat_is_feeded', true)
+//})
+
+
+myGame.stateManager.addStateEvent('cat_is_feeded', true, function(){
+    myGame.sound.play('win');
+    myGame.sceneManager.jumpToScene(2);
+    myGame.hideInventory();
+})
+
+
 
 //--//
 myGame.start(0);
