@@ -504,13 +504,13 @@ Parser = function (jsonPath, buildPath){
 
 			//if messageBox, all the following reaction is included in the call-back function.
 			//console.log("reaction type is " + reactionList[i].type + "\n");
-			if (reactionList[i].type == 9) {
+			if (reactionList[i].type == 8) {
 				messageBoxParenCounter++;
 				indentCounter++;
 			}		
 
 			if (result === false) return false;
-			else if (reactionList[i].type == 9) toReturn += indent(indentCounter - 1, "") + result;
+			else if (reactionList[i].type == 8) toReturn += indent(indentCounter - 1, "") + result;
 			else toReturn +=  indent(indentCounter, "") + result;
 		}
 
@@ -771,7 +771,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "myGame.sound.play('" + sound + "')\n";
+				return "myGame.sound.play('" + sound + "');\n";
 			}
 
 		}else{
