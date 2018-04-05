@@ -72,6 +72,49 @@ var baseURL = {
     nomalAssets: './Resources/Assets/'
 }
 
+
+function StateManager(_states, _game) {
+    //this.game = _game;
+    this.states = _states;
+    
+    //[{state: _state, toBe: _tobe}]
+    this.statesEventMessageList = [];
+    
+    this.eventSprite = new Alice.Object;
+    
+    this.addStateEvent = function(_state, _toBe, func) {
+        var eventMessage = _state + " is changed to " + _toBe;
+        this.statesEventMessageList[eventMessage] = true;
+        this.eventSprite.on(eventMessage,function() {
+           func(); 
+        });
+    }
+    
+//    this.checkEventExist = function(message) {
+//        if(this.eventMessageList[message] == undefined || this.eventMessageList[message] == false) {
+//            //console.log("not valid");
+//            return false;
+//        }
+//        return true;
+//    }
+    
+    this.callEvent = function(message) {
+        //check?
+        this.eventSprite.emit(message);
+    }
+    
+    this.setState = function(_state_name, _value) {
+        
+        if(this.states[_state_name] != _value) {
+            var message = _state_name + " is changed to " + _value;
+            this.states[_state_name] = _value;
+            this.callEvent(message);
+        }
+
+    }
+
+}
+
 function InventoryInteractionSystem() {
     
     this.emptySprite = new Alice.Object;
@@ -417,6 +460,7 @@ function GameManager() {
     this.inventory;
     this.sceneManager;
     this.messageBox;
+    this.stateManager;
     
     //sound list
     this.sound = PIXI.sound;
@@ -425,8 +469,8 @@ function GameManager() {
     this.lock = false;
     
     this.init = function(width,height,invent_size = 5) {
-//        if(invent_size == 0)
-//            invent_size = 5;
+        if(invent_size < 5)
+            invent_size = 5;
         
         this.screenWidth = width;
         this.screenHeight = height;
@@ -449,6 +493,10 @@ function GameManager() {
         
         //this.winSceneIndex = 0;
     
+    }
+    
+    this.initStateManager = function(_states) {
+        this.stateManager = new StateManager(_states, this);
     }
     
     
@@ -507,13 +555,6 @@ function GameManager() {
     this.scene = function(index) {
         return this.sceneManager.getSceneByIndex(index);
     }
-    
-    
-    
-//    this.win = function() {
-//        this.sceneManager.jumpToScene(this.winSceneIndex);
-//    }
-//    
     
 }
 

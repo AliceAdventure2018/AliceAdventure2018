@@ -16,15 +16,6 @@ State = function(_id, _name, _val = false){
 	//GameProperties.AddState(this);
 };
 
-
-State.prototype.toJSONObject = function() {
-    var obj = {};
-    obj.id = this.id;
-    obj.name = this.name;
-    obj.value = this.value;
-    return obj;
-}
-
 // static
 State.NewState = function(_name, _val = false){
 	let state = new State(null, _name, _val);
@@ -32,14 +23,9 @@ State.NewState = function(_name, _val = false){
 };
 
 State.LoadState = function(_data){
-	// TODO
-	//console.log("function not implemented");
-	//let State = new State(_data.id);
-	//State.eventList = [];
-	//State.reactionList = [];
-	//return State;
-    console.log(_data)
-    GameProperties.AddState(new State(_data.id, _data.name, _data.value));
+	let state = new State(_data.id, _data.name, _data.value);
+    GameProperties.AddState(state);
+    return state;
 };
 
 // functions
@@ -49,6 +35,14 @@ State.prototype.SetDefaultValue = function(_val){
 
 State.prototype.DeleteThis = function(){
 	GameProperties.DeleteState(this);
+};
+
+State.prototype.toJsonObject = function() {
+    var obj = {};
+    obj.id = this.id;
+    obj.name = this.name;
+    obj.value = this.value;
+    return obj;
 };
 
 module.exports = State;
