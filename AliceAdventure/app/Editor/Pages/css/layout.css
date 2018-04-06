@@ -476,6 +476,7 @@ input:checked + .slider:before {
     left: 0;
     right: 0;
     background-color: #fff;
+    overflow: auto;
 }
 
 
@@ -513,20 +514,6 @@ input:checked + .slider:before {
     font-size: 0.8em !important;
 }
 
-#event-list{
-    background: #eee;
-    border-radius: 10px;
-    list-style: none;
-    margin: 10px;
-    padding: 10px;
-    max-height: 150px;
-    overflow: auto;
-
-}
-
-#event-list li{
-    padding-bottom:5px;
-}
 #state-library h6{
     display: inline-block;
 
@@ -566,6 +553,21 @@ input:checked + .slider:before {
 
     padding-bottom:5px;
 }
+#event-list{
+    background: #eee;
+    border-radius: 10px;
+    list-style: none;
+    margin: 10px;
+    padding: 10px;
+    max-height: 200px;
+    overflow: auto;
+
+}
+
+#event-list li{
+    padding-bottom:5px;
+}
+
 
 #reaction-list{
     border-radius: 10px;
