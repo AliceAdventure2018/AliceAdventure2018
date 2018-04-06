@@ -313,14 +313,14 @@
 						
 					}
 
-					for(j=0; j<childTargetElement.length; j++){
-						if(childTargetElement[j].tagName === 'LI'){
-							childTargetElementLi = childTargetElement[j];
+					for(j=0; j<childTargetElement.childNodes.length; j++){
+						if(childTargetElement.childNodes[j].tagName === 'LI'){
+							childTargetElementLi = childTargetElement.childNodes[j];
 						}
 					}
 
-
-					if(childTargetElementLi.childNodes !== null){ //cannot be null
+				
+					if(childTargetElementLi.childNodes !== null){ 
 							if(childTargetElement.style.display === "none"){
 								childTargetElement.style.display = "block";
 							}else if(childTargetElement.style.display === "block"){
