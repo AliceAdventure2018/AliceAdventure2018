@@ -47,8 +47,8 @@ SceneView.prototype.InitView = function(){
 		antialiasing: true, 
 		backgroundcolor: 0xFFFFFF
 	});
-	this.app.view.setAttribute("v-on:dragover", "assetDragover(event)");
-	this.app.view.setAttribute("v-on:drop", "assetDrop(event)");
+	//this.app.view.setAttribute("v-on:dragover", "assetDragover(event)");
+	//this.app.view.setAttribute("v-on:drop", "assetDrop(event)");
 	document.getElementById(this.bindElementID).appendChild(this.app.view);
 
 	// events

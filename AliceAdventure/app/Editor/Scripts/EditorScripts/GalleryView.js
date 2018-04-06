@@ -96,7 +96,7 @@ GalleryView.prototype.InitView = function(){
 		methods: {
 			pictureDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.GalleryPicture, d);},
 			soundDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.SoundPicture, d);},
-			//chooseObj: (_obj)=>{ this.ChooseObj(_obj); },
+			chooseObj: (_obj)=>{ this.ChooseObj(_obj); },
 		}
 	});
 
