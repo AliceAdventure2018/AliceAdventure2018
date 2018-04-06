@@ -59,7 +59,7 @@ function InitRunView(){
 }
 
 function InitInteractionView(){
-  interactionView = AliceEditor.InteractionView.NewView('interaction-editor');
+  interactionView = AliceEditor.InteractionView.NewView('second-column');
 }
 
 function InitILibraryView(){

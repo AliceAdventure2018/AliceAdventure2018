@@ -145,13 +145,13 @@ SceneObject.prototype.SelectOff = function(){
 SceneObject.prototype.SelectOn = function(_add = false){
 	if (_add){
 		SceneObject.Selection.add(this);
-		this.sprite.alpha = 0.7;
+		//this.sprite.alpha = 0.7;
 	} else{
 		if (SceneObject.Selection.objects[0] != null){
 			SceneObject.Selection.objects[0].SelectOff();
 		}
 		SceneObject.Selection.set(this);
-		this.sprite.alpha = 0.9; // TODO
+		//this.sprite.alpha = 0.9; // TODO
 	}
 };
 

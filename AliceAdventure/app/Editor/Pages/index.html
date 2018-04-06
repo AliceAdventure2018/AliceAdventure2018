@@ -2,96 +2,83 @@
 <html lang="en" ng-app="myApp">
 <head>
 	<title> Alice's Adventure </title>
-
 	<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-		<link rel="stylesheet" href="css/layout.css">
-	 
-		<script>document.write('<base href="' + document.location + '" />');</script>
-	 
+		<link rel="stylesheet" href="css/layout.css">	 
+		<script>document.write('<base href="' + document.location + '" />');</script>	 
 		<script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script> 
 	 <script src="js/app.js"></script>
-		<script src="js/resizer.js"></script>	
- 
+		<script src="js/resizer.js"></script>	 
 
-		<!-- Import controllers -->
 		<link rel="stylesheet" href="../../Resources/bootstrap.min.css">
 		<script type="text/javascript" src="../../Resources/jquery-2.0.3.min.js"></script>
 		<script type="text/javascript" src="../../Resources/modal.js"></script>
 		<script type="text/javascript" src="../../Resources/util.js"></script>
 		<script type="text/javascript" src="../../Resources/vue.js"></script>
 		<script type="text/javascript" src="../scripts/index.js"></script>
-	
-
 </head>
 <body ng-controller="MainCtrl">
-	
-		<nav  id="topnav">
-			<a class="float-left" id="brand" href="#">
-				<img src="./src/AliceAdventure_logo.svg" width="25" height="25" alt="">&nbsp; Alice's Adventure
-			 </a>
-<!--
-			 
-			 <button  onclick="switchDesignView()" class="float-left" id="design-button" >Design </button>
 
-			 <button  onclick="switchCodeView()"  class="float-left"  id ="code-button" >Code</button>
+	<nav  id="topnav">
+    <a class="float-left" id="brand" href="#">
+    <img src="./src/AliceAdventure_logo.svg" width="25" height="25" alt="">&nbsp; Alice's Adventure
+    </a>			 
+    <!--button  onclick="switchDesignView()" class="float-left" id="design-button" >Design </button>
 
-	 -->
-			 <button id="setting-button"  class="float-right" data-toggle="modal" data-target="#setting">
-                   Setting
-        </button>
+    <button  onclick="switchCodeView()"  class="float-left"  id ="code-button" >Code</button-->
 
-				<button onclick="AliceEditor.File.BuildProject()" id="build-button"  class="float-right" >
-									 Build
-				</button>
+    <button id="setting-button"  class="float-right" data-toggle="modal" data-target="#setting">
+               Setting
+    </button>
 
-			 <button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
-									 Run
-				</button>
-				<button onclick="AliceEditor.File.SaveProject()" id="save-button"  class="float-right" >
-									 Save
-				</button>
+    <button onclick="AliceEditor.File.BuildProject()" id="build-button"  class="float-right" >
+    					 Build
+    </button>
 
-			 
-			 
-		</nav>
-		<script type="text/javascript">
-			window.onload = function() {
-				var elements = getElementsByClassName('editInPlace', '*', document);
-				for(var i = 0; i < elements.length; i++) {
-					elements[i].ondblclick = function() {
-						this.setAttribute('oldText', this.innerHTML); // not actually required. I use this just in case you want to cancel and set the original text back.
-						var origianalText = this.innerHTML;
+    <button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
+    					 Run
+    </button>
+    <button onclick="AliceEditor.File.SaveProject()" id="save-button"  class="float-right" >
+    					 Save
+    </button>			 
+	</nav>
 
-						var textBox = document.createElement('INPUT');
-							textBox.setAttribute('type', 'text');
-							textBox.value = this.innerHTML;
-							textBox.onblur = function() {
-								var newValue = this.value;
-								console.log("on blur");
-								if(newValue === ''){
-									console.log("null detected");
+	<script type="text/javascript">
+		window.onload = function() {
+			var elements = getElementsByClassName('editInPlace', '*', document);
+			for(var i = 0; i < elements.length; i++) {
+				elements[i].ondblclick = function() {
+					this.setAttribute('oldText', this.innerHTML); // not actually required. I use this just in case you want to cancel and set the original text back.
+					var origianalText = this.innerHTML;
+
+					var textBox = document.createElement('INPUT');
+						textBox.setAttribute('type', 'text');
+						textBox.value = this.innerHTML;
+						textBox.onblur = function() {
+							var newValue = this.value;
+							console.log("on blur");
+							if(newValue === ''){
+								console.log("null detected");
+								this.parentNode.innerHTML = origianalText;
+
+							} else {
+								if(newValue.length >30){
+									alert("Name should be less than 30 characters");
 									this.parentNode.innerHTML = origianalText;
-
 								} else {
-									if(newValue.length >30){
-										alert("Name should be less than 30 characters");
-										this.parentNode.innerHTML = origianalText;
-									} else {
-										 this.parentNode.innerHTML = newValue;
-									 }
-								}
-							 // alert("Your new value: \n\n" + newValue);
+									 this.parentNode.innerHTML = newValue;
+								 }
 							}
- 
-						this.innerHTML = '';
- 
-						this.appendChild(textBox);
-					}
-				}(i);
-			}
-			function getElementsByClassName(className, tag, elm){
+						 // alert("Your new value: \n\n" + newValue);
+						}
+
+					this.innerHTML = '';
+
+					this.appendChild(textBox);
+				}
+			}(i);
+		}
+		function getElementsByClassName(className, tag, elm){
 			var testClass = new RegExp("(^|\\s)" + className + "(\\s|$)");
 			var tag = tag || "*";
 			var elm = elm || document;
@@ -107,154 +94,138 @@
 			}
 			return returnElements;
 		}
-		</script>
+	</script>
 
-		<script type="text/javascript">
-			function switchGalleryView() {
-					var x = document.getElementById("gallery");
-					var y = document.getElementById("object-list");
+	<script type="text/javascript">
+		function switchGalleryView() {
+				var x = document.getElementById("gallery");
+				var y = document.getElementById("object-list");
 
-					if (x.style.display === "none" || y.style.display ==="block") {
-							x.style.display = "block";
-							y.style.display = "none";
-					} else {
-						
-					}
-			}
-
-			function switchListView() {
-					var y = document.getElementById("gallery");
-					var x = document.getElementById("object-list");
-
-					if (x.style.display === "none" || y.style.display ==="block") {
-							x.style.display = "block";
-							y.style.display = "none";
-					} else {
-						
-					}
-			}
-
-			function switchCategoryView() {
-				
-				/*if (document.addEventListener){}else if (document.attachEvent) {  }
-				*/
-				
-				document.addEventListener("click", function(event){
-
-					var selected = document.getElementsByClassName("selected");
-					var unselecteds = document.getElementsByClassName("unselecteds");
-
-					for(i=0;i<selected.length;i++){
-						selected[i].className ="unselecteds";
-					}
+				if (x.style.display === "none" || y.style.display ==="block") {
+						x.style.display = "block";
+						y.style.display = "none";
+				} else {
 					
-					var targetElement = event.target || event.srcElement;
-					if(targetElement.tagName === 'A'){
-					targetElement.className = "selected";
-					unselecteds = document.getElementsByClassName("unselecteds");
-					}
+				}
+		}
 
-					if(selected.length === 1){
+		function switchListView() {
+				var y = document.getElementById("gallery");
+				var x = document.getElementById("object-list");
 
-						var assetName = targetElement.getAttribute("aria-controls");
-						document.getElementById(assetName).style.display = "block";
-						//console.log(document.getElementById(assetName));
+				if (x.style.display === "none" || y.style.display ==="block") {
+						x.style.display = "block";
+						y.style.display = "none";
+				} else {
+					
+				}
+		}
 
-						var assetName_unselected = [];
+		function switchCategoryView() {
+			
+			/*if (document.addEventListener){}else if (document.attachEvent) {  }
+			*/
+			
+			document.addEventListener("click", function(event){
 
+				var selected = document.getElementsByClassName("selected");
+				var unselecteds = document.getElementsByClassName("unselecteds");
 
-						if(unselecteds.length !== null){
-							for(j=0; j<unselecteds.length;j++){
-								assetName_unselected[j]= unselecteds[j].getAttribute("aria-controls");
-							}
-
-							for(t=0; t<unselecteds.length;t++){
-								document.getElementById(assetName_unselected[t]).style.display = "none";
-							} 
-
-							assetName_unselected = null;
-							unselecteds = null;
-							
-						//console.log(targetElement.getAttribute("aria-controls"));
-						}
-					} 
-
-
-				});
+				for(i=0;i<selected.length;i++){
+					selected[i].className ="unselecteds";
+				}
 				
+				var targetElement = event.target || event.srcElement;
+				if(targetElement.tagName === 'A'){
+				targetElement.className = "selected";
+				unselecteds = document.getElementsByClassName("unselecteds");
+				}
 
-			}
+				if(selected.length === 1){
 
-		</script>
+					var assetName = targetElement.getAttribute("aria-controls");
+					document.getElementById(assetName).style.display = "block";
+					//console.log(document.getElementById(assetName));
+
+					var assetName_unselected = [];
+
+
+					if(unselecteds.length !== null){
+						for(j=0; j<unselecteds.length;j++){
+							assetName_unselected[j]= unselecteds[j].getAttribute("aria-controls");
+						}
+
+						for(t=0; t<unselecteds.length;t++){
+							document.getElementById(assetName_unselected[t]).style.display = "none";
+						} 
+
+						assetName_unselected = null;
+						unselecteds = null;
+						
+					//console.log(targetElement.getAttribute("aria-controls"));
+					}
+				} 
+
+
+			});
+			
+
+		}
+	</script>
 
 				<!-- Modal -->
-		 <div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="settingLongTitle">Game Setting</h5>
-            <button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Game Resolution <select></select></p> 
-            <p>Number of Containers in Inventory: <select></select></p>
-            <p>Start Scene <select></select></p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" id="close-button" data-dismiss="modal">Close</button>
-            <button type="button"  id="save-button">Save changes</button>
-          </div>
+  <div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="settingLongTitle">Game Setting</h5>
+          <button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Game Resolution <select></select></p> 
+          <p>Number of Containers in Inventory: <select></select></p>
+          <p>Start Scene <select></select></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="close-button" data-dismiss="modal">Close</button>
+          <button type="button"  id="save-button">Save changes</button>
         </div>
       </div>
     </div>
+  </div>
 
+	<div id="design-view" style="display: block;">
 
+		<div id="first-column">		
 
-
-		<div id="design-view" style="display: block;">
-
-
-		<div id="first-column">
-		
-
-			<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6>
+			<div id="design-editor">
+        <h6 class="window-title">SCENE EDITOR</h6>
 				<div id="add-scene">
 					<button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene'> Add Scene</button></div>
 			</div>
 		
-		<div id="first-column-second-row">
+		  <div id="first-column-second-row">
 
-			
-			
-
-	    <div id="wrap-first-column-second-row">
-		<div id="gallery" ><h6 class="window-title" >GALLERY</h6>
-			
-			<div id="tabList">
-			<ul >
-
-						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="unselecteds">
-						Default</a></li>
-						<li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Other</a></li>
-
-			<!--<div class="tab-list" id="tabList">
-			<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-
-						<li class="nav-item"><a class="nav-link" id="door-tab"  data-toggle="tab" href="#door-asset" role="tab" aria-expanded="false" aria-controls="door-asset" aria-selected="false">Default</a></li>
-						<li class="nav-item"><a class="nav-link" id="key-tab" data-toggle="tab" href="#key-asset" role="tab" aria-expanded="true" aria-controls="key-asset" aria-selected="false">Other</a></li>
-						li class="nav-item"><a class="nav-link" id="container-tab"  data-toggle="tab" href="#container-asset" role="tab" aria-expanded="false" aria-controls="container-asset" aria-selected="false">Container</a></li>
-						<li class="nav-item"><a class="nav-link" id="actor-tab" data-toggle="tab" href="#actor-asset" role="tab" aria-expanded="true" aria-controls="actor-asset" aria-selected="false">Actor</a></li-->
-						
-					</ul>
-			</div>
+        <div id="wrap-first-column-second-row">
+      		<div id="gallery" >
+            <h6 class="window-title" >GALLERY</h6>
+      			<div id="tabList">
+        			<ul >
+    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="unselecteds">
+    						Pictures</a></li>
+    						<li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
+          			<!--<div class="tab-list" id="tabList">
+          			<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical"-->
+              </ul>
+  		      </div>
 						<div id="tabContent">
 							<div id="door-asset" style="display: none;">
 								<div class="assets">
 									<ul>
 									<!-- bind the gallery data -->
-										<li v-for="obj in objects" v-on:click="chooseObj(obj)"> <div class="asset"><img v-bind:src="'../../'+obj.src"> </div><p v-html='obj.name'></p>
+										<li v-for="pic in pictures" v-on:click="chooseObj(pic)"> <div class="asset"><img v-bind:src="'../../'+pic.src"> </div><p v-html='pic.name'></p>
 										</li>
 										
 									</ul>
@@ -264,166 +235,145 @@
 							<div id="key-asset" style="display: none;">
 								<div class="assets">
 									<ul>
-										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
-										</li>
-										
-									</ul>
-								</div>
-							</div>
-
-							<div id="container-asset" style="display: none;">
-								<div class="assets">
-									<ul>
-										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
-										</li>
-										
-									</ul>
-								</div>
-							</div>
-
-							<div  id="actor-asset" style="display: none;">
-								<div class="assets">
-									<ul>
-										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
-										</li>
-										
-									</ul>
+                  <!-- bind the gallery data -->
+                    <li v-for="sound in sounds"> <div class="asset"><img v-bind:src="'../../'+sound.src"> </div><p v-html='sound.name'></p>
+                    </li>                    
+                  </ul>
 								</div>
 							</div>
 						</div>
-		</div>
+		      </div>
 
-
-		<script type="text/javascript" >
-			function showListView(event) {
-				//document.addEventListener("click", function(event){
-					var targetElement = event.target || event.srcElement;
-					var parentTargetElement = targetElement.parentElement;
-					console.log(parentTargetElement.nodeName);
-					var childTargetElements = parentTargetElement.childNodes;
-					var childTargetElement;
-					var childTargetElementLi;
-					if(childTargetElements !== null){
-						for(t=0; t<childTargetElements.length; t++){
-							if(childTargetElements[t].tagName === 'OL'){
-								childTargetElement = childTargetElements[t];
-							} 
-						}
-
-						
-					}
-
-					for(j=0; j<childTargetElement.childNodes.length; j++){
-						if(childTargetElement.childNodes[j].tagName === 'LI'){
-							childTargetElementLi = childTargetElement.childNodes[j];
-						}
-					}
-
-				
-					if(childTargetElementLi.childNodes !== null){ 
-							if(childTargetElement.style.display === "none"){
-								childTargetElement.style.display = "block";
-							}else if(childTargetElement.style.display === "block"){
-										childTargetElement.style.display = "none";
-							} 
+<script type="text/javascript" >
+	function showListView(event) {
+		//document.addEventListener("click", function(event){
+			var targetElement = event.target || event.srcElement;
+			var parentTargetElement = targetElement.parentElement;
+			console.log(parentTargetElement.nodeName);
+			var childTargetElements = parentTargetElement.childNodes;
+			var childTargetElement;
+			var childTargetElementLi;
+			if(childTargetElements !== null){
+				for(t=0; t<childTargetElements.length; t++){
+					if(childTargetElements[t].tagName === 'OL'){
+						childTargetElement = childTargetElements[t];
 					} 
-				
-					
-				//});
+				}				
 			}
-		</script>
 
-
-		<div id="object-list" ><h6 class="window-title" >OBJECT LIST</h6>
+			for(j=0; j<childTargetElement.childNodes.length; j++){
+				if(childTargetElement.childNodes[j].tagName === 'LI'){
+					childTargetElementLi = childTargetElement.childNodes[j];
+				}
+			}
+		
+			if(childTargetElementLi.childNodes !== null){ 
+					if(childTargetElement.style.display === "none"){
+						childTargetElement.style.display = "block";
+					}else if(childTargetElement.style.display === "block"){
+								childTargetElement.style.display = "none";
+					} 
+			} 	
 			
+	}
+</script>
 
-				<!-- if show object list on -->
-				<ol v-if='showObjectList' class="object-tree">
-				<li v-for="scene in sceneList" v-on:click="onSelect(scene)">
+      		<div id="object-list" ><h6 class="window-title" >OBJECT LIST</h6>
+      			<!-- if show object list on -->
+      			<ol v-if='showObjectList' class="object-tree">
+      				<li v-for="scene in sceneList" v-on:click="onSelect(scene)">
+        				<!-- loop all scenes and objects 
+        				<label class="object_label" v-html="scene.name"></label>
+        				<input type="checkbox" /> -->
+        				<button onclick="showListView(event)"  v-html="scene.name">hello</button>
+      					<ol class="object_label" style="display:block;">
+      						<li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
+      							<!--<label class="object_label" v-html="object.name"></label>
+      							<input type="checkbox"/>-->
+      							<button v-html="object.name">hi</button>
+      						</li>						
+      					</ol>
+      				</li>
+      				<!--li>
+      					<label class="object_label" for="inventory">Inventory</label>
+      				</li-->
+      			</ol>
+      		</div>
+      		<div id="gallery-list-resizer" 
+      			resizer="vertical-left" 
+      			resizer-width="6" 
+      			resizer-left="#gallery" 
+      			resizer-right="#object-list"
+      			resizer-max="466"
+      			>
+      		</div>
 
-				<!-- loop all scenes and objects 
-				<label class="object_label" v-html="scene.name"></label>
-				<input type="checkbox" /> -->
-				<button onclick="showListView(event)"  v-html="scene.name">hello</button>
-					<ol class="object_label" style="display:block;">
-						<li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
-							<!--<label class="object_label" v-html="object.name"></label>
-							<input type="checkbox"/>-->
-							<button v-html="object.name">hi</button>
-
-						</li>
-						
-					</ol>
-				</li>
-				<!--li>
-					<label class="object_label" for="inventory">Inventory</label>
-				</li-->
-			</ol>
-		</div>
-			<div id="gallery-list-resizer" 
-				resizer="vertical-left" 
-				resizer-width="6" 
-				resizer-left="#gallery" 
-				resizer-right="#object-list"
-				resizer-max="466"
-				>
-			</div>
-
-	</div>
-</div>
-		<div id="design-editor-resizer" 
-				resizer="horizontal" 
-				resizer-height="6" 
-				resizer-top="#design-editor" 
-				resizer-bottom="#first-column-second-row"
-				resizer-min="450"
-				>
-		</div>
-	</div>
+      	</div>
+      </div>
+      <div id="design-editor-resizer" 
+      		resizer="horizontal" 
+      		resizer-height="6" 
+      		resizer-top="#design-editor" 
+      		resizer-bottom="#first-column-second-row"
+      		resizer-min="450"
+      		>
+      </div>
+    </div>
 	
-		<di v id="second-column">
-			<div id="interaction-editor"><h6 class="window-title">INTERACTION EDITOR</h6>
-			<div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' v-on:dblclick='deleteInteraction(ntra)'>
+		<div id="second-column">
+			<div id="interaction-editor">
+        <h6 class="window-title">INTERACTION EDITOR</h6>
+		    <div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions'>
 
-				<div><span class="editInPlace">Title</span><a><img id="interaction-box-close" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEpSURBVGhD7dk9CsJAEIbheABb7fUkHkKPY2krnskz2HoLO0Fn1A+WEEJ2szs/Mi98qKl80E2TLoqi6G9a0I609eeTbnva7vs2P0a8aDeaJuZAe9IetC1fyI2/PCM0MUDwdzjxhdI0MdUQSANTHYEkMc0QSALTHIFaYsQQqAVGHIFqYtQQqAZGHYHmYMwgUAnGHALlYMwi0BSMeQQaw7hBoCGMOwRKMXeaSwRiDCMYwLvQXJb+nXj9M+OiFHGm9c+Mi4YOdnpmXGDG7k5uMFNuseYxUxDILCYHgcxhShDIDGYOAqljaiCQGqYmAoljWiCQGKYlAjXHSCBQM4wkAlXHaCBQNYwmAvUxK1p2/MyOH3dpIRAwV9qSL5S0+b1qx79EMSKKoshaXfcGi/zGyoPvvCcAAAAASUVORK5CYII="/></a></div>
+				<div>
+          <span class="editInPlace">Title</span>
+          <a v-on:click="deleteInteraction(ntra)"><img id="interaction-box-close" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEpSURBVGhD7dk9CsJAEIbheABb7fUkHkKPY2krnskz2HoLO0Fn1A+WEEJ2szs/Mi98qKl80E2TLoqi6G9a0I609eeTbnva7vs2P0a8aDeaJuZAe9IetC1fyI2/PCM0MUDwdzjxhdI0MdUQSANTHYEkMc0QSALTHIFaYsQQqAVGHIFqYtQQqAZGHYHmYMwgUAnGHALlYMwi0BSMeQQaw7hBoCGMOwRKMXeaSwRiDCMYwLvQXJb+nXj9M+OiFHGm9c+Mi4YOdnpmXGDG7k5uMFNuseYxUxDILCYHgcxhShDIDGYOAqljaiCQGqYmAoljWiCQGKYlAjXHSCBQM4wkAlXHaCBQNYwmAvUxK1p2/MyOH3dpIRAwV9qSL5S0+b1qx79EMSKKoshaXfcGi/zGyoPvvCcAAAAASUVORK5CYII="/></a>
+        </div>
 				<h6 id="event-box-title" class="window-title">Event</h6>
 				<ul class="event-box" v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'>
 					<li>
 						<span v-if='ntra.event==null'>Drag an event to here</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 0'>
+              When 
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-							</select> is clicked
+							</select> is clicked, 
 						</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 1'>
-								<select v-model="ntra.event.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> 
-								is used on
-								<select v-model="ntra.event.args[1]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> 
+              When
+							<select v-model="ntra.event.args[0]">
+									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+							</select> 
+							is used on
+							<select v-model="ntra.event.args[1]">
+									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option> ,
+							</select> 
 						</span>              
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 2'>
-								<select v-model="ntra.event.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> is observed
+              When
+							<select v-model="ntra.event.args[0]">
+									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+							</select> is observed, 
 						</span>              
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 3'>
-								<select v-model="ntra.event.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> 
-								is combined with
-								<select v-model="ntra.event.args[1]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> 
+              When
+							<select v-model="ntra.event.args[0]">
+									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+							</select> 
+							is combined with
+							<select v-model="ntra.event.args[1]">
+									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+							</select> , 
 						</span>
 					</li>
 				</ul>
 				<h6 id="condition-box-title" class="window-title">Condition</h6>
 				<ul class="condition-box" v-on:drop='stateDrop(event, ntra)' v-on:dragover='stateDragover(event)'>
-					<li v-for='state in ntra.conditionList' v-on:dblclick='removeCondition(state, ntra)'>
-						<span class="badge badge-pill badge-state" v-html='state.name'></span>
+					<li v-for='cond in ntra.conditionList' v-on:dblclick='removeCondition(cond, ntra)'>
+						<span class="badge badge-pill badge-state">
+              if <span v-html='cond.name'></span> is 
+              <label class="switch"><input type="checkbox" v-model='cond.value'><span class="slider round"></span></label>
+            </span>
 					</li>
 
 				 
@@ -438,7 +388,7 @@
 <!--                        <option selected>win</option>-->
 										<option v-for="stat in states" v-html="stat.name" v-bind:value="stat"></option>
 								</select> to 
-								<input v-model="react.args[1]" type='checkbox' value='true'>
+                <label class="switch"><input type="checkbox" v-model='react.args[1]'><span class="slider round"></span></label>
 						</span>
 						
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 1'>
@@ -504,14 +454,11 @@
 					</li>
 				</ul>
 			</div>
-				
-				
-			</div>	
-
-			<div id="add-interaction" v-on:click='addInteraction()'>
-				<!--button type="button"  class="btn btn-outline-success btn-sm" id="add-interaction-button" v-on:click='addInteraction()'> Add Interaction </button-->
-				<a><img src="./src/add-interaction.svg" class="svg" width="70" height="70"/></a>
-				</div>
+      </div>
+      <div id="add-interaction">
+  			<!--button type="button"  class="btn btn-outline-success btn-sm" id="add-interaction-button" v-on:click='addInteraction()'> Add Interaction </button-->
+  			<a v-on:click='addInteraction()'><img src="./src/add-interaction.svg" class="svg" width="70" height="70"/></a>
+			</div>
 		</div>
 
 		<div id="first-second-resizer" 
@@ -603,7 +550,7 @@
 						<li>
 							 <!--<input v-model='bindObj.interactive' id="clickable" type="checkbox">-->
 						<label for="clickable">interactive</label>
-						<label class="switch"><input type="checkbox" v-model='bindObj.sprite.interactive' id ="visible" ><span class="slider round"></span></label>
+						<label class="switch"><input type="checkbox" v-model='bindObj.interactive' id ="visible" ><span class="slider round"></span></label>
 						 
 						</li>
 
