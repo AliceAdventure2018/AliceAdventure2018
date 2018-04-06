@@ -153,13 +153,9 @@
       </div>
     </div>
 
-
-
     <div id="design-view" style="display: block;">
 
-
-    <div id="first-column">
-   	
+    <div id="first-column">   	
 
    	<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6>
    		<div id="add-scene">
@@ -175,57 +171,43 @@
   	<div id="gallery" style="display: block;">
   		
   		<div class="tab-list" id="tabList">
-      <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
-            <li class="nav-item"><a class="nav-link" id="door-tab"  data-toggle="tab" href="#door-asset" role="tab" aria-expanded="false" aria-controls="door-asset" aria-selected="false">Default</a></li>
-            <li class="nav-item"><a class="nav-link" id="key-tab" data-toggle="tab" href="#key-asset" role="tab" aria-expanded="true" aria-controls="key-asset" aria-selected="false">Other</a></li>
+            <li class="nav-item"><a class="nav-link" id="door-tab"  data-toggle="tab" href="#picture-assets" role="tab" aria-expanded="false" aria-controls="door-asset" aria-selected="false">Pictrures</a></li>
+            <li class="nav-item"><a class="nav-link" id="key-tab" data-toggle="tab" href="#sounds-assets" role="tab" aria-expanded="true" aria-controls="key-asset" aria-selected="false">Sounds</a></li>
             <!--li class="nav-item"><a class="nav-link" id="container-tab"  data-toggle="tab" href="#container-asset" role="tab" aria-expanded="false" aria-controls="container-asset" aria-selected="false">Container</a></li>
             <li class="nav-item"><a class="nav-link" id="actor-tab" data-toggle="tab" href="#actor-asset" role="tab" aria-expanded="true" aria-controls="actor-asset" aria-selected="false">Actor</a></li-->
             
-          </ul>
+        </ul>
       </div>
-            <div class="tab-content" id="v-pills-tabContent">
-              <div class="tab-pane fade active" id="door-asset" role="tabpanel" aria-labelledby="door-tab">
-                <div class="assets">
-                  <ul>
-                  <!-- bind the gallery data -->
-                    <li v-for="obj in objects" v-on:click="chooseObj(obj)"> <div class="asset"><img v-bind:src="'../../'+obj.src"> </div><p v-html='obj.name'></p>
-                    </li>
-                    
-                  </ul>
-                </div>
-              </div>
+      <div class="tab-content" id="v-pills-tabContent">
 
-              <div class="tab-pane fade" id="key-asset" role="tabpanel" aria-labelledby="key-tab">
-                <div class="assets">
-                  <ul>
-                    <li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
-                    </li>
-                    
-                  </ul>
-                </div>
-              </div>
+        <div class="tab-pane fade active" id="picture-assets" role="tabpanel" aria-labelledby="pic-tab">
+          <div class="assets">
+            <ul>
+            <!-- bind the gallery data -->
+              <li v-for="pic in pictures"> 
+              <div class="asset" draggable="true"  v-on:dragstart='pictureDragstart(event, pic)'><img draggable="false" v-bind:src="'../../'+pic.src"> </div>
+              <p v-html='pic.name'></p>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
 
-              <div class="tab-pane fade" id="container-asset" role="tabpanel" aria-labelledby="container-tab">
-                <div class="assets">
-                  <ul>
-                    <li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
-                    </li>
-                    
-                  </ul>
-                </div>
-              </div>
-
-              <div class="tab-pane fade" id="actor-asset" role="tabpanel" aria-labelledby="actor-tab">
-                <div class="assets">
-                  <ul>
-                    <li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
-                    </li>
-                    
-                  </ul>
-                </div>
-              </div>
-            </div>
+        <div class="tab-pane fade active" id="sound-assets" role="tabpanel" aria-labelledby="sound-tab">
+          <div class="assets">
+            <ul>
+            <!-- bind the gallery data -->
+              <li v-for="sound in sounds"> 
+              <div class="asset" draggable="true"  v-on:dragstart='soundDragstart(event, sound)'><img draggable="false" v-bind:src=""> </div>
+              <p v-html='sound.name'></p>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
   	</div>
 
   	<div id="object-list" style="display: none;" >
@@ -305,7 +287,6 @@
           <li v-for='state in ntra.conditionList' v-on:dblclick='removeCondition(state, ntra)'>
             <span class="badge badge-pill badge-state" v-html='state.name'></span>
           </li>
-
          
   			</ul>
   			<h6 class="window-title">Reaction</h6>
@@ -408,9 +389,6 @@
     </div>
 
     <div id="third-column">
-      
-      
-
       <div id="interaction-library">
       	<h6 class="window-title">INTERACTION LIBRARY</h6>
 	      <div id="event-library"><h6 class="window-title">Event</h6>
@@ -468,14 +446,11 @@
 
             <li>
               <input v-model='bindObj.sprite.visible' id ="visible" type="checkbox">
-              <label for="visible">visible</label>
-              
-              
+              <label for="visible">visible</label>              
             </li>
             <li>
                <input v-model='bindObj.interactive' id="clickable" type="checkbox">
-            <label for="clickable">interactive</label>
-             
+              <label for="clickable">interactive</label>             
             </li>
 
             <!-- user properties -->
@@ -562,17 +537,6 @@
 
   </div>  end of code view -->
 
-  	
-  
-  	
-
-		
-
-		
-
-
-	
-	
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

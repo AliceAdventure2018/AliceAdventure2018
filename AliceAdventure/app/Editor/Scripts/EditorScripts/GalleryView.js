@@ -15,7 +15,7 @@ GalleryView = function(_bindElementID, _height = -1, _width = -1){
 };
 GalleryView.prototype = new View();
 
-GalleryView.GalleryObjects = [
+GalleryView.PictureLibrary = [
 	{
 		index: 0, 
 		src: "Assets/kitchen.png", 
@@ -69,6 +69,14 @@ GalleryView.GalleryObjects = [
     
 ];
 
+GalleryView.SoundLibrary = [
+	{
+		index: 0, 
+		src: "Assets/door.wav", 
+		name: "Door"
+	}, 
+];
+
 GalleryView.NewView = function(_elementID){
 	let view = new GalleryView(_elementID);
 	view.InitView();
@@ -80,13 +88,16 @@ GalleryView.prototype.InitView = function(){
 	View.prototype.InitView.apply(this); // call super method
 	// init data binding
 	this.vModel = new Vue({
-	  el: '#' + this.bindElementID,
-	  data: {
-	  	objects: GalleryView.GalleryObjects
-	  }, 
-	  methods: {
-	  	chooseObj: (_obj)=>{ this.ChooseObj(_obj); }
-	  }
+		el: '#' + this.bindElementID,
+		data: {
+			pictures: GalleryView.PictureLibrary,
+			sounds: GalleryView.SoundLibrary
+		}, 
+		methods: {
+			pictureDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.GalleryPicture, d);},
+			soundDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.SoundPicture, d);},
+			//chooseObj: (_obj)=>{ this.ChooseObj(_obj); },
+		}
 	});
 
 	// events

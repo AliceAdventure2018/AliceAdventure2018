@@ -12,27 +12,37 @@ View = function(_tag = "Untagged", _height = -1, _width = -1, _bindElementID = n
 };
 
 // static
+var dragData = {}; // private
+
 View.DragInfo = {
 	IEvent: 0, 
 	State: 1, 
-	IReaction: 3
+	IReaction: 3, 
+	GalleryPicture: 4,
+	GallerySound: 5
 };
 
 View.HandleDragstart = function(ev, infoType, data){
-	ev.dataTransfer.setData("text/plain", JSON.stringify({type: infoType, data: data}));
+	dragData = {type: infoType, data: data};
+	//ev.dataTransfer.setData("text/plain", JSON.stringify({type: infoType, data: data}));
  	ev.dropEffect = "all";
 };
 
-View.HandleDragover = function(ev){
-	ev.preventDefault();
+View.HandleDragover = function(ev, infoType, operation){
+	if (infoType == null || infoType == dragData.type){
+		ev.preventDefault();
+		if (typeof operation == "function"){
+			operation(dragData.data);
+		}
+	}
 };
 
 View.HandleDrop = function(ev, infoType, operation){
-	var info = JSON.parse(ev.dataTransfer.getData("text"));
-	if (info.type == infoType){
+	//var info = JSON.parse(ev.dataTransfer.getData("text"));
+	if (infoType == dragData.type){
 		ev.preventDefault();
 		if (typeof operation == "function"){
-			operation(info.data);
+			operation(dragData.data);
 		}
 	}
 }

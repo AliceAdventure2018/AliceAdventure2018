@@ -38,11 +38,11 @@ InteractionView.prototype.InitView = function(){
             sounds: null
 		}, 
 		methods: {
-			eventDragover: (ev)=>{View.HandleDragover(ev);},
+			eventDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.IEvent);},
 			eventDrop: (ev, ntra)=>{View.HandleDrop(ev, View.DragInfo.IEvent, (data)=>{ntra.SetIEvent(data);});}, 
-			stateDragover: (ev)=>{View.HandleDragover(ev);},
+			stateDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.State);},
 			stateDrop: (ev, ntra)=>{View.HandleDrop(ev, View.DragInfo.State, (data)=>{ntra.AddCondition(data);});}, 
-			reactionDragover: (ev)=>{View.HandleDragover(ev);},
+			reactionDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.IReaction);},
 			reactionDrop: (ev, ntra)=>{View.HandleDrop(ev, View.DragInfo.IReaction, (data)=>{ntra.AddIReaction(data);});}, 
 			addInteraction: ()=>{this.AddNewInteraction();}, 
 			deleteInteraction: (ntra)=>{ntra.DeleteThis();}, 

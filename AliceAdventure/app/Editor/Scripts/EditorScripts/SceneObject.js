@@ -83,7 +83,8 @@ SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = 
 	this.sprite
 		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
 		.on("pointermove", (e)=>{this.OnPointerMove(e);})
-		.on("pointerup", (e)=>{this.OnPointerUp(e);});
+		.on("pointerup", (e)=>{this.OnPointerUp(e);})
+		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
 };
 
 SceneObject.prototype.DeleteThis = function(){
