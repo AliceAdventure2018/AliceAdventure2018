@@ -6,7 +6,63 @@ button{
 }
 
 
+.switch {
+  position: relative;
+  
+  float:right;
+  width: 30px;
+  height: 17px;
 
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #28a745;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #28a745;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(13px);
+  -ms-transform: translateX(13px);
+  transform: translateX(13px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 17px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 
 .editInPlace {
     margin-left: 10px;
@@ -49,8 +105,34 @@ button{
     margin-left: 10px;
     margin-top: 10px;
     text-align: left;
-    color:#ffc107;
+    /*color:#ffc107;*/
+    color:#666;
 }
+
+#event-library .window-title{
+    color:#ef5b34 !important;
+}
+
+#state-library .window-title{
+    color:#ffc107 !important;
+}
+
+#reaction-library .window-title{
+     color:#28a745 !important;
+}
+#event-box-title{
+    color:#ef5b34 !important;
+}
+
+#condition-box-title{
+    color:#ffc107 !important;
+}
+
+#reaction-box-title{
+     color:#28a745 !important;
+}
+
+
 
 #add-scene{
     position: absolute;
@@ -60,8 +142,12 @@ button{
 
 #add-interaction{
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    margin:10px;
+    bottom:0;
+    right: 0;
+    float: right;
+   
+  
 }
 
 
@@ -136,17 +222,32 @@ button{
     left: 0;
     width: 720px;
 }
-/*
+
 #gallery {
     background-color: #FFF;
     position: absolute;
     height: 450px;
     bottom: 0;
     left: 0;
-    width: 720px;
+    width: 460px;
     
 }
-*/
+
+#wrap-first-column-second-row{
+    position: relative;
+    height: 450px;
+    bottom: 0;
+}
+#object-list {
+    background-color: #FFF;
+    position: absolute;
+    height: 450px;
+    bottom: 0;
+    left: 466px;
+    width: 254px;
+    
+}
+
 #gallery-title{
     display: inline-block;
 
@@ -175,7 +276,7 @@ button{
      left:10px;
      
 }
-#v-pills-tabContent{
+#tabContent{
     position: absolute;
     top:40px;
     left: 130px;
@@ -189,7 +290,7 @@ button{
     border-radius: 10px;
     background-color: #eee;
     margin:10px;
-    min-height:350px;
+    height:350px;
    /* 
     width: 560px;
 */
@@ -401,6 +502,7 @@ button{
     left: 0;
     right: 0;
     background-color: #fff;
+    overflow: auto;
 }
 
 
@@ -421,12 +523,14 @@ button{
     font-size: 0.8em !important;
 }
 .badge-state{
+
     min-width: 200px;
-     text-align: left !important;
+    text-align: left !important;
     background-color: #f9af48;
     color:#fff;
     font-size: 0.8em !important;
 }
+
 
 .badge-reaction{
     min-width: 200px;
@@ -436,20 +540,6 @@ button{
     font-size: 0.8em !important;
 }
 
-#event-list{
-    background: #eee;
-    border-radius: 10px;
-    list-style: none;
-    margin: 10px;
-    padding: 10px;
-    max-height: 150px;
-    overflow: auto;
-
-}
-
-#event-list li{
-    padding-bottom:5px;
-}
 #state-library h6{
     display: inline-block;
 
@@ -489,6 +579,21 @@ button{
 
     padding-bottom:5px;
 }
+#event-list{
+    background: #eee;
+    border-radius: 10px;
+    list-style: none;
+    margin: 10px;
+    padding: 10px;
+    max-height: 200px;
+    overflow: auto;
+
+}
+
+#event-list li{
+    padding-bottom:5px;
+}
+
 
 #reaction-list{
     border-radius: 10px;
@@ -539,24 +644,25 @@ button{
    margin:0;       /* all list item li dots invisible */
 }
 
+/*
 .object-tree li .object_label + input[type=checkbox] {
-      opacity: 0;             /* checkboxes invisible and use no space */
-     }                        /* display: none; is better but fails in ie8 */
+      opacity: 0;              checkboxes invisible and use no space 
+     }                        display: none; is better but fails in ie8 
 
 .object-tree li .object_label {
-      cursor: pointer;        /* cursor changes when you mouse over this class */
-    }                         /* could add the many user-select: none; commands here */
+      cursor: pointer;        cursor changes when you mouse over this class 
+    }                          could add the many user-select: none; commands here 
 
 .object-tree li .object_label + input[type=checkbox] + ol > li
          {
-            display: none;         /* prevents sublists below unchecked labels from displaying */
+            display: none;          prevents sublists below unchecked labels from displaying
          }
 
 .object-tree li .object_label + input[type=checkbox]:checked + ol > li
          {
-           display: block;         /* display submenu on click */
+           display: block;        display submenu on click 
          }
-
+*/
 #design-property{
     position: absolute;
     height: 350px;
@@ -691,6 +797,16 @@ button{
     overflow: auto;
      background-color: #fff;
 }
+
+#gallery-list-resizer {
+    background-color: #EEE;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 460px;
+    width: 6px;
+    cursor: e-resize;
+}
 #first-second-resizer {
     background-color: #EEE;
     position: absolute;
@@ -768,6 +884,7 @@ button{
     cursor: n-resize;
 }
 
+#gallery-list-resizer:hover,
 #gallery-resizer:hover,
 #code-library-resizer:hover,
 #design-side-resizer:hover, 
