@@ -1,621 +1,529 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="myApp">
 <head>
-	<title> Alice's Adventure </title>
+  <title> Alice's Adventure </title>
 
-	<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-		<link rel="stylesheet" href="css/layout.css">
-	 
-		<script>document.write('<base href="' + document.location + '" />');</script>
-	 
-		<script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script> 
-	 <script src="js/app.js"></script>
-		<script src="js/resizer.js"></script>	
+    <link rel="stylesheet" href="css/layout.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script>document.write('<base href="' + document.location + '" />');</script>
+   <script src="http://code.jquery.com/jquery-2.0.3.min.js" data-semver="2.0.3" data-require="jquery"></script>
+   
+  <script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script>
+   <script src="js/app.js"></script>
+    <script src="js/resizer.js"></script> 
  
 
-		<!-- Import controllers -->
-		<link rel="stylesheet" href="../../Resources/bootstrap.min.css">
-		<script type="text/javascript" src="../../Resources/jquery-2.0.3.min.js"></script>
-		<script type="text/javascript" src="../../Resources/vue.js"></script>
-		<script type="text/javascript" src="../scripts/index.js"></script>
-	
+    <!-- Import controllers -->
+    <script type="text/javascript" src="../../Resources/vue.js"></script>
+    <script type="text/javascript" src="../scripts/index.js"></script>
+  
 
 </head>
 <body ng-controller="MainCtrl">
-	
-		<nav  id="topnav">
-			<a class="float-left" id="brand" href="#">
-				<img src="./src/AliceAdventure_logo.svg" width="25" height="25" alt="">&nbsp; Alice's Adventure
-			 </a>
-<!--
-			 
-			 <button  onclick="switchDesignView()" class="float-left" id="design-button" >Design </button>
+  
+    <nav  id="topnav">
+      <a class="float-left" id="brand" href="#">
+        <img src="./src/AliceAdventure_logo.svg" width="25" height="25" alt="">&nbsp; Alice's Adventure
+       </a>
+       <!--button  onclick="switchDesignView()" class="float-left" id="design-button" >Design </button>
 
-			 <button  onclick="switchCodeView()"  class="float-left"  id ="code-button" >Code</button>
+       <button  onclick="switchCodeView()"  class="float-left"  id ="code-button" >Code</button-->
+       <button id="setting-button"  class="float-right" data-toggle="modal" data-target="#setting">
+                   Setting
+        </button>
 
-	 -->
-			 <button id="setting-button"  class="float-right" data-toggle="modal" data-target="#setting">
-									 Setting
-				</button>
+        <button onclick="AliceEditor.File.BuildProject()" id="build-button"  class="float-right" >
+                   Build
+        </button>
 
-				<button onclick="AliceEditor.File.BuildProject()" id="build-button"  class="float-right" >
-									 Build
-				</button>
+       <button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
+                   Run
+        </button>
+        <button onclick="AliceEditor.File.SaveProject()" id="save-button"  class="float-right" >
+                   Save
+        </button>
 
-			 <button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
-									 Run
-				</button>
-				<button onclick="AliceEditor.File.SaveProject()" id="save-button"  class="float-right" >
-									 Save
-				</button>
+       
+       
+    </nav>
+    <script type="text/javascript">
+      window.onload = function() {
+        var elements = getElementsByClassName('editInPlace', '*', document);
+        for(var i = 0; i < elements.length; i++) {
+          elements[i].ondblclick = function() {
+            this.setAttribute('oldText', this.innerHTML); // not actually required. I use this just in case you want to cancel and set the original text back.
+            var origianalText = this.innerHTML;
 
-			 
-			 
-		</nav>
-		<script type="text/javascript">
-			window.onload = function() {
-				var elements = getElementsByClassName('editInPlace', '*', document);
-				for(var i = 0; i < elements.length; i++) {
-					elements[i].ondblclick = function() {
-						this.setAttribute('oldText', this.innerHTML); // not actually required. I use this just in case you want to cancel and set the original text back.
-						var origianalText = this.innerHTML;
+            var textBox = document.createElement('INPUT');
+              textBox.setAttribute('type', 'text');
+              textBox.value = this.innerHTML;
+              textBox.onblur = function() {
+                var newValue = this.value;
+                console.log("on blur");
+                if(newValue === ''){
+                  console.log("null detected");
+                  this.parentNode.innerHTML = origianalText;
 
-						var textBox = document.createElement('INPUT');
-							textBox.setAttribute('type', 'text');
-							textBox.value = this.innerHTML;
-							textBox.onblur = function() {
-								var newValue = this.value;
-								console.log("on blur");
-								if(newValue === ''){
-									console.log("null detected");
-									this.parentNode.innerHTML = origianalText;
-
-								} else {
-									if(newValue.length >30){
-										alert("Name should be less than 30 characters");
-										this.parentNode.innerHTML = origianalText;
-									} else {
-										 this.parentNode.innerHTML = newValue;
-									 }
-								}
-							 // alert("Your new value: \n\n" + newValue);
-							}
+                } else {
+                  if(newValue.length >30){
+                    alert("Name should be less than 30 characters");
+                    this.parentNode.innerHTML = origianalText;
+                  } else {
+                     this.parentNode.innerHTML = newValue;
+                   }
+                }
+               // alert("Your new value: \n\n" + newValue);
+              }
  
-						this.innerHTML = '';
+            this.innerHTML = '';
  
-						this.appendChild(textBox);
-					}
-				}(i);
-			}
-			function getElementsByClassName(className, tag, elm){
-			var testClass = new RegExp("(^|\\s)" + className + "(\\s|$)");
-			var tag = tag || "*";
-			var elm = elm || document;
-			var elements = (tag == "*" && elm.all)? elm.all : elm.getElementsByTagName(tag);
-			var returnElements = [];
-			var current;
-			var length = elements.length;
-			for(var i=0; i<length; i++){
-				current = elements[i];
-				if(testClass.test(current.className)){
-					returnElements.push(current);
-				}
-			}
-			return returnElements;
-		}
-		</script>
+            this.appendChild(textBox);
+          }
+        }(i);
+      }
+      function getElementsByClassName(className, tag, elm){
+      var testClass = new RegExp("(^|\\s)" + className + "(\\s|$)");
+      var tag = tag || "*";
+      var elm = elm || document;
+      var elements = (tag == "*" && elm.all)? elm.all : elm.getElementsByTagName(tag);
+      var returnElements = [];
+      var current;
+      var length = elements.length;
+      for(var i=0; i<length; i++){
+        current = elements[i];
+        if(testClass.test(current.className)){
+          returnElements.push(current);
+        }
+      }
+      return returnElements;
+    }
+    </script>
+    <script type="text/javascript">
+      function switchGalleryView() {
+          var x = document.getElementById("gallery");
+          var y = document.getElementById("object-list");
 
-		<script type="text/javascript">
-			function switchGalleryView() {
-					var x = document.getElementById("gallery");
-					var y = document.getElementById("object-list");
+          if (x.style.display === "none" || y.style.display ==="block") {
+              x.style.display = "block";
+              y.style.display = "none";
+          } else {
+            
+          }
+      }
 
-					if (x.style.display === "none" || y.style.display ==="block") {
-							x.style.display = "block";
-							y.style.display = "none";
-					} else {
-						
-					}
-			}
+      function switchListView() {
+          var y = document.getElementById("gallery");
+          var x = document.getElementById("object-list");
 
-			function switchListView() {
-					var y = document.getElementById("gallery");
-					var x = document.getElementById("object-list");
+          if (x.style.display === "none" || y.style.display ==="block") {
+              x.style.display = "block";
+              y.style.display = "none";
+          } else {
+            
+          }
+      }
+    </script>
 
-					if (x.style.display === "none" || y.style.display ==="block") {
-							x.style.display = "block";
-							y.style.display = "none";
-					} else {
-						
-					}
-			}
+        <!-- Modal -->
+    <div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="settingLongTitle">Game Attributes</h5>
+            <button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="close-button" data-dismiss="modal">Close</button>
+            <button type="button"  id="save-change-button">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-			function switchCategoryView(event) {
-				var unselecteds = document.getElementsByClassName("unselecteds");
-				var selected = document.getElementsByClassName("selected");
-				selected.className ="unselecteds";
-				console.log(selected.length);
-				/*if (document.addEventListener){}else if (document.attachEvent) {  }
-				*/
-				document.addEventListener("click", function(event){
-						var targetElement = event.target || event.srcElement;
-								targetElement.className = "selected";
-								
-							 //onsole.log(targetElement.className); 
-								if(selected.length === 1){
-											console.log(targetElement.getAttribute("aria-controls"));
-								} 
+    <div id="design-view" style="display: block;">
 
+    <div id="first-column">     
 
-						});
-				
-					
+    <div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6>
+      <div id="add-scene">
+        <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene'> Add Scene</button></div>
+    </div>
+    
+    <div id="first-column-second-row">
+      <button  onclick="switchGalleryView()" id="gallery-title"><h6 class="window-title" >GALLERY</h6></button>
+      <button  onclick="switchListView()" id="object-list-title"><h6 class="window-title" >OBJECT LIST</h6></button>
 
-					
+      <div id="gallery" style="display: block;">      
+        <div class="tab-list" id="tabList">
+          <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <li class="nav-item"><a class="nav-link" id="picture-tab"  data-toggle="tab" href="#picture-asset" role="tab" aria-expanded="false" aria-controls="picture-asset" aria-selected="false">Pictures</a></li>
+            <li class="nav-item"><a class="nav-link" id="sound-tab" data-toggle="tab" href="#sound-asset" role="tab" aria-expanded="true" aria-controls="sound-asset" aria-selected="false">Sounds</a></li>          
+          </ul>
+        </div>
+        <div class="tab-content" id="v-pills-tabContent">
+          <div class="tab-pane fade active" id="picture-asset" role="tabpanel" aria-labelledby="door-tab">
+            <div class="assets">
+              <ul>
+              <!-- bind the gallery data -->
+                <li v-for="pic in pictures"> 
+                  <div class="asset" draggable="true" v-on:dragstart='pictureDragstart(event, pic)'><img v-bind:src="'../../'+pic.src"> </div>
+                  <p v-html='pic.name'></p>
+                </li>              
+              </ul>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="sound-asset" role="tabpanel" aria-labelledby="key-tab">
+            <div class="assets">
+              <ul>
+              <!-- bind the gallery data -->
+                <li v-for="sound in sounds"> 
+                  <div class="asset" draggable="true" v-on:dragstart='pictureDragstart(event, sound)'><img src=""> </div>
+                  <p v-html='sound.name'></p>
+                </li>              
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
 
-		 
+      <div id="object-list" style="display: none;" >
+          <!-- if show object list on -->
+          <ol v-if='showObjectList' class="object-tree">
+          <li v-for="scene in sceneList" v-on:click="onSelect(scene)">
 
-					
+          <!-- loop all scenes and objects -->
+          <label class="object_label" v-html="scene.name"></label>
+          <input type="checkbox" /> 
+            <ol>
+              <li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
+                <label class="object_label" v-html="object.name"></label>
+                <input type="checkbox"/>
+                
+              </li>
+            </ol>
+          </li>
+          <!--li>
+            <label class="object_label" for="inventory">Inventory</label>
+          </li-->
+        </ol>
+      </div>
+    </div>
 
+    <div id="design-editor-resizer" 
+        resizer="horizontal" 
+        resizer-height="6" 
+        resizer-top="#design-editor" 
+        resizer-bottom="#first-column-second-row"
+        >
+    </div>
+    </div>
+  
+    <div id="second-column">
+      <div id="interaction-editor"><h6 class="window-title">INTERACTION EDITOR</h6>
+      <div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' v-on:dblclick='deleteInteraction(ntra)'>
 
-			}
-
-		</script>
-
-				<!-- Modal -->
-		<div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="settingLongTitle">Game Attributes</h5>
-						<button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						...
-					</div>
-					<div class="modal-footer">
-						<button type="button" id="close-button" data-dismiss="modal">Close</button>
-						<button type="button"  id="save-change-button">Save changes</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-
-
-		<div id="design-view" style="display: block;">
-
-
-		<div id="first-column">
-		
-
-		<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6>
-			<div id="add-scene">
-				<button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene'> Add Scene</button></div>
-		</div>
-		
-		<div id="first-column-second-row">
-
-			<button  onclick="switchGalleryView(event)" id="gallery-title"><h6 class="window-title" >GALLERY</h6></button>
-			<button  onclick="switchListView(event)" id="object-list-title"><h6 class="window-title" >OBJECT LIST</h6></button>
-
-
-		<div id="gallery" style="display: block;">
-			
-			<div class="tab-list" id="tabList">
-			<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-
-						<li class="nav-item"><a onclick="switchCategoryView()" id="door" href="#door-asset" aria-controls="door-asset" class="unselecteds">Default</a></li>
-						<li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Other</a></li>
-
-			<!--<div class="tab-list" id="tabList">
-			<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-
-						<li class="nav-item"><a class="nav-link" id="door-tab"  data-toggle="tab" href="#door-asset" role="tab" aria-expanded="false" aria-controls="door-asset" aria-selected="false">Default</a></li>
-						<li class="nav-item"><a class="nav-link" id="key-tab" data-toggle="tab" href="#key-asset" role="tab" aria-expanded="true" aria-controls="key-asset" aria-selected="false">Other</a></li>
-						li class="nav-item"><a class="nav-link" id="container-tab"  data-toggle="tab" href="#container-asset" role="tab" aria-expanded="false" aria-controls="container-asset" aria-selected="false">Container</a></li>
-						<li class="nav-item"><a class="nav-link" id="actor-tab" data-toggle="tab" href="#actor-asset" role="tab" aria-expanded="true" aria-controls="actor-asset" aria-selected="false">Actor</a></li-->
-						
-					</ul>
-			</div>
-						<div class="tab-content" id="v-pills-tabContent">
-							<div class="tab-pane fade active" id="door-asset" role="tabpanel" aria-labelledby="door-tab">
-								<div class="assets">
-									<ul>
-									<!-- bind the gallery data -->
-										<li v-for="obj in objects" v-on:click="chooseObj(obj)"> <div class="asset"><img v-bind:src="'../../'+obj.src"> </div><p v-html='obj.name'></p>
-										</li>
-										
-									</ul>
-								</div>
-							</div>
-
-							<div class="tab-pane fade" id="key-asset" role="tabpanel" aria-labelledby="key-tab">
-								<div class="assets">
-									<ul>
-										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
-										</li>
-										
-									</ul>
-								</div>
-							</div>
-
-							<div class="tab-pane fade" id="container-asset" role="tabpanel" aria-labelledby="container-tab">
-								<div class="assets">
-									<ul>
-										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
-										</li>
-										
-									</ul>
-								</div>
-							</div>
-
-							<div class="tab-pane fade" id="actor-asset" role="tabpanel" aria-labelledby="actor-tab">
-								<div class="assets">
-									<ul>
-										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
-										</li>
-										
-									</ul>
-								</div>
-							</div>
-						</div>
-		</div>
-
-		<div id="object-list" style="display: none;" >
-			
-
-				<!-- if show object list on -->
-				<ol v-if='showObjectList' class="object-tree">
-				<li v-for="scene in sceneList" v-on:click="onSelect(scene)">
-
-				<!-- loop all scenes and objects -->
-				<label class="object_label" v-html="scene.name"></label>
-				<input type="checkbox" /> 
-					<ol>
-						<li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
-							<label class="object_label" v-html="object.name"></label>
-							<input type="checkbox"/>
-							
-						</li>
-					</ol>
-				</li>
-				<!--li>
-					<label class="object_label" for="inventory">Inventory</label>
-				</li-->
-			</ol>
-			</div>
-	</div>
-		<div id="design-editor-resizer" 
-				resizer="horizontal" 
-				resizer-height="6" 
-				resizer-top="#design-editor" 
-				resizer-bottom="#first-column-second-row"
-				>
-		</div>
-	</div>
-	
-		<div id="second-column">
-			<div id="interaction-editor"><h6 class="window-title">INTERACTION EDITOR</h6>
-			<div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' v-on:dblclick='deleteInteraction(ntra)'>
-
-				<div><span class="editInPlace">Title</span><a><img id="interaction-box-close" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEpSURBVGhD7dk9CsJAEIbheABb7fUkHkKPY2krnskz2HoLO0Fn1A+WEEJ2szs/Mi98qKl80E2TLoqi6G9a0I609eeTbnva7vs2P0a8aDeaJuZAe9IetC1fyI2/PCM0MUDwdzjxhdI0MdUQSANTHYEkMc0QSALTHIFaYsQQqAVGHIFqYtQQqAZGHYHmYMwgUAnGHALlYMwi0BSMeQQaw7hBoCGMOwRKMXeaSwRiDCMYwLvQXJb+nXj9M+OiFHGm9c+Mi4YOdnpmXGDG7k5uMFNuseYxUxDILCYHgcxhShDIDGYOAqljaiCQGqYmAoljWiCQGKYlAjXHSCBQM4wkAlXHaCBQNYwmAvUxK1p2/MyOH3dpIRAwV9qSL5S0+b1qx79EMSKKoshaXfcGi/zGyoPvvCcAAAAASUVORK5CYII="/></a></div>
-				<h6 class="window-title">Event</h6>
-				<ul class="event-box" v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'>
-					<li>
-						<span v-if='ntra.event==null'>Drag an event to here</span>
-						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 0'>
-							<select v-model="ntra.event.args[0]">
-									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-							</select> is clicked
-						</span>
-						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 1'>
-								<select v-model="ntra.event.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> 
-								is used on
-								<select v-model="ntra.event.args[1]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> 
-						</span>              
-						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 2'>
-								<select v-model="ntra.event.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> is observed
-						</span>              
-						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 3'>
-								<select v-model="ntra.event.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> 
-								is combined with
-								<select v-model="ntra.event.args[1]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> 
-						</span>
-					</li>
-				</ul>
-				<h6 class="window-title">Condition</h6>
-				<ul class="condition-box" v-on:drop='stateDrop(event, ntra)' v-on:dragover='stateDragover(event)'>
-					<li v-for='state in ntra.conditionList' v-on:dblclick='removeCondition(state, ntra)'>
-						<span class="badge badge-pill badge-state" v-html='state.name'></span>
-					</li>
-
-				 
-				</ul>
-				<h6 class="window-title">Reaction</h6>
-				<ul class="reaction-box" v-on:drop='reactionDrop(event, ntra)' v-on:dragover='reactionDragover(event)'>
-					<li v-for='react in ntra.reactionList' v-on:dblclick='deleteReaction(react, ntra)'>
-						<!--span class="badge badge-pill badge-reaction" v-html='react.template'></span-->
-						<span class="badge badge-pill badge-reaction" v-if='react.type == 0'>
-								Set state 
-								<select v-model="react.args[0]">
+        <div><span class="editInPlace">Title</span><a><img id="interaction-box-close" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEpSURBVGhD7dk9CsJAEIbheABb7fUkHkKPY2krnskz2HoLO0Fn1A+WEEJ2szs/Mi98qKl80E2TLoqi6G9a0I609eeTbnva7vs2P0a8aDeaJuZAe9IetC1fyI2/PCM0MUDwdzjxhdI0MdUQSANTHYEkMc0QSALTHIFaYsQQqAVGHIFqYtQQqAZGHYHmYMwgUAnGHALlYMwi0BSMeQQaw7hBoCGMOwRKMXeaSwRiDCMYwLvQXJb+nXj9M+OiFHGm9c+Mi4YOdnpmXGDG7k5uMFNuseYxUxDILCYHgcxhShDIDGYOAqljaiCQGqYmAoljWiCQGKYlAjXHSCBQM4wkAlXHaCBQNYwmAvUxK1p2/MyOH3dpIRAwV9qSL5S0+b1qx79EMSKKoshaXfcGi/zGyoPvvCcAAAAASUVORK5CYII="/></a></div>
+        <h6 class="window-title">Event</h6>
+        <ul class="event-box" v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'>
+          <li>
+            <span v-if='ntra.event==null'>Drag an event to here</span>
+            <span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 0'>
+              <select v-model="ntra.event.args[0]">
+                  <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+              </select> is clicked
+            </span>
+            <span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 1'>
+                <select v-model="ntra.event.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> 
+                is used on
+                <select v-model="ntra.event.args[1]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> 
+            </span>              
+            <span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 2'>
+                <select v-model="ntra.event.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> is observed
+            </span>              
+            <span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 3'>
+                <select v-model="ntra.event.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> 
+                is combined with
+                <select v-model="ntra.event.args[1]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> 
+            </span>
+          </li>
+        </ul>
+        <h6 class="window-title">Condition</h6>
+        <ul class="condition-box" v-on:drop='stateDrop(event, ntra)' v-on:dragover='stateDragover(event)'>
+          <li v-for='state in ntra.conditionList' v-on:dblclick='removeCondition(state, ntra)'>
+            <span class="badge badge-pill badge-state" v-html='state.name'></span>
+          </li>
+         
+        </ul>
+        <h6 class="window-title">Reaction</h6>
+        <ul class="reaction-box" v-on:drop='reactionDrop(event, ntra)' v-on:dragover='reactionDragover(event)'>
+          <li v-for='react in ntra.reactionList' v-on:dblclick='deleteReaction(react, ntra)'>
+            <!--span class="badge badge-pill badge-reaction" v-html='react.template'></span-->
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 0'>
+                Set state 
+                <select v-model="react.args[0]">
 <!--                        <option selected>win</option>-->
-										<option v-for="stat in states" v-html="stat.name" v-bind:value="stat"></option>
-								</select> to 
-								<input v-model="react.args[1]" type='checkbox' value='true'>
-						</span>
-						
-						<span class="badge badge-pill badge-reaction" v-if='react.type == 1'>
-								Go to scene 
-								<select v-model="react.args[0]">
-										<option v-for="scene in scenes" v-html="scene.name" v-bind:value="scene"></option>
-								</select>
-						</span>
-						
-						<span class="badge badge-pill badge-reaction" v-if='react.type == 2'>
-								Add 
-								<select v-model="react.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> into inventory
-						</span>
-						
-						<span class="badge badge-pill badge-reaction" v-if='react.type == 3'>
-								Remove 
-								<select v-model="react.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> out of inventory
-						</span>
-						
-						<span class="badge badge-pill badge-reaction" v-if='react.type == 4'>
-								Make 
-								<select v-model="react.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> visible
-						</span>
-						
-						<span class="badge badge-pill badge-reaction" v-if='react.type == 5'>
-								Make 
-								<select v-model="react.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> invisible
-						</span>
-						
-						<span class="badge badge-pill badge-reaction" v-if='react.type == 6'>
-								Make 
-								<select v-model="react.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> interactive
-						</span>
-						
-						<span class="badge badge-pill badge-reaction" v-if='react.type == 7'>
-								Make 
-								<select v-model="react.args[0]">
-										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> not interactive
-						</span>
-						
-						<span class="badge badge-pill badge-reaction" v-if='react.type == 8'>
-								Show dialog
-								<input v-model='react.args[0]'/>
-						</span>
+                    <option v-for="stat in states" v-html="stat.name" v-bind:value="stat"></option>
+                </select> to 
+                <input v-model="react.args[1]" type='checkbox' value='true'>
+            </span>
+            
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 1'>
+                Go to scene 
+                <select v-model="react.args[0]">
+                    <option v-for="scene in scenes" v-html="scene.name" v-bind:value="scene"></option>
+                </select>
+            </span>
+            
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 2'>
+                Add 
+                <select v-model="react.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> into inventory
+            </span>
+            
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 3'>
+                Remove 
+                <select v-model="react.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> out of inventory
+            </span>
+            
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 4'>
+                Make 
+                <select v-model="react.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> visible
+            </span>
+            
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 5'>
+                Make 
+                <select v-model="react.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> invisible
+            </span>
+            
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 6'>
+                Make 
+                <select v-model="react.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> interactive
+            </span>
+            
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 7'>
+                Make 
+                <select v-model="react.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> not interactive
+            </span>
+            
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 8'>
+                Show dialog
+                <input v-model='react.args[0]'/>
+            </span>
 
-						<span class="badge badge-pill badge-reaction" v-if='react.type == 9'>
-								Play sound
-								<select v-model="react.args[0]">
-										<option v-for="sound in sounds" v-html="sound.name" v-bind:value="sound"></option>
-								</select>
-						</span>
-					</li>
-				</ul>
-			</div>
-				
-				<div id="add-interaction" v-on:click='addInteraction()'>
-				<!--button type="button"  class="btn btn-outline-success btn-sm" id="add-interaction-button" v-on:click='addInteraction()'> Add Interaction </button-->
-				<a><img src="./src/add-interaction.svg" class="svg" width="70" height="70"/></a>
-				</div>
-			</div>	
-		</div>
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 9'>
+                Play sound
+                <select v-model="react.args[0]">
+                    <option v-for="sound in sounds" v-html="sound.name" v-bind:value="sound"></option>
+                </select>
+            </span>
+          </li>
+        </ul>
+      </div>
+        
+        <div id="add-interaction" v-on:click='addInteraction()'>
+        <!--button type="button"  class="btn btn-outline-success btn-sm" id="add-interaction-button" v-on:click='addInteraction()'> Add Interaction </button-->
+        <a><img src="./src/add-interaction.svg" class="svg" width="70" height="70"/></a>
+        </div>
+      </div>  
+    </div>
 
-		<div id="first-second-resizer" 
-			resizer="vertical-left" 
-			resizer-width="6" 
-			resizer-left="#first-column" 
-			resizer-right="#second-column"
-			resizer-max="720">
-		</div>
-		<div id="second-third-resizer" 
-			resizer="vertical-right" 
-			resizer-width="6" 
-			resizer-left="#second-column" 
-			resizer-right="#third-column"
-			resizer-max="400">
-		</div>
+    <div id="first-second-resizer" 
+      resizer="vertical-left" 
+      resizer-width="6" 
+      resizer-left="#first-column" 
+      resizer-right="#second-column"
+      resizer-max="720">
+    </div>
+    <div id="second-third-resizer" 
+      resizer="vertical-right" 
+      resizer-width="6" 
+      resizer-left="#second-column" 
+      resizer-right="#third-column"
+      resizer-max="400">
+    </div>
 
-		<div id="third-column">
-			
-			
+    <div id="third-column">
+      <div id="interaction-library">
+        <h6 class="window-title">INTERACTION LIBRARY</h6>
+        <div id="event-library"><h6 class="window-title">Event</h6>
+          <ul id="event-list" v-if='viewEnabled'>
+            <li v-for='em in events'>
+              <span class="badge badge-pill badge-event" v-on:dragstart='eventDragstart(event, em.type)' draggable="true" v-html='em.name'></span>
+            </li>
+          </ul>
+        </div>
+        <div id="state-library">
+        <h6 class="window-title">State</h6>
+        <div id="add-state"><button type="button" class="badge badge-pill badge-state-button" id="add-state-button" v-on:click='newState()'>Add</button></div>
+          <ul id="state-list" v-if='viewEnabled'>
+            <li v-for='state in states' v-on:dblclick='deleteState(state)'>
+              <span class="badge badge-pill badge-state" v-on:dragstart='stateDragstart(event, state)' draggable="true">
+                <span v-html='state.name'></span>
+                &nbsp;&nbsp;
+                <input type="checkbox" v-model='state.value'>
+              </span>
+            </li> 
+          </ul>
 
-			<div id="interaction-library">
-				<h6 class="window-title">INTERACTION LIBRARY</h6>
-				<div id="event-library"><h6 class="window-title">Event</h6>
-					<ul id="event-list" v-if='viewEnabled'>
-						<li v-for='em in events'>
-							<span class="badge badge-pill badge-event" v-on:dragstart='eventDragstart(event, em.type)' draggable="true" v-html='em.name'></span>
-						</li>
-					</ul>
-				</div>
-				<div id="state-library">
-				<h6 class="window-title">State</h6>
-				<div id="add-state"><button type="button" class="badge badge-pill badge-state-button" id="add-state-button" v-on:click='newState()'>Add</button></div>
-					<ul id="state-list" v-if='viewEnabled'>
-						<li v-for='state in states' v-on:dblclick='deleteState(state)'>
-							<span class="badge badge-pill badge-state" v-on:dragstart='stateDragstart(event, state)' draggable="true">
-								<span v-html='state.name'></span>
-								&nbsp;&nbsp;
-								<input type="checkbox" v-model='state.value'>
-							</span>
-						</li> 
-					</ul>
+        </div>
+        <div id="reaction-library"><h6 class="window-title">Reaction</h6>
+          <ul id="reaction-list" v-if='viewEnabled'>
+            <li v-for='rm in reactions'>
+              <span class="badge badge-pill badge-reaction" v-on:dragstart='reactionDragstart(event, rm.type)' draggable="true" v-html='rm.name'></span>
+            </li>
+          </ul>
+        </div>
+      </div>
 
-				</div>
-				<div id="reaction-library"><h6 class="window-title">Reaction</h6>
-					<ul id="reaction-list" v-if='viewEnabled'>
-						<li v-for='rm in reactions'>
-							<span class="badge badge-pill badge-reaction" v-on:dragstart='reactionDragstart(event, rm.type)' draggable="true" v-html='rm.name'></span>
-						</li>
-					</ul>
-				</div>
-			</div>
+      <div id="design-property">
+        <h6 class="window-title">PROPERTIES</h6>
+        <!-- bind img src -->
+        <div v-if='showProperty' class="property-img-bg"> <img class="property-img" v-bind:src="'../../'+bindObj.src"></div>
+        <!-- bind info -->
+        <div v-if='showProperty' class="property-info">
+          <ul>
+            <li><input v-model='bindObj.name'/></li>
+            <li>
+            <label for="property-input">position </label>
+            <div class="property-input">
+            <label for="pos-x">x:</label> <input id="pos-x" v-model.number='bindObj.sprite.x'>
+             <label for="pos-y">y:</label> <input id="pos-y" v-model.number='bindObj.sprite.y'>
+           </div>
+           </li>
+            <li>
+              scale
+              <div class="property-input">
+                <label for="scale-x"> x:</label> <input id="scale-x" v-model.number='bindObj.sprite.scale.x'>
+             <label for="scale-y">y:</label> <input id="scale-y" v-model.number='bindObj.sprite.scale.y'>
+           </div>
+         </li>
 
-			<div id="design-property">
-				<h6 class="window-title">PROPERTIES</h6>
-				<!-- bind img src -->
-				<div v-if='showProperty' class="property-img-bg"> <img class="property-img" v-bind:src="'../../'+bindObj.src"></div>
-				<!-- bind info -->
-				<div v-if='showProperty' class="property-info">
-					<ul>
-						<li><input v-model='bindObj.name'/></li>
-						<li>
-						<label for="property-input">position </label>
-						<div class="property-input">
-						<label for="pos-x">x:</label> <input id="pos-x" v-model.number='bindObj.sprite.x'>
-						 <label for="pos-y">y:</label> <input id="pos-y" v-model.number='bindObj.sprite.y'>
-					 </div>
-					 </li>
-						<li>
-							scale
-							<div class="property-input">
-								<label for="scale-x"> x:</label> <input id="scale-x" v-model.number='bindObj.sprite.scale.x'>
-						 <label for="scale-y">y:</label> <input id="scale-y" v-model.number='bindObj.sprite.scale.y'>
-					 </div>
-				 </li>
+            <li>
+              <input v-model='bindObj.sprite.visible' id ="visible" type="checkbox">
+              <label for="visible">visible</label>              
+            </li>
+            <li>
+               <input v-model='bindObj.interactive' id="clickable" type="checkbox">
+              <label for="clickable">interactive</label>             
+            </li>
 
-						<li>
-							<input v-model='bindObj.sprite.visible' id ="visible" type="checkbox">
-							<label for="visible">visible</label>
-							
-							
-						</li>
-						<li>
-							 <input v-model='bindObj.interactive' id="clickable" type="checkbox">
-						<label for="clickable">interactive</label>
-						 
-						</li>
+            <!-- user properties -->
+            <!--li v-for='property in bindObj.properties'>
+              <label for="pos-x">{{ property.key }}:</label> 
+              <input id="pos-x" v-model='property.value'>
+            </li-->
 
-						<!-- user properties -->
-						<!--li v-for='property in bindObj.properties'>
-							<label for="pos-x">{{ property.key }}:</label> 
-							<input id="pos-x" v-model='property.value'>
-						</li-->
+          </ul>
 
-					</ul>
-
-				</div>
-			</div>
-			<div id="design-property-resizer" 
-				resizer="horizontal" 
-				resizer-height="6" 
-				resizer-top="#interaction-library" 
-				resizer-bottom="#design-property">
-			</div>
-		</div>
+        </div>
+      </div>
+      <div id="design-property-resizer" 
+        resizer="horizontal" 
+        resizer-height="6" 
+        resizer-top="#interaction-library" 
+        resizer-bottom="#design-property">
+      </div>
+    </div>
 
 
-	</div> <!-- end of design view -->
-	<script>InitAllViews();</script>
+  </div> <!-- end of design view -->
+  <script>InitAllViews();</script>
 
 <!--
-	<div id="code-view" style="display: none;">
+  <div id="code-view" style="display: none;">
 
-		<div id="code-library">
-			
-				<h6 class="window-title">CODE LIBRARY</h6>
-		</div>
-	
-		<div id="code-content">
+    <div id="code-library">
+      
+        <h6 class="window-title">CODE LIBRARY</h6>
+    </div>
+  
+    <div id="code-content">
 
-			<div id="code-preview">
-				<h6 class="window-title">PREVIEW</h6></div>
-	
-			<div id="code-editor">
-				<h6 class="window-title">CODE EDITOR</h6></div>
-	
-			<div id="code-editor-resizer" 
-				resizer="horizontal" 
-				resizer-height="6" 
-				resizer-top="#code-preview" 
-				resizer-bottom="#code-editor">
-			</div>
-	
-		</div>
+      <div id="code-preview">
+        <h6 class="window-title">PREVIEW</h6></div>
+  
+      <div id="code-editor">
+        <h6 class="window-title">CODE EDITOR</h6></div>
+  
+      <div id="code-editor-resizer" 
+        resizer="horizontal" 
+        resizer-height="6" 
+        resizer-top="#code-preview" 
+        resizer-bottom="#code-editor">
+      </div>
+  
+    </div>
 
-		<div id="code-library-resizer" 
-			resizer="vertical-left" 
-			resizer-width="6" 
-			resizer-left="#code-library" 
-			resizer-right="#code-content"
-			resizer-max="400">
-		</div>
-		<div id="code-side-resizer" 
-			resizer="vertical-right" 
-			resizer-width="6" 
-			resizer-left="#code-content" 
-			resizer-right="#code-side-common"
-			resizer-max="400">
-		</div>
-
-
-		<div id="code-side-common">
-			
-			<div id="code-object-list">
-			 
-				<h6 class="window-title">OBJECTS IN THE SCENES</h6>
-			</div>
-			<div id="code-property">
-
-				<h6 class="window-title">PROPERTIES</h6>
-			</div>
-			<div id="code-property-resizer" 
-				resizer="horizontal" 
-				resizer-height="6" 
-				resizer-top="#code-object-list" 
-				resizer-bottom="#code-property">
-			</div>
-		</div>
+    <div id="code-library-resizer" 
+      resizer="vertical-left" 
+      resizer-width="6" 
+      resizer-left="#code-library" 
+      resizer-right="#code-content"
+      resizer-max="400">
+    </div>
+    <div id="code-side-resizer" 
+      resizer="vertical-right" 
+      resizer-width="6" 
+      resizer-left="#code-content" 
+      resizer-right="#code-side-common"
+      resizer-max="400">
+    </div>
 
 
-	</div>  end of code view -->
+    <div id="code-side-common">
+      
+      <div id="code-object-list">
+       
+        <h6 class="window-title">OBJECTS IN THE SCENES</h6>
+      </div>
+      <div id="code-property">
 
-		
-	
-		
+        <h6 class="window-title">PROPERTIES</h6>
+      </div>
+      <div id="code-property-resizer" 
+        resizer="horizontal" 
+        resizer-height="6" 
+        resizer-top="#code-object-list" 
+        resizer-bottom="#code-property">
+      </div>
+    </div>
 
-		
 
-		
+  </div>  end of code view -->
 
-
-	
-	
-	<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-	 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-	<script src="http://code.jquery.com/jquery-2.0.3.min.js" data-semver="2.0.3" data-require="jquery"></script>
- 
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
-	-->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
 </body>
 </html>
