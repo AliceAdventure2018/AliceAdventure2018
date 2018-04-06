@@ -293,6 +293,47 @@
 						</div>
 		</div>
 
+
+		<script type="text/javascript" >
+			function showListView(event) {
+				//document.addEventListener("click", function(event){
+					var targetElement = event.target || event.srcElement;
+					var parentTargetElement = targetElement.parentElement;
+					console.log(parentTargetElement.nodeName);
+					var childTargetElements = parentTargetElement.childNodes;
+					var childTargetElement;
+					var childTargetElementLi;
+					if(childTargetElements !== null){
+						for(t=0; t<childTargetElements.length; t++){
+							if(childTargetElements[t].tagName === 'OL'){
+								childTargetElement = childTargetElements[t];
+							} 
+						}
+
+						
+					}
+
+					for(j=0; j<childTargetElement.length; j++){
+						if(childTargetElement[j].tagName === 'LI'){
+							childTargetElementLi = childTargetElement[j];
+						}
+					}
+
+
+					if(childTargetElementLi.childNodes !== null){ //cannot be null
+							if(childTargetElement.style.display === "none"){
+								childTargetElement.style.display = "block";
+							}else if(childTargetElement.style.display === "block"){
+										childTargetElement.style.display = "none";
+							} 
+					} 
+				
+					
+				//});
+			}
+		</script>
+
+
 		<div id="object-list" ><h6 class="window-title" >OBJECT LIST</h6>
 			
 
@@ -300,15 +341,18 @@
 				<ol v-if='showObjectList' class="object-tree">
 				<li v-for="scene in sceneList" v-on:click="onSelect(scene)">
 
-				<!-- loop all scenes and objects -->
+				<!-- loop all scenes and objects 
 				<label class="object_label" v-html="scene.name"></label>
-				<input type="checkbox" /> 
-					<ol>
+				<input type="checkbox" /> -->
+				<button onclick="showListView(event)"  v-html="scene.name">hello</button>
+					<ol class="object_label" style="display:block;">
 						<li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
-							<label class="object_label" v-html="object.name"></label>
-							<input type="checkbox"/>
-							
+							<!--<label class="object_label" v-html="object.name"></label>
+							<input type="checkbox"/>-->
+							<button v-html="object.name">hi</button>
+
 						</li>
+						
 					</ol>
 				</li>
 				<!--li>
@@ -342,7 +386,7 @@
 			<div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' v-on:dblclick='deleteInteraction(ntra)'>
 
 				<div><span class="editInPlace">Title</span><a><img id="interaction-box-close" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEpSURBVGhD7dk9CsJAEIbheABb7fUkHkKPY2krnskz2HoLO0Fn1A+WEEJ2szs/Mi98qKl80E2TLoqi6G9a0I609eeTbnva7vs2P0a8aDeaJuZAe9IetC1fyI2/PCM0MUDwdzjxhdI0MdUQSANTHYEkMc0QSALTHIFaYsQQqAVGHIFqYtQQqAZGHYHmYMwgUAnGHALlYMwi0BSMeQQaw7hBoCGMOwRKMXeaSwRiDCMYwLvQXJb+nXj9M+OiFHGm9c+Mi4YOdnpmXGDG7k5uMFNuseYxUxDILCYHgcxhShDIDGYOAqljaiCQGqYmAoljWiCQGKYlAjXHSCBQM4wkAlXHaCBQNYwmAvUxK1p2/MyOH3dpIRAwV9qSL5S0+b1qx79EMSKKoshaXfcGi/zGyoPvvCcAAAAASUVORK5CYII="/></a></div>
-				<h6 class="window-title">Event</h6>
+				<h6 id="event-box-title" class="window-title">Event</h6>
 				<ul class="event-box" v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'>
 					<li>
 						<span v-if='ntra.event==null'>Drag an event to here</span>
@@ -376,7 +420,7 @@
 						</span>
 					</li>
 				</ul>
-				<h6 class="window-title">Condition</h6>
+				<h6 id="condition-box-title" class="window-title">Condition</h6>
 				<ul class="condition-box" v-on:drop='stateDrop(event, ntra)' v-on:dragover='stateDragover(event)'>
 					<li v-for='state in ntra.conditionList' v-on:dblclick='removeCondition(state, ntra)'>
 						<span class="badge badge-pill badge-state" v-html='state.name'></span>
@@ -384,7 +428,7 @@
 
 				 
 				</ul>
-				<h6 class="window-title">Reaction</h6>
+				<h6 id="reaction-box-title" class="window-title">Reaction</h6>
 				<ul class="reaction-box" v-on:drop='reactionDrop(event, ntra)' v-on:dragover='reactionDragover(event)'>
 					<li v-for='react in ntra.reactionList' v-on:dblclick='deleteReaction(react, ntra)'>
 						<!--span class="badge badge-pill badge-reaction" v-html='react.template'></span-->

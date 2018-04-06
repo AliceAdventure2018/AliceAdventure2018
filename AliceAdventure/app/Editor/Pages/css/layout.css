@@ -105,8 +105,34 @@ input:checked + .slider:before {
     margin-left: 10px;
     margin-top: 10px;
     text-align: left;
-    color:#ffc107;
+    /*color:#ffc107;*/
+    color:#666;
 }
+
+#event-library .window-title{
+    color:#ef5b34 !important;
+}
+
+#state-library .window-title{
+    color:#ffc107 !important;
+}
+
+#reaction-library .window-title{
+     color:#28a745 !important;
+}
+#event-box-title{
+    color:#ef5b34 !important;
+}
+
+#condition-box-title{
+    color:#ffc107 !important;
+}
+
+#reaction-box-title{
+     color:#28a745 !important;
+}
+
+
 
 #add-scene{
     position: absolute;
@@ -618,24 +644,25 @@ input:checked + .slider:before {
    margin:0;       /* all list item li dots invisible */
 }
 
+/*
 .object-tree li .object_label + input[type=checkbox] {
-      opacity: 0;             /* checkboxes invisible and use no space */
-     }                        /* display: none; is better but fails in ie8 */
+      opacity: 0;              checkboxes invisible and use no space 
+     }                        display: none; is better but fails in ie8 
 
 .object-tree li .object_label {
-      cursor: pointer;        /* cursor changes when you mouse over this class */
-    }                         /* could add the many user-select: none; commands here */
+      cursor: pointer;        cursor changes when you mouse over this class 
+    }                          could add the many user-select: none; commands here 
 
 .object-tree li .object_label + input[type=checkbox] + ol > li
          {
-            display: none;         /* prevents sublists below unchecked labels from displaying */
+            display: none;          prevents sublists below unchecked labels from displaying
          }
 
 .object-tree li .object_label + input[type=checkbox]:checked + ol > li
          {
-           display: block;         /* display submenu on click */
+           display: block;        display submenu on click 
          }
-
+*/
 #design-property{
     position: absolute;
     height: 350px;
