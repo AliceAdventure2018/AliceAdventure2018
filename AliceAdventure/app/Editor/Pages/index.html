@@ -44,40 +44,50 @@
 	</nav>
 
 	<script type="text/javascript">
-		window.onload = function() {
-			var elements = getElementsByClassName('editInPlace', '*', document);
-			for(var i = 0; i < elements.length; i++) {
-				elements[i].ondblclick = function() {
-					this.setAttribute('oldText', this.innerHTML); // not actually required. I use this just in case you want to cancel and set the original text back.
-					var origianalText = this.innerHTML;
+		
+			function editInPlace(event){
+			
+					var targetTitle = event.target || event.srcElement;
+					targetTitle.setAttribute('oldText', targetTitle.innerHTML); // not actually required. I use target just in case you want to cancel and set the original text back.
+					var origianalText = targetTitle.innerHTML;
 
 					var textBox = document.createElement('INPUT');
 						textBox.setAttribute('type', 'text');
-						textBox.value = this.innerHTML;
+						textBox.style['width'] ='100px';
+						textBox.value = targetTitle.innerHTML;
+
+						
 						textBox.onblur = function() {
-							var newValue = this.value;
+							
+							var newValue = textBox.value; //targetTitle.value
 							console.log("on blur");
+							console.log(newValue);
+
 							if(newValue === ''){
 								console.log("null detected");
-								this.parentNode.innerHTML = origianalText;
+								//targetTitle.parentNode.innerHTML = origianalText;
+								targetTitle.innerHTML = origianalText;
 
 							} else {
-								if(newValue.length >30){
-									alert("Name should be less than 30 characters");
-									this.parentNode.innerHTML = origianalText;
+								if(newValue.length >25){
+									alert("Name should be less than 25 characters");
+									targetTitle.innerHTML = origianalText;
+									//targetTitle.parentNode.innerHTML = origianalText;
 								} else {
-									 this.parentNode.innerHTML = newValue;
+									targetTitle.innerHTML = newValue;
+									 //targetTitle.parentNode.innerHTML = newValue;
 								 }
 							}
 						 // alert("Your new value: \n\n" + newValue);
 						}
 
-					this.innerHTML = '';
+					targetTitle.innerHTML = '';
 
-					this.appendChild(textBox);
-				}
-			}(i);
+					targetTitle.appendChild(textBox);
+			
 		}
+
+
 		function getElementsByClassName(className, tag, elm){
 			var testClass = new RegExp("(^|\\s)" + className + "(\\s|$)");
 			var tag = tag || "*";
@@ -342,7 +352,7 @@
 		    <div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions'>
 
 				<div>
-          <span class="editInPlace">Title</span>
+          <span ondblclick="editInPlace(event)" class="editInPlace">Title</span>
           <a v-on:click="deleteInteraction(ntra)"><img id="interaction-box-close" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEpSURBVGhD7dk9CsJAEIbheABb7fUkHkKPY2krnskz2HoLO0Fn1A+WEEJ2szs/Mi98qKl80E2TLoqi6G9a0I609eeTbnva7vs2P0a8aDeaJuZAe9IetC1fyI2/PCM0MUDwdzjxhdI0MdUQSANTHYEkMc0QSALTHIFaYsQQqAVGHIFqYtQQqAZGHYHmYMwgUAnGHALlYMwi0BSMeQQaw7hBoCGMOwRKMXeaSwRiDCMYwLvQXJb+nXj9M+OiFHGm9c+Mi4YOdnpmXGDG7k5uMFNuseYxUxDILCYHgcxhShDIDGYOAqljaiCQGqYmAoljWiCQGKYlAjXHSCBQM4wkAlXHaCBQNYwmAvUxK1p2/MyOH3dpIRAwV9qSL5S0+b1qx79EMSKKoshaXfcGi/zGyoPvvCcAAAAASUVORK5CYII="/></a>
         </div>
 				<h6 id="event-box-title" class="window-title">Event</h6>
@@ -537,7 +547,7 @@
 				<!-- bind info -->
 				<div v-if='showProperty' class="property-info">
 					<ul>
-						<li><span class="editInPlace" v-model='bindObj.name'/>name</span></li>
+						<li><span ondblclick="editInPlace(event)" class="editInPlace" v-model='bindObj.name'/>name</span></li>
 
 						<!--<input v-model='bindObj.name'/>-->
 						<li>
