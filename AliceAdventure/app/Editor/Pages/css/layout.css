@@ -146,10 +146,14 @@ input:checked + .slider:before {
     bottom:0;
     right: 0;
     float: right;
-   
-  
 }
 
+
+
+#add-interaction:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
 
 #gallery-title h6:hover{
    color:#f9af48;
@@ -246,6 +250,10 @@ input:checked + .slider:before {
     left: 466px;
     width: 254px;
     
+}
+
+#object-list button{
+    cursor: pointer;
 }
 
 #gallery-title{
