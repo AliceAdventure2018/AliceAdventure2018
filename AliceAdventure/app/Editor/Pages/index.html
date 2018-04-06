@@ -219,18 +219,18 @@
 		<div id="first-column">
 		
 
-		<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6>
-			<div id="add-scene">
-				<button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene'> Add Scene</button></div>
-		</div>
+			<div id="design-editor"><h6 class="window-title">SCENE EDITOR</h6>
+				<div id="add-scene">
+					<button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene'> Add Scene</button></div>
+			</div>
 		
 		<div id="first-column-second-row">
 
-			<button  onclick="switchGalleryView(event)" id="gallery-title"><h6 class="window-title" >GALLERY</h6></button>
-			<button  onclick="switchListView(event)" id="object-list-title"><h6 class="window-title" >OBJECT LIST</h6></button>
+			
+			
 
-
-		<div id="gallery" style="display: block;">
+	    <div id="wrap-first-column-second-row">
+		<div id="gallery" ><h6 class="window-title" >GALLERY</h6>
 			
 			<div id="tabList">
 			<ul >
@@ -293,7 +293,7 @@
 						</div>
 		</div>
 
-		<div id="object-list" style="display: none;" >
+		<div id="object-list" ><h6 class="window-title" >OBJECT LIST</h6>
 			
 
 				<!-- if show object list on -->
@@ -315,13 +315,24 @@
 					<label class="object_label" for="inventory">Inventory</label>
 				</li-->
 			</ol>
+		</div>
+			<div id="gallery-list-resizer" 
+				resizer="vertical-left" 
+				resizer-width="6" 
+				resizer-left="#gallery" 
+				resizer-right="#object-list"
+				resizer-max="466"
+				>
 			</div>
+
 	</div>
+</div>
 		<div id="design-editor-resizer" 
 				resizer="horizontal" 
 				resizer-height="6" 
 				resizer-top="#design-editor" 
 				resizer-bottom="#first-column-second-row"
+				resizer-min="450"
 				>
 		</div>
 	</div>
@@ -519,7 +530,9 @@
 				<!-- bind info -->
 				<div v-if='showProperty' class="property-info">
 					<ul>
-						<li><input v-model='bindObj.name'/></li>
+						<li><span class="editInPlace" v-model='bindObj.name'/>name</span></li>
+
+						<!--<input v-model='bindObj.name'/>-->
 						<li>
 						<label for="property-input">position </label>
 						<div class="property-input">
@@ -564,7 +577,9 @@
 				resizer="horizontal" 
 				resizer-height="6" 
 				resizer-top="#interaction-library" 
-				resizer-bottom="#design-property">
+				resizer-bottom="#design-property"
+				resizer-min="350"
+				>
 			</div>
 		</div>
 

@@ -53,12 +53,13 @@ angular.module('mc.resizer', []).directive('resizer', function($document) {
           });
           
         }
-      }else {
+      }else if($attrs.resizer =='horizontal'){
         // Handle horizontal resizer
 
 
         var y = window.innerHeight - event.pageY;
-        if (y > 50 && y < (window.innerHeight - 50)) {
+        if (y > 100 && y < $attrs.resizerMin) {
+
           $element.css({
             bottom: y + 'px'
           });
