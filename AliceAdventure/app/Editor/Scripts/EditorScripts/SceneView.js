@@ -35,7 +35,9 @@ SceneView.prototype.InitView = function(){
 			projectLoaded: false
 		}, 
 		methods: {
-			addScene: ()=>{this.AddScene();}
+			addScene: ()=>{this.AddScene();},
+			assetDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.GalleryPicture);},
+			assetDrop: (ev)=>{View.HandleDrop(ev, View.DragInfo.GalleryPicture, (data)=>{this.AddObject(data);});},
 		}
 	});
 	// Init app
@@ -45,7 +47,8 @@ SceneView.prototype.InitView = function(){
 		antialiasing: true, 
 		backgroundcolor: 0xFFFFFF
 	});
-	//this.app.view.style.margin = "auto";
+	this.app.view.setAttribute("v-on:dragover", "assetDragover(event)");
+	this.app.view.setAttribute("v-on:drop", "assetDrop(event)");
 	document.getElementById(this.bindElementID).appendChild(this.app.view);
 
 	// events
