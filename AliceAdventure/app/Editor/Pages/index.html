@@ -18,6 +18,8 @@
 		<!-- Import controllers -->
 		<link rel="stylesheet" href="../../Resources/bootstrap.min.css">
 		<script type="text/javascript" src="../../Resources/jquery-2.0.3.min.js"></script>
+		<script type="text/javascript" src="../../Resources/modal.js"></script>
+		<script type="text/javascript" src="../../Resources/util.js"></script>
 		<script type="text/javascript" src="../../Resources/vue.js"></script>
 		<script type="text/javascript" src="../scripts/index.js"></script>
 	
@@ -37,8 +39,8 @@
 
 	 -->
 			 <button id="setting-button"  class="float-right" data-toggle="modal" data-target="#setting">
-									 Setting
-				</button>
+                   Setting
+        </button>
 
 				<button onclick="AliceEditor.File.BuildProject()" id="build-button"  class="float-right" >
 									 Build
@@ -136,33 +138,30 @@
 				
 				/*if (document.addEventListener){}else if (document.attachEvent) {  }
 				*/
-
-
+				
 				document.addEventListener("click", function(event){
-					
 
-				var selected = document.getElementsByClassName("selected");
-				var unselecteds;
-
+					var selected = document.getElementsByClassName("selected");
+					var unselecteds = document.getElementsByClassName("unselecteds");
 
 					for(i=0;i<selected.length;i++){
 						selected[i].className ="unselecteds";
 					}
 					
-					console.log(selected.length);
-
 					var targetElement = event.target || event.srcElement;
+					if(targetElement.tagName === 'A'){
 					targetElement.className = "selected";
 					unselecteds = document.getElementsByClassName("unselecteds");
-					
+					}
 
 					if(selected.length === 1){
 
 						var assetName = targetElement.getAttribute("aria-controls");
 						document.getElementById(assetName).style.display = "block";
-						console.log(document.getElementById(assetName));
+						//console.log(document.getElementById(assetName));
 
 						var assetName_unselected = [];
+
 
 						if(unselecteds.length !== null){
 							for(j=0; j<unselecteds.length;j++){
@@ -172,7 +171,11 @@
 							for(t=0; t<unselecteds.length;t++){
 								document.getElementById(assetName_unselected[t]).style.display = "none";
 							} 
-						console.log(targetElement.getAttribute("aria-controls"));
+
+							assetName_unselected = null;
+							unselecteds = null;
+							
+						//console.log(targetElement.getAttribute("aria-controls"));
 						}
 					} 
 
@@ -185,25 +188,28 @@
 		</script>
 
 				<!-- Modal -->
-		<div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="settingLongTitle">Game Attributes</h5>
-						<button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						...
-					</div>
-					<div class="modal-footer">
-						<button type="button" id="close-button" data-dismiss="modal">Close</button>
-						<button type="button"  id="save-change-button">Save changes</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		 <div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="settingLongTitle">Game Setting</h5>
+            <button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Game Resolution <select></select></p> 
+            <p>Number of Containers in Inventory: <select></select></p>
+            <p>Start Scene <select></select></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="close-button" data-dismiss="modal">Close</button>
+            <button type="button"  id="save-button">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
 
 
@@ -229,7 +235,8 @@
 			<div id="tabList">
 			<ul >
 
-						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="unselecteds">Default</a></li>
+						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="unselecteds">
+						Default</a></li>
 						<li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Other</a></li>
 
 			<!--<div class="tab-list" id="tabList">
@@ -254,7 +261,7 @@
 								</div>
 							</div>
 
-							<div class="tab-pane fade" id="key-asset" role="tabpanel" aria-labelledby="key-tab" style="display: none;">
+							<div id="key-asset" style="display: none;">
 								<div class="assets">
 									<ul>
 										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
@@ -264,7 +271,7 @@
 								</div>
 							</div>
 
-							<div class="tab-pane fade" id="container-asset" role="tabpanel" aria-labelledby="container-tab" style="display: none;">
+							<div id="container-asset" style="display: none;">
 								<div class="assets">
 									<ul>
 										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
@@ -274,7 +281,7 @@
 								</div>
 							</div>
 
-							<div class="tab-pane fade" id="actor-asset" role="tabpanel" aria-labelledby="actor-tab" style="display: none;">
+							<div  id="actor-asset" style="display: none;">
 								<div class="assets">
 									<ul>
 										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
@@ -319,7 +326,7 @@
 		</div>
 	</div>
 	
-		<div id="second-column">
+		<di v id="second-column">
 			<div id="interaction-editor"><h6 class="window-title">INTERACTION EDITOR</h6>
 			<div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' v-on:dblclick='deleteInteraction(ntra)'>
 
@@ -443,11 +450,13 @@
 				</ul>
 			</div>
 				
-				<div id="add-interaction" v-on:click='addInteraction()'>
+				
+			</div>	
+
+			<div id="add-interaction" v-on:click='addInteraction()'>
 				<!--button type="button"  class="btn btn-outline-success btn-sm" id="add-interaction-button" v-on:click='addInteraction()'> Add Interaction </button-->
 				<a><img src="./src/add-interaction.svg" class="svg" width="70" height="70"/></a>
 				</div>
-			</div>	
 		</div>
 
 		<div id="first-second-resizer" 
@@ -484,9 +493,11 @@
 					<ul id="state-list" v-if='viewEnabled'>
 						<li v-for='state in states' v-on:dblclick='deleteState(state)'>
 							<span class="badge badge-pill badge-state" v-on:dragstart='stateDragstart(event, state)' draggable="true">
-								<span v-html='state.name'></span>
+								<span v-html='state.name'>helllo</span>
 								&nbsp;&nbsp;
-								<input type="checkbox" v-model='state.value'>
+
+								<label class="switch"><input type="checkbox" v-model='state.value'><span class="slider round"></span></label>
+								<!--<input type="checkbox" v-model='state.value'>-->
 							</span>
 						</li> 
 					</ul>
@@ -512,27 +523,30 @@
 						<li>
 						<label for="property-input">position </label>
 						<div class="property-input">
-						<label for="pos-x">x:</label> <input id="pos-x" v-model.number='bindObj.sprite.x'>
-						 <label for="pos-y">y:</label> <input id="pos-y" v-model.number='bindObj.sprite.y'>
+						x: <input id="pos-x" v-model.number='bindObj.sprite.x'>
+						 y:<input id="pos-y" v-model.number='bindObj.sprite.y'>
 					 </div>
 					 </li>
 						<li>
 							scale
 							<div class="property-input">
-								<label for="scale-x"> x:</label> <input id="scale-x" v-model.number='bindObj.sprite.scale.x'>
-						 <label for="scale-y">y:</label> <input id="scale-y" v-model.number='bindObj.sprite.scale.y'>
+								x: <input id="scale-x" v-model.number='bindObj.sprite.scale.x'>
+						        y: <input id="scale-y" v-model.number='bindObj.sprite.scale.y'>
 					 </div>
 				 </li>
 
 						<li>
-							<input v-model='bindObj.sprite.visible' id ="visible" type="checkbox">
-							<label for="visible">visible</label>
+							
+							<!--<input v-model='bindObj.sprite.visible' id ="visible" type="checkbox">-->
+							visible
+							<label class="switch"><input type="checkbox" v-model='bindObj.sprite.visible' id ="visible" ><span class="slider round"></span></label>
 							
 							
 						</li>
 						<li>
-							 <input v-model='bindObj.interactive' id="clickable" type="checkbox">
+							 <!--<input v-model='bindObj.interactive' id="clickable" type="checkbox">-->
 						<label for="clickable">interactive</label>
+						<label class="switch"><input type="checkbox" v-model='bindObj.sprite.interactive' id ="visible" ><span class="slider round"></span></label>
 						 
 						</li>
 
