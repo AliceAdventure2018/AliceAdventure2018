@@ -132,33 +132,53 @@
 					}
 			}
 
-			function switchCategoryView(event) {
-				var unselecteds = document.getElementsByClassName("unselecteds");
-				var selected = document.getElementsByClassName("selected");
-				selected.className ="unselecteds";
-				console.log(selected.length);
+			function switchCategoryView() {
+				
 				/*if (document.addEventListener){}else if (document.attachEvent) {  }
 				*/
+
+
 				document.addEventListener("click", function(event){
-						var targetElement = event.target || event.srcElement;
-								targetElement.className = "selected";
-								
-							 //onsole.log(targetElement.className); 
-								if(selected.length === 1){
-											console.log(targetElement.getAttribute("aria-controls"));
-								} 
+					
+
+				var selected = document.getElementsByClassName("selected");
+				var unselecteds;
 
 
-						});
+					for(i=0;i<selected.length;i++){
+						selected[i].className ="unselecteds";
+					}
+					
+					console.log(selected.length);
+
+					var targetElement = event.target || event.srcElement;
+					targetElement.className = "selected";
+					unselecteds = document.getElementsByClassName("unselecteds");
+					
+
+					if(selected.length === 1){
+
+						var assetName = targetElement.getAttribute("aria-controls");
+						document.getElementById(assetName).style.display = "block";
+						console.log(document.getElementById(assetName));
+
+						var assetName_unselected = [];
+
+						if(unselecteds.length !== null){
+							for(j=0; j<unselecteds.length;j++){
+								assetName_unselected[j]= unselecteds[j].getAttribute("aria-controls");
+							}
+
+							for(t=0; t<unselecteds.length;t++){
+								document.getElementById(assetName_unselected[t]).style.display = "none";
+							} 
+						console.log(targetElement.getAttribute("aria-controls"));
+						}
+					} 
+
+
+				});
 				
-					
-
-					
-
-		 
-
-					
-
 
 			}
 
@@ -206,10 +226,10 @@
 
 		<div id="gallery" style="display: block;">
 			
-			<div class="tab-list" id="tabList">
-			<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+			<div id="tabList">
+			<ul >
 
-						<li class="nav-item"><a onclick="switchCategoryView()" id="door" href="#door-asset" aria-controls="door-asset" class="unselecteds">Default</a></li>
+						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="unselecteds">Default</a></li>
 						<li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Other</a></li>
 
 			<!--<div class="tab-list" id="tabList">
@@ -222,8 +242,8 @@
 						
 					</ul>
 			</div>
-						<div class="tab-content" id="v-pills-tabContent">
-							<div class="tab-pane fade active" id="door-asset" role="tabpanel" aria-labelledby="door-tab">
+						<div id="tabContent">
+							<div id="door-asset" style="display: none;">
 								<div class="assets">
 									<ul>
 									<!-- bind the gallery data -->
@@ -234,7 +254,7 @@
 								</div>
 							</div>
 
-							<div class="tab-pane fade" id="key-asset" role="tabpanel" aria-labelledby="key-tab">
+							<div class="tab-pane fade" id="key-asset" role="tabpanel" aria-labelledby="key-tab" style="display: none;">
 								<div class="assets">
 									<ul>
 										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
@@ -244,7 +264,7 @@
 								</div>
 							</div>
 
-							<div class="tab-pane fade" id="container-asset" role="tabpanel" aria-labelledby="container-tab">
+							<div class="tab-pane fade" id="container-asset" role="tabpanel" aria-labelledby="container-tab" style="display: none;">
 								<div class="assets">
 									<ul>
 										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
@@ -254,7 +274,7 @@
 								</div>
 							</div>
 
-							<div class="tab-pane fade" id="actor-asset" role="tabpanel" aria-labelledby="actor-tab">
+							<div class="tab-pane fade" id="actor-asset" role="tabpanel" aria-labelledby="actor-tab" style="display: none;">
 								<div class="assets">
 									<ul>
 										<li> <div class="asset"><img src="src/cat.png"> </div><p> cat</p>
