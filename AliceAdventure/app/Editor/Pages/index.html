@@ -245,38 +245,54 @@
 		      </div>
 
 <script type="text/javascript" >
-	function showListView(event) {
-		//document.addEventListener("click", function(event){
-			var targetElement = event.target || event.srcElement;
-			var parentTargetElement = targetElement.parentElement;
-			console.log(parentTargetElement.nodeName);
-			var childTargetElements = parentTargetElement.childNodes;
-			var childTargetElement;
-			var childTargetElementLi;
-			if(childTargetElements !== null){
-				for(t=0; t<childTargetElements.length; t++){
-					if(childTargetElements[t].tagName === 'OL'){
-						childTargetElement = childTargetElements[t];
-					} 
-				}				
-			}
+			function showListView(event) {
+				//document.addEventListener("click", function(event){
+					var targetElement = event.target || event.srcElement;
+					var parentTargetElement = targetElement.parentElement;
+					console.log(parentTargetElement.nodeName);
+					var childTargetElements = parentTargetElement.childNodes;
+					var childTargetElement;
+					var childTargetElementLi;
 
-			for(j=0; j<childTargetElement.childNodes.length; j++){
-				if(childTargetElement.childNodes[j].tagName === 'LI'){
-					childTargetElementLi = childTargetElement.childNodes[j];
-				}
+					var icon;
+	
+
+					for(k=0;k<parentTargetElement.childNodes.length;k++){
+						if(parentTargetElement.childNodes[k].tagName === 'I')
+						icon = parentTargetElement.childNodes[k];
+					}
+					
+
+					if(childTargetElements !== null){
+						for(t=0; t<childTargetElements.length; t++){
+							if(childTargetElements[t].tagName === 'OL'){
+								childTargetElement = childTargetElements[t];
+							} 
+						}
+
+						
+					}
+
+					for(j=0; j<childTargetElement.childNodes.length; j++){
+						if(childTargetElement.childNodes[j].tagName === 'LI'){
+							childTargetElementLi = childTargetElement.childNodes[j];
+						}
+					}
+
+					
+					if(childTargetElementLi !== null){ 
+							if(childTargetElement.style.display === "none"){
+								icon.className = "down";
+								childTargetElement.style.display = "block";
+							}else if(childTargetElement.style.display === "block"){
+										childTargetElement.style.display = "none";
+										icon.className = "right";
+							} 
+					}
+					
+				//});
 			}
-		
-			if(childTargetElementLi.childNodes !== null){ 
-					if(childTargetElement.style.display === "none"){
-						childTargetElement.style.display = "block";
-					}else if(childTargetElement.style.display === "block"){
-								childTargetElement.style.display = "none";
-					} 
-			} 	
-			
-	}
-</script>
+		</script>
 
       		<div id="object-list" ><h6 class="window-title" >OBJECT LIST</h6>
       			<!-- if show object list on -->
@@ -285,7 +301,7 @@
         				<!-- loop all scenes and objects 
         				<label class="object_label" v-html="scene.name"></label>
         				<input type="checkbox" /> -->
-        				<button onclick="showListView(event)"  v-html="scene.name">hello</button>
+        				<i class="down"></i><button onclick="showListView(event)"  v-html="scene.name">hello</button>
       					<ol class="object_label" style="display:block;">
       						<li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
       							<!--<label class="object_label" v-html="object.name"></label>

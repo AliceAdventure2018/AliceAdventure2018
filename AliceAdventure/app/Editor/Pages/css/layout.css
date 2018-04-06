@@ -5,6 +5,35 @@ button{
     background: none;
 }
 
+i {
+  border: solid black;
+  opacity: 0.5;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  margin-right: 7px;
+}
+
+.right {
+    
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
 
 .switch {
   position: relative;
@@ -252,8 +281,15 @@ input:checked + .slider:before {
     
 }
 
+#object-list button:focus{
+   background-color: #fff;
+   outline-color: #aaa;
+}
+
 #object-list button{
     cursor: pointer;
+    font-weight: 500 !important;
+    color: #666;
 }
 
 #gallery-title{
@@ -342,12 +378,9 @@ input:checked + .slider:before {
      height: 80px;
 }
 
-#door-tab.active{
+.nav-tem a.active{
     color: #ffffff;
     background-color: #28a745;
-    
-   
-
     margin-left: 10px;
      margin-right: 10px;
 
@@ -643,34 +676,16 @@ input:checked + .slider:before {
 }
 
 .object-tree ol{
-    padding-left: 10px;
+    padding-left: 30px;
 }
 
 .object-tree li {
    list-style: none;   
-   font-size: 0.8em;
+   font-size: 1em;
    margin:0;       /* all list item li dots invisible */
 }
 
-/*
-.object-tree li .object_label + input[type=checkbox] {
-      opacity: 0;              checkboxes invisible and use no space 
-     }                        display: none; is better but fails in ie8 
 
-.object-tree li .object_label {
-      cursor: pointer;        cursor changes when you mouse over this class 
-    }                          could add the many user-select: none; commands here 
-
-.object-tree li .object_label + input[type=checkbox] + ol > li
-         {
-            display: none;          prevents sublists below unchecked labels from displaying
-         }
-
-.object-tree li .object_label + input[type=checkbox]:checked + ol > li
-         {
-           display: block;        display submenu on click 
-         }
-*/
 #design-property{
     position: absolute;
     height: 350px;
