@@ -423,7 +423,6 @@ Parser = function (jsonPath, buildPath){
 	//   5   make invisible     [objID]               make object invisible
 	//   6   make interactive   [objID]               make object of this ID interactive
 	//   7   make UNinteractive [objID]               make object of this ID UNinteractive
-
 	//   8   show message box   [string]              show message box 
 	//   9   play music         [soundID]             play music of this ID
 	//  10   show inventory     []                    show inventory
@@ -608,8 +607,13 @@ Parser = function (jsonPath, buildPath){
 
 			var state = findStateByID.call(this, args[0]);
 
-			if (state === false || typeof (args[1]) !== "boolean"){
-				callback("Compile ERROR: cannot find state of id for reaction type 0: " + args[0] + ".");
+			if (state === false ){
+				callback("Compile ERROR: for reaction type 0 cannot find state of id: " + args[0] + ".");
+				return false;
+
+			}else if ( typeof (args[1]) !== "boolean"){
+
+				callback("Compile ERROR: the right-handside of the equation must be a boolean, not null.");
 				return false;
 
 			}else{
