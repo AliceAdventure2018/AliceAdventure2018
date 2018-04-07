@@ -316,7 +316,7 @@
       						<li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
       							<!--<label class="object_label" v-html="object.name"></label>
       							<input type="checkbox"/>-->
-      							<button v-html="object.name">hi</button>
+      							<button v-html="object.name" v-on:dblclick='deleteObject(object)'></button>
       						</li>						
       					</ol>
       				</li>

@@ -92,6 +92,8 @@ SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = 
 };
 
 SceneObject.prototype.DeleteThis = function(){
+	this.sprite.destroy({children:true, texture:true, baseTexture:true});
+	SceneObject.Selection.remove(this);
 	GameProperties.DeleteObject(this);
 };
 
