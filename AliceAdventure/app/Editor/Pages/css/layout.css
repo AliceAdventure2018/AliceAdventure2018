@@ -71,11 +71,11 @@ i {
 }
 
 input:checked + .slider {
-  background-color: #32CD32;
+  background-color: #28a745;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #32CD32;
+  box-shadow: 0 0 1px #28a745;
 }
 
 input:checked + .slider:before {
