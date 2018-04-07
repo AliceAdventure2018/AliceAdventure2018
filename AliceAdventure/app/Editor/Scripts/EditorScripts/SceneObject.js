@@ -70,6 +70,10 @@ SceneObject.Selection = {
 	}
 };
 
+var pixiFilters = { // private
+	outlineFilterBlue: new PIXI.filters.OutlineFilter(4, 0x99ff99), 
+}; 
+
 // functions
 SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = {x: 0.5, y: 0.5}, _anchor = {x: 0.5, y: 0.5}, _active = true ){
 	if (!(this instanceof SceneObject)) return;
@@ -138,8 +142,9 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 };
 
 SceneObject.prototype.SelectOff = function(){
-	this.sprite.alpha = 1;
+	//this.sprite.alpha = 1;
 	SceneObject.Selection.clear();
+		this.sprite.filters = [];
 };
 
 SceneObject.prototype.SelectOn = function(_add = false){
@@ -151,6 +156,7 @@ SceneObject.prototype.SelectOn = function(_add = false){
 			SceneObject.Selection.objects[0].SelectOff();
 		}
 		SceneObject.Selection.set(this);
+		this.sprite.filters = [pixiFilters.outlineFilterBlue];
 		//this.sprite.alpha = 0.9; // TODO
 	}
 };
