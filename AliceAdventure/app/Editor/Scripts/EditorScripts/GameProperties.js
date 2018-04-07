@@ -12,6 +12,7 @@ GameProperties = function(){
 		resWidth: 640, 
 		resHeight: 360, 
 		inventoryGridNum: 5,
+		startScene: -1,
 		projectName: "untitled"
 	};
 	this.projectData = {

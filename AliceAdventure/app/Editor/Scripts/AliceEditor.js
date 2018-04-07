@@ -26,8 +26,9 @@ AliceEditor = (function(){
 		get ObjectListView() {return getModule('ObjectListView');},
 		get ILibraryView() {return getModule('ILibraryView');},
 		get InteractionView() {return getModule('InteractionView');}, 
+		get GameSettingView() {return getModule('GameSettingView');},
 		get File() {return getModule('File');}, 
-		get Menu() {return getModule('Menu');},
+		//get Menu() {return getModule('Menu');},
 	};
 })();
 

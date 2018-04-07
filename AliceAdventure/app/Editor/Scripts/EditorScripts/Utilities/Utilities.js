@@ -8,7 +8,7 @@ Utilities = (function(){
 	return {
 		PIXI: PIXI, 
 		ELECTRON: require('electron').remote,
-		MENU: require('electron').remote.Menu, 
+		//MENU: require('electron').remote.Menu, 
 		FS: require('fs-extra'), 
 		PATH: require('path'),
 		PROMPT: require('electron-prompt'), 

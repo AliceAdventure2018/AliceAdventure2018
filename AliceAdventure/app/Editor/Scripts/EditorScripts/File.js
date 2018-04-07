@@ -252,6 +252,7 @@ File.OpenFromPath = function(_path){
 	File.instance.gameProperties.resWidth = data.settings.resWidth; 
 	File.instance.gameProperties.resHeight = data.settings.resHeight; 
 	File.instance.gameProperties.inventoryGridNum = data.settings.inventoryGridNum;
+	File.instance.gameProperties.startScene = data.settings.startScene; 
 	File.instance.gameProperties.projectName = data.settings.projectName;
 
 	// ProjData

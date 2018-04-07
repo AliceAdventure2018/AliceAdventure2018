@@ -3,19 +3,19 @@
 <head>
 	<title> Alice's Adventure </title>
 	<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<link rel="stylesheet" href="css/layout.css">	 
-		<script>document.write('<base href="' + document.location + '" />');</script>	 
-		<script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script> 
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="css/layout.css">	 
+	<script>document.write('<base href="' + document.location + '" />');</script>	 
+	<script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script> 
 	 <script src="js/app.js"></script>
-		<script src="js/resizer.js"></script>	 
+	<script src="js/resizer.js"></script>	 
 
-		<link rel="stylesheet" href="../../Resources/bootstrap.min.css">
-		<script type="text/javascript" src="../../Resources/jquery-2.0.3.min.js"></script>
-		<script type="text/javascript" src="../../Resources/modal.js"></script>
-		<script type="text/javascript" src="../../Resources/util.js"></script>
-		<script type="text/javascript" src="../../Resources/vue.js"></script>
-		<script type="text/javascript" src="../scripts/index.js"></script>
+	<link rel="stylesheet" href="../../Resources/bootstrap.min.css"/>
+	<script type="text/javascript" src="../../Resources/jquery-2.0.3.min.js"></script>
+	<script type="text/javascript" src="../../Resources/modal.js"></script>
+	<script type="text/javascript" src="../../Resources/util.js"></script>
+	<script type="text/javascript" src="../../Resources/vue.js"></script>
+	<script type="text/javascript" src="../Scripts/index.js"></script>
 </head>
 <body ng-controller="MainCtrl">
 
@@ -35,12 +35,20 @@
     					 Build
     </button>
 
-    <button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
+    <!--button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
     					 Run
-    </button>
+    </button-->
     <button onclick="AliceEditor.File.SaveProject()" id="save-button"  class="float-right" >
     					 Save
-    </button>			 
+    </button>
+
+    <button onclick="AliceEditor.File.OpenProject()" id="save-button"  class="float-right" >
+    					 Open
+    </button>
+
+    <button onclick="AliceEditor.File.NewProject()" id="save-button"  class="float-right" >
+    					 New
+    </button>
 	</nav>
 
 	<script type="text/javascript">
@@ -175,17 +183,13 @@
 					//console.log(targetElement.getAttribute("aria-controls"));
 					}
 				} 
-
-
 			});
-			
-
 		}
 	</script>
 
 				<!-- Modal -->
   <div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document" id="game-setting">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="settingLongTitle">Game Setting</h5>
@@ -194,13 +198,19 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Game Resolution <select></select></p> 
-          <p>Number of Containers in Inventory: <select></select></p>
-          <p>Start Scene <select></select></p>
+          <p>Game Resolution <select v-model='resolution'>
+          	<option v-for='opt in resolutionOptions' v-html='opt' v-bind:value='opt'></option>
+          </select></p> 
+          <p>Number of Containers in Inventory: <select v-model.number='gridNum'>
+          	<option v-for='opt in gridNumOptions' v-html='opt' v-bind:value='opt'></option>
+          </select></p>
+          <p>Start Scene <select v-model='sceneID'>
+          	<option v-for='opt in sceneOptions' v-html='opt.name' v-bind:value='opt.id'></option>
+          </select></p>
         </div>
         <div class="modal-footer">
           <button type="button" id="close-button" data-dismiss="modal">Close</button>
-          <button type="button"  id="save-button">Save changes</button>
+          <!--button type="button" id="save-button">Save changes</button-->
         </div>
       </div>
     </div>
@@ -311,7 +321,7 @@
         				<!-- loop all scenes and objects 
         				<label class="object_label" v-html="scene.name"></label>
         				<input type="checkbox" /> -->
-        				<i class="down"></i><button onclick="showListView(event)"  v-html="scene.name">hello</button>
+        				<i class="down" onclick="showListView(event)"></i><button v-html="scene.name"></button>
       					<ol class="object_label" style="display:block;">
       						<li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
       							<!--<label class="object_label" v-html="object.name"></label>
