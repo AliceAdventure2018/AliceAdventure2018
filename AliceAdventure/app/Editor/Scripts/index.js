@@ -24,11 +24,12 @@ var sceneView,
 	galleryView, 
 	runView, 
 	interactionView, 
-	iLibraryView;
+	iLibraryView, 
+	gameSettingView;
 
 function InitAllViews(){
-	AliceEditor.Menu.Init();
-	AliceEditor.Menu.Update();
+	//AliceEditor.Menu.Init();
+	//AliceEditor.Menu.Update();
 	InitSceneView();
 	InitPropertyView();
 	InitObjectListView();
@@ -36,6 +37,7 @@ function InitAllViews(){
 	InitRunView();
 	InitInteractionView();
 	InitILibraryView();
+	InitGameSettingView();
 }
 
 function InitSceneView(){
@@ -64,4 +66,8 @@ function InitInteractionView(){
 
 function InitILibraryView(){
   iLibraryView = AliceEditor.ILibraryView.NewView('interaction-library');
+}
+
+function InitGameSettingView(){
+	gameSettingView = AliceEditor.GameSettingView.NewView('game-setting');
 }

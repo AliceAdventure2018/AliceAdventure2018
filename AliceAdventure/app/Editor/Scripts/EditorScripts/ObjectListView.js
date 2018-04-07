@@ -35,9 +35,8 @@ ObjectListView.prototype.InitView = function(){
 	    selectedObjects: null
 	  }, 
 	  methods: {
-	  	onSelect: function(_thing){
-	  		_thing.SelectOn(); // work both for obj and scene
-	  	}
+	  	onSelect: (thing)=>{thing.SelectOn();}, // work both for obj and scene
+	  	deleteObject: (obj)=>{obj.DeleteThis()},
 	  }
 	});
 

@@ -70,11 +70,11 @@ GalleryView.PictureLibrary = [
 ];
 
 GalleryView.SoundLibrary = [
-	{
+	/*{
 		index: 0, 
 		src: "Assets/door.wav", 
 		name: "Door"
-	}, 
+	}, */
 ];
 
 GalleryView.NewView = function(_elementID){

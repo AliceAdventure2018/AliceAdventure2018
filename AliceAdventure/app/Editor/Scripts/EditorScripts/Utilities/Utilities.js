@@ -3,10 +3,12 @@
 var Utilities; 
 
 Utilities = (function(){
+	var PIXI = require('../../../../Resources/pixi/pixi');
+	Object.assign(PIXI.filters, require('../../../../Resources/pixi/pixi-extra-filters.min.js'));
 	return {
-		PIXI: require('../../../../Resources/pixi/pixi'), 
+		PIXI: PIXI, 
 		ELECTRON: require('electron').remote,
-		MENU: require('electron').remote.Menu, 
+		//MENU: require('electron').remote.Menu, 
 		FS: require('fs-extra'), 
 		PATH: require('path'),
 		PROMPT: require('electron-prompt'), 

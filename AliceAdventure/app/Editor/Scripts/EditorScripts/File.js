@@ -56,13 +56,11 @@ File.NewProject = function(_template = null){ // TODO: load from template
 			File.instance.gameProperties.settings.projectName = _name;
 			Event.Broadcast("reload-project");
 		}
-	})
+	});
 };
 
 File.SaveProject = function(){
-	if (File.instance == null){
-		return;
-	}
+	if (File.instance == null){return;}
 	if (File.instance.path == null){ // No path saved
 		// Open file selector
 		ELECTRON.dialog.showSaveDialog({
@@ -79,21 +77,22 @@ File.SaveProject = function(){
 	}
 };
 
-File.SaveAsNewProject = function(){
-	if (File.instance == null){
-		return;
-	}
+File.SaveAsNewProject = function(callback){
+	if (File.instance == null){return;}
 	// open file selecter
 	ELECTRON.dialog.showSaveDialog({
-			title: 'Select folder',  
-			defaultPath: File.instance.gameProperties.settings.projectName, 
-			buttonLabel: 'Save', 
-			filters: [{name: 'AliceAdventureProject', extensions: [File.extension]}], 
-			properties: ['openFile', 'createDirectory']
-		}, (_path)=>{ // callback
-			if (_path == null) return;
-			File.SaveToPath(_path);
-		});
+		title: 'Select folder',  
+		defaultPath: File.instance.gameProperties.settings.projectName, 
+		buttonLabel: 'Save', 
+		filters: [{name: 'AliceAdventureProject', extensions: [File.extension]}], 
+		properties: ['openFile', 'createDirectory']
+	}, (_path)=>{ // callback
+		if (_path == null) return;
+		File.SaveToPath(_path);
+		if (typeof callback == "function"){
+			callback();
+		}
+	});
 }
 
 File.OpenProject = function(){
@@ -127,12 +126,17 @@ File.CloseProject = function(){
 
 File.BuildProject = function(){
 	if (File.instance == null) return;
-	var compiler = new Compiler(File.instance.path, (_err)=>{ Debug.LogError(_err); });
-	if (compiler.build((_err)=>{ Debug.LogError(_err); })){ // success
-		Debug.Log("Build succeeded")
-	} else { // fail
-		Debug.Log("Build failed with error");
-	}
+	// check if project saved
+	if (File.instance.path == null){ // no existing file
+		if (confirm('Your project is unsaved. \nSave it first?')){
+			File.SaveAsNewProject(()=>{File.Build()});
+		} else {
+			return;
+		}
+	} else {
+		File.SaveToPath(File.instance.path);
+		File.Build();
+	}	
 }
 
 File.RunProject = function(){
@@ -248,11 +252,21 @@ File.OpenFromPath = function(_path){
 	File.instance.gameProperties.resWidth = data.settings.resWidth; 
 	File.instance.gameProperties.resHeight = data.settings.resHeight; 
 	File.instance.gameProperties.inventoryGridNum = data.settings.inventoryGridNum;
+	File.instance.gameProperties.startScene = data.settings.startScene; 
 	File.instance.gameProperties.projectName = data.settings.projectName;
 
 	// ProjData
 	ID.setCounter(data.projectData.idCounter);
 
 	Event.Broadcast("reload-project");
+}
+
+File.Build = function(){
+	var compiler = new Compiler(File.instance.path, (_err)=>{ Debug.LogError(_err); });
+	if (compiler.build((_err)=>{ Debug.LogError(_err); })){ // success
+		Debug.Log("Build succeeded")
+	} else { // fail
+		Debug.Log("Build failed with error");
+	}
 }
 module.exports = File;

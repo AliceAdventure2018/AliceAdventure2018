@@ -44,6 +44,7 @@ View.HandleDrop = function(ev, infoType, operation){
 		if (typeof operation == "function"){
 			operation(dragData.data);
 		}
+		dragData = {};
 	}
 }
 
