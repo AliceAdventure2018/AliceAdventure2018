@@ -2,6 +2,11 @@
 <html lang="en" ng-app="myApp">
 <head>
 	<title> Alice's Adventure </title>
+	<script>
+		window.onerror = function (errorMsg, url, lineNumber) {
+		    alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+		}
+	</script>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="css/layout.css">	 
@@ -38,6 +43,10 @@
     <!--button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
     					 Run
     </button-->
+    <button onclick="AliceEditor.File.ImportSound()" id="save-button"  class="float-right" >
+    					 Import
+    </button>
+
     <button onclick="AliceEditor.File.SaveProject()" id="save-button"  class="float-right" >
     					 Save
     </button>
@@ -82,8 +91,12 @@
 									targetTitle.innerHTML = origianalText;
 									//targetTitle.parentNode.innerHTML = origianalText;
 								} else {
-									targetTitle.innerHTML = newValue;
+									//if (obj == null){
+										targetTitle.innerHTML = newValue;
+									//} else {
+										//obj.name = newValue;
 									 //targetTitle.parentNode.innerHTML = newValue;
+									//}
 								 }
 							}
 						 // alert("Your new value: \n\n" + newValue);
@@ -557,7 +570,7 @@
 				<!-- bind info -->
 				<div v-if='showProperty' class="property-info">
 					<ul>
-						<li><span ondblclick="editInPlace(event)" class="editInPlace" v-model='bindObj.name'/>name</span></li>
+						<li><span ondblclick="//editInPlace(event)" class="editInPlace"/></span><input style="width:100px" v-model='bindObj.name'/></li>
 
 						<!--<input v-model='bindObj.name'/>-->
 						<li>

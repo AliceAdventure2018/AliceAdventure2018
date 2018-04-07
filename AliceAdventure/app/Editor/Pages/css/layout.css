@@ -71,11 +71,11 @@ i {
 }
 
 input:checked + .slider {
-  background-color: #28a745;
+  background-color: #32CD32;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #28a745;
+  box-shadow: 0 0 1px #32CD32;
 }
 
 input:checked + .slider:before {
@@ -371,6 +371,7 @@ input:checked + .slider:before {
 
 
 .asset {
+    cursor: pointer;
     margin:7px; /* 5px */
     border-radius: 10px;
      background-color: #ccc;
@@ -475,7 +476,7 @@ input:checked + .slider:before {
 }
 
 #interaction-box-close{
-
+    cursor:pointer;
     width:15px;
     height: 15px;
     float:right;
@@ -557,6 +558,7 @@ input:checked + .slider:before {
 
 
 .badge-event{
+    cursor: pointer;
     min-width: 200px;
      text-align: left !important;
     background-color: #ef5b34;
@@ -564,7 +566,7 @@ input:checked + .slider:before {
     font-size: 0.8em !important;
 }
 .badge-state{
-
+    cursor: pointer;
     min-width: 200px;
     text-align: left !important;
     background-color: #f9af48;
@@ -574,6 +576,7 @@ input:checked + .slider:before {
 
 
 .badge-reaction{
+    cursor: pointer;
     min-width: 200px;
      text-align: left !important;
     background-color: #28a745;

@@ -106,7 +106,7 @@ IReaction.prototype.toJsonObject = function() {
     switch(obj.type) {
         case 0:
             args[0] = this.args[0].id;
-            args[1] = this.args[1];
+            args[1] = (this.args[1] == null)? false:this.args[1];
             break;
         case 1:
             args[0] = this.args[0].id;
