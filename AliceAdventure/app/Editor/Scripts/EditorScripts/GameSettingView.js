@@ -30,15 +30,18 @@ GameSettingView.prototype.InitView = function(){
 	this.vModel = new Vue({
 		el: '#' + this.bindElementID,
 		data: {
-			resolutionOptions: ['640 x 360'], 
-			resolution: null,
+			projLoaded: false,
 			sceneOptions: null,
-			sceneID: null,
-			gridNumOptions: [0, 1, 2, 3, 4, 5],
-			gridNum: null, 
+			gridNumOptions: [0, 5, 6, 7, 8, 9, 10],
+			resOptions: [{w: 1280, h: 720}, {w: 640, h: 360}], 
+			res: {w: null, h:null},
+			settings: null
 		}, 
 		methods:{
-			
+			changeRes: ()=>{
+				this.vModel.settings.resWidth = this.vModel.res.w; 
+				this.vModel.settings.resHeight = this.vModel.res.h;
+			},
 		}
 	});
 
@@ -49,15 +52,13 @@ GameSettingView.prototype.InitView = function(){
 GameSettingView.prototype.ReloadView = function(){
 	View.prototype.ReloadView.apply(this); // call super method
 	if (GameProperties.instance == null){
-		this.vModel.resolution = null;
+		this.vModel.projLoaded = false;
 		this.vModel.sceneOptions = null;
-		this.vModel.sceneID = null;
-		this.vModel.gridNum = null;
+		this.vModel.settings = null;
 	} else {
-		this.vModel.resolution = null; // TODO
+		this.vModel.projLoaded = true;
 		this.vModel.sceneOptions = GameProperties.instance.sceneList;
-		this.vModel.sceneID = GameProperties.instance.settings.startScene;
-		this.vModel.gridNum = GameProperties.instance.settings.inventoryGridNum;
+		this.vModel.settings = GameProperties.instance.settings;
 	}
 }
 
