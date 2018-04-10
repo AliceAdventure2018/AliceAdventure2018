@@ -8,19 +8,55 @@
 
     <link rel="stylesheet" href="css/layout.css">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
     <script>document.write('<base href="' + document.location + '" />');</script>
-   <script src="http://code.jquery.com/jquery-2.0.3.min.js" data-semver="2.0.3" data-require="jquery"></script>
+
    
-	<script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script>
-   <script src="js/app.js"></script>
-    <script src="js/resizer.js"></script>	
+   <link rel="stylesheet" href="../../Resources/bootstrap.min.css"/>
+  <script type="text/javascript" src="../../Resources/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="../../Resources/modal.js"></script>
+  <script type="text/javascript" src="../../Resources/util.js"></script>
+  <script type="text/javascript" src="../../Resources/vue.js"></script>
+  <script type="text/javascript" src="../Scripts/index.js"></script>
 	
 
 </head>
-<body>
+
+<style rel="stylesheet">
+.sys-button{
+  display: block;
+  margin:auto;
+  padding:1%;
+   color:#fff;
+   font-weight: 480;
+   font-size: 1.8em;
+}
+
+.sys-button:focus{
+  outline: none;
+}
+
+.sys-button:hover {
+  opacity: 0.5;
+}
+</style>
+<body style="background-color:#28a745;">
+  <div style="
+  display: block;
+  margin-top:10%;
+
+  ">
+  <img src="src/welcome.png" style="
+  display: block;
+  width:40%;
+  padding-bottom: 0.5%;
+  margin:auto;
+  "/>
 	
-  <button onclick="createNewProject()"> Create New Project </button>
+  <button class="sys-button" onclick="createNewProject()" > Create New Project </button>
+   <button class="sys-button" onclick=""> Open Project </button>
+ </div>
+
 
   <script>
     function createNewProject(){
@@ -31,11 +67,7 @@
     }
   </script>
 
-	
-	
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
   
 </body>
 </html>
