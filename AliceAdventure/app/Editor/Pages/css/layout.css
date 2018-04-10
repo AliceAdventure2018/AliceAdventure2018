@@ -491,8 +491,10 @@ input:checked + .slider:before {
 .interaction-box{
     /*min-width: 300px;
     width: 300px;
+     display: inline-block;
     */
-    display: inline-block;
+    
+    position: absolute;
     border-radius: 10px;
     border-width: thin;
     border-style: solid;

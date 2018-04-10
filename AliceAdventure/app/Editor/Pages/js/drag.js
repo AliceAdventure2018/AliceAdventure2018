@@ -1,57 +1,64 @@
-function detectDrag(){
+var x =0, y=0;
+interact('.interaction-box')
+  .draggable({
+    // enable inertial throwing
+    inertia: false,
+    snap: {
+      targets: [
+        interact.createSnapGrid({ x: 30, y: 30 })
+      ],
+      range: Infinity,
+      relativePoints: [ { x: 0, y: 0 } ]
+    },
 
-	dragElement(document.getElementsByClassName(("interaction-box")));
-}
+    onmove: dragMoveListener,
+    // keep the element within the area of it's parent
+    restrict: {
+    // restriction: "parent",
 
+    //  endOnly: true,
+      elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+    },
+    // enable autoScroll
+   // autoScroll: true,
 
+    // call this function on every dragmove event
+    
+    // call this function on every dragend event
+    
+  })
+  .on('doubletap', function (event) {
+    var target = event.target || event.srcElement;
+    var index = target.style.zIndex;
+    if(index === null){
+      target.style.zIndex = 0;
+      index =0;
+    }else{
+      index++;
+      console.log(index);
+      target.style.zIndex = index;
+    }
 
+    
 
-function dragElement(elmnt) {
-	
+  });
 
-  var pos1, pos2, pos3, pos4;
-  var iterator;
-  for(i=0;i<elmnt.length;i++){
-  	if (elmnt[i] !== null) {
-  		
-    /* if present, the header is where you move the DIV from:*/
-    	elmnt[i].onmousedown = dragMouseDown(){
-    		iterator = elmnt[i]; console.log("drag");
-		  	console.log(elmnt[i]);
-		    elmnt[i] = elmnt[i] || window.event;
-		    console.log(elmnt[i]);
-		    // get the mouse cursor position at startup:
-		    pos3 = elmnt[i].clientX;
-		    pos4 = elmnt[i].clientY;
-		    document.onmouseup = closeDragElement;
-		    // call a function whenever the cursor moves:
-		   // document.onmousemove = elementDrag;
-		  };
+  function dragMoveListener (event) {
+    var target = event.target,
+        // keep the dragged position in the data-x/data-y attributes
+        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-    	
-	  }
+ 
+    // translate the element
+    target.style.webkitTransform =
+    target.style.transform =
+      'translate(' + x + 'px, ' + y + 'px)';
 
+    // update the posiion attributes
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
   }
 
-  
-   
-
-  function elementDrag(e) {
-    e = e || window.event;
-    // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    iterator.style.top = (iterator.offsetTop - pos2) + "px";
-    console.log(iterator.style.top);
-    iterator.style.left = (iterator.offsetLeft - pos1) + "px";
-  }
-
-  function closeDragElement() {
-    /* stop moving when mouse button is released:*/
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
-}
+  // this is used later in the resizing and gesture demos
+  window.dragMoveListener = dragMoveListener;
