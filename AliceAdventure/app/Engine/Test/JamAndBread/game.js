@@ -1,7 +1,7 @@
 var myGame = new GameManager();
-//myGame.init(1280,720,8);
+myGame.init(1280,720,8);
 //myGame.init(600,400,5);
-myGame.init(1280*2/4,720*2/4,5);
+//myGame.init(1280*2/4,720*2/4,5);
 myGame.sceneManager.createScenes(3);
 //myGame.states = {cat_is_feeded:false}
 myGame.initStateManager({cat_is_feeded:false});
@@ -32,7 +32,7 @@ door.interactive = true;
 door.buttonMode = true;
 door.on('pointerdown',function() {
     myGame.sound.play('door');
-    myGame.sceneManager.nextScene();
+    myGame.sceneManager.jumpToScene(1);
 });
 
 myGame.scene(0).addChild(door);
@@ -171,7 +171,7 @@ myGame.scene(2).addChild(winScene);
 //register events
 
 
-myGame.inventory.interactionSystem.addCombineEvent(knife,jam,function(){
+myGame.eventSystem.addCombineEvent(knife,jam,function(){
     
     myGame.inventory.remove(knife);
     myGame.inventory.remove(jam);
@@ -180,7 +180,7 @@ myGame.inventory.interactionSystem.addCombineEvent(knife,jam,function(){
 
 });
 
-myGame.inventory.interactionSystem.addCombineEvent(knifewithjam,bread,function(){
+myGame.eventSystem.addCombineEvent(knifewithjam,bread,function(){
     myGame.inventory.remove(knifewithjam);
     myGame.inventory.remove(bread);
     breadwithjam.visible = true;
@@ -189,7 +189,7 @@ myGame.inventory.interactionSystem.addCombineEvent(knifewithjam,bread,function()
 });
 
 
-myGame.inventory.interactionSystem.addUsedEvent(breadwithjam,cat,function(){
+myGame.eventSystem.addUsedEvent(breadwithjam,cat,function(){
 
     cat.visible = false;
     cat_sad.visible = true;
@@ -202,15 +202,14 @@ myGame.inventory.interactionSystem.addUsedEvent(breadwithjam,cat,function(){
 });
 
 
-//cat.on('pointerdown',function() {
-//    myGame.stateManager.setState('cat_is_feeded', true)
-//})
-
-
-myGame.stateManager.addStateEvent('cat_is_feeded', true, function(){
+myGame.eventSystem.addStateEvent('cat_is_feeded', true, function(){
     myGame.sound.play('win');
     myGame.sceneManager.jumpToScene(2);
     myGame.hideInventory();
+})
+
+myGame.eventSystem.addSceneTransitEvent(1, function(){
+    myGame.messageBox.startConversation(["There are some ingredient...", "On the table..."]);
 })
 
 

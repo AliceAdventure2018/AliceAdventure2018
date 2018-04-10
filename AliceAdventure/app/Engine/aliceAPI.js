@@ -73,46 +73,79 @@ var baseURL = {
 }
 
 
-function StateManager(_states, _game) {
+function StateManager(_states, _eventSys) {
     //this.game = _game;
     this.states = _states;
+    this.eventSystem = _eventSys;
     
-    //[{state: _state, toBe: _tobe}]
-    this.statesEventMessageList = [];
+    this.setState = function(_state_name, _value) {
+        if(this.states[_state_name] != _value) {
+            var message = _state_name + " is changed to " + _value;
+            this.states[_state_name] = _value;
+            this.eventSystem.callEvent(message);
+        }
+    }
+
+}
+
+function AliceEventSystem() {
+    this.emptySprite = new Alice.Object;
+    this.eventMessageList = {};
     
-    this.eventSprite = new Alice.Object;
-    
-    this.addStateEvent = function(_state, _toBe, func) {
-        var eventMessage = _state + " is changed to " + _toBe;
-        this.statesEventMessageList[eventMessage] = true;
-        this.eventSprite.on(eventMessage,function() {
+    this.addUsedEvent = function(objA, objB, func) {
+        var eventMessage = objA.name + " is used on " + objB.name;
+        //console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true; 
+        this.emptySprite.on(eventMessage,function() {
            func(); 
         });
     }
     
-//    this.checkEventExist = function(message) {
-//        if(this.eventMessageList[message] == undefined || this.eventMessageList[message] == false) {
-//            //console.log("not valid");
-//            return false;
-//        }
-//        return true;
-//    }
+    this.addCombineEvent = function(objA, objB, func) {
+        var eventMessage = objA.name + " is combined with " + objB.name;
+        console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true; 
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
+        
+        eventMessage = objB.name + " is combined with " + objA.name;
+        console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true; 
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
+    }
+    
+    this.addObserveEvent = function(obj, func) {
+        var eventMessage = obj.name + " is observed";
+        //console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true;
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
+    }
+    
+    this.addStateEvent = function(_state, _toBe, func) {
+        var eventMessage = _state + " is changed to " + _toBe;
+        this.eventMessageList[eventMessage] = true;
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
+    }
+    
+    this.checkEventExist = function(message) {
+        if(this.eventMessageList[message] == undefined || this.eventMessageList[message] == false) {
+            //console.log("not valid");
+            return false;
+        }
+        return true;
+    }
     
     this.callEvent = function(message) {
-        //check?
-        this.eventSprite.emit(message);
+        this.emptySprite.emit(message);
     }
     
-    this.setState = function(_state_name, _value) {
-        
-        if(this.states[_state_name] != _value) {
-            var message = _state_name + " is changed to " + _value;
-            this.states[_state_name] = _value;
-            this.callEvent(message);
-        }
-
-    }
-
 }
 
 function InventoryInteractionSystem() {
