@@ -403,9 +403,10 @@ Parser = function (jsonPath, buildPath){
 	//-----------------------------------------------------------
 	// 0       Click on A        1           # is clicked on
 	// 1       Use A on B        2           # is used on #
-	// 2       Observe A         1           # is observed
+	// 2(preserved)Observe A     1           # is observed
 	// 3     Combine A with B    2           # is combined with # 
-	// 4     State A -> B        2           # when state A is changed to B 
+	// 4     State A -> B        2           when state A is changed to B 
+	// 5     Scene -> #          1           when scene transit to #
 	//------------------------------------------------------------
 
 	//--------------------CONDITION-------------------------------
@@ -430,10 +431,9 @@ Parser = function (jsonPath, buildPath){
 	//   9   play music         [soundID]             play music of this ID
 	//  10   show inventory     []                    show inventory
 	//  11   hide inventory     []                    show inventory
-
 	function interactionListParser(callback){
 
-		var toReturn = "";
+		var toReturn = "var reaction = myGame.reactionSystem;\n";
 		for (let i = 0; i < this.interactionList.length; i++){
 			var result = interactionParser.call(this, this.interactionList[i], callback);
 
@@ -459,6 +459,7 @@ Parser = function (jsonPath, buildPath){
 				conditions  = conditionListParser.call(this, interaction.conditionList, callback);
 				if (conditions === false ) return false;
 			}
+
 
 			var reactions = reactionListParser.call(this, interaction.reactionList,callback);
 			if (reactions === false) return false;
@@ -598,6 +599,16 @@ Parser = function (jsonPath, buildPath){
 
 				if (toReturn === false) return false;
 				else return toReturn;
+			case 10:
+				toReturn = translate_reactionType_10.call(this,reaction.args, callback);
+
+				if (toReturn === false) return false;
+				else return toReturn;
+			case 11:
+				toReturn = translate_reactionType_11.call(this,reaction.args, callback);
+
+				if (toReturn === false) return false;
+				else return toReturn;
 			default:
 				callback("WRONG REACTION TYPE");
 				return false;
@@ -620,7 +631,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "myGame.stateManager.setState('" + state + "', " + args[1] + ");\n";
+				return "reaction.setState('" + state + "', " + args[1] + ");\n";
 			}
 
 		}else{
@@ -641,7 +652,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "myGame.sceneManager.jumpToScene(" + sceneIndex +  ");\n";
+				return "reaction.transitToScene(" + sceneIndex +  ");\n";
 			}
 
 		}else{
@@ -661,7 +672,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "myGame.inventory.add(" + obj +  ");\n";
+				return "reaction.addToInventory(" + obj +  ");\n";
 			}
 
 		}else{
@@ -681,7 +692,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "myGame.inventory.remove(" + obj +  ");\n";
+				return "reaction.removeFromInventory(" + obj +  ");\n";
 			}
 
 		}else{
@@ -702,7 +713,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return obj + ".visible = true;\n";
+				return "reaction.makeObjVisible(" + obj + ");\n";
 			}
 
 		}else{
@@ -722,7 +733,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return obj + ".visible = false;\n";
+				return "reaction.makeObjInvisible(" + obj + ");\n";
 			}
 
 		}else{
@@ -742,7 +753,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return obj + ".interactive = true;\n";
+				return "reaction.makeInteractive(" + obj + ");\n";
 			}
 
 		}else{
@@ -762,7 +773,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return obj + ".interactive = false;\n";
+				return "reaction.makeNonInteractive(" + obj + ");\n";
 			}
 
 		}else{
@@ -772,28 +783,7 @@ Parser = function (jsonPath, buildPath){
 
 	}
 
-
-	function translate_reactionType_9( args, callback){
-		if (args.length == 1){
-
-			var sound = findSoundByID.call(this, args[0]);
-
-			if (sound === false){
-				callback("Compile ERROR: cannot find sound of id: " + args[0] + ".");
-				return false;
-
-			}else{
-				return "myGame.sound.play('" + sound + "');\n";
-			}
-
-		}else{
-			callback("JSON Format ERROR: reaction type 8 (play sound) should have ONE argument.");
-			return false;
-		}
-
-	}
-
-	//show message box
+		//show message box
 	function translate_reactionType_8( args, callback){
 		if (args.length == 1){
 	
@@ -804,6 +794,50 @@ Parser = function (jsonPath, buildPath){
 			return false;
 		}
 	}
+
+	//play sound
+	function translate_reactionType_9( args, callback){
+		if (args.length == 1){
+
+			var sound = findSoundByID.call(this, args[0]);
+
+			if (sound === false){
+				callback("Compile ERROR: cannot find sound of id: " + args[0] + ".");
+				return false;
+
+			}else{
+				return "reaction.playAudio(" + sound + ");\n";
+			}
+
+		}else{
+			callback("JSON Format ERROR: reaction type 8 (play sound) should have ONE argument.");
+			return false;
+		}
+
+	}
+
+	function translate_reactionType_10( args, callback){
+		if (args.length == 0){
+	
+			return "reaction.showInventory();\n";
+
+		}else{
+			callback("JSON Format ERROR: reaction type 10 (show inventory) should have ZERO argument.");
+			return false;
+		}
+	}
+
+	function translate_reactionType_11( args, callback){
+		if (args.length == 0){
+	
+			return "reaction.hideInventory();\n";
+
+		}else{
+			callback("JSON Format ERROR: reaction type 10 (hide inventory) should have ZERO argument.");
+			return false;
+		}
+	}
+
 
 //-------------------------EVENT----------------------------------------------
 	function eventParser(event, callback){
@@ -823,11 +857,11 @@ Parser = function (jsonPath, buildPath){
 
 					if (toReturn === false) return false;
 					else return toReturn;
-				case 2: 
-					toReturn = translate_eventType_2.call(this, event.args, callback);
+				// case 2: 
+				// 	toReturn = translate_eventType_2.call(this, event.args, callback);
 
-					if (toReturn === false) return false;
-					else return toReturn;
+				// 	if (toReturn === false) return false;
+				//	else return toReturn;
 				case 3:
 					toReturn = translate_eventType_3.call(this, event.args, callback);
 
@@ -838,6 +872,12 @@ Parser = function (jsonPath, buildPath){
 
 					if (toReturn === false) return false;
 					else return toReturn;
+				case 5:
+					toReturn = translate_eventType_5.call(this, event.args, callback);
+
+					if (toReturn === false) return false;
+					else return toReturn;
+
 				default:
 					callback("Unsupported Event Type.");
 					return false;
@@ -874,7 +914,7 @@ Parser = function (jsonPath, buildPath){
 			var obj2 = findObjectByID.call(this, args[1]);
 
 			if (obj1 != false && obj2 != false){
-				return "\n//-------------USE--------------\nmyGame.inventory.interactionSystem.addUsedEvent(" + obj1 + ", " + obj2 + ", function(){\n";
+				return "\n//-------------USE--------------\nmyGame.eventSystem.addUsedEvent(" + obj1 + ", " + obj2 + ", function(){\n";
 
 			}else{
 				callback("Compile ERROR: cannot find object of id: " + obj1 + " or " + obj2 + ".");
@@ -887,23 +927,23 @@ Parser = function (jsonPath, buildPath){
 	}
 		
 
-	function translate_eventType_2(args, callback){
-		if (args.length == 1){
-			var objID = args[0];
-			var objName = findObjectByID.call(this,objID);
+	// function translate_eventType_2(args, callback){
+	// 	if (args.length == 1){
+	// 		var objID = args[0];
+	// 		var objName = findObjectByID.call(this,objID);
 
-			if (objName === false){
-				callback("Compile ERROR: Cannot find the object of ID: " + objID + ".") ;
-				return false;
-			}else{
-				return "\n//--------------Observe--------------\n" + objName + ".on('pointerdown', function(){\n";		
-			}
+	// 		if (objName === false){
+	// 			callback("Compile ERROR: Cannot find the object of ID: " + objID + ".") ;
+	// 			return false;
+	// 		}else{
+	// 			return "\n//--------------Observe--------------\n" + objName + ".on('pointerdown', function(){\n";		
+	// 		}
 
-		}else{
-			callback("JSON Format ERROR: For event type 2 (Observe A) must have ONLY one argument.");
-			return false;
-		}
-	}
+	// 	}else{
+	// 		callback("JSON Format ERROR: For event type 2 (Observe A) must have ONLY one argument.");
+	// 		return false;
+	// 	}
+	// }
 
 	function translate_eventType_3(args, callback){
 		if (args.length == 2){
@@ -911,7 +951,7 @@ Parser = function (jsonPath, buildPath){
 			var obj2 = findObjectByID.call(this, args[1]);
 
 			if (obj1 != false && obj2 != false){
-				return "\n//-------------COMBINE--------------\nmyGame.inventory.interactionSystem.addCombineEvent(" + obj1 + ", " + obj2 + ", function(){\n";
+				return "\n//-------------COMBINE--------------\nmyGame.eventSystem.addCombineEvent(" + obj1 + ", " + obj2 + ", function(){\n";
 
 			}else{
 				callback("Compile ERROR: cannot find object of id: " + obj1 + " or " + obj2 + ".");
@@ -929,11 +969,13 @@ Parser = function (jsonPath, buildPath){
 		if (args.length == 2){
 			var state = findStateByID.call(this, args[0]);
 
-			if (state === false){
-				callback("Compile ERROR: For event Type 4, cannot find state of id : " + args[0] + ".");
+			if (state === false ){
+
+				if (args[1] == null) callback("JSON ERROR: state_to_be of event Type 4 ( when state A is changed to state B) cannnot be null");
+				else callback("Compile ERROR: For event Type 4, cannot find state of id : " + args[0] + ".");
 				return false;
 			}else{
-				return "\n//----------------When State A --> B----------------------\nmyGame.stateManager.addStateEvent( '" + state + "', " + args[1] + ", function(){\n";
+				return "\n//----------------When State A --> B----------------------\nmyGame.eventSystem.addStateEvent( '" + state + "', " + args[1] + ", function(){\n";
 			}
 
 		
@@ -942,6 +984,25 @@ Parser = function (jsonPath, buildPath){
 			return false;
 		}
 	}
+
+	function translate_eventType_5(args, callback){
+		if (args.length == 1){
+			var sceneIndex = findSceneByID.call(this, args[0]);
+
+			if (sceneIndex == false){
+				callback("Compile ERROR: for event type 5(sceneTransitEvent), cannot find scene id： " + args[0] +".");
+				return false;
+			}
+			else{
+				return "\n-----------------When Scene transit to A------------------\nmygame.eventSystem.addSceneTransitEvent( " + sceneIndex +", function(){\n";
+			}
+		}
+		else{
+			callback("JSON Format ERROR: For event type 5 (sceneTransitEvent) must have ONE argument.");
+			return false;
+		}
+	}
+
 
 
 	// return false if not found
