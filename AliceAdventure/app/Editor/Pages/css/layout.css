@@ -476,13 +476,26 @@ input:checked + .slider:before {
 }
 
 #interaction-box-close{
+    opacity: 0.8;
     cursor:pointer;
-    width:15px;
-    height: 15px;
+    width:16px;
+    height: 16px;
     float:right;
     margin-top:7px;
     margin-right: 7px;
 
+}
+#interaction-box-minimize:hover{
+    opacity: 0.5;
+}
+#interaction-box-minimize{
+    opacity: 0.8;
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    float:right;
+    margin-top: 7px;
+    margin-right: 7px;
 }
 
 #interaction-box-close:hover {

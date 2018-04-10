@@ -22,27 +22,45 @@ interact('.interaction-box')
     // enable autoScroll
    // autoScroll: true,
 
-    // call this function on every dragmove event
+  
     
-    // call this function on every dragend event
-    
-  })
-  .on('doubletap', function (event) {
-    var target = event.target || event.srcElement;
-    var index = target.style.zIndex;
-    if(index === null){
-      target.style.zIndex = 0;
-      index =0;
-    }else{
-      index++;
-      console.log(index);
-      target.style.zIndex = index;
-    }
-
-    
-
   });
 
+  function minimizeWindow(event){
+  		var eventTarget = event.target.parentNode;
+  		var target = eventTarget.closest('.interaction-box');
+    	var targetChildren = target.childNodes;
+   		var minimizeSrc = document.getElementById("interaction-box-minimize").getAttribute("min-src");
+   		var maxmizeSrc = document.getElementById("interaction-box-minimize").getAttribute("max-src");
+   		console.log(minimizeSrc);
+   		console.log(maxmizeSrc);
+    if(target.getAttribute("max") === 'true'){
+    	target.setAttribute("max",'false');
+    	document.getElementById("interaction-box-minimize").src = maxmizeSrc;
+    	//console.log("let's minimize");
+    	//console.log(target.max);
+    	for(i=0;i<targetChildren.length;i++){
+    		if(targetChildren[i].tagName === 'UL' || targetChildren[i].tagName === 'H6'){
+    			targetChildren[i].style.display = 'none';
+    		}
+    	}
+    	target.style.width = '250px';
+
+    } else if(target.getAttribute("max") === 'false'){
+    	target.setAttribute("max",'true');
+    	document.getElementById("interaction-box-minimize").src = minimizeSrc;
+
+    	target.style.width = null;
+
+    	//console.log("let's maxmize");
+    	for(k=0;k<targetChildren.length;k++){
+    		if(targetChildren[k].tagName === 'UL' || targetChildren[k].tagName === 'H6'){
+    			targetChildren[k].style.display = 'block';
+    		}
+    	}
+    }
+  }
+  
   function dragMoveListener (event) {
     var target = event.target,
         // keep the dragged position in the data-x/data-y attributes
