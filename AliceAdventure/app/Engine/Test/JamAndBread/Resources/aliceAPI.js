@@ -18,6 +18,7 @@ var baseURL = {
 }
 
 
+
 function StateManager(_states, _eventSys) {
     this.states = _states;
     this.eventSystem = _eventSys;
@@ -31,6 +32,60 @@ function StateManager(_states, _eventSys) {
         }
     }
 
+}
+
+function AliceReactionSystem(_game) {
+    
+    this.game = _game;
+    
+    this.setState = function(_stateName, _value) {
+        this.game.stateManager.setState(_stateName, _value);
+    }
+    
+    this.transitToScene = function(_sceneIndex) {
+        this.game.sceneManager.jumpToScene(_sceneIndex);
+    }
+    
+    this.addToInventory = function(_obj) {
+        this.game.inventory.add(_obj);
+    }
+    
+    this.removeFromInventory = function(_obj) {
+        this.game.inventory.remove(_obj);
+    }
+    
+    this.makeObjVisible = function(_obj) {
+        _obj.visible = true;
+    }
+    
+    this.makeObjInvisible = function(_obj) {
+        _obj.visible = false;
+    }
+    
+    this.makeInteractive = function(_obj) {
+        _obj.interactive = true;
+    }
+    
+    this.makeNonInteractive = function(_obj) {
+        _obj.interactive = false;
+    }
+    
+    this.playAudio = function(_audio) {
+        this.game.sound.play(_audio);
+    }
+    
+    this.showInventory = function() {
+        this.game.showInventory();
+    }
+    
+    this.hideInventory = function() {
+        this.game.hideInventory();
+    }
+    
+    this.moveObjectToScene= function(_obj, _scene_index, x = null , y = null) {
+        this.game.moveObjectToScene(_obj,_scene_index,x,y);
+    }
+    
 }
 
 function AliceEventSystem() {
@@ -371,6 +426,9 @@ function SceneManager(game) {
     }
     
     this.start = function(index) {
+        console.log("width: " + window.screen.width);
+        console.log("height: " + window.screen.height);
+
         this.currentScene = this.sceneContainer.getChildAt(index);
         this.currentScene.visible = true;
     }
@@ -393,6 +451,7 @@ function GameManager() {
     this.messageBox;
     this.stateManager;
     this.eventSystem;
+    this.reactionSystem;
     
     //sound
     this.sound = PIXI.sound;
@@ -412,8 +471,16 @@ function GameManager() {
                
         this.sceneManager = new SceneManager(this);
         this.inventory = new Inventory(this);
-        this.messageBox = new MessageBox({x:width,y:height,scale:1, url: baseURL.requireAssets+'textbox.png',a:1},false, this);
+        this.messageBox = new MessageBox({w:width,
+                                          h:height,
+                                          scale:1, 
+                                          url: baseURL.requireAssets+'textbox.png',
+                                          a:1},
+                                         false, 
+                                         this);
+        
         this.eventSystem = new AliceEventSystem();
+        this.reactionSystem = new AliceReactionSystem(this);
         
         this.app.stage.addChild(this.sceneManager.sceneContainer);
         this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
@@ -423,8 +490,17 @@ function GameManager() {
     
     }
     
+    
     this.initStateManager = function(_states) {
         this.stateManager = new StateManager(_states, this.eventSystem);
+    }
+    
+    this.moveObjectToScene= function(_obj, _scene_index, x = null , y = null) {
+        this.scene(_scene_index).addChild(_obj);
+        if(x)
+            _obj.x = x;
+        if(y)
+            _obj.y = y;
     }
     
     
@@ -454,12 +530,28 @@ function GameManager() {
 }
 
 
-function Message(text,style,avatar) {
-    this.text;
-    this.style;
+function Message(_text, _style, _avatar, _narrator="") {
+//    this.defaultStyle = new PIXI.TextStyle({
+//        fontFamily: 'Arial',
+//        fontSize: 20,
+//        fontWeight: 'bold',
+//        wordWrap: true,
+//        wordWrapWidth: 600
+//    });
+    
+    this.text = _text;
+    this.style = _style;
     this.avatar;
+    this.narrator = _narrator;
 }
 
+/*
+the original settings for 1280*720 screen
+    url: baseURL.requireAssets+'textbox.png'
+    pixel: 1051*231
+    alpha: 0.8
+    font_size: 25
+*/
 
 function MessageBox(background, avatarEnable, game) {
     
@@ -467,19 +559,20 @@ function MessageBox(background, avatarEnable, game) {
     
     this.holder = new Alice.Container();
     
+    //the original background asset is built for 1280*720 screen
     this.backgronud = Alice.Object.fromImage(background.url);
+    //this.backgronud = Alice.Object.fromImage("Assets/require/textbox.png");
     this.backgronud.anchor.set(0.5);
     
-    this.backgronud.x = background.x/2;
-    
-    
+    //horizontal center
+    this.backgronud.x = background.w/2;
     this.backgronud.alpha = 0.8;
     
-    var scale = (this.game.screenWidth / 1280);
+    var scale = (this.game.screenWidth / 1280) * 0.7;
+    
     this.backgronud.scale.set(scale);
     
-    this.backgronud.y = background.y - (220 * scale)/2 - 10 * scale;
-    
+    this.backgronud.y = background.h - (220 * scale)/2 - 10 * scale;
     
     this.backgronud.interactive = true;
     this.backgronud.buttonMode = true;
@@ -514,26 +607,15 @@ function MessageBox(background, avatarEnable, game) {
     
     this.defaltStyle = new PIXI.TextStyle({
         fontFamily: 'Arial',
-        fontSize: 20 * scale ,
-        //fontStyle: 'italic',
+        fontSize: 23 * scale,
         fontWeight: 'bold',
-        //fill: ['#ffffff', '#00ff99'], // gradient
-//        stroke: '#4a1850',
-//        strokeThickness: 5,
-//        dropShadow: true,
-//        dropShadowColor: '#000000',
-//        dropShadowBlur: 4,
-//        dropShadowAngle: Math.PI / 6,
-//        dropShadowDistance: 6,
         wordWrap: true,
-        wordWrapWidth: 600
+        wordWrapWidth: 1051 * scale * 0.8
     });
     
 
     this.currentMsg = new PIXI.Text("", this.defaltStyle);
     this.currentMsg.anchor.set(0.5);
-    this.currentMsg.x = 30;
-    this.currentMsg.y = 180;
     this.currentMsg.x = this.backgronud.x;
     this.currentMsg.y = this.backgronud.y;
     
@@ -547,10 +629,7 @@ function MessageBox(background, avatarEnable, game) {
         this.messageBuffer = this.messageBuffer.concat(msgs);
     }
     
-    this.startConversation= function(msgs,func) {
-        
-        //console.log(msgs);
-        
+    this.startConversation= function(msgs, func = null) {
         if(msgs.length == 0)
             return
         
@@ -558,10 +637,8 @@ function MessageBox(background, avatarEnable, game) {
             this.addMessages(msgs);
             return;
         }
-        
-        this.game.lock = true;
             
-        if(func!=undefined)
+        if(func)
             this.callBack = func;
         
         this.messageBuffer = msgs;
