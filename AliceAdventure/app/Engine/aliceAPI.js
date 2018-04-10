@@ -11,61 +11,6 @@ var Alice = {
     Sound: PIXI.sound
 }
 
-function InteractionSystem(object) {
-    this.clickCollection = new InteractionCollection(0);
-    
-    object.interactive = true;
-    object.buttonMode = true;
-    object.onClick = function() {
-        object.interactionSystem.clickCollection.react()
-    }
-    object.on('pointerdown', object.onClick);
-
-}
-
-function Condition(description) {
-    this.description = description;
-    this.satisfied = false;
-}
-
-
-function InteractionCollection(type) {
-    this.type = type;
-    this.interactions = [];
-    this.add = function(interation) {
-        //console.log(this.interactions);
-        this.interactions.push(interation);
-    }
-    this.react = function() {
-        //console.log(this.interactions);
-        this.interactions.forEach(function(int) {
-            if(int.checkCondition()) {
-                int.reaction();
-                console.log("react");
-            }
-        })
-    }
-}
-
-function Interaction() {
-    this.active = true;
-    this.description = "";
-    this.requiredConditions = [];
-    
-    //override
-    this.reaction = function(){};
-    
-    this.checkCondition = function() {
-        console.log("check");
-        var result = true;
-        for(var condition in this.requiredConditions) {
-            result = result && condition.satisfied;
-        }
-        return result;
-    }
-}
-
-
 
 var baseURL = {
     requireAssets: './Resources/Assets/require/',
@@ -73,56 +18,92 @@ var baseURL = {
 }
 
 
-function StateManager(_states, _game) {
-    //this.game = _game;
+
+function StateManager(_states, _eventSys) {
     this.states = _states;
-    
-    //[{state: _state, toBe: _tobe}]
-    this.statesEventMessageList = [];
-    
-    this.eventSprite = new Alice.Object;
-    
-    this.addStateEvent = function(_state, _toBe, func) {
-        var eventMessage = _state + " is changed to " + _toBe;
-        this.statesEventMessageList[eventMessage] = true;
-        this.eventSprite.on(eventMessage,function() {
-           func(); 
-        });
-    }
-    
-//    this.checkEventExist = function(message) {
-//        if(this.eventMessageList[message] == undefined || this.eventMessageList[message] == false) {
-//            //console.log("not valid");
-//            return false;
-//        }
-//        return true;
-//    }
-    
-    this.callEvent = function(message) {
-        //check?
-        this.eventSprite.emit(message);
-    }
+    this.eventSystem = _eventSys;
     
     this.setState = function(_state_name, _value) {
-        
         if(this.states[_state_name] != _value) {
-            var message = _state_name + " is changed to " + _value;
+            var message = _state_name + this.eventSystem.template.state + _value;
             this.states[_state_name] = _value;
-            this.callEvent(message);
+            
+            this.eventSystem.callEvent(message);
         }
-
     }
 
 }
 
-function InventoryInteractionSystem() {
+function AliceReactionSystem(_game) {
+    
+    this.game = _game;
+    
+    this.setState = function(_stateName, _value) {
+        this.game.stateManager.setState(_stateName, _value);
+    }
+    
+    this.transitToScene = function(_sceneIndex) {
+        this.game.sceneManager.jumpToScene(_sceneIndex);
+    }
+    
+    this.addToInventory = function(_obj) {
+        this.game.inventory.add(_obj);
+    }
+    
+    this.removeFromInventory = function(_obj) {
+        this.game.inventory.remove(_obj);
+    }
+    
+    this.makeObjVisible = function(_obj) {
+        _obj.visible = true;
+    }
+    
+    this.makeObjInvisible = function(_obj) {
+        _obj.visible = false;
+    }
+    
+    this.makeInteractive = function(_obj) {
+        _obj.interactive = true;
+    }
+    
+    this.makeNonInteractive = function(_obj) {
+        _obj.interactive = false;
+    }
+    
+    this.playAudio = function(_audio) {
+        this.game.sound.play(_audio);
+    }
+    
+    this.showInventory = function() {
+        this.game.showInventory();
+    }
+    
+    this.hideInventory = function() {
+        this.game.hideInventory();
+    }
+    
+    this.moveObjectToScene= function(_obj, _scene_index, x = null , y = null) {
+        this.game.moveObjectToScene(_obj,_scene_index,x,y);
+    }
+    
+}
+
+function AliceEventSystem() {
+    
+    this.template = {
+        use: " is used on ",
+        combine: " is combined with ",
+        observe: " is observed ",
+        state: " is changed to ",
+        transit: "transit to "
+    }
     
     this.emptySprite = new Alice.Object;
     this.eventMessageList = {};
     
     this.addUsedEvent = function(objA, objB, func) {
-        var eventMessage = objA.name + " is used on " + objB.name;
-        //console.log("msg: " + eventMessage);
+        var eventMessage = objA.name + this.template.use + objB.name;
+        console.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
            func(); 
@@ -130,14 +111,14 @@ function InventoryInteractionSystem() {
     }
     
     this.addCombineEvent = function(objA, objB, func) {
-        var eventMessage = objA.name + " is combined with " + objB.name;
+        var eventMessage = objA.name + this.template.combine + objB.name;
         console.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
            func(); 
         });
         
-        eventMessage = objB.name + " is combined with " + objA.name;
+        eventMessage = objB.name + this.template.combine + objA.name;
         console.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
@@ -146,8 +127,25 @@ function InventoryInteractionSystem() {
     }
     
     this.addObserveEvent = function(obj, func) {
-        var eventMessage = obj.name + " is observed";
-        //console.log("msg: " + eventMessage);
+        var eventMessage = obj.name + this.template.observe;
+        console.log("msg: " + eventMessage);
+        this.eventMessageList[eventMessage] = true;
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
+    }
+    
+    this.addStateEvent = function(_state, _toBe, func) {
+        var eventMessage = _state + this.template.state + _toBe;
+        this.eventMessageList[eventMessage] = true;
+        this.emptySprite.on(eventMessage,function() {
+           func(); 
+        });
+    }
+    
+    this.addSceneTransitEvent = function(_scene, func) {
+        var eventMessage = this.template.transit + _scene;
+        //console.log("add scene transit: " + eventMessage)
         this.eventMessageList[eventMessage] = true;
         this.emptySprite.on(eventMessage,function() {
            func(); 
@@ -159,15 +157,15 @@ function InventoryInteractionSystem() {
             //console.log("not valid");
             return false;
         }
-        
         return true;
     }
     
     this.callEvent = function(message) {
         this.emptySprite.emit(message);
     }
-
+    
 }
+
 
 function Inventory(game) { //always on the top
     //tools container
@@ -193,9 +191,6 @@ function Inventory(game) { //always on the top
         inventBack.y = i*this.inventory_w;
         this.inventoryBackgroundGrp.addChild(inventBack); 
     }
-    
-    //interaction system
-    this.interactionSystem = new InventoryInteractionSystem();
     
 
     //sound
@@ -262,42 +257,30 @@ function Inventory(game) { //always on the top
     
     
     this.inventoryUse = function(tool) {
-        //console.log(tool.name);
-        
+
         var res = this.getCollisionMap(tool);
         var sceneCollider = res.scene;
         var inventoryCollider = res.inventory;
         
-        
-        
         if(inventoryCollider.length > 0) {
-            //console.log('1');
-            var message = tool.name + " is combined with " + inventoryCollider.pop().name;
-            //console.log(message);
-            if(this.interactionSystem.checkEventExist(message)){
-                console.log('2');
+            var message = tool.name + this.game.eventSystem.template.combine + inventoryCollider.pop().name;
+            if(this.game.eventSystem.checkEventExist(message)){
                 game.sound.play('good');
-                this.interactionSystem.callEvent(message);
+                this.game.eventSystem.callEvent(message);
                 return;
             }
-            //console.log('2.5');
         }
-        //console.log('3');
         
         if(sceneCollider.length > 0) {
-            //console.log('4');
-            var message = tool.name + " is used on " + sceneCollider.pop().name;
-            console.log(message);
-            if(this.interactionSystem.checkEventExist(message)){
-                console.log('5');
-                this.interactionSystem.callEvent(message);
+            var message = tool.name + this.game.eventSystem.template.use + sceneCollider.pop().name;
+            //console.log(message);
+            if(this.game.eventSystem.checkEventExist(message)){
+                game.sound.play('good');
+                this.game.eventSystem.callEvent(message);
                 return;
             }
-            //console.log('6');
         }
         
-        
-        //console.log('here');
         game.sound.play('bad');
         tool.x = tool.inventPos.x;
         tool.y = tool.inventPos.y;
@@ -329,7 +312,7 @@ function Inventory(game) { //always on the top
         //console.log(objectsInInventory);
         objectsInInventory.forEach(function(obj) {
             if(obj.name!=tool.name && obj.visible && hitTestRectangle(tool,obj)) {
-                console.log(obj.name);
+                //console.log(obj.name);
                 InventoryCollideList.push(obj);
             }
         });
@@ -342,10 +325,10 @@ function Inventory(game) { //always on the top
         InventoryCollideList.forEach(function(obj){
             invObjName.push(obj.name);
         })
-        console.log("sceneObjName:");
-        console.log(sceneObjName);
-        console.log("invObjName:");
-        console.log(invObjName);
+//        console.log("sceneObjName:");
+//        console.log(sceneObjName);
+//        console.log("invObjName:");
+//        console.log(invObjName);
         
         return {scene:SceneCollideList,inventory:InventoryCollideList};
     }
@@ -381,8 +364,7 @@ function onDragEnd() {
 
 function SceneManager(game) {
     this.currentScene;
-    
-    //init
+
     this.game = game;
     this.sceneContainer = new PIXI.Container();
     
@@ -432,7 +414,11 @@ function SceneManager(game) {
         this.currentScene.visible = true; 
     }
     
+    //transit to scene index
     this.jumpToScene = function(scene) {
+        var message = this.game.eventSystem.template.transit + scene;
+        this.game.eventSystem.callEvent(message);
+        
         var toScene = this.sceneContainer.getChildAt(scene);
         this.currentScene.visible = false;
         toScene.visible = true;
@@ -440,6 +426,9 @@ function SceneManager(game) {
     }
     
     this.start = function(index) {
+        console.log("width: " + window.screen.width);
+        console.log("height: " + window.screen.height);
+
         this.currentScene = this.sceneContainer.getChildAt(index);
         this.currentScene.visible = true;
     }
@@ -461,12 +450,11 @@ function GameManager() {
     this.sceneManager;
     this.messageBox;
     this.stateManager;
+    this.eventSystem;
+    this.reactionSystem;
     
-    //sound list
+    //sound
     this.sound = PIXI.sound;
-    
-    //lock
-    this.lock = false;
     
     this.init = function(width,height,invent_size = 5) {
         if(invent_size < 5)
@@ -483,20 +471,36 @@ function GameManager() {
                
         this.sceneManager = new SceneManager(this);
         this.inventory = new Inventory(this);
-        this.messageBox = new MessageBox({x:width,y:height,scale:1, url: baseURL.requireAssets+'textbox.png',a:1},false, this);
+        this.messageBox = new MessageBox({w:width,
+                                          h:height,
+                                          scale:1, 
+                                          url: baseURL.requireAssets+'textbox.png',
+                                          a:1},
+                                         false, 
+                                         this);
+        
+        this.eventSystem = new AliceEventSystem();
+        this.reactionSystem = new AliceReactionSystem(this);
         
         this.app.stage.addChild(this.sceneManager.sceneContainer);
         this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
         this.app.stage.addChild(this.inventory.inventoryContainer);
         this.app.stage.addChild(this.messageBox.holder);
-        //this.messageBox.startConversation(["hahha","lalalala"]);
-        
-        //this.winSceneIndex = 0;
+ 
     
     }
     
+    
     this.initStateManager = function(_states) {
-        this.stateManager = new StateManager(_states, this);
+        this.stateManager = new StateManager(_states, this.eventSystem);
+    }
+    
+    this.moveObjectToScene= function(_obj, _scene_index, x = null , y = null) {
+        this.scene(_scene_index).addChild(_obj);
+        if(x)
+            _obj.x = x;
+        if(y)
+            _obj.y = y;
     }
     
     
@@ -513,41 +517,8 @@ function GameManager() {
         
     }
     
-    
-    this.end = function() {
-        console.log("game end");
-        this.inventory.inventoryBackgroundGrp.visible = false;
-        this.sceneManager.sceneContainer.visible = false;
-        
-        var style = new PIXI.TextStyle({
-            fontFamily: 'Arial',
-            fontSize: 45,
-            fontStyle: 'italic',
-            fontWeight: 'bold',
-            fill: ['#ffffff', '#00ff99'], // gradient
-            stroke: '#4a1850',
-            strokeThickness: 5,
-            dropShadow: true,
-            dropShadowColor: '#000000',
-            dropShadowBlur: 4,
-            dropShadowAngle: Math.PI / 6,
-            dropShadowDistance: 6,
-            wordWrap: true,
-            wordWrapWidth: 1300
-        });
-
-        var richText = new PIXI.Text('Mission Complete!', style);
-        richText.anchor.set(0.5);
-        richText.x = 640 + 72;
-        richText.y = 360;
-
-        this.app.stage.addChild(richText);
-    
-    }
-    
-    
     this.start = function(index) {
-        console.log("in start");
+        //console.log("in start");
         this.sceneManager.start(index);
         this.awake();
     }
@@ -559,11 +530,28 @@ function GameManager() {
 }
 
 
-function Message(text,style,avatar) {
-    this.text;
-    this.style;
+function Message(_text, _style, _avatar, _narrator="") {
+//    this.defaultStyle = new PIXI.TextStyle({
+//        fontFamily: 'Arial',
+//        fontSize: 20,
+//        fontWeight: 'bold',
+//        wordWrap: true,
+//        wordWrapWidth: 600
+//    });
+    
+    this.text = _text;
+    this.style = _style;
     this.avatar;
+    this.narrator = _narrator;
 }
+
+/*
+the original settings for 1280*720 screen
+    url: baseURL.requireAssets+'textbox.png'
+    pixel: 1051*231
+    alpha: 0.8
+    font_size: 25
+*/
 
 function MessageBox(background, avatarEnable, game) {
     
@@ -571,19 +559,20 @@ function MessageBox(background, avatarEnable, game) {
     
     this.holder = new Alice.Container();
     
+    //the original background asset is built for 1280*720 screen
     this.backgronud = Alice.Object.fromImage(background.url);
+    //this.backgronud = Alice.Object.fromImage("Assets/require/textbox.png");
     this.backgronud.anchor.set(0.5);
     
-    this.backgronud.x = background.x/2;
-    
-    
+    //horizontal center
+    this.backgronud.x = background.w/2;
     this.backgronud.alpha = 0.8;
     
-    var scale = (this.game.screenWidth / 1280);
+    var scale = (this.game.screenWidth / 1280) * 0.7;
+    
     this.backgronud.scale.set(scale);
     
-    this.backgronud.y = background.y - (220 * scale)/2 - 10 * scale;
-    
+    this.backgronud.y = background.h - (220 * scale)/2 - 10 * scale;
     
     this.backgronud.interactive = true;
     this.backgronud.buttonMode = true;
@@ -618,26 +607,15 @@ function MessageBox(background, avatarEnable, game) {
     
     this.defaltStyle = new PIXI.TextStyle({
         fontFamily: 'Arial',
-        fontSize: 20 * scale ,
-        //fontStyle: 'italic',
+        fontSize: 23 * scale,
         fontWeight: 'bold',
-        //fill: ['#ffffff', '#00ff99'], // gradient
-//        stroke: '#4a1850',
-//        strokeThickness: 5,
-//        dropShadow: true,
-//        dropShadowColor: '#000000',
-//        dropShadowBlur: 4,
-//        dropShadowAngle: Math.PI / 6,
-//        dropShadowDistance: 6,
         wordWrap: true,
-        wordWrapWidth: 600
+        wordWrapWidth: 1051 * scale * 0.8
     });
     
 
     this.currentMsg = new PIXI.Text("", this.defaltStyle);
     this.currentMsg.anchor.set(0.5);
-    this.currentMsg.x = 30;
-    this.currentMsg.y = 180;
     this.currentMsg.x = this.backgronud.x;
     this.currentMsg.y = this.backgronud.y;
     
@@ -651,10 +629,7 @@ function MessageBox(background, avatarEnable, game) {
         this.messageBuffer = this.messageBuffer.concat(msgs);
     }
     
-    this.startConversation= function(msgs,func) {
-        
-        //console.log(msgs);
-        
+    this.startConversation= function(msgs, func = null) {
         if(msgs.length == 0)
             return
         
@@ -662,10 +637,8 @@ function MessageBox(background, avatarEnable, game) {
             this.addMessages(msgs);
             return;
         }
-        
-        this.game.lock = true;
             
-        if(func!=undefined)
+        if(func)
             this.callBack = func;
         
         this.messageBuffer = msgs;
@@ -692,36 +665,6 @@ function messageBoxOnClick() {
 }
 
 
-function StateMachine(states) {
-    this.currentState = 0;
-    this.states = states;
-    
-    this.nextState = function() {
-        if(this.currentState + 1 >= this.states.length) {
-            return;
-        }
-        this.currentState ++;
-    }
-    
-    this.getCurrentStateIndex = function() {
-        return this.currentState;
-    }
-    
-    
-    this.getCurrentState = function() {
-        if(this.currentState >= this.states.length) {
-            return null;
-        }
-        return this.states[this.currentState];
-    }
-    
-    this.setState = function(index) {
-        if(index >= this.states.length)
-            return;
-        this.currentState = index;        
-    }
-    
-}
 
 
 /*
