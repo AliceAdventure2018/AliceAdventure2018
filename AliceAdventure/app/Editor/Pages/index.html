@@ -168,26 +168,22 @@
 			
 			document.addEventListener("click", function(event){
 
-				var selected = document.getElementsByClassName("selected");
-				var unselecteds = document.getElementsByClassName("unselecteds");
+				var target = event.target;
+				var previous_selected = document.getElementsByClassName("selected");
+				var assetName = target.getAttribute("aria-controls");
+				if(target.className === "unselecteds"){
+					console.log("yes");
+					for(i=0;i<previous_selected.length;i++){
+						previous_selected[i].setAttribute("class", "unselecteds");
+					}
 
-				for(i=0;i<selected.length;i++){
-					selected[i].className ="unselecteds";
-				}
+					var unselecteds = document.getElementsByClassName("unselecteds");
+					target.className = "selected";
+
 				
-				var targetElement = event.target || event.srcElement;
-				if(targetElement.tagName === 'A'){
-				targetElement.className = "selected";
-				unselecteds = document.getElementsByClassName("unselecteds");
-				}
+						document.getElementById(assetName).style.display = "block";
 
-				if(selected.length === 1){
-
-					var assetName = targetElement.getAttribute("aria-controls");
-					document.getElementById(assetName).style.display = "block";
-					//console.log(document.getElementById(assetName));
-
-					var assetName_unselected = [];
+						var assetName_unselected = [];
 
 
 					if(unselecteds.length !== null){
@@ -201,10 +197,13 @@
 
 						assetName_unselected = null;
 						unselecteds = null;
-						
-					//console.log(targetElement.getAttribute("aria-controls"));
+			
 					}
-				} 
+					
+
+
+				}
+			
 			});
 		}
 	</script>
@@ -260,7 +259,7 @@
             <h6 class="window-title" >GALLERY</h6>
       			<div id="tabList">
         			<ul >
-    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="unselecteds">
+    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="selected">
     						Images</a></li>
     						<li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
           			<!--<div class="tab-list" id="tabList">
@@ -268,7 +267,7 @@
               </ul>
   		      </div>
 						<div id="tabContent">
-							<div id="door-asset" style="display: none;">
+							<div id="door-asset" style="display: block;">
 								<div class="assets">
 									<ul>
 									<!-- bind the gallery data -->
