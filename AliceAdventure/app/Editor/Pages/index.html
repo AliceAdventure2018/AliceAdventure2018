@@ -13,8 +13,10 @@
 	<script>document.write('<base href="' + document.location + '" />');</script>	 
 	<script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script> 
 	 <script src="js/app.js"></script>
-	<script src="js/resizer.js"></script>	 
-
+	<script src="js/resizer.js"></script>	
+	<script src="js/interact.js"></script>	  
+	<script src="js/drag.js"></script>	 
+	<script src="js/dropdown.js"></script>	
 	<link rel="stylesheet" href="../../Resources/bootstrap.min.css"/>
 	<script type="text/javascript" src="../../Resources/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" src="../../Resources/modal.js"></script>
@@ -36,28 +38,35 @@
                Setting
     </button>
 
-    <button onclick="AliceEditor.File.BuildProject()" id="build-button"  class="float-right" >
-    					 Build
-    </button>
-
+    
     <!--button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
     					 Run
     </button-->
-    <button onclick="AliceEditor.File.ImportAssets()" id="save-button"  class="float-right" >
-    					 Import
+   	<img  src="src/import.png" class="topnav-icon" />
+   	<div class="dropdown">
+    <button  onmouseover="dropdownShow(event)" id="save-button"  class="dropbtn float-right">
+	Import
     </button>
+    <div id="import-dropdown" class="dropdown-content">
+    	<a class="dropdown-item"  onclick="AliceEditor.File.ImportImage()"> Image</a>
+    	<a class="dropdown-item" onclick="AliceEditor.File.ImportSound()"> Sound</a>
 
-    <button onclick="AliceEditor.File.SaveProject()" id="save-button"  class="float-right" >
-    					 Save
+    </div>
+	</div>
+   <div class="dropdown" >
+    <button  onmouseover="dropdownShow(event)"  id="save-button"  class="dropbtn">
+	File
     </button>
+    <div id="import-dropdown" class="dropdown-content">
+    	<a class="dropdown-item" onclick="AliceEditor.File.NewProject()" > New project</a>
+    	<a class="dropdown-item" onclick="AliceEditor.File.OpenProject()"> Open project</a>
+    	<a class="dropdown-item" onclick="AliceEditor.File.SaveProject()"> Save project</a>
+    	<a class="dropdown-item" onclick="AliceEditor.File.BuildProject()"> Build project</a>
+    </div>
+	</div>
+    
 
-    <button onclick="AliceEditor.File.OpenProject()" id="save-button"  class="float-right" >
-    					 Open
-    </button>
 
-    <button onclick="AliceEditor.File.NewProject()" id="save-button"  class="float-right" >
-    					 New
-    </button>
 	</nav>
 
 	<script type="text/javascript">
@@ -375,14 +384,17 @@
       </div>
     </div>
 	
+	
 		<div id="second-column">
 			<div id="interaction-editor">
         <h6 class="window-title">INTERACTION EDITOR</h6>
-		    <div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions'>
+		    <div  class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' max='true'>
 
 				<div>
           <span ondblclick="editInPlace(event)" class="editInPlace">Title</span>
-          <a v-on:click="deleteInteraction(ntra)"><img id="interaction-box-close" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEpSURBVGhD7dk9CsJAEIbheABb7fUkHkKPY2krnskz2HoLO0Fn1A+WEEJ2szs/Mi98qKl80E2TLoqi6G9a0I609eeTbnva7vs2P0a8aDeaJuZAe9IetC1fyI2/PCM0MUDwdzjxhdI0MdUQSANTHYEkMc0QSALTHIFaYsQQqAVGHIFqYtQQqAZGHYHmYMwgUAnGHALlYMwi0BSMeQQaw7hBoCGMOwRKMXeaSwRiDCMYwLvQXJb+nXj9M+OiFHGm9c+Mi4YOdnpmXGDG7k5uMFNuseYxUxDILCYHgcxhShDIDGYOAqljaiCQGqYmAoljWiCQGKYlAjXHSCBQM4wkAlXHaCBQNYwmAvUxK1p2/MyOH3dpIRAwV9qSL5S0+b1qx79EMSKKoshaXfcGi/zGyoPvvCcAAAAASUVORK5CYII="/></a>
+          <a v-on:click="deleteInteraction(ntra)"><img id="interaction-box-close" src="src/close.png"/></a>
+          <a onclick="minimizeWindow(event)"><img id="interaction-box-minimize" min-src="src/minimize.png" max-src="src/maximize.png" src="src/minimize.png"></a>
+          
         </div>
 				<h6 id="event-box-title" class="window-title">Event</h6>
 				<ul class="event-box" v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'>

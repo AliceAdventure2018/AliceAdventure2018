@@ -183,7 +183,7 @@ File.ImportSound = function(){ // test
 		title: 'Import sound',  
 		defaultPath: '', 
 		buttonLabel: 'Import', 
-		filters: [{name: 'Audio file', extensions: ['mp3', 'wav']}], 
+		filters: [{name: 'Audio', extensions: ['mp3', 'wav']}], 
 		properties: ['openFile', 'multiSelections']
 	}, (_paths)=>{ // callback
 		if (_paths == null) return;
@@ -193,17 +193,17 @@ File.ImportSound = function(){ // test
 	});	
 }
 
-File.ImportSound = function(){ // test
+File.ImportImage = function(){ // test
 	ELECTRON.dialog.showOpenDialog({
-		title: 'Import sound',  
+		title: 'Import image',  
 		defaultPath: '', 
 		buttonLabel: 'Import', 
-		filters: [{name: 'Audio file', extensions: ['mp3', 'wav']}], 
+		filters: [{name: 'Image', extensions: ['png', 'jpg', 'jpeg']}], 
 		properties: ['openFile', 'multiSelections']
 	}, (_paths)=>{ // callback
 		if (_paths == null) return;
 		_paths.forEach((path)=>{ 
-			Sound.NewSound(PATH.basename(path, PATH.extname(path)), path);
+			Image.ImportImage(path);
 		});
 	});	
 }

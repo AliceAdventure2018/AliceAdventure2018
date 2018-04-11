@@ -26,6 +26,9 @@ Parser = function (jsonPath, buildPath){
 //====================================================================================
 	Parser.prototype.translate = function (callback){
 
+
+
+
 		var toReturn= '\n';
 		var sound = createSoundList.call(this,callback);
 		if (sound ===false) return false;
