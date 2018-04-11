@@ -6,10 +6,15 @@ myGame.sceneManager.createScenes(3);
 myGame.initStateManager({cat_is_feeded:false});
 
 ///------------------------------------------------------------///
-myGame.sound.add('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
-myGame.sound.add('meow_happy', baseURL.nomalAssets + 'meow_happy.wav');
-myGame.sound.add('door', baseURL.nomalAssets + 'door.wav');
-myGame.sound.add('win', baseURL.nomalAssets + 'win.wav');
+//myGame.sound.add('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
+//myGame.sound.add('meow_happy', baseURL.nomalAssets + 'meow_happy.wav');
+//myGame.sound.add('door', baseURL.nomalAssets + 'door.wav');
+//myGame.sound.add('win', baseURL.nomalAssets + 'win.wav');
+
+myGame.soundManager.load('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
+myGame.soundManager.load('meow_happy', baseURL.nomalAssets + 'meow_happy.wav');
+myGame.soundManager.load('door', baseURL.nomalAssets + 'door.wav');
+myGame.soundManager.load('win', baseURL.nomalAssets + 'win.wav');
 
 ///-----------------------------------------------------------///
 
@@ -162,7 +167,6 @@ myGame.scene(2).addChild(winScene);
 
 
 //register events
-
 var reaction = myGame.reactionSystem;
 
 myGame.eventSystem.addCombineEvent(knife,jam,function(){
@@ -188,6 +192,7 @@ myGame.eventSystem.addCombineEvent(knifewithjam,bread,function(){
     //myGame.inventory.add(breadwithjam);
     reaction.addToInventory(breadwithjam);
 });
+
 
 
 myGame.eventSystem.addUsedEvent(breadwithjam,cat,function(){

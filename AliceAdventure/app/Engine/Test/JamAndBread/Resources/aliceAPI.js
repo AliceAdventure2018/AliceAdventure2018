@@ -71,7 +71,7 @@ function AliceReactionSystem(_game) {
     }
     
     this.playAudio = function(_audio) {
-        this.game.sound.play(_audio);
+        this.game.soundManager.play(_audio);
     }
     
     this.showInventory = function() {
@@ -157,6 +157,7 @@ function AliceEventSystem() {
         });
     }
     
+    //-------------//
     this.checkEventExist = function(message) {
         if(this.eventMessageList[message] == undefined || this.eventMessageList[message] == false) {
             //console.log("not valid");
@@ -199,9 +200,9 @@ function Inventory(game) { //always on the top
     
 
     //sound
-    game.sound.add('add', baseURL.requireAssets + 'sound/add.wav');
-    game.sound.add('good', baseURL.requireAssets + 'sound/use_good.wav');
-    game.sound.add('bad', baseURL.requireAssets + 'sound/use_bad.wav');
+//    game.sound.add('add', baseURL.requireAssets + 'sound/add.wav');
+//    game.sound.add('good', baseURL.requireAssets + 'sound/use_good.wav');
+//    game.sound.add('bad', baseURL.requireAssets + 'sound/use_bad.wav');
     
     ////////functions//////////
     this.scaleDown = function(tool) {
@@ -214,7 +215,8 @@ function Inventory(game) { //always on the top
     this.add = function(tool) {
         
         //this.soundList.add.play();
-        game.sound.play('add');
+        this.game.soundManager.play('add');
+        
         //remove tool from the original scene and add to inventory container
         this.inventoryContainer.addChild(tool); //[INTERESTING: remove it from the original container]
         
@@ -270,7 +272,8 @@ function Inventory(game) { //always on the top
         if(inventoryCollider.length > 0) {
             var message = tool.name + this.game.eventSystem.template.combine + inventoryCollider.pop().name;
             if(this.game.eventSystem.checkEventExist(message)){
-                game.sound.play('good');
+                //game.sound.play('good');
+                this.game.soundManager.play('good');
                 this.game.eventSystem.callEvent(message);
                 return;
             }
@@ -280,13 +283,15 @@ function Inventory(game) { //always on the top
             var message = tool.name + this.game.eventSystem.template.use + sceneCollider.pop().name;
             //console.log(message);
             if(this.game.eventSystem.checkEventExist(message)){
-                game.sound.play('good');
+                //game.sound.play('good');
+                this.game.soundManager.play('good');
                 this.game.eventSystem.callEvent(message);
                 return;
             }
         }
         
-        game.sound.play('bad');
+        //game.sound.play('bad');
+        this.game.soundManager.play('bad');
         tool.x = tool.inventPos.x;
         tool.y = tool.inventPos.y;
          
@@ -337,6 +342,30 @@ function Inventory(game) { //always on the top
         
         return {scene:SceneCollideList,inventory:InventoryCollideList};
     }
+    
+}
+
+function SoundManager() {
+    this.sound = PIXI.sound;
+    this.baseURL = './Resources/Assets/require/sound/';
+    
+    
+    
+    this.initSystemSound = function() {
+        this.sound.add('add', this.baseURL + 'add.wav');
+        this.sound.add('good', this.baseURL + 'use_good.wav');
+        this.sound.add('bad', this.baseURL + 'use_bad.wav');
+    }
+    
+    this.play = function(_name) {
+        this.sound.play(_name);
+    }
+    
+    this.load = function(_name, _url) {
+        this.sound.add(_name, _url);
+    }
+    
+    this.initSystemSound();
     
 }
 
@@ -394,6 +423,9 @@ function SceneManager(game) {
     
     //transit to scene index
     this.jumpToScene = function(scene) {
+        //clear messsage box
+        this.game.messageBox.stopConversation();
+        
         var message = this.game.eventSystem.template.transit + scene;
         this.game.eventSystem.callEvent(message);
         
@@ -401,11 +433,13 @@ function SceneManager(game) {
         this.currentScene.visible = false;
         toScene.visible = true;
         this.currentScene = toScene;
+    
+        
     }
     
     this.start = function(index) {
-        console.log("width: " + window.screen.width);
-        console.log("height: " + window.screen.height);
+        //console.log("width: " + window.screen.width);
+        //console.log("height: " + window.screen.height);
 
         this.currentScene = this.sceneContainer.getChildAt(index);
         this.currentScene.visible = true;
@@ -433,6 +467,7 @@ function GameManager() {
     this.stateManager;
     this.eventSystem;
     this.reactionSystem;
+    this.soundManager;
     
     //sound
     this.sound = PIXI.sound;
@@ -471,6 +506,7 @@ function GameManager() {
         
         this.eventSystem = new AliceEventSystem();
         this.reactionSystem = new AliceReactionSystem(this);
+        this.soundManager = new SoundManager();
         
 //        this.app.stage.addChild(this.sceneManager.sceneContainer);
 //        this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
@@ -497,17 +533,21 @@ function GameManager() {
     }
     
     this.showInventory = function() {
-        this.app.renderer.resize(this.screenWidth + this.inventoryWidth,this.screenHeight);
+        this.renderer.resize(this.screenWidth + this.inventoryWidth,this.screenHeight);
+        this.ratio = this.size[0] / this.size[1];
+        this.resize();
     }
     
+    
     this.hideInventory = function() {
-        this.app.renderer.resize(this.screenWidth,this.screenHeight);
+        this.renderer.resize(this.screenWidth,this.screenHeight);
+        this.ratio = (this.size[0] - this.inventoryWidth) / this.size[1];
+        this.resize();
     }
     
     this.scene = function(index) {
         return this.sceneManager.getSceneByIndex(index);
     }
-
     
     this.awake = function() {
         
@@ -658,7 +698,8 @@ function MessageBox(background, avatarEnable, game) {
             this.currentMsg.text = "";
             this.currentMsgIndex = 0;
             this.holder.visible = false;
-            this.game.lock = false;
+            this.callBack = function(){};
+            //this.game.lock = false;
     }
 }
 
@@ -720,6 +761,7 @@ function hitTestRectangle(r1, r2) {
 // game instances //
 var myGame = new GameManager();
 
+
 var animate = function() {
     requestAnimationFrame(animate);
     myGame.renderer.render(myGame.stage);
@@ -737,7 +779,6 @@ function messageBoxOnClick() {
         myGame.messageBox.nextConversation();
     }
 }
-
 
 function onDragStart(event) {
     myGame.inventory.popUp(this);
