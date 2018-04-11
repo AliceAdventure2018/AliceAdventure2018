@@ -28,6 +28,7 @@ interact('.interaction-box')
 
   function minimizeWindow(event){
   		var eventTarget = event.target.parentNode;
+  		var targetImg = event.target.closest('#interaction-box-minimize');
   		var target = eventTarget.closest('.interaction-box');
     	var targetChildren = target.childNodes;
    		var minimizeSrc = document.getElementById("interaction-box-minimize").getAttribute("min-src");
@@ -36,7 +37,7 @@ interact('.interaction-box')
    		console.log(maxmizeSrc);
     if(target.getAttribute("max") === 'true'){
     	target.setAttribute("max",'false');
-    	document.getElementById("interaction-box-minimize").src = maxmizeSrc;
+    	targetImg.src = maxmizeSrc;
     	//console.log("let's minimize");
     	//console.log(target.max);
     	for(i=0;i<targetChildren.length;i++){
@@ -48,7 +49,7 @@ interact('.interaction-box')
 
     } else if(target.getAttribute("max") === 'false'){
     	target.setAttribute("max",'true');
-    	document.getElementById("interaction-box-minimize").src = minimizeSrc;
+    	targetImg.src = minimizeSrc;
 
     	target.style.width = null;
 
@@ -60,7 +61,7 @@ interact('.interaction-box')
     	}
     }
   }
-  
+
   function dragMoveListener (event) {
     var target = event.target,
         // keep the dragged position in the data-x/data-y attributes
