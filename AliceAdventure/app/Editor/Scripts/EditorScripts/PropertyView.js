@@ -1,7 +1,7 @@
 'use strict';
 
 const {Event} = require('./Utilities/Utilities');
-const SceneObject = require('./SceneObject');
+const GameProperties = require('./GameProperties');
 const View = require('./View');
 
 // class
@@ -11,7 +11,7 @@ var PropertyView;
 PropertyView = function(_bindElementID, _height = -1, _width = -1){
 	View.call(this, "PropertyView", _height, _width, _bindElementID);
 
-	this.bindObject = null;
+	//this.bindObject = null;
 	this.vModel = null;
 	
 };
@@ -31,40 +31,31 @@ PropertyView.prototype.InitView = function(){
 	this.vModel = new Vue({
 	  el: '#' + this.bindElementID,
 	  data: {
-	  	showProperty: false,
-	  	propertyKey: "",
-	  	propertyType: "",
-	  	propertyValue: "", 
-	    bindObj: this.bindObject 
+	  	projectLoaded: false,
+	    selection: View.Selection,
 	  }, 
 	  methods:{
-	  	addProperty: ()=>{ this.bindObject.AddUserProperty(this.vModel.propertyKey, this.vModel.propertyType, this.vModel.propertyValue); }
+	  	//addProperty: ()=>{ this.bindObject.AddUserProperty(this.vModel.propertyKey, this.vModel.propertyType, this.vModel.propertyValue); }
 	  }
 	});
 
 	// events
 	Event.AddListener("reload-project", ()=>{this.ReloadView();});
-	Event.AddListener("update-selected-object", ()=>{this.UpdateSelectedObject();});
+	//Event.AddListener("update-selection", ()=>{this.UpdateSelection();});
 };
 
 PropertyView.prototype.ReloadView = function(){
 	View.prototype.ReloadView.apply(this); // call super method
 
-	this.SetBindObject(null);
-}
-
-PropertyView.prototype.SetBindObject = function(_sceneObj = null){
-	this.bindObject = _sceneObj;
-	if (this.bindObject == null){ // null case
-		this.vModel.showProperty = false;
-	} else { 
-		this.vModel.showProperty = true;
-		this.vModel.bindObj = this.bindObject;
+	if (GameProperties.instance == null){
+		this.vModel.projectLoaded = false;
+	} else {
+		this.vModel.projectLoaded = true;
 	}
-}
+};
 
-PropertyView.prototype.UpdateSelectedObject = function(){
-	this.SetBindObject(SceneObject.Selection.objects[0]);
+PropertyView.prototype.UpdateSelection = function(){
+	//if (View.Selection.)
 }
 
 module.exports = PropertyView;

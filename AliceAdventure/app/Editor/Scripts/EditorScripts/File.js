@@ -7,6 +7,7 @@ const SceneObject = require('./SceneObject');
 const State = require('./State');
 const Interaction = require('./Interaction');
 const Sound = require('./Sound');
+const Image = require('./Image');
 
 // class
 var File;
@@ -54,6 +55,9 @@ File.NewProject = function(_template = null){ // TODO: load from template
 		if (_name != null) {
 			new File(null, new GameProperties());
 			File.instance.gameProperties.settings.projectName = _name;
+			// Default settings
+			Scene.AddScene("First scene");
+			
 			Event.Broadcast("reload-project");
 		}
 	});
@@ -142,6 +146,48 @@ File.BuildProject = function(){
 File.RunProject = function(){
 	// TODO
 	Debug.LogError("Function not implemented");
+}
+
+File.ImportAssets = function(){
+	ELECTRON.dialog.showOpenDialog({
+		title: 'Import assets',  
+		defaultPath: '', 
+		buttonLabel: 'Import', 
+		filters: [{name: 'Audio', extensions: ['mp3', 'wav']}, {name: 'Image', extensions: ['png', 'jpg', 'jpeg']}], 
+		properties: ['openFile', 'multiSelections']
+	}, (_paths)=>{ // callback
+		if (_paths == null) return;
+		_paths.forEach((path)=>{ 
+			switch (path){
+				case 'mp3':
+				case 'wav':
+					Sound.NewSound(PATH.basename(path, PATH.extname(path)), path);
+					break;
+				case 'png':
+				case 'jpg':
+				case 'jpeg':
+					Image.ImportImage(path);
+					break;
+				default:
+					break;
+			}
+		});
+	});	
+}
+
+File.ImportSound = function(){ // test
+	ELECTRON.dialog.showOpenDialog({
+		title: 'Import sound',  
+		defaultPath: '', 
+		buttonLabel: 'Import', 
+		filters: [{name: 'Audio file', extensions: ['mp3', 'wav']}], 
+		properties: ['openFile', 'multiSelections']
+	}, (_paths)=>{ // callback
+		if (_paths == null) return;
+		_paths.forEach((path)=>{ 
+			Sound.NewSound(PATH.basename(path, PATH.extname(path)), path);
+		});
+	});	
 }
 
 File.ImportSound = function(){ // test

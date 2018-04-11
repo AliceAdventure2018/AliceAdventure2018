@@ -36,8 +36,8 @@ SceneView.prototype.InitView = function(){
 		}, 
 		methods: {
 			addScene: ()=>{this.AddScene();},
-			assetDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.GalleryPicture);},
-			assetDrop: (ev)=>{View.HandleDrop(ev, View.DragInfo.GalleryPicture, (data)=>{this.AddObject(data);});},
+			assetDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.GalleryImage);},
+			assetDrop: (ev)=>{View.HandleDrop(ev, View.DragInfo.GalleryImage, (data)=>{this.AddObject(data);});},
 		}
 	});
 	// Init app
@@ -49,7 +49,7 @@ SceneView.prototype.InitView = function(){
 	});
 	//this.app.view.setAttribute("v-on:dragover", "assetDragover(event)");
 	//this.app.view.setAttribute("v-on:drop", "assetDrop(event)");
-	document.getElementById(this.bindElementID).appendChild(this.app.view);
+	document.getElementById('canvas-container').appendChild(this.app.view);
 
 	// events
 	Event.AddListener('reload-project', ()=>{this.ReloadView();});
@@ -73,8 +73,8 @@ SceneView.prototype.ReloadView = function(){
 };
 
 SceneView.prototype.AddObject = function(_objInfo){
-	if (Scene.Selection.scene == null) return;
-	var _bindScene = Scene.Selection.scene;
+	if (View.Selection.scene == null) return;
+	var _bindScene = View.Selection.scene;
 	var _obj = SceneObject.AddObject(_objInfo, _bindScene, this.app.screen.width / 2, this.app.screen.height / 2);
 	_obj.SelectOn();
 	//this.app.stage.addChild(_obj.sprite);

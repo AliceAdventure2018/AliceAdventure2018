@@ -2,7 +2,6 @@
 
 const {Event} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
-const SceneObject = require('./SceneObject');
 const View = require('./View');
 
 // class
@@ -29,14 +28,15 @@ ObjectListView.prototype.InitView = function(){
 	this.vModel = new Vue({
 	  el: '#' + this.bindElementID,
 	  data: {
-	  	showObjectList: false, 
+	  	projectLoaded: false, 
 	    sceneList: null, 
 	    objectList: null, 
-	    selectedObjects: null
 	  }, 
 	  methods: {
-	  	onSelect: (thing)=>{thing.SelectOn();}, // work both for obj and scene
-	  	deleteObject: (obj)=>{obj.DeleteThis()},
+	  	onObjectSelect: (obj)=>{View.Selection.selectObject(obj);}, 
+	  	onSceneSelect: (scn)=>{View.Selection.selectScene(scn);}, 
+	  	deleteObject: (obj)=>{View.Selection.deSelect();obj.DeleteThis();},
+	  	deleteScene: (scn)=>{View.Selection.deSelect();scn.DeleteThis();},
 	  }
 	});
 
@@ -48,15 +48,13 @@ ObjectListView.prototype.ReloadView = function(){
 	View.prototype.ReloadView.apply(this); // call super method
 
 	if (GameProperties.instance == null){
-		this.vModel.showObjectList = false;
+		this.vModel.projectLoaded = false;
 		this.vModel.sceneList = null;
 		this.vModel.objectList = null;
-		this.vModel.selectedObjects = null;
 	} else {
-	  	this.vModel.showObjectList = true; 
+	  	this.vModel.projectLoaded = true; 
 	    this.vModel.sceneList = GameProperties.instance.sceneList; 
 	    this.vModel.objectList = GameProperties.instance.objectList; 
-	    this.vModel.selectedObjects = SceneObject.Selection.objects;
 	}
 };
 

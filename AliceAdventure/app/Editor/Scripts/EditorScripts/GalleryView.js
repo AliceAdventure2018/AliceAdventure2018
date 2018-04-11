@@ -15,7 +15,7 @@ GalleryView = function(_bindElementID, _height = -1, _width = -1){
 };
 GalleryView.prototype = new View();
 
-GalleryView.PictureLibrary = [
+GalleryView.ImageLibrary = [
 	{
 		index: 0, 
 		src: "Assets/kitchen.png", 
@@ -77,6 +77,8 @@ GalleryView.SoundLibrary = [
 	}, */
 ];
 
+GalleryView.ImportedImages = [];
+
 GalleryView.NewView = function(_elementID){
 	let view = new GalleryView(_elementID);
 	view.InitView();
@@ -90,12 +92,12 @@ GalleryView.prototype.InitView = function(){
 	this.vModel = new Vue({
 		el: '#' + this.bindElementID,
 		data: {
-			pictures: GalleryView.PictureLibrary,
+			images: GalleryView.ImageLibrary,
 			sounds: GalleryView.SoundLibrary
 		}, 
 		methods: {
-			pictureDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.GalleryPicture, d);},
-			soundDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.SoundPicture, d);},
+			imageDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.GalleryImage, d);},
+			soundDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.GallerySound, d);},
 			chooseObj: (_obj)=>{ this.ChooseObj(_obj); },
 		}
 	});

@@ -8,6 +8,7 @@ GameProperties = function(){
 	this.interactionList = [];
 	this.stateList = [];
     this.soundList = [];
+    this.imageList = [];
 	this.settings = {
 		resWidth: 640, 
 		resHeight: 360, 
@@ -71,6 +72,15 @@ GameProperties.GetSoundById = function(_id){
 	for (let i in GameProperties.instance.soundList){
 		if (GameProperties.instance.soundList[i].id == _id){
 			return GameProperties.instance.soundList[i];
+		}
+	}
+	return null;
+};
+GameProperties.GetImageById = function(_id){
+	if (GameProperties.instance == null) return null;
+	for (let i in GameProperties.instance.imageList){
+		if (GameProperties.instance.imageList[i].id == _id){
+			return GameProperties.instance.imageList[i];
 		}
 	}
 	return null;
@@ -146,6 +156,22 @@ GameProperties.DeleteSound = function(_sound){
 	var i = GameProperties.instance.soundList.indexOf(_sound);
 	if (i >= 0){
 		GameProperties.instance.soundList.splice(i, 1);
+		return true;
+	}
+	return false;
+};
+
+GameProperties.AddImage = function(_image){
+	if (GameProperties.instance == null) return false;
+	// TODO detect repetitive path
+	GameProperties.instance.imageList.push(_image);
+	return true;
+};
+GameProperties.DeleteImage = function(_image){
+	if (GameProperties.instance == null) return false; 
+	var i = GameProperties.instance.imageList.indexOf(_image);
+	if (i >= 0){
+		GameProperties.instance.imageList.splice(i, 1);
 		return true;
 	}
 	return false;

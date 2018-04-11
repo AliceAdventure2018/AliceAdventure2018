@@ -95,6 +95,20 @@ IReaction.Library = [
 		inputTypes: [IReaction.InputModel.Audio],
 		template: "Play audio"
 	}, 
+    {
+        type: 10,
+        name: "Show inventory", 
+        inputLength: 0, 
+        inputTypes: [],
+        template: "Show inventory"
+    },
+    {
+        type: 11,
+        name: "Hide inventory", 
+        inputLength: 0, 
+        inputTypes: [],
+        template: "Hide inventory"
+    },
 ];
 
 // functions

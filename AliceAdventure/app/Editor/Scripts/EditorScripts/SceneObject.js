@@ -42,7 +42,7 @@ SceneObject.LoadObject = function(_data){ // I AM HERE
 	return _obj;
 };
 
-SceneObject.Selection = { 
+/*SceneObject.Selection = { 
 	objects: [], // Reference
 	set: function(_obj){
 		this.objects = [_obj];
@@ -68,7 +68,7 @@ SceneObject.Selection = {
 	contain: function(_obj){
 		return (this.objects.indexOf(_obj) >= 0);
 	}
-};
+};*/
 
 var pixiFilters = { // private
 	outlineFilterBlue: new PIXI.filters.OutlineFilter(4, 0x99ff99), 
@@ -93,7 +93,6 @@ SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = 
 
 SceneObject.prototype.DeleteThis = function(){
 	this.sprite.destroy({children:true, texture:true, baseTexture:true});
-	SceneObject.Selection.remove(this);
 	GameProperties.DeleteObject(this);
 };
 
@@ -145,26 +144,12 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 
 SceneObject.prototype.SelectOff = function(){
 	//this.sprite.alpha = 1;
-	SceneObject.Selection.clear();
-		this.sprite.filters = [];
+	this.sprite.filters = [];
 };
 
-SceneObject.prototype.SelectOn = function(_add = false){
-	if (_add){
-		SceneObject.Selection.add(this);
-		//this.sprite.alpha = 0.7;
-	} else{
-		if (SceneObject.Selection.objects[0] != null){
-			SceneObject.Selection.objects[0].SelectOff();
-		}
-		SceneObject.Selection.set(this);
-		this.sprite.filters = [pixiFilters.outlineFilterBlue];
-		//this.sprite.alpha = 0.9; // TODO
-	}
-};
-
-SceneObject.prototype.IsSelected = function(){
-	return SceneObject.Selection.contain(this);
+SceneObject.prototype.SelectOn = function(){
+	//this.sprite.alpha = 0.9; // TODO
+	this.sprite.filters = [pixiFilters.outlineFilterBlue];
 };
 
 SceneObject.prototype.OnPointerDown = function(_event){
@@ -217,7 +202,5 @@ SceneObject.prototype.toJsonObject = function(){
 		//properties: _o.properties, 
 	};
 };
-
-Event.AddListener("reload-project", ()=>{SceneObject.Selection.clear();})
 
 module.exports = SceneObject;

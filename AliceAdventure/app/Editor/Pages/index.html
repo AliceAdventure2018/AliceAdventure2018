@@ -43,7 +43,7 @@
     <!--button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
     					 Run
     </button-->
-    <button onclick="AliceEditor.File.ImportSound()" id="save-button"  class="float-right" >
+    <button onclick="AliceEditor.File.ImportAssets()" id="save-button"  class="float-right" >
     					 Import
     </button>
 
@@ -236,9 +236,12 @@
 		<div id="first-column">		
 
 			<div id="design-editor">
-        <h6 class="window-title">SCENE EDITOR</h6>
+        		<h6 class="window-title">SCENE EDITOR</h6>        		
+				<!--DO NOT DELETE THIS, for canvas initialization. Can add style for it-->
+				<div id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'></div>
+
 				<div id="add-scene">
-					<button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene'> Add Scene</button></div>
+					<button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene()'> Add Scene</button></div>
 			</div>
 		
 		  <div id="first-column-second-row">
@@ -249,7 +252,7 @@
       			<div id="tabList">
         			<ul >
     						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="unselecteds">
-    						Pictures</a></li>
+    						Images</a></li>
     						<li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
           			<!--<div class="tab-list" id="tabList">
           			<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical"-->
@@ -260,7 +263,7 @@
 								<div class="assets">
 									<ul>
 									<!-- bind the gallery data -->
-										<li v-for="pic in pictures" v-on:click="chooseObj(pic)"> <div class="asset"><img v-bind:src="'../../'+pic.src"> </div><p v-html='pic.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="'../../'+img.src"> </div><p v-html='img.name'></p>
 										</li>
 										
 									</ul>
@@ -329,16 +332,17 @@
 			}
 		</script>
 
-      		<div id="object-list" ><h6 class="window-title" >OBJECT LIST</h6>
+      		<div id="object-list" >
+      			<h6 class="window-title" >OBJECT LIST</h6>
       			<!-- if show object list on -->
-      			<ol v-if='showObjectList' class="object-tree">
-      				<li v-for="scene in sceneList" v-on:click="onSelect(scene)">
+      			<ol v-if='projectLoaded' class="object-tree">
+      				<li v-for="scene in sceneList">
         				<!-- loop all scenes and objects 
         				<label class="object_label" v-html="scene.name"></label>
         				<input type="checkbox" /> -->
-        				<i class="down" onclick="showListView(event)"></i><button v-html="scene.name"></button>
+        				<i class="down" onclick="showListView(event)"></i><button v-html="scene.name" v-on:click="onSceneSelect(scene)"></button>
       					<ol class="object_label" style="display:block;">
-      						<li v-for="object in objectList" v-on:click="onSelect(object)" v-if="object.bindScene.id == scene.id">
+      						<li v-for="object in objectList" v-on:click="ObjectSelect(object)" v-if="object.bindScene.id == scene.id">
       							<!--<label class="object_label" v-html="object.name"></label>
       							<input type="checkbox"/>-->
       							<button v-html="object.name" v-on:dblclick='deleteObject(object)'></button>
@@ -568,51 +572,41 @@
 			<div id="design-property">
 				<h6 class="window-title">PROPERTIES</h6>
 				<!-- bind img src -->
-				<div v-if='showProperty' class="property-img-bg"> <img class="property-img" v-bind:src="'../../'+bindObj.src"></div>
-				<!-- bind info -->
-				<div v-if='showProperty' class="property-info">
-					<ul>
-						<li><span ondblclick="//editInPlace(event)" class="editInPlace"/></span><input style="width:100px" v-model='bindObj.name'/></li>
+				<div v-if='projectLoaded'>
+					<div v-if='selection.showObject' class="property-img-bg"> <img class="property-img" v-bind:src="'../../'+selection.object.src"></div>
+					<!-- bind info -->
+					<div v-if='selection.showObject' class="property-info">
+						<ul>
+							<li><span ondblclick="//editInPlace(event)" class="editInPlace"/></span><input style="width:100px" v-model='selection.object.name'/></li>
 
-						<!--<input v-model='bindObj.name'/>-->
-						<li>
-						<label for="property-input">position </label>
-						<div class="property-input">
-						x: <input id="pos-x" v-model.number='bindObj.sprite.x'>
-						 y:<input id="pos-y" v-model.number='bindObj.sprite.y'>
-					 </div>
-					 </li>
-						<li>
-							scale
-							<div class="property-input">
-								x: <input id="scale-x" v-model.number='bindObj.sprite.scale.x'>
-						        y: <input id="scale-y" v-model.number='bindObj.sprite.scale.y'>
-					 </div>
-				 </li>
-
-						<li>
-							
-							<!--<input v-model='bindObj.sprite.visible' id ="visible" type="checkbox">-->
-							visible
-							<label class="switch"><input type="checkbox" v-model='bindObj.sprite.visible' id ="visible" ><span class="slider round"></span></label>
-							
-							
-						</li>
-						<li>
-							 <!--<input v-model='bindObj.interactive' id="clickable" type="checkbox">-->
-						<label for="clickable">interactive</label>
-						<label class="switch"><input type="checkbox" v-model='bindObj.interactive' id ="visible" ><span class="slider round"></span></label>
-						 
-						</li>
-
-						<!-- user properties -->
-						<!--li v-for='property in bindObj.properties'>
-							<label for="pos-x">{{ property.key }}:</label> 
-							<input id="pos-x" v-model='property.value'>
-						</li-->
-
-					</ul>
-
+							<!--<input v-model='bindObj.name'/>-->
+							<li>
+								<label for="property-input">position </label>
+								<div class="property-input">
+								x: <input id="pos-x" v-model.number='selection.object.sprite.x'>
+								 y:<input id="pos-y" v-model.number='selection.object.sprite.y'>
+								</div>
+							</li>
+							<li> scale
+								<div class="property-input">
+									x: <input id="scale-x" v-model.number='selection.object.sprite.scale.x'>
+							    y: <input id="scale-y" v-model.number='selection.object.sprite.scale.y'>
+							  </div>
+						  </li>
+							<li> visible
+								<label class="switch"><input type="checkbox" v-model='selection.object.sprite.visible' id ="visible" ><span class="slider round"></span></label>
+							</li>
+							<li>
+								<label for="clickable">interactive</label>
+								<label class="switch"><input type="checkbox" v-model='selection.object.interactive' id ="visible" ><span class="slider round"></span></label>						 
+							</li>
+							<!-- user properties -->
+							<!--li v-for='property in bindObj.properties'>
+								<label for="pos-x">{{ property.key }}:</label> 
+								<input id="pos-x" v-model='property.value'>
+							</li-->
+						</ul>
+					</div>
 				</div>
 			</div>
 			<div id="design-property-resizer" 

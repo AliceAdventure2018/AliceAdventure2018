@@ -13,6 +13,7 @@ Scene = function(_id, _name = "untitledScene"){
 	this.name = _name;
 
 	this.container = null;
+	this.selected = false;
 
 	GameProperties.AddScene(this);
 };
@@ -30,7 +31,7 @@ Scene.LoadScene = function(_data){
 	return scene;
 }
 
-Scene.Selection = { // only 1 selection is supported 
+/*Scene.Selection = { // only 1 selection is supported 
 	scene: null, // Dont set this directly
 	hasSelection: function(){ return (this.scene != null); }, 
 	select: function(_scene){ 
@@ -50,7 +51,7 @@ Scene.Selection = { // only 1 selection is supported
 		this.scene = null;
 		Event.Broadcast("update-selected-scene");
 	}
-};
+};*/
 
 // functions
 Scene.prototype.InitContainer = function(){
@@ -63,13 +64,13 @@ Scene.prototype.DeleteThis = function(){
 }
 
 Scene.prototype.SelectOn = function(){
-	Scene.Selection.select(this);
+	this.selected = true;
+	this.container.visible = true;
 };
 
 Scene.prototype.SelectOff = function(){
-	if (Scene.Selection.scene == this){
-		Scene.Selection.cancel();
-	}
+	this.selected = false;
+	this.container.visible = false;
 };
 
 Scene.prototype.toJsonObject = function(){
