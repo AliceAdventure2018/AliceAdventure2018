@@ -36,8 +36,20 @@ IEvent.Library = [
 		type: 3,
 		name: "Combine A with B",
 		inputObjNum: 2, 
-		template: '<select v-model="ntra.event.args[0]"><option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option></select> is combined with <select v-model="ntra.event.args[1]"><option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option></select>'
+		template: ''
 	}, 
+    {
+        type: 4,
+        name: "State A change to V",
+        inputObjNum: 2, 
+        template: ''
+    }, 
+    {
+        type: 5,
+        name: "Enter scene A",
+        inputObjNum: 1, 
+        template: ''
+    }, 
 ];
 
 IEvent.GetModel = function(type){

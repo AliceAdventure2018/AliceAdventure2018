@@ -75,29 +75,21 @@ View.Selection = (function(){ // WORKING ON: MOVE TO GLOBAL
 		scn.SelectOn();
 	};
 	return {
-		object: _obj,
-		scene: _scn,
-		showScene: false,
-		showObject: false,
+		get object() {return _obj},
+		get scene() {return _scn},
 		deSelect: function(){
 			_objOff(); 
 			_scnOff();
-			this.showObject = false;
-			this.showScene = false;
 			Event.Broadcast("update-selection");
 		},
 		selectObject: function(obj){
 			_objOn(obj);
 			if (obj.bindScene != null) _scnOn(obj.bindScene);
-			this.showObject = true;
-			this.showScene = false;
 			Event.Broadcast("update-selection");
 		},
 		selectScene: function(scn){
 			_scnOn(scn);
 			_objOff();
-			this.showObject = false;
-			this.showScene = true;
 			Event.Broadcast("update-selection");
 		},
 	};

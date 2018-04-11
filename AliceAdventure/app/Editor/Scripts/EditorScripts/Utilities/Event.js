@@ -2,35 +2,32 @@
 
 const Debug = require('./Debug');
 
-// class
 var Event;
 
-// variables
-Event = function(){};
+Event = (function(){
+	var events = {}; // private
+	return {
+		Broadcast: function(_event, _parameters){
+			if (events[_event] == undefined){
+				Debug.LogWarning("Event \"" + _event + "\" is not defined. ");
+			}
+			else {
+				for (var i in events[_event]){
+					events[_event][i](_parameters);
+				}
+			}
+		}, 
+		AddListener: function(_event, _function){
+			if (events[_event] == undefined){
+				events[_event] = [];
+			}
 
-Event.Events = {}; // INTERNAL USE
-
-// functions
-Event.Broadcast = function(_event, _parameters){
-	if (Event.Events[_event] == undefined){
-		Debug.LogWarning("Event \"" + _event + "\" is not defined. ");
-	}
-	else {
-		for (var i in Event.Events[_event]){
-			Event.Events[_event][i](_parameters);
+			if (typeof _function == 'function')
+				events[_event].push(_function);
+			else
+				Debug.LogError("Parameter added to event \"" + _event + "\" is not a function. ");
 		}
 	}
-}
-
-Event.AddListener = function(_event, _function){
-	if (Event.Events[_event] == undefined){
-		Event.Events[_event] = [];
-	}
-
-	if (typeof _function == 'function')
-		Event.Events[_event].push(_function);
-	else
-		Debug.LogError("Parameter added to event \"" + _event + "\" is not a function. ");
-}
+})();
 
 module.exports = Event;

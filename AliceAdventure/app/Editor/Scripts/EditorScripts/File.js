@@ -8,6 +8,7 @@ const State = require('./State');
 const Interaction = require('./Interaction');
 const Sound = require('./Sound');
 const Image = require('./Image');
+const View = require('./View');
 
 // class
 var File;
@@ -56,9 +57,11 @@ File.NewProject = function(_template = null){ // TODO: load from template
 			new File(null, new GameProperties());
 			File.instance.gameProperties.settings.projectName = _name;
 			// Default settings
-			Scene.AddScene("First scene");
+			let firstScene = Scene.AddScene("First scene");
 			
 			Event.Broadcast("reload-project");
+
+			View.Selection.selectScene(firstScene);
 		}
 	});
 };

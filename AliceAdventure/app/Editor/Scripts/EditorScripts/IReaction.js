@@ -109,6 +109,20 @@ IReaction.Library = [
         inputTypes: [],
         template: "Hide inventory"
     },
+    {
+        type: 12,
+        name: "Move object to scene", 
+        inputLength: 2, 
+        inputTypes: [],
+        template: "Move object to scene"
+    },
+    {
+        type: 13,
+        name: "Move object to position", 
+        inputLength: 3, 
+        inputTypes: [],
+        template: "Move object to position"
+    },
 ];
 
 // functions

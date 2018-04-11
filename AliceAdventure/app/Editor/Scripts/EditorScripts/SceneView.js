@@ -3,8 +3,8 @@
 const {PIXI, PROMPT, Event} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
 const Scene = require('./Scene');
-const View = require('./View');
 const SceneObject = require('./SceneObject');
+const View = require('./View');
 
 // class
 var SceneView;
@@ -47,13 +47,12 @@ SceneView.prototype.InitView = function(){
 		antialiasing: true, 
 		backgroundcolor: 0xFFFFFF
 	});
-	//this.app.view.setAttribute("v-on:dragover", "assetDragover(event)");
-	//this.app.view.setAttribute("v-on:drop", "assetDrop(event)");
 	document.getElementById('canvas-container').appendChild(this.app.view);
 
 	// events
 	Event.AddListener('reload-project', ()=>{this.ReloadView();});
 	Event.AddListener('add-gallery-object', (_obj)=>{this.AddObject(_obj);});
+	Event.AddListener('object-sprite-click', (_obj)=>{this.SelectObject(_obj);});
 };
 
 SceneView.prototype.ReloadView = function(){
@@ -76,24 +75,42 @@ SceneView.prototype.AddObject = function(_objInfo){
 	if (View.Selection.scene == null) return;
 	var _bindScene = View.Selection.scene;
 	var _obj = SceneObject.AddObject(_objInfo, _bindScene, this.app.screen.width / 2, this.app.screen.height / 2);
-	_obj.SelectOn();
+	this.SelectObject(_obj);
 	//this.app.stage.addChild(_obj.sprite);
 	_bindScene.container.addChild(_obj.sprite);
 };
 
-SceneView.prototype.AddScene = function(){
+SceneView.prototype.AddScene = function(_name = null){
 	var _scene;
-	PROMPT({
-		title: "New scene", 
-		label: "Input scene name: ", 
-		value: "new-scene"
-	}).then((_name)=>{
-		if (_name != null) {
-			_scene = Scene.AddScene(_name);
-			_scene.SelectOn();
-			this.app.stage.addChild(_scene.container);
-		}
-	});
+	if (_name == null){
+		PROMPT({
+			title: "New scene", 
+			label: "Input scene name: ", 
+			value: "new-scene"
+		}).then((_name)=>{
+			if (_name != null) {
+				_scene = Scene.AddScene(_name);
+				this.SelectScene(_scene);
+				this.app.stage.addChild(_scene.container);
+			}
+		});
+	} else {
+		_scene = Scene.AddScene(_name);
+		this.SelectScene(_scene);
+		this.app.stage.addChild(_scene.container);
+	}
+};
+
+SceneView.prototype.SelectObject = function(_obj){
+	// Select this object
+	if (_obj.selectAllowed){
+		View.Selection.selectObject(_obj);
+	}
+};
+
+SceneView.prototype.SelectScene = function(_scn){
+	// Select this object
+	View.Selection.selectScene(_scn);
 };
 
 module.exports = SceneView;

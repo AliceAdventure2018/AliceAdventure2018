@@ -11,7 +11,7 @@ var PropertyView;
 PropertyView = function(_bindElementID, _height = -1, _width = -1){
 	View.call(this, "PropertyView", _height, _width, _bindElementID);
 
-	//this.bindObject = null;
+	this.bindObject = null;
 	this.vModel = null;
 	
 };
@@ -32,7 +32,8 @@ PropertyView.prototype.InitView = function(){
 	  el: '#' + this.bindElementID,
 	  data: {
 	  	projectLoaded: false,
-	    selection: View.Selection,
+	  	showObject: false,
+	    object: null,
 	  }, 
 	  methods:{
 	  	//addProperty: ()=>{ this.bindObject.AddUserProperty(this.vModel.propertyKey, this.vModel.propertyType, this.vModel.propertyValue); }
@@ -41,7 +42,7 @@ PropertyView.prototype.InitView = function(){
 
 	// events
 	Event.AddListener("reload-project", ()=>{this.ReloadView();});
-	//Event.AddListener("update-selection", ()=>{this.UpdateSelection();});
+	Event.AddListener("update-selection", ()=>{this.UpdateSelection();});
 };
 
 PropertyView.prototype.ReloadView = function(){
@@ -55,7 +56,8 @@ PropertyView.prototype.ReloadView = function(){
 };
 
 PropertyView.prototype.UpdateSelection = function(){
-	//if (View.Selection.)
-}
+	this.vModel.showObject = (View.Selection.object != null);
+	this.vModel.object = View.Selection.object;
+};
 
 module.exports = PropertyView;

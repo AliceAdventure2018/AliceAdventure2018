@@ -7,13 +7,15 @@ const GameProperties = require('./GameProperties');
 var SceneObject;
 
 // variables
-SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = null, _interative = false){
+SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = null, _clickable = false, _draggable = false){
 	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
 	this.id = _id;
 	this.name = _name;
 	this.src = _src; // "Assets/xxx"
 	//this.isDefault = true; // TODO
 	this.bindScene = _bindScene;
+	this.clickable = _clickable;
+	this.draggable = _draggable;
 
 	this.selectAllowed = true;
 	this.selected = false;
@@ -22,7 +24,6 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 
 	this.properties = [];
 	this.sprite = null;
-	this.interactive = _interative;
 
 	GameProperties.AddObject(this);
 };
@@ -37,7 +38,7 @@ SceneObject.AddObject = function(_objInfo, _bindScene, _x, _y){
 };
 
 SceneObject.LoadObject = function(_data){ // I AM HERE
-	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene), _data.interactive);
+	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene), _data.clickable, _data.draggable);
 	_obj.InitSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
 	return _obj;
 };
@@ -75,14 +76,14 @@ var pixiFilters = { // private
 }; 
 
 // functions
-SceneObject.prototype.InitSprite = function(_url, _pos = {x: 0, y: 0}, _scale = {x: 0.5, y: 0.5}, _anchor = {x: 0.5, y: 0.5}, _active = true ){
+SceneObject.prototype.InitSprite = function(_url, _pos, _scale, _anchor, _active){
 	if (!(this instanceof SceneObject)) return;
 	this.sprite = PIXI.Sprite.fromImage(_url);
-	this.sprite.x = isNumberOr(_pos.x, 0);
-	this.sprite.y = isNumberOr(_pos.y, 0);
-	this.sprite.scale.set(isNumberOr(_scale.x, 1), isNumberOr(_scale.y, 1));
-	this.sprite.anchor.set(isNumberOr(_anchor.x, 0.5), isNumberOr(_anchor.y, 0.5));
-	this.sprite.visible = _active;
+	this.sprite.x = (_pos != null)?_pos.x: 0;
+	this.sprite.y = (_pos != null)?_pos.y: 0;
+	this.sprite.scale.set((_scale != null)?_scale.x: 0.5, (_scale != null)?_scale.y: 0.5);
+	this.sprite.anchor.set((_anchor != null)?_anchor.x: 0.5, (_anchor != null)?_anchor.y: 0.5);
+	this.sprite.visible = (_active != null)?_active:true;
 	this.sprite.interactive = true;
 	this.sprite
 		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
@@ -153,11 +154,9 @@ SceneObject.prototype.SelectOn = function(){
 };
 
 SceneObject.prototype.OnPointerDown = function(_event){
-	if (!(this instanceof SceneObject)) return;
-
 	// Select this object
 	if (this.selectAllowed){
-		this.SelectOn();
+		Event.Broadcast('object-sprite-click', this);
 	}
 
 	// Start dragging
@@ -168,8 +167,6 @@ SceneObject.prototype.OnPointerDown = function(_event){
 };
 
 SceneObject.prototype.OnPointerMove = function(_event){
-	if (!(this instanceof SceneObject)) return;
-
 	// While dragging
 	if (this.dragAllowed && this.drag.on){
 		var newPosition = this.drag.eventData.getLocalPosition(this.sprite.parent);
@@ -179,9 +176,7 @@ SceneObject.prototype.OnPointerMove = function(_event){
 };
 
 SceneObject.prototype.OnPointerUp = function(_event){
-	if (!(this instanceof SceneObject)) return;
-
-	// Start dragging
+	// Stop dragging
 	if (this.dragAllowed){
 		this.drag.on = false;
 	}
@@ -197,7 +192,8 @@ SceneObject.prototype.toJsonObject = function(){
 		anchor: {x: Number(this.sprite.anchor.x), y: Number(this.sprite.anchor.y)}, 
 		scale: {x: Number(this.sprite.scale.x), y: Number(this.sprite.scale.y)}, 
 		active: this.sprite.visible, 
-		interactive: this.interactive, 
+		clickable: this.clickable, 
+		draggable: this.draggable, 
 		bindScene: this.bindScene.id, 
 		//properties: _o.properties, 
 	};
