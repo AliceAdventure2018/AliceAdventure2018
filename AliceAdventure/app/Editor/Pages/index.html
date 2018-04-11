@@ -16,6 +16,7 @@
 	<script src="js/resizer.js"></script>	
 	<script src="js/interact.js"></script>	  
 	<script src="js/drag.js"></script>	 
+	<script src="js/dropdown.js"></script>	
 	<link rel="stylesheet" href="../../Resources/bootstrap.min.css"/>
 	<script type="text/javascript" src="../../Resources/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" src="../../Resources/modal.js"></script>
@@ -37,28 +38,35 @@
                Setting
     </button>
 
-    <button onclick="AliceEditor.File.BuildProject()" id="build-button"  class="float-right" >
-    					 Build
-    </button>
-
+    
     <!--button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
     					 Run
     </button-->
-    <button onclick="AliceEditor.File.ImportSound()" id="save-button"  class="float-right" >
-    					 Import
+   	<img  src="src/import.png" class="topnav-icon" />
+   	<div class="dropdown">
+    <button  onmouseover="dropdownShow(event)" id="save-button"  class="dropbtn float-right">
+	Import
     </button>
+    <div id="import-dropdown" class="dropdown-content">
+    	<a class="dropdown-item" > Image</a>
+    	<a class="dropdown-item" onclick="AliceEditor.File.ImportSound()"> Sound</a>
 
-    <button onclick="AliceEditor.File.SaveProject()" id="save-button"  class="float-right" >
-    					 Save
+    </div>
+	</div>
+   <div class="dropdown" >
+    <button  onmouseover="dropdownShow(event)"  id="save-button"  class="dropbtn">
+	File
     </button>
+    <div id="import-dropdown" class="dropdown-content">
+    	<a class="dropdown-item" onclick="AliceEditor.File.NewProject()" > New project</a>
+    	<a class="dropdown-item" onclick="AliceEditor.File.OpenProject()"> Open project</a>
+    	<a class="dropdown-item" onclick="AliceEditor.File.SaveProject()"> Save project</a>
+    	<a class="dropdown-item" onclick="AliceEditor.File.BuildProject()"> Build project</a>
+    </div>
+	</div>
+    
 
-    <button onclick="AliceEditor.File.OpenProject()" id="save-button"  class="float-right" >
-    					 Open
-    </button>
 
-    <button onclick="AliceEditor.File.NewProject()" id="save-button"  class="float-right" >
-    					 New
-    </button>
 	</nav>
 
 	<script type="text/javascript">
