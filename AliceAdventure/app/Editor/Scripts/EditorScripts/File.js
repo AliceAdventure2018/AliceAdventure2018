@@ -147,8 +147,18 @@ File.BuildProject = function(){
 }
 
 File.RunProject = function(){
-	// TODO
-	Debug.LogError("Function not implemented");
+	if (File.instance == null) return;
+	// check if project saved
+	if (File.instance.path == null){ // no existing file
+		if (confirm('Your project is unsaved. \nSave it first?')){
+			File.SaveAsNewProject(()=>{File.Build()});
+		} else {
+			return;
+		}
+	} else {
+		File.SaveToPath(File.instance.path);
+		File.Build();
+	}	
 }
 
 File.ImportAssets = function(){
@@ -317,5 +327,9 @@ File.Build = function(){
 	} else { // fail
 		Debug.Log("Build failed with error");
 	}
+}
+
+File.Run = function(){
+	Event.$emit('run-in-editor', File.instance.path + 'build/index.html');
 }
 module.exports = File;
