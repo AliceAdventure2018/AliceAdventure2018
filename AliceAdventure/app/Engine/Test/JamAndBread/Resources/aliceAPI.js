@@ -86,6 +86,11 @@ function AliceReactionSystem(_game) {
         this.game.moveObjectToScene(_obj,_scene_index,x,y);
     }
     
+    this.setObjectLocation = function(_obj, _x, _y) {
+        _obj.x = x;
+        _obj.y = y;
+    }
+    
 }
 
 function AliceEventSystem() {
@@ -220,7 +225,7 @@ function Inventory(game) { //always on the top
         tool.buttonMode = true;
         
         tool.off('pointerdown', tool.onClick);
-        tool.on('rightclick', function(){myGame.inventory.inventoryObserved(tool)});
+//        tool.on('rightclick', function(){myGame.inventory.inventoryObserved(tool)});
         
         //enable drag and drop
         tool
@@ -335,33 +340,6 @@ function Inventory(game) { //always on the top
     
 }
 
-
-function onDragStart(event) {
-    myGame.inventory.popUp(this);
-    this.data = event.data;
-    this.alpha = 0.5;
-    this.dragging = true;
-}
-
-function onDragMove() {
-    if (this.dragging) {
-        var newPosition = this.data.getLocalPosition(this.parent);
-        this.x = newPosition.x;
-        this.y = newPosition.y;
-    }
-}
-
-function onDragEnd() {
-    this.alpha = 1;
-    this.dragging = false;
-    this.data = null;
-    
-    if(myGame.inventory) {
-        myGame.inventory.inventoryUse(this);
-    }  
-}
-
-
 function SceneManager(game) {
     this.currentScene;
 
@@ -437,6 +415,9 @@ function SceneManager(game) {
 
 
 
+
+
+
 function GameManager() {
     
     //game
@@ -466,8 +447,17 @@ function GameManager() {
         this.inventorySize = invent_size;
         this.inventoryWidth = height/invent_size
         
-        this.app = new Alice.Application(this.screenWidth + this.inventoryWidth, height, {backgroundColor : 0x1099bb});
-        document.body.appendChild(this.app.view);
+        this.size = [this.screenWidth + this.inventoryWidth, this.screenHeight];
+        this.ratio = this.size[0] / this.size[1];
+        this.stage = new PIXI.Stage(0x333333, true);
+        this.renderer = PIXI.autoDetectRenderer(this.size[0], this.size[1], null);
+        
+        //this.app = new Alice.Application(this.screenWidth + this.inventoryWidth, this.screenHeight, {backgroundColor : 0x1099bb});
+        
+        //this.app.rende
+        
+        document.body.appendChild(this.renderer.view);
+    
                
         this.sceneManager = new SceneManager(this);
         this.inventory = new Inventory(this);
@@ -482,15 +472,18 @@ function GameManager() {
         this.eventSystem = new AliceEventSystem();
         this.reactionSystem = new AliceReactionSystem(this);
         
-        this.app.stage.addChild(this.sceneManager.sceneContainer);
-        this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
-        this.app.stage.addChild(this.inventory.inventoryContainer);
-        this.app.stage.addChild(this.messageBox.holder);
+//        this.app.stage.addChild(this.sceneManager.sceneContainer);
+//        this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
+//        this.app.stage.addChild(this.inventory.inventoryContainer);
+//        this.app.stage.addChild(this.messageBox.holder);
  
-    
+        this.stage.addChild(this.sceneManager.sceneContainer);
+        this.stage.addChild(this.inventory.inventoryBackgroundGrp); 
+        this.stage.addChild(this.inventory.inventoryContainer);
+        this.stage.addChild(this.messageBox.holder);
+        
     }
-    
-    
+
     this.initStateManager = function(_states) {
         this.stateManager = new StateManager(_states, this.eventSystem);
     }
@@ -503,13 +496,16 @@ function GameManager() {
             _obj.y = y;
     }
     
-    
     this.showInventory = function() {
         this.app.renderer.resize(this.screenWidth + this.inventoryWidth,this.screenHeight);
     }
     
     this.hideInventory = function() {
         this.app.renderer.resize(this.screenWidth,this.screenHeight);
+    }
+    
+    this.scene = function(index) {
+        return this.sceneManager.getSceneByIndex(index);
     }
 
     
@@ -519,16 +515,25 @@ function GameManager() {
     
     this.start = function(index) {
         //console.log("in start");
+        
+        this.resize();
         this.sceneManager.start(index);
         this.awake();
     }
     
-    this.scene = function(index) {
-        return this.sceneManager.getSceneByIndex(index);
+    this.resize = function() {
+        if (window.innerWidth / window.innerHeight >= this.ratio) {
+            var w = window.innerHeight * this.ratio;
+            var h = window.innerHeight;
+        } else {
+            var w = window.innerWidth;
+            var h = window.innerWidth / this.ratio;
+        }
+        this.renderer.view.style.width = w + 'px';
+        this.renderer.view.style.height = h + 'px';
     }
-    
-}
 
+}
 
 function Message(_text, _style, _avatar, _narrator="") {
 //    this.defaultStyle = new PIXI.TextStyle({
@@ -657,16 +662,6 @@ function MessageBox(background, avatarEnable, game) {
     }
 }
 
-
-function messageBoxOnClick() {
-    if(myGame.messageBox) {
-        myGame.messageBox.nextConversation();
-    }
-}
-
-
-
-
 /*
     2D collision detection
 */
@@ -720,4 +715,53 @@ function hitTestRectangle(r1, r2) {
   //`hit` will be either `true` or `false`
   return hit;
 };
+
+
+// game instances //
+var myGame = new GameManager();
+
+var animate = function() {
+    requestAnimationFrame(animate);
+    myGame.renderer.render(myGame.stage);
+}
+
+requestAnimationFrame(animate);
+
+
+window.onresize = function(event) {
+    myGame.resize();
+};
+
+function messageBoxOnClick() {
+    if(myGame.messageBox) {
+        myGame.messageBox.nextConversation();
+    }
+}
+
+
+function onDragStart(event) {
+    myGame.inventory.popUp(this);
+    this.data = event.data;
+    this.alpha = 0.5;
+    this.dragging = true;
+}
+
+function onDragMove() {
+    if (this.dragging) {
+        var newPosition = this.data.getLocalPosition(this.parent);
+        this.x = newPosition.x;
+        this.y = newPosition.y;
+    }
+}
+
+function onDragEnd() {
+    this.alpha = 1;
+    this.dragging = false;
+    this.data = null;
+    
+    if(myGame.inventory) {
+        myGame.inventory.inventoryUse(this);
+    }  
+}
+
 
