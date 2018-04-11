@@ -268,11 +268,13 @@
               </ul>
   		      </div>
 						<div id="tabContent">
-							<div id="door-asset" style="display: block;">
+							<div id="door-asset" style="display: none;">
 								<div class="assets">
 									<ul>
 									<!-- bind the gallery data -->
 										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="'../../'+img.src"> </div><p v-html='img.name'></p>
+										</li>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 										
 									</ul>
@@ -284,7 +286,9 @@
 									<ul>
                   <!-- bind the gallery data -->
                     <li v-for="sound in sounds"> <div class="asset"><img v-bind:src="'../../'+sound.src"> </div><p v-html='sound.name'></p>
-                    </li>                    
+                    </li>
+                    <li v-for="sound in importedSounds"> <div class="asset"><img v-bind:src='sound.src'> </div><p v-html='sound.name'></p>
+                    </li>  
                   </ul>
 								</div>
 							</div>

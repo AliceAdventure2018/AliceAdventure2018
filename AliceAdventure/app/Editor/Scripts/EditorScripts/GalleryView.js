@@ -1,6 +1,7 @@
 'use strict';
 
 const {Event} = require('./Utilities/Utilities');
+const GameProperties = require('./GameProperties');
 const SceneObject = require('./SceneObject');
 const View = require('./View');
 
@@ -93,7 +94,9 @@ GalleryView.prototype.InitView = function(){
 		el: '#' + this.bindElementID,
 		data: {
 			images: GalleryView.ImageLibrary,
-			sounds: GalleryView.SoundLibrary
+			sounds: GalleryView.SoundLibrary,
+			importedImages: null,
+			importedSounds: null,
 		}, 
 		methods: {
 			imageDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.GalleryImage, d);},
@@ -108,6 +111,14 @@ GalleryView.prototype.InitView = function(){
 
 GalleryView.prototype.ReloadView = function(){
 	View.prototype.ReloadView.apply(this); // call super method
+
+	if (GameProperties.instance == null){
+		this.vModel.importedImages = null;
+		this.vModel.importedSounds = null;
+	} else {
+		this.vModel.importedImages = GameProperties.instance.imageList;
+		this.vModel.importedSounds = GameProperties.instance.soundList;
+	}
 };
 
 GalleryView.prototype.ChooseObj = function(_obj){
