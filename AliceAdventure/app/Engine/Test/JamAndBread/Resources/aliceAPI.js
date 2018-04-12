@@ -172,14 +172,14 @@ function AliceEventSystem() {
     }
     
     this.addCombineEvent = function(objA, objB, func) {
-        var eventMessage = objA.name + this.template.use + objB.name;
+        var eventMessage = objA.name + this.template.combine + objB.name;
         debug.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
            func(); 
         });
         
-        eventMessage = objB.name + this.template.use + objA.name;
+        eventMessage = objB.name + this.template.combine + objA.name;
         debug.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
@@ -979,7 +979,7 @@ function onMouseUp() {
     if(!this.mouseIsDown)
         return;
     
-    
+    toOriginalLayer(this)
     this.alpha = 1;
     this.mouseIsDown = false;
     this.data = null;
@@ -998,30 +998,46 @@ function onMouseUp() {
         }
     }
     else {
-        debug.log("drag");
+        //debug.log("drag");
         var res = myGame.getCollisionMap(this);
         var sceneCollider = res.scene;
         var inventoryCollider = res.inventory;
         
         if(inventoryCollider.length > 0) {
-            var message = this.name + myGame.eventSystem.template.use + inventoryCollider.pop().name;
+            
+            var item = inventoryCollider.pop();
+            
+            var message = this.name + myGame.eventSystem.template.use + item.name;
             if(myGame.eventSystem.checkEventExist(message)){
-                //this.game.soundManager.play('good');
+                myGame.eventSystem.callEvent(message);
+                return;
+            }
+            
+            message = this.name + myGame.eventSystem.template.combine + item.name;
+            if(myGame.eventSystem.checkEventExist(message)){
                 myGame.eventSystem.callEvent(message);
                 return;
             }
         }
         
         if(sceneCollider.length > 0) {
-            var message = this.name + myGame.eventSystem.template.use + sceneCollider.pop().name;
+            
+            var item = sceneCollider.pop();
+            var message = this.name + myGame.eventSystem.template.use + item.name;
             //console.log(message);
             if(myGame.eventSystem.checkEventExist(message)){
                 //myGame.soundManager.play('good');
                 myGame.eventSystem.callEvent(message);
                 return;
             }
+            
+            message = this.name + myGame.eventSystem.template.combine + item.name;
+            if(myGame.eventSystem.checkEventExist(message)){
+                //myGame.soundManager.play('good');
+                myGame.eventSystem.callEvent(message);
+                return;
+            }
         }
-        
         
         
         
