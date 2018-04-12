@@ -63,12 +63,58 @@ function AliceReactionSystem(_game) {
     }
     
     this.makeInteractive = function(_obj) {
+        if(_obj.interactive)
+            return;
+        
         _obj.interactive = true;
+        _obj.buttonMode = true;
+        
+        _obj
+            .on('pointerdown', onMouseDown)
+            .on('pointerup', onMouseUp)
+            //.on('pointerupoutside', onMouseUp)
+            .on('pointermove', onMouseMove);
     }
     
     this.makeNonInteractive = function(_obj) {
+        if(!_obj.interactive)
+            return;
+        
         _obj.interactive = false;
+        _obj.buttonMode = false;
+        
+        _obj
+            .off('pointerdown', onMouseDown)
+            .off('pointerup', onMouseUp)
+            .off('pointermove', onMouseMove);
     }
+    
+    this.makeClickable = function(_obj) {
+        this.makeInteractive(_obj);
+        _obj.clickable = true;
+    }
+    
+    this.makeUnClickable = function(_obj) {
+        _obj.clickable = false;
+        if(!_obj.dragable)
+        {
+            this.makeNonInteractive(_obj)
+        }
+    }
+    
+    this.makeDragable = function(_obj) {
+        this.makeInteractive(_obj);
+        _obj.dragable = true;
+    }
+    
+    this.makeUnDragable = function(_obj) {
+        __obj.dragable = false;
+        if(!_obj.clickable)
+        {
+            this.makeNonInteractive(_obj)
+        }
+    }
+   
     
     this.playAudio = function(_audio) {
         this.game.soundManager.play(_audio);
@@ -116,14 +162,14 @@ function AliceEventSystem() {
     }
     
     this.addCombineEvent = function(objA, objB, func) {
-        var eventMessage = objA.name + this.template.combine + objB.name;
+        var eventMessage = objA.name + this.template.use + objB.name;
         console.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
            func(); 
         });
         
-        eventMessage = objB.name + this.template.combine + objA.name;
+        eventMessage = objB.name + this.template.use + objA.name;
         console.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
@@ -170,6 +216,7 @@ function AliceEventSystem() {
         this.emptySprite.emit(message);
     }
     
+    
 }
 
 
@@ -198,21 +245,35 @@ function Inventory(game) { //always on the top
         this.inventoryBackgroundGrp.addChild(inventBack); 
     }
     
-
-    //sound
-//    game.sound.add('add', baseURL.requireAssets + 'sound/add.wav');
-//    game.sound.add('good', baseURL.requireAssets + 'sound/use_good.wav');
-//    game.sound.add('bad', baseURL.requireAssets + 'sound/use_bad.wav');
-    
     ////////functions//////////
     this.scaleDown = function(tool) {
         tool.scale.set(1);
+        //
         tool.scale.set((this.inventory_w/tool.width) * this.magic_scale);
         
     }
     
+    this.isInsideInventory = function(tool) {        
+        //console.log(this.inventoryContainer.children.length)
+        
+        for(i in this.inventoryContainer.children) {
+            //console.log(obj.name)
+            obj = this.inventoryContainer.children[i];
+            if(obj.name == tool.name)
+                return true
+        }
+        
+        return false;
+    }
     
     this.add = function(tool) {
+        
+        if(this.isInsideInventory(tool))
+        {
+                //console.log("inside")
+                return;
+        }
+            
         
         //this.soundList.add.play();
         this.game.soundManager.play('add');
@@ -223,17 +284,21 @@ function Inventory(game) { //always on the top
         //scale down
         this.scaleDown(tool);
         
-        tool.interactive = true;
-        tool.buttonMode = true;
+        //!???????????!
+        this.game.reactionSystem.makeDragable(tool);
         
-        tool.off('pointerdown', tool.onClick);
-//        tool.on('rightclick', function(){myGame.inventory.inventoryObserved(tool)});
-        
-        //enable drag and drop
-        tool
-            .on('pointerdown', onDragStart)
-            .on('pointerup', onDragEnd)
-            .on('pointermove', onDragMove);
+//        tool.interactive = true;
+//        tool.buttonMode = true;
+//        
+        //this.game.reactionSystem.makeUnClickable(tool);
+//        tool.off('pointerdown', tool.onClick);
+////        tool.on('rightclick', function(){myGame.inventory.inventoryObserved(tool)});
+//        
+//        //enable drag and drop
+//        tool
+//            .on('pointerdown', onDragStart)
+//            .on('pointerup', onDragEnd)
+//            .on('pointermove', onDragMove);
 
         this.update();
     }
@@ -449,9 +514,6 @@ function SceneManager(game) {
 
 
 
-
-
-
 function GameManager() {
     
     //game
@@ -572,6 +634,45 @@ function GameManager() {
         this.renderer.view.style.width = w + 'px';
         this.renderer.view.style.height = h + 'px';
     }
+    
+    this.getCollisionMap = function(tool) {
+        var SceneCollideList = [];
+        var objectsInCurrentScene = this.sceneManager.getCurrentScene().children;
+        //console.log(objectsInCurrentScene)
+        objectsInCurrentScene.forEach(function(obj) {
+            if(obj.visible && hitTestRectangle(tool,obj)) {
+                console.log(obj.name);
+                SceneCollideList.push(obj);
+            }
+        });
+        
+        var InventoryCollideList = [];
+        var objectsInInventory = this.inventory.inventoryContainer.children;
+        //console.log(objectsInInventory);
+        objectsInInventory.forEach(function(obj) {
+            if(obj.name!=tool.name && obj.visible && hitTestRectangle(tool,obj)) {
+                //console.log(obj.name);
+                InventoryCollideList.push(obj);
+            }
+        });
+        var sceneObjName = [];
+        SceneCollideList.forEach(function(obj){
+            sceneObjName.push(obj.name);
+        })
+        
+        var invObjName = [];
+        InventoryCollideList.forEach(function(obj){
+            invObjName.push(obj.name);
+        })
+//        console.log("sceneObjName:");
+//        console.log(sceneObjName);
+//        console.log("invObjName:");
+//        console.log(invObjName);
+        
+        return {scene:SceneCollideList,inventory:InventoryCollideList};
+    }
+    
+    
 
 }
 
@@ -757,6 +858,10 @@ function hitTestRectangle(r1, r2) {
   return hit;
 };
 
+function distance(x1,y1,x2,y2) {
+    return Math.pow((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2), 0.5);
+}
+
 
 // game instances //
 var myGame = new GameManager();
@@ -780,6 +885,8 @@ function messageBoxOnClick() {
     }
 }
 
+
+//
 function onDragStart(event) {
     myGame.inventory.popUp(this);
     this.data = event.data;
@@ -804,5 +911,111 @@ function onDragEnd() {
         myGame.inventory.inventoryUse(this);
     }  
 }
+
+function toFrontLayer(obj) {
+    obj.temp = new Alice.Object;
+    //obj.layer = obj.parent.getChildIndex(obj);
+    var localparent = obj.parent;
+    localparent.addChild(obj.temp);
+    localparent.swapChildren(obj,obj.temp)
+
+}
+
+function toOriginalLayer(obj) {
+    var localparent = obj.parent;
+    localparent.swapChildren(obj, obj.temp)
+    localparent.removeChild(obj.temp)
+    obj.temp = null;
+}
+
+function onMouseDown(event) {
+    //myGame.inventory.popUp(this);
+    this.data = event.data;
+    ///this.alpha = 0.5;
+    this.mouseIsDown = true;
+    this.original = [this.x,this.y]
+    this.offset = {
+        x: this.data.getLocalPosition(this.parent).x - this.x,
+        y: this.data.getLocalPosition(this.parent).y - this.y
+    }
+    this.dragStart = false;
+    
+    toFrontLayer(this);
+}
+
+function onMouseMove() {
+    if (this.mouseIsDown && this.dragable) {
+        var newPosition = this.data.getLocalPosition(this.parent);
+        this.x = newPosition.x - this.offset.x;
+        this.y = newPosition.y - this.offset.y;
+        
+        if(distance(this.x,this.y, this.original[0],this.original[1]) > 0.3) {
+            this.alpha = 0.5;
+            if(!this.dragStart) {
+                this.dragStart = true;
+                if(this.DIY_DRAG != undefined)
+                    this.DIY_DRAG();
+            }
+        }
+    }
+}
+
+
+
+function onMouseUp() {
+    this.alpha = 1;
+    this.mouseIsDown = false;
+    this.data = null;
+    
+    toOriginalLayer(this);
+    
+    if(!this.dragStart)
+    {
+        this.x = this.original[0];
+        this.y = this.original[1];
+        console.log("click");
+        if(this.clickable) {
+            if(this.DIY_CLICK != undefined)
+                this.DIY_CLICK();
+        }
+    }
+    else {
+        console.log("drag");
+        var res = myGame.getCollisionMap(this);
+        var sceneCollider = res.scene;
+        var inventoryCollider = res.inventory;
+        
+        if(inventoryCollider.length > 0) {
+            var message = this.name + myGame.eventSystem.template.use + inventoryCollider.pop().name;
+            if(myGame.eventSystem.checkEventExist(message)){
+                //this.game.soundManager.play('good');
+                myGame.eventSystem.callEvent(message);
+                return;
+            }
+        }
+        
+        if(sceneCollider.length > 0) {
+            var message = this.name + myGame.eventSystem.template.use + sceneCollider.pop().name;
+            //console.log(message);
+            if(myGame.eventSystem.checkEventExist(message)){
+                //myGame.soundManager.play('good');
+                myGame.eventSystem.callEvent(message);
+                return;
+            }
+        }
+        
+        myGame.soundManager.play('bad');
+        this.x = this.original[0];
+        this.y = this.original[1];
+        
+    }
+    
+    
+    
+}
+
+//droped on the event target: do something
+//droped on not event target: back to place
+
 
 
