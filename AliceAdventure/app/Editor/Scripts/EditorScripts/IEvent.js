@@ -26,12 +26,12 @@ IEvent.Library = [
 		inputObjNum: 2, 
 		template: '<select v-model="ntra.event.args[0]"><option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option></select> is used on <select v-model="ntra.event.args[1]"><option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option></select>'
 	}, 
-	{
+	/*{
 		type: 2,
 		name: "Observe A",
 		inputObjNum: 1, 
 		template: '<select v-model="ntra.event.args[0]"><option v-for="obj in objects" v-html="obj.name" v-bind:value="obj.id"></option></select> is observed'
-	}, 
+	},*/
 	{
 		type: 3,
 		name: "Combine A with B",

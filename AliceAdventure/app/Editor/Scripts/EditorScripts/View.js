@@ -19,9 +19,13 @@ var dragData = {}; // private
 View.DragInfo = {
 	IEvent: 0, 
 	State: 1, 
+	ListedState: 2,
 	IReaction: 3, 
-	GalleryImage: 4,
-	GallerySound: 5
+	ListedIReaction: 4, 
+	GalleryImage: 5,
+	GallerySound: 6,
+	ListedObject: 7, 
+	ListedScene: 8,
 };
 
 View.HandleDragstart = function(ev, infoType, data){

@@ -330,6 +330,6 @@ File.Build = function(){
 }
 
 File.Run = function(){
-	Event.$emit('run-in-editor', File.instance.path + 'build/index.html');
+	Event.Broadcast('run-in-editor', File.instance.path + 'build/index.html');
 }
 module.exports = File;
