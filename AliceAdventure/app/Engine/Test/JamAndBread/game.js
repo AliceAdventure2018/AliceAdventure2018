@@ -180,12 +180,17 @@ myGame.scene(2).addChild(winScene);
 
 
 cat.DIY_CLICK = function() {
-    console.log("in DIY function");
+    //console.log("in DIY function");
+    reaction.playAudio("meow_unhappy");
+    myGame.messageBox.startConversation(["Hungry... ... .... ..... .. .... ........ ...... ...... ...... ..... ....... ........ .......... ...... ...... ...... ....... ...... ....... ........ ......... ........... ........ ..... ...."], function() {
+            myGame.messageBox.startConversation(["Want a bread with jam.."], function() {
+            });
+        });
 }
 
-cat.DIY_DROP = function() {
-    console.log("in DIYDROP function");
-}
+//cat.DIY_DROP = function() {
+//    console.log("in DIYDROP function");
+//}
 
 door.DIY_CLICK = function(){
     reaction.playAudio('door');
@@ -200,23 +205,26 @@ door2.DIY_CLICK = function(){
 jam.DIY_CLICK = function() {
     //myGame.inventory.add(jam);
     reaction.addToInventory(jam);
+    reaction.playAudio('add');
 }
 
 knife.DIY_CLICK = function() {
     //myGame.inventory.add(knife);
     reaction.addToInventory(knife);
+    reaction.playAudio('add');
 }
 
 
 bread.DIY_CLICK = function() {
     //myGame.inventory.add(bread);
     reaction.addToInventory(bread);
+    reaction.playAudio('add');
 }
 
 
 
 myGame.eventSystem.addCombineEvent(knife,jam,function(){
-    
+    reaction.playAudio('good');
     //myGame.inventory.remove(knife);
     reaction.removeFromInventory(knife);
     //myGame.inventory.remove(jam);
@@ -229,6 +237,7 @@ myGame.eventSystem.addCombineEvent(knife,jam,function(){
 });
 
 myGame.eventSystem.addCombineEvent(knifewithjam,bread,function(){
+    reaction.playAudio('good');
     //myGame.inventory.remove(knifewithjam);
     reaction.removeFromInventory(knifewithjam);
     //myGame.inventory.remove(bread);
@@ -242,7 +251,7 @@ myGame.eventSystem.addCombineEvent(knifewithjam,bread,function(){
 
 
 myGame.eventSystem.addUsedEvent(breadwithjam,cat,function(){
-
+    
     //cat.visible = false;
     reaction.makeObjInvisible(cat);
     //cat_sad.visible = true;
@@ -273,20 +282,6 @@ myGame.eventSystem.addStateEvent('cat_is_feeded', true, function(){
 myGame.eventSystem.addSceneTransitEvent(1, function(){
     myGame.messageBox.startConversation(["There are some ingredient...", "On the table..."]);
 })
-
-
-//cat.on('pointerdown',function() {
-//    
-//        //myGame.sound.play('meow_unhappy');
-//        reaction.playAudio("meow_unhappy");
-//        myGame.messageBox.startConversation(["Hungry... ... .... ..... .. .... ........ ...... ...... ...... ..... ....... ........ .......... ...... ...... ...... ....... ...... ....... ........ ......... ........... ........ ..... ...."], function() {
-//            //myGame.sound.play('meow_unhappy');
-//            myGame.messageBox.startConversation(["Want a bread with jam.."], function() {
-//                //myGame.sound.play('meow_unhappy');
-//            });
-//            
-//        });
-//});
 
 
 

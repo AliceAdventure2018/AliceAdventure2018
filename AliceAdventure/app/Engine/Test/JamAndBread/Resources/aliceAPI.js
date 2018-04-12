@@ -17,6 +17,16 @@ var baseURL = {
     nomalAssets: './Resources/Assets/'
 }
 
+function DebugSystem(_open) {
+    this.open = _open;
+    this.log = function(info) {
+        if(this.open) {
+            console.log(info);
+        }
+    }
+}
+
+var debug = new DebugSystem(true);
 
 
 function StateManager(_states, _eventSys) {
@@ -154,7 +164,7 @@ function AliceEventSystem() {
     
     this.addUsedEvent = function(objA, objB, func) {
         var eventMessage = objA.name + this.template.use + objB.name;
-        console.log("msg: " + eventMessage);
+        debug.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
            func(); 
@@ -163,14 +173,14 @@ function AliceEventSystem() {
     
     this.addCombineEvent = function(objA, objB, func) {
         var eventMessage = objA.name + this.template.use + objB.name;
-        console.log("msg: " + eventMessage);
+        debug.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
            func(); 
         });
         
         eventMessage = objB.name + this.template.use + objA.name;
-        console.log("msg: " + eventMessage);
+        debug.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
            func(); 
@@ -179,7 +189,7 @@ function AliceEventSystem() {
     
     this.addObserveEvent = function(obj, func) {
         var eventMessage = obj.name + this.template.observe;
-        console.log("msg: " + eventMessage);
+        debug.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true;
         this.emptySprite.on(eventMessage,function() {
            func(); 
@@ -196,7 +206,7 @@ function AliceEventSystem() {
     
     this.addSceneTransitEvent = function(_scene, func) {
         var eventMessage = this.template.transit + _scene;
-        //console.log("add scene transit: " + eventMessage)
+        //debug.log("add scene transit: " + eventMessage)
         this.eventMessageList[eventMessage] = true;
         this.emptySprite.on(eventMessage,function() {
            func(); 
@@ -206,7 +216,7 @@ function AliceEventSystem() {
     //-------------//
     this.checkEventExist = function(message) {
         if(this.eventMessageList[message] == undefined || this.eventMessageList[message] == false) {
-            //console.log("not valid");
+            //debug.log("not valid");
             return false;
         }
         return true;
@@ -276,7 +286,7 @@ function Inventory(game) { //always on the top
             
         
         //this.soundList.add.play();
-        this.game.soundManager.play('add');
+        //this.game.soundManager.play('add');
         
         //remove tool from the original scene and add to inventory container
         this.inventoryContainer.addChild(tool); //[INTERESTING: remove it from the original container]
@@ -377,7 +387,7 @@ function Inventory(game) { //always on the top
         //console.log(objectsInCurrentScene)
         objectsInCurrentScene.forEach(function(obj) {
             if(obj.visible && hitTestRectangle(tool,obj)) {
-                console.log(obj.name);
+                //debug.log(obj.name);
                 SceneCollideList.push(obj);
             }
         });
@@ -641,7 +651,7 @@ function GameManager() {
         //console.log(objectsInCurrentScene)
         objectsInCurrentScene.forEach(function(obj) {
             if(obj.visible && hitTestRectangle(tool,obj)) {
-                console.log(obj.name);
+                debug.log(obj.name);
                 SceneCollideList.push(obj);
             }
         });
@@ -776,6 +786,9 @@ function MessageBox(background, avatarEnable, game) {
     }
     
     this.startConversation= function(msgs, func = null) {
+        
+        this.stopConversation();
+        
         if(msgs.length == 0)
             return
         
@@ -800,7 +813,7 @@ function MessageBox(background, avatarEnable, game) {
             this.currentMsgIndex = 0;
             this.holder.visible = false;
             this.callBack = function(){};
-            //this.game.lock = false;
+
     }
 }
 
@@ -961,26 +974,31 @@ function onMouseMove() {
 }
 
 
-
 function onMouseUp() {
+    
+    if(!this.mouseIsDown)
+        return;
+    
+    
     this.alpha = 1;
     this.mouseIsDown = false;
     this.data = null;
     
-    toOriginalLayer(this);
+    debug.log("mouseUp")
+    
     
     if(!this.dragStart)
     {
         this.x = this.original[0];
         this.y = this.original[1];
-        console.log("click");
+        debug.log("click");
         if(this.clickable) {
             if(this.DIY_CLICK != undefined)
                 this.DIY_CLICK();
         }
     }
     else {
-        console.log("drag");
+        debug.log("drag");
         var res = myGame.getCollisionMap(this);
         var sceneCollider = res.scene;
         var inventoryCollider = res.inventory;
@@ -1003,6 +1021,9 @@ function onMouseUp() {
                 return;
             }
         }
+        
+        
+        
         
         myGame.soundManager.play('bad');
         this.x = this.original[0];
