@@ -35,7 +35,7 @@ RunView.prototype.InitView = function(){
 		}
 	});
 
-	Event.AddListener('run-in-editor', (_path)=>{this.StartGame(_path);});
+	Event.AddListener('run-in-editor', (_path)=>{this.Start(_path);});
 };
 
 RunView.prototype.ReloadView = function(){
@@ -44,13 +44,14 @@ RunView.prototype.ReloadView = function(){
 
 RunView.prototype.Start = function(_path){
 	if (FS.existsSync(_path)){
-		this.showRunView = true;
+		this.vModel.showRunView = true;
 		this.vModel.src = _path;
 	}
 };
 
 RunView.prototype.Terminate = function(){
-	this.showRunView = false;
+	this.vModel.showRunView = false;
+	this.vModel.src = null;
 };
 
 

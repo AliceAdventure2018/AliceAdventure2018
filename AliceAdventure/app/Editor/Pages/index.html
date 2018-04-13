@@ -639,7 +639,8 @@
 				>
 			</div>
 		</div>
-		<div style="position:fixed;margin:auto" id="run-view" v-if='showRunView'>
+		<div style="position:fixed;top:30%;left:30%" id="run-view" v-if='showRunView'>
+			<div style="text-align: center"><button v-on:click='stop();'>Stop</button></div>
 			<webview id="foo" v-bind:src='src' style="display:inline-flex; width:640px; height:480px"></webview>
 		</div>		
 

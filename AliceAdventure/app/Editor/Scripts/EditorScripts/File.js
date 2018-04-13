@@ -151,13 +151,14 @@ File.RunProject = function(){
 	// check if project saved
 	if (File.instance.path == null){ // no existing file
 		if (confirm('Your project is unsaved. \nSave it first?')){
-			File.SaveAsNewProject(()=>{File.Build()});
+			File.SaveAsNewProject(()=>{File.Build();File.Run();});
 		} else {
 			return;
 		}
 	} else {
 		File.SaveToPath(File.instance.path);
 		File.Build();
+		File.Run();
 	}	
 }
 
@@ -330,6 +331,6 @@ File.Build = function(){
 }
 
 File.Run = function(){
-	Event.Broadcast('run-in-editor', File.instance.path + 'build/index.html');
+	Event.Broadcast('run-in-editor', PATH.join(PATH.dirname(File.instance.path), 'Build/index.html'));
 }
 module.exports = File;
