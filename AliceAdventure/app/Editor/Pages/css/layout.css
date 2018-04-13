@@ -5,6 +5,18 @@ button{
     background: none;
 }
 
+table {
+    text-align: left !important;
+    background: #fff !important;
+    width:1200px !important;
+    margin-left: 5%;
+    margin-top:1%;
+}
+
+td, th {
+    max-width: 100px !important;
+}
+
 i {
   border: solid black;
   opacity: 0.5;
@@ -104,16 +116,9 @@ input:checked + .slider:before {
     float: right;
     position: relative;
     display: inline-block;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-.dropbtn{
-    float:right;
 
 }
+
 .dropdown-content {
     float: right;
     display: none;

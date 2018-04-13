@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+	<title> Welcome to Alice's Adventure </title>
+
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="css/layout.css">
+    <!-- Bootstrap CSS -->
+
+    <script>document.write('<base href="' + document.location + '" />');</script>
+
+   
+   <link rel="stylesheet" href="../../Resources/bootstrap.min.css"/>
+  <script type="text/javascript" src="../../Resources/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="../../Resources/modal.js"></script>
+  <script type="text/javascript" src="../../Resources/util.js"></script>
+  <script type="text/javascript" src="../../Resources/vue.js"></script>
+  <script type="text/javascript" src="../Scripts/index.js"></script>
+	
+
+</head>
+
+<style rel="stylesheet">
+.sys-button{
+  display: block;
+  margin:auto;
+  padding:1%;
+   color:#fff;
+   font-weight: 480;
+   font-size: 1.8em;
+}
+
+.sys-button:focus{
+  outline: none;
+}
+
+.sys-button:hover {
+  opacity: 0.5;
+}
+</style>
+<body style="background-color:#28a745;">
+  <div style="
+  display: block;
+  margin-top:10%;
+
+  ">
+  
+  <p>
+    <h6 class="window-title" style="color:#ffc107; font-size: 1.5em !important;">Where does the story happen?</h6>
+    <div class="table-responsive">
+    <table class="table table-bordered" id="table1">
+      <thread>
+      <tr>
+        <th > #
+        </th>
+        <th  >where is the item?
+        </th>
+      </tr>
+      </thread>
+      <tbody>
+        <tr>
+          <td> 1
+          </td>
+          <td contenteditable="true"> hello world
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </p>
+
+  <p>
+    <h6 class="window-title" style="color:#ffc107; font-size: 1.5em !important;" >Who are the characters in your game?</h6>
+    <div class="table-responsive">
+     <table class="table table-bordered" id="table2">
+      <thread>
+      <tr>
+        <th > #
+        </th>
+        <th> where is the character?
+        </th>
+        <th> character name
+        </th>
+      </tr>
+     
+       
+      </thread>
+      <tbody>
+        <tr>
+          <td> 1
+          </td>
+          <td contenteditable="true"> hello world
+          </td>
+          <td contenteditable="true"> Alice
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </p>
+
+  <p>
+    <h6 class="window-title" style="color:#ffc107;font-size: 1.5em !important;">What kind of items do you need in your game?</h6>
+    <div class="table-responsive">
+     <table class="table table-bordered" id="table3">
+      <thread>
+      <tr>
+        <th > #
+        </th>
+        <th  > where is the item?
+        </th>
+        <th  > item name          
+        </th>
+      </tr>
+      </thread>
+      <tbody>
+        <tr>
+          <td> 1
+          </td>
+          <td  contenteditable="true" > hello world
+          </td>
+          <td  contenteditable="true" > book
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </p>
+	
+  <button class="sys-button" onclick="goToNext()" > Next </button>
+   <button class="sys-button" onclick="goSkip()"> Skip </button>
+ </div>
+
+
+  <script>
+    function goToNext(){
+
+    }
+
+    function goSkip(){
+
+    }
+  </script>
+
+
+  
+</body>
+</html>
