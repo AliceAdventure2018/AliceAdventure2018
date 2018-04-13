@@ -17,6 +17,16 @@ var baseURL = {
     nomalAssets: './Resources/Assets/'
 }
 
+function DebugSystem(_open) {
+    this.open = _open;
+    this.log = function(info) {
+        if(this.open) {
+            console.log(info);
+        }
+    }
+}
+
+var debug = new DebugSystem(true);
 
 
 function StateManager(_states, _eventSys) {
@@ -63,15 +73,61 @@ function AliceReactionSystem(_game) {
     }
     
     this.makeInteractive = function(_obj) {
+        if(_obj.interactive)
+            return;
+        
         _obj.interactive = true;
+        _obj.buttonMode = true;
+        
+        _obj
+            .on('pointerdown', onMouseDown)
+            .on('pointerup', onMouseUp)
+            //.on('pointerupoutside', onMouseUp)
+            .on('pointermove', onMouseMove);
     }
     
     this.makeNonInteractive = function(_obj) {
+        if(!_obj.interactive)
+            return;
+        
         _obj.interactive = false;
+        _obj.buttonMode = false;
+        
+        _obj
+            .off('pointerdown', onMouseDown)
+            .off('pointerup', onMouseUp)
+            .off('pointermove', onMouseMove);
     }
     
+    this.makeClickable = function(_obj) {
+        this.makeInteractive(_obj);
+        _obj.clickable = true;
+    }
+    
+    this.makeUnClickable = function(_obj) {
+        _obj.clickable = false;
+        if(!_obj.dragable)
+        {
+            this.makeNonInteractive(_obj)
+        }
+    }
+    
+    this.makeDragable = function(_obj) {
+        this.makeInteractive(_obj);
+        _obj.dragable = true;
+    }
+    
+    this.makeUnDragable = function(_obj) {
+        __obj.dragable = false;
+        if(!_obj.clickable)
+        {
+            this.makeNonInteractive(_obj)
+        }
+    }
+   
+    
     this.playAudio = function(_audio) {
-        this.game.sound.play(_audio);
+        this.game.soundManager.play(_audio);
     }
     
     this.showInventory = function() {
@@ -84,6 +140,11 @@ function AliceReactionSystem(_game) {
     
     this.moveObjectToScene= function(_obj, _scene_index, x = null , y = null) {
         this.game.moveObjectToScene(_obj,_scene_index,x,y);
+    }
+    
+    this.setObjectLocation = function(_obj, _x, _y) {
+        _obj.x = x;
+        _obj.y = y;
     }
     
 }
@@ -103,7 +164,7 @@ function AliceEventSystem() {
     
     this.addUsedEvent = function(objA, objB, func) {
         var eventMessage = objA.name + this.template.use + objB.name;
-        console.log("msg: " + eventMessage);
+        debug.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
            func(); 
@@ -112,14 +173,14 @@ function AliceEventSystem() {
     
     this.addCombineEvent = function(objA, objB, func) {
         var eventMessage = objA.name + this.template.combine + objB.name;
-        console.log("msg: " + eventMessage);
+        debug.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
            func(); 
         });
         
         eventMessage = objB.name + this.template.combine + objA.name;
-        console.log("msg: " + eventMessage);
+        debug.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true; 
         this.emptySprite.on(eventMessage,function() {
            func(); 
@@ -128,7 +189,7 @@ function AliceEventSystem() {
     
     this.addObserveEvent = function(obj, func) {
         var eventMessage = obj.name + this.template.observe;
-        console.log("msg: " + eventMessage);
+        debug.log("msg: " + eventMessage);
         this.eventMessageList[eventMessage] = true;
         this.emptySprite.on(eventMessage,function() {
            func(); 
@@ -145,16 +206,17 @@ function AliceEventSystem() {
     
     this.addSceneTransitEvent = function(_scene, func) {
         var eventMessage = this.template.transit + _scene;
-        //console.log("add scene transit: " + eventMessage)
+        //debug.log("add scene transit: " + eventMessage)
         this.eventMessageList[eventMessage] = true;
         this.emptySprite.on(eventMessage,function() {
            func(); 
         });
     }
     
+    //-------------//
     this.checkEventExist = function(message) {
         if(this.eventMessageList[message] == undefined || this.eventMessageList[message] == false) {
-            //console.log("not valid");
+            //debug.log("not valid");
             return false;
         }
         return true;
@@ -163,6 +225,7 @@ function AliceEventSystem() {
     this.callEvent = function(message) {
         this.emptySprite.emit(message);
     }
+    
     
 }
 
@@ -192,41 +255,60 @@ function Inventory(game) { //always on the top
         this.inventoryBackgroundGrp.addChild(inventBack); 
     }
     
-
-    //sound
-    game.sound.add('add', baseURL.requireAssets + 'sound/add.wav');
-    game.sound.add('good', baseURL.requireAssets + 'sound/use_good.wav');
-    game.sound.add('bad', baseURL.requireAssets + 'sound/use_bad.wav');
-    
     ////////functions//////////
     this.scaleDown = function(tool) {
         tool.scale.set(1);
+        //
         tool.scale.set((this.inventory_w/tool.width) * this.magic_scale);
         
     }
     
+    this.isInsideInventory = function(tool) {        
+        //console.log(this.inventoryContainer.children.length)
+        
+        for(i in this.inventoryContainer.children) {
+            //console.log(obj.name)
+            obj = this.inventoryContainer.children[i];
+            if(obj.name == tool.name)
+                return true
+        }
+        
+        return false;
+    }
     
     this.add = function(tool) {
         
+        if(this.isInsideInventory(tool))
+        {
+                //console.log("inside")
+                return;
+        }
+            
+        
         //this.soundList.add.play();
-        game.sound.play('add');
+        //this.game.soundManager.play('add');
+        
         //remove tool from the original scene and add to inventory container
         this.inventoryContainer.addChild(tool); //[INTERESTING: remove it from the original container]
         
         //scale down
         this.scaleDown(tool);
         
-        tool.interactive = true;
-        tool.buttonMode = true;
+        //!???????????!
+        this.game.reactionSystem.makeDragable(tool);
         
-        tool.off('pointerdown', tool.onClick);
-        tool.on('rightclick', function(){myGame.inventory.inventoryObserved(tool)});
-        
-        //enable drag and drop
-        tool
-            .on('pointerdown', onDragStart)
-            .on('pointerup', onDragEnd)
-            .on('pointermove', onDragMove);
+//        tool.interactive = true;
+//        tool.buttonMode = true;
+//        
+        //this.game.reactionSystem.makeUnClickable(tool);
+//        tool.off('pointerdown', tool.onClick);
+////        tool.on('rightclick', function(){myGame.inventory.inventoryObserved(tool)});
+//        
+//        //enable drag and drop
+//        tool
+//            .on('pointerdown', onDragStart)
+//            .on('pointerup', onDragEnd)
+//            .on('pointermove', onDragMove);
 
         this.update();
     }
@@ -265,7 +347,8 @@ function Inventory(game) { //always on the top
         if(inventoryCollider.length > 0) {
             var message = tool.name + this.game.eventSystem.template.combine + inventoryCollider.pop().name;
             if(this.game.eventSystem.checkEventExist(message)){
-                game.sound.play('good');
+                //game.sound.play('good');
+                this.game.soundManager.play('good');
                 this.game.eventSystem.callEvent(message);
                 return;
             }
@@ -275,13 +358,15 @@ function Inventory(game) { //always on the top
             var message = tool.name + this.game.eventSystem.template.use + sceneCollider.pop().name;
             //console.log(message);
             if(this.game.eventSystem.checkEventExist(message)){
-                game.sound.play('good');
+                //game.sound.play('good');
+                this.game.soundManager.play('good');
                 this.game.eventSystem.callEvent(message);
                 return;
             }
         }
         
-        game.sound.play('bad');
+        //game.sound.play('bad');
+        this.game.soundManager.play('bad');
         tool.x = tool.inventPos.x;
         tool.y = tool.inventPos.y;
          
@@ -302,7 +387,7 @@ function Inventory(game) { //always on the top
         //console.log(objectsInCurrentScene)
         objectsInCurrentScene.forEach(function(obj) {
             if(obj.visible && hitTestRectangle(tool,obj)) {
-                console.log(obj.name);
+                //debug.log(obj.name);
                 SceneCollideList.push(obj);
             }
         });
@@ -335,32 +420,29 @@ function Inventory(game) { //always on the top
     
 }
 
-
-function onDragStart(event) {
-    myGame.inventory.popUp(this);
-    this.data = event.data;
-    this.alpha = 0.5;
-    this.dragging = true;
-}
-
-function onDragMove() {
-    if (this.dragging) {
-        var newPosition = this.data.getLocalPosition(this.parent);
-        this.x = newPosition.x;
-        this.y = newPosition.y;
-    }
-}
-
-function onDragEnd() {
-    this.alpha = 1;
-    this.dragging = false;
-    this.data = null;
+function SoundManager() {
+    this.sound = PIXI.sound;
+    this.baseURL = './Resources/Assets/require/sound/';
     
-    if(myGame.inventory) {
-        myGame.inventory.inventoryUse(this);
-    }  
+    
+    
+    this.initSystemSound = function() {
+        this.sound.add('add', this.baseURL + 'add.wav');
+        this.sound.add('good', this.baseURL + 'use_good.wav');
+        this.sound.add('bad', this.baseURL + 'use_bad.wav');
+    }
+    
+    this.play = function(_name) {
+        this.sound.play(_name);
+    }
+    
+    this.load = function(_name, _url) {
+        this.sound.add(_name, _url);
+    }
+    
+    this.initSystemSound();
+    
 }
-
 
 function SceneManager(game) {
     this.currentScene;
@@ -416,6 +498,9 @@ function SceneManager(game) {
     
     //transit to scene index
     this.jumpToScene = function(scene) {
+        //clear messsage box
+        this.game.messageBox.stopConversation();
+        
         var message = this.game.eventSystem.template.transit + scene;
         this.game.eventSystem.callEvent(message);
         
@@ -423,11 +508,13 @@ function SceneManager(game) {
         this.currentScene.visible = false;
         toScene.visible = true;
         this.currentScene = toScene;
+    
+        
     }
     
     this.start = function(index) {
-        console.log("width: " + window.screen.width);
-        console.log("height: " + window.screen.height);
+        //console.log("width: " + window.screen.width);
+        //console.log("height: " + window.screen.height);
 
         this.currentScene = this.sceneContainer.getChildAt(index);
         this.currentScene.visible = true;
@@ -452,6 +539,7 @@ function GameManager() {
     this.stateManager;
     this.eventSystem;
     this.reactionSystem;
+    this.soundManager;
     
     //sound
     this.sound = PIXI.sound;
@@ -466,8 +554,17 @@ function GameManager() {
         this.inventorySize = invent_size;
         this.inventoryWidth = height/invent_size
         
-        this.app = new Alice.Application(this.screenWidth + this.inventoryWidth, height, {backgroundColor : 0x1099bb});
-        document.body.appendChild(this.app.view);
+        this.size = [this.screenWidth + this.inventoryWidth, this.screenHeight];
+        this.ratio = this.size[0] / this.size[1];
+        this.stage = new PIXI.Stage(0x333333, true);
+        this.renderer = PIXI.autoDetectRenderer(this.size[0], this.size[1], null);
+        
+        //this.app = new Alice.Application(this.screenWidth + this.inventoryWidth, this.screenHeight, {backgroundColor : 0x1099bb});
+        
+        //this.app.rende
+        
+        document.body.appendChild(this.renderer.view);
+    
                
         this.sceneManager = new SceneManager(this);
         this.inventory = new Inventory(this);
@@ -481,16 +578,20 @@ function GameManager() {
         
         this.eventSystem = new AliceEventSystem();
         this.reactionSystem = new AliceReactionSystem(this);
+        this.soundManager = new SoundManager();
         
-        this.app.stage.addChild(this.sceneManager.sceneContainer);
-        this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
-        this.app.stage.addChild(this.inventory.inventoryContainer);
-        this.app.stage.addChild(this.messageBox.holder);
+//        this.app.stage.addChild(this.sceneManager.sceneContainer);
+//        this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
+//        this.app.stage.addChild(this.inventory.inventoryContainer);
+//        this.app.stage.addChild(this.messageBox.holder);
  
-    
+        this.stage.addChild(this.sceneManager.sceneContainer);
+        this.stage.addChild(this.inventory.inventoryBackgroundGrp); 
+        this.stage.addChild(this.inventory.inventoryContainer);
+        this.stage.addChild(this.messageBox.holder);
+        
     }
-    
-    
+
     this.initStateManager = function(_states) {
         this.stateManager = new StateManager(_states, this.eventSystem);
     }
@@ -503,15 +604,22 @@ function GameManager() {
             _obj.y = y;
     }
     
-    
     this.showInventory = function() {
-        this.app.renderer.resize(this.screenWidth + this.inventoryWidth,this.screenHeight);
+        this.renderer.resize(this.screenWidth + this.inventoryWidth,this.screenHeight);
+        this.ratio = this.size[0] / this.size[1];
+        this.resize();
     }
+    
     
     this.hideInventory = function() {
-        this.app.renderer.resize(this.screenWidth,this.screenHeight);
+        this.renderer.resize(this.screenWidth,this.screenHeight);
+        this.ratio = (this.size[0] - this.inventoryWidth) / this.size[1];
+        this.resize();
     }
-
+    
+    this.scene = function(index) {
+        return this.sceneManager.getSceneByIndex(index);
+    }
     
     this.awake = function() {
         
@@ -519,16 +627,64 @@ function GameManager() {
     
     this.start = function(index) {
         //console.log("in start");
+        
+        this.resize();
         this.sceneManager.start(index);
         this.awake();
     }
     
-    this.scene = function(index) {
-        return this.sceneManager.getSceneByIndex(index);
+    this.resize = function() {
+        if (window.innerWidth / window.innerHeight >= this.ratio) {
+            var w = window.innerHeight * this.ratio;
+            var h = window.innerHeight;
+        } else {
+            var w = window.innerWidth;
+            var h = window.innerWidth / this.ratio;
+        }
+        this.renderer.view.style.width = w + 'px';
+        this.renderer.view.style.height = h + 'px';
     }
     
-}
+    this.getCollisionMap = function(tool) {
+        var SceneCollideList = [];
+        var objectsInCurrentScene = this.sceneManager.getCurrentScene().children;
+        //console.log(objectsInCurrentScene)
+        objectsInCurrentScene.forEach(function(obj) {
+            if(obj.visible && hitTestRectangle(tool,obj)) {
+                debug.log(obj.name);
+                SceneCollideList.push(obj);
+            }
+        });
+        
+        var InventoryCollideList = [];
+        var objectsInInventory = this.inventory.inventoryContainer.children;
+        //console.log(objectsInInventory);
+        objectsInInventory.forEach(function(obj) {
+            if(obj.name!=tool.name && obj.visible && hitTestRectangle(tool,obj)) {
+                //console.log(obj.name);
+                InventoryCollideList.push(obj);
+            }
+        });
+        var sceneObjName = [];
+        SceneCollideList.forEach(function(obj){
+            sceneObjName.push(obj.name);
+        })
+        
+        var invObjName = [];
+        InventoryCollideList.forEach(function(obj){
+            invObjName.push(obj.name);
+        })
+//        console.log("sceneObjName:");
+//        console.log(sceneObjName);
+//        console.log("invObjName:");
+//        console.log(invObjName);
+        
+        return {scene:SceneCollideList,inventory:InventoryCollideList};
+    }
+    
+    
 
+}
 
 function Message(_text, _style, _avatar, _narrator="") {
 //    this.defaultStyle = new PIXI.TextStyle({
@@ -630,6 +786,9 @@ function MessageBox(background, avatarEnable, game) {
     }
     
     this.startConversation= function(msgs, func = null) {
+        
+        this.stopConversation();
+        
         if(msgs.length == 0)
             return
         
@@ -653,19 +812,10 @@ function MessageBox(background, avatarEnable, game) {
             this.currentMsg.text = "";
             this.currentMsgIndex = 0;
             this.holder.visible = false;
-            this.game.lock = false;
+            this.callBack = function(){};
+
     }
 }
-
-
-function messageBoxOnClick() {
-    if(myGame.messageBox) {
-        myGame.messageBox.nextConversation();
-    }
-}
-
-
-
 
 /*
     2D collision detection
@@ -720,4 +870,189 @@ function hitTestRectangle(r1, r2) {
   //`hit` will be either `true` or `false`
   return hit;
 };
+
+function distance(x1,y1,x2,y2) {
+    return Math.pow((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2), 0.5);
+}
+
+
+// game instances //
+var myGame = new GameManager();
+
+
+var animate = function() {
+    requestAnimationFrame(animate);
+    myGame.renderer.render(myGame.stage);
+}
+
+requestAnimationFrame(animate);
+
+
+window.onresize = function(event) {
+    myGame.resize();
+};
+
+function messageBoxOnClick() {
+    if(myGame.messageBox) {
+        myGame.messageBox.nextConversation();
+    }
+}
+
+
+//
+function onDragStart(event) {
+    myGame.inventory.popUp(this);
+    this.data = event.data;
+    this.alpha = 0.5;
+    this.dragging = true;
+}
+
+function onDragMove() {
+    if (this.dragging) {
+        var newPosition = this.data.getLocalPosition(this.parent);
+        this.x = newPosition.x;
+        this.y = newPosition.y;
+    }
+}
+
+function onDragEnd() {
+    this.alpha = 1;
+    this.dragging = false;
+    this.data = null;
+    
+    if(myGame.inventory) {
+        myGame.inventory.inventoryUse(this);
+    }  
+}
+
+function toFrontLayer(obj) {
+    obj.temp = new Alice.Object;
+    //obj.layer = obj.parent.getChildIndex(obj);
+    var localparent = obj.parent;
+    localparent.addChild(obj.temp);
+    localparent.swapChildren(obj,obj.temp)
+
+}
+
+function toOriginalLayer(obj) {
+    var localparent = obj.parent;
+    localparent.swapChildren(obj, obj.temp)
+    localparent.removeChild(obj.temp)
+    obj.temp = null;
+}
+
+function onMouseDown(event) {
+    //myGame.inventory.popUp(this);
+    this.data = event.data;
+    ///this.alpha = 0.5;
+    this.mouseIsDown = true;
+    this.original = [this.x,this.y]
+    this.offset = {
+        x: this.data.getLocalPosition(this.parent).x - this.x,
+        y: this.data.getLocalPosition(this.parent).y - this.y
+    }
+    this.dragStart = false;
+    
+    toFrontLayer(this);
+}
+
+function onMouseMove() {
+    if (this.mouseIsDown && this.dragable) {
+        var newPosition = this.data.getLocalPosition(this.parent);
+        this.x = newPosition.x - this.offset.x;
+        this.y = newPosition.y - this.offset.y;
+        
+        if(distance(this.x,this.y, this.original[0],this.original[1]) > 0.3) {
+            this.alpha = 0.5;
+            if(!this.dragStart) {
+                this.dragStart = true;
+                if(this.DIY_DRAG != undefined)
+                    this.DIY_DRAG();
+            }
+        }
+    }
+}
+
+
+function onMouseUp() {
+    
+    if(!this.mouseIsDown)
+        return;
+    
+    toOriginalLayer(this)
+    this.alpha = 1;
+    this.mouseIsDown = false;
+    this.data = null;
+    
+    debug.log("mouseUp")
+    
+    
+    if(!this.dragStart)
+    {
+        this.x = this.original[0];
+        this.y = this.original[1];
+        debug.log("click");
+        if(this.clickable) {
+            if(this.DIY_CLICK != undefined)
+                this.DIY_CLICK();
+        }
+    }
+    else {
+        //debug.log("drag");
+        var res = myGame.getCollisionMap(this);
+        var sceneCollider = res.scene;
+        var inventoryCollider = res.inventory;
+        
+        if(inventoryCollider.length > 0) {
+            
+            var item = inventoryCollider.pop();
+            
+            var message = this.name + myGame.eventSystem.template.use + item.name;
+            if(myGame.eventSystem.checkEventExist(message)){
+                myGame.eventSystem.callEvent(message);
+                return;
+            }
+            
+            message = this.name + myGame.eventSystem.template.combine + item.name;
+            if(myGame.eventSystem.checkEventExist(message)){
+                myGame.eventSystem.callEvent(message);
+                return;
+            }
+        }
+        
+        if(sceneCollider.length > 0) {
+            
+            var item = sceneCollider.pop();
+            var message = this.name + myGame.eventSystem.template.use + item.name;
+            //console.log(message);
+            if(myGame.eventSystem.checkEventExist(message)){
+                //myGame.soundManager.play('good');
+                myGame.eventSystem.callEvent(message);
+                return;
+            }
+            
+            message = this.name + myGame.eventSystem.template.combine + item.name;
+            if(myGame.eventSystem.checkEventExist(message)){
+                //myGame.soundManager.play('good');
+                myGame.eventSystem.callEvent(message);
+                return;
+            }
+        }
+        
+        
+        
+        myGame.soundManager.play('bad');
+        this.x = this.original[0];
+        this.y = this.original[1];
+        
+    }
+    
+    
+    
+}
+
+//droped on the event target: do something
+//droped on not event target: back to place
+
+
 
