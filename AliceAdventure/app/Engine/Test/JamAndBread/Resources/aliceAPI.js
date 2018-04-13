@@ -112,12 +112,12 @@ function AliceReactionSystem(_game) {
         }
     }
     
-    this.makeDragable = function(_obj) {
+    this.makeDraggable = function(_obj) {
         this.makeInteractive(_obj);
         _obj.dragable = true;
     }
     
-    this.makeUnDragable = function(_obj) {
+    this.makeUnDraggable = function(_obj) {
         __obj.dragable = false;
         if(!_obj.clickable)
         {
@@ -156,7 +156,7 @@ function AliceEventSystem() {
         combine: " is combined with ",
         observe: " is observed ",
         state: " is changed to ",
-        transit: "transit to "
+        transit: " transit to "
     }
     
     this.emptySprite = new Alice.Object;
@@ -295,7 +295,7 @@ function Inventory(game) { //always on the top
         this.scaleDown(tool);
         
         //!???????????!
-        this.game.reactionSystem.makeDragable(tool);
+        this.game.reactionSystem.makeDraggable(tool);
         
 //        tool.interactive = true;
 //        tool.buttonMode = true;

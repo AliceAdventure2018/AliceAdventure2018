@@ -56,7 +56,7 @@ cat.y = 500;
 cat.scale.set(0.8);
 cat.name = "cat";
 reaction.makeClickable(cat);
-reaction.makeDragable(cat);
+reaction.makeDraggable(cat);
 //cat.interactive = true;
 //cat.buttonMode = true;
 myGame.scene(0).addChild(cat);
