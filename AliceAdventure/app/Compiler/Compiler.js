@@ -26,8 +26,8 @@ Compiler = function (path, callback){
 			FileSys.writeFile(FileSys.merge(this.buildDest, 'game.js'), string);
 			parser.writeHTML();
 
-			var commandLine = "start " + this.buildDest.replace(/\\/g, "\\\\");
-			require('child_process').exec(commandLine);
+			// var commandLine = "start " + this.buildDest.replace(/\\/g, "\\\\");
+			// require('child_process').exec(commandLine);
 			return true;
 		}
 	}

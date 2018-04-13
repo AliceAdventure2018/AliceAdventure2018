@@ -474,6 +474,7 @@ Parser = function (jsonPath, buildPath){
 		var event= "";
 		var conditions = "";
 		var reactions = "";
+		var indent = 0;
 		if (interaction.hasOwnProperty("event") && interaction.hasOwnProperty("conditionList") && interaction.hasOwnProperty("reactionList")){
 
 			var hasCondition = (interaction.conditionList.length > 0);
@@ -483,15 +484,16 @@ Parser = function (jsonPath, buildPath){
 
 			
 			if (hasCondition){
+				indent++;
 				conditions  = conditionListParser.call(this, interaction.conditionList, callback);
 				if (conditions === false ) return false;
 			}
 
 
-			reactions = reactionListParser.call(this, interaction.reactionList,callback);
+			reactions = reactionListParser.call(this, interaction.reactionList, indent, callback);
 			if (reactions === false) return false;
 
-			if (hasCondition) reactions += "		}//if statement end\n"; //if statementend
+			if (hasCondition) reactions += "		return;\n	}//if statement end\n"; //if statementend
 
 
 			this.iTree.putNode(event, interaction.event.type, interaction.event.args, conditions + reactions);
@@ -530,9 +532,9 @@ Parser = function (jsonPath, buildPath){
 
 
 //-------------------------REACTION------------------------------------------
-	function reactionListParser(reactionList, callback){
+	function reactionListParser(reactionList, ind, callback){
 		var toReturn = "";
-		var indentCounter = 1;
+		var indentCounter = 1 + ind;
 		var messageBoxParenCounter = 0;
 		for (let i = 0; i < reactionList.length; i++){
 			var result = reactionParser.call(this,reactionList[i], callback);
