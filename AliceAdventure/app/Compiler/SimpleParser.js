@@ -5,6 +5,7 @@
 
 const fs = require('fs-extra');
 const FileSys = require('./FileSys.js');
+var ITree = require('./BinaryTree.js');
 
 var Parser;
 Parser = function (jsonPath, buildPath){
@@ -19,6 +20,7 @@ Parser = function (jsonPath, buildPath){
 	this.interactionList=this.game.interactionList;
 	this.stateList = this.game.stateList;
 	this.soundList = this.game.soundList;
+	this.iTree = new ITree();
 
 }
 
@@ -435,18 +437,22 @@ Parser = function (jsonPath, buildPath){
 
 		var toReturn = "var reaction = myGame.reactionSystem;\n";
 		for (let i = 0; i < this.interactionList.length; i++){
+			//add everyting to the tree
 			var result = interactionParser.call(this, this.interactionList[i], callback);
 
 			if (result === false) return false;
-			else toReturn += result;
 		}
+
+		toReturn += this.iTree.getEverything();
 
 		return toReturn + "\n";
 
 	}
 
 	function interactionParser(interaction, callback){
-		var toReturn = "";
+		var event= "";
+		var conditions = "";
+		var reactions = "";
 		if (interaction.hasOwnProperty("event") && interaction.hasOwnProperty("conditionList") && interaction.hasOwnProperty("reactionList")){
 
 			var hasCondition = (interaction.conditionList.length > 0);
@@ -454,21 +460,21 @@ Parser = function (jsonPath, buildPath){
 			var event = eventParser.call(this, interaction.event, callback);
 			if (event === false) return false;
 
-			var conditions = "";
+			
 			if (hasCondition){
 				conditions  = conditionListParser.call(this, interaction.conditionList, callback);
 				if (conditions === false ) return false;
 			}
 
 
-			var reactions = reactionListParser.call(this, interaction.reactionList,callback);
+			reactions = reactionListParser.call(this, interaction.reactionList,callback);
 			if (reactions === false) return false;
 
-			toReturn += event + conditions + reactions + "\n";
-			if (hasCondition) toReturn += "		}//if statement end\n"; //if statementend
+			if (hasCondition) reactions += "		}//if statement end\n"; //if statementend
 
-			return toReturn + "}); //interaction end\n";
 
+			this.iTree.putNode(event, interaction.event.type, interaction.event.args, conditions + reactions);
+			return true;
 
 		}else{
 			callback("JSON Format ERROR: interaction must have: event, conditionList, reactionList");
