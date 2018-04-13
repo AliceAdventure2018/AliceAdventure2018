@@ -20,6 +20,8 @@ Parser = function (jsonPath, buildPath){
 	this.interactionList=this.game.interactionList;
 	this.stateList = this.game.stateList;
 	this.soundList = this.game.soundList;
+	this.scalarX = this.game.projectData.scalarX;
+	this.scalarY = this.game.projectData.scalarY;
 	this.iTree = new ITree();
 
 }
@@ -166,7 +168,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	function setScale(obj, scale){
-		return obj + '.scale.set(' + scale.x + ', ' + scale.y + ');\n';
+		return obj + '.scale.set(' + scale.x * this.scalarX + ', ' + scale.y * this.scalarY + ');\n';
 	}
 
 	//interactive or buttonMode should be boolean
@@ -184,7 +186,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	function setPos(obj, pos){
-		return obj+'.x = ' + pos.x + ';\n' + obj+'.y = ' + pos.y+';\n';
+		return obj+'.x = ' + pos.x * this.scalarX + ';\n' + obj+'.y = ' + pos.y * this.scalarY+';\n';
 	}
 
 	function setActive(obj, active){
@@ -263,7 +265,7 @@ Parser = function (jsonPath, buildPath){
 					if (object.pos.hasOwnProperty('x') && !isNaN(object.pos.x) && typeof object.pos.x === "number"
 						&& object.pos.hasOwnProperty('y') && !isNaN(object.pos.y) && typeof object.pos.y === "number"){
 
-							toReturn += setPos(name, object.pos);
+							toReturn += setPos.call(this, name, object.pos);
 					}else{
 						error = "Compile ERROR: x and y of the position must be defined as numbers.";
 						callback(error);
@@ -281,7 +283,7 @@ Parser = function (jsonPath, buildPath){
 					if (object.scale.hasOwnProperty('x') && !isNaN(object.scale.x) &&  typeof (object.scale.x) === "number"
 						&& object.scale.hasOwnProperty('y') && !isNaN(object.scale.y) && typeof object.scale.y === "number"){
 
-							toReturn += setScale(name, object.scale);
+							toReturn += setScale.call(this,name, object.scale);
 					}else{
 						error = "Compile ERROR: x and y of the scale must be defined as numbers.";
 						callback(error);
