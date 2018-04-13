@@ -38,7 +38,7 @@ Parser = function (jsonPath, buildPath){
 		toReturn += "//===============create Game==================\n" + createGame.call(this);
 		toReturn += "\n//===============add Sound==================\n" + sound;
 		toReturn += "\n//===============create Scene================\n" + createScene.call(this);
-		toReturn += "\n//===============create States================\n" + createStates.call(this);
+		toReturn += "\n//===============create States================\n" + createStates.call(this) +"var reaction = myGame.reactionSystem;\n";;
 
 		toReturn += "\n//===============create Objects==================\n";
 		var mustHave = translateObjects.call(this,callback);
@@ -68,7 +68,7 @@ Parser = function (jsonPath, buildPath){
 //private:
 //=================setting up the basic game properties==============================
 	function createGame(){
-		return 'var myGame = new GameManager();\n myGame.init(' + this.settings.resWidth + ',' 
+		return 'myGame.init(' + this.settings.resWidth + ',' 
 																+ this.settings.resHeight + ',' 
 																+ this.settings.inventoryGridNum + ');\n';
 	}
@@ -125,7 +125,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	function addSound(name, id, src){
-		return "myGame.sound.add('" + name+'_'+id +"', '" + src+"');\n";
+		return "myGame.soundManager.load('" + name+'_'+id +"', '" + src+"');\n";
 	}
 	
 	//if the scene is found, return the SCENE INDEX!!!!.
@@ -170,8 +170,13 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//interactive or buttonMode should be boolean
-	function setInteractive(obj, interactive){
-		return obj + '.interactive = ' + interactive + ';\n' +obj + '.buttonMode = ' + interactive + ';\n';
+	function setClickable(obj, clickable){
+		if (clickable) return "reaction.makeClickable( " + obj + " );\n";
+		else return "reaction.makeUnClickable( " +obj + " );\n";
+	}
+	function setDraggable(obj, draggable){
+		if (draggable) return "reaction.makeDraggable( " + obj + " );\n";
+		else return "reaction.makeUnDraggable( " +obj + " );\n";
 	}
 
 	function getNameWithID(obj, id){
@@ -288,14 +293,14 @@ Parser = function (jsonPath, buildPath){
 					return false;
 				}
 
-				//interactive
-				if (object.hasOwnProperty("interactive")){
+				//clickable
+				if (object.hasOwnProperty("clickable")){
 
-					if (typeof object.interactive === 'boolean'){
+					if (typeof object.clickable === 'boolean'){
 
-						toReturn += setInteractive(name, object.interactive);
+						toReturn += setClickable(name, object.clickable);
 					}else{
-						error = "Compile ERROR: The interactive value of the object must be a boolean.";
+						error = "Compile ERROR: The clickable value of the object must be a boolean.";
 						callback(error);
 						return false;
 					}
@@ -303,8 +308,24 @@ Parser = function (jsonPath, buildPath){
 					error = "Compile ERROR: Object has not set the interativity.";
 					callback(error);
 					return false;
-				}//end interactive
+				}//end clickable
 
+				//draggable
+				if (object.hasOwnProperty("draggable")){
+
+					if (typeof object.draggable === 'boolean'){
+
+						toReturn += setDraggable(name, object.draggable);
+					}else{
+						error = "Compile ERROR: The draggable value of the object must be a boolean.";
+						callback(error);
+						return false;
+					}
+				}else{
+					error = "Compile ERROR: Object has not set the [draggable] .";
+					callback(error);
+					return false;
+				}//end clickable
 
 
 				//active
@@ -435,7 +456,7 @@ Parser = function (jsonPath, buildPath){
 	//  11   hide inventory     []                    show inventory
 	function interactionListParser(callback){
 
-		var toReturn = "var reaction = myGame.reactionSystem;\n";
+		var toReturn = "";
 		for (let i = 0; i < this.interactionList.length; i++){
 			//add everyting to the tree
 			var result = interactionParser.call(this, this.interactionList[i], callback);
@@ -904,7 +925,7 @@ Parser = function (jsonPath, buildPath){
 				callback("Compile ERROR: Cannot find the object of ID: " + objID + ".") ;
 				return false;
 			}else{
-				return "\n//--------------Click--------------\n" +  objName + ".on('pointerdown', function(){\n";		
+				return "\n//--------------Click--------------\n" +  objName + ".DIY_CLICK = function(){\n";		
 			}
 
 		}else{

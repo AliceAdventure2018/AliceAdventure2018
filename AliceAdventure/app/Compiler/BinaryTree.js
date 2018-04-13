@@ -51,8 +51,14 @@ function _putNode(n, eventString, eventType, args, condWithReact){
 
 function _postOrder(n, string){
 	if (n != null){
-		if (n.left !== null) return _postOrder(n.left, string + _getString(n) + "}); //interaction end\n");
-		if(n.right !== null) return  _postOrder(n.right, string + _getString(n)+ "}); //interaction end\n");
+		var end;
+		if (n.type == 0) end = "}//interaction end\n";
+		else end = "}); //interaction end\n";
+
+		if (n.left !== null) 
+			return _postOrder(n.left, string + _getString(n) + end);
+
+		if(n.right !== null) return  _postOrder(n.right, string + _getString(n)+ end);
 	}else{
 		return string;
 	}
