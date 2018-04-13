@@ -62,7 +62,7 @@
     	<a class="dropdown-item" onclick="AliceEditor.File.OpenProject()"> Open project</a>
     	<a class="dropdown-item" onclick="AliceEditor.File.SaveProject()"> Save project</a>
     	<a class="dropdown-item" onclick="AliceEditor.File.BuildProject()"> Build project</a>
-    	<a class="dropdown-item" onclick="AliceEditor.File.Runroject()"> Run project</a>
+    	<a class="dropdown-item" onclick="AliceEditor.File.RunProject()"> Run project</a>
     </div>
 	</div>
     
@@ -639,9 +639,9 @@
 				>
 			</div>
 		</div>
-		<!--div id="run-view" v-if='showRunView'>
+		<div style="position:fixed;margin:auto" id="run-view" v-if='showRunView'>
 			<webview id="foo" v-bind:src='src' style="display:inline-flex; width:640px; height:480px"></webview>
-		</div-->		
+		</div>		
 
 	</div> <!-- end of design view -->
 	<script>InitAllViews();</script>

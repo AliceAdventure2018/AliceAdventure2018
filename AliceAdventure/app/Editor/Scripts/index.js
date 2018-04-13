@@ -57,7 +57,7 @@ function InitGalleryView(){
 }
 
 function InitRunView(){
-	//runView = AliceEditor.RunView.NewView('run-view');
+	runView = AliceEditor.RunView.NewView('run-view');
 }
 
 function InitInteractionView(){

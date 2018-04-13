@@ -1,6 +1,6 @@
 'use strict';
 
-const {FS, Evnet} = require('./Utilities/Utilities');
+const {FS, Event} = require('./Utilities/Utilities');
 const View = require('./View');
 
 // class
@@ -8,7 +8,7 @@ var RunView;
 
 // variables
 RunView = function(_bindElementID, _height = -1, _width = -1){
-	View.call(this, "RunView", _height, _width, _bindElemetnID);
+	View.call(this, "RunView", _height, _width, _bindElementID);
 	this.vModel = null;
 };
 RunView.prototype = new View();
