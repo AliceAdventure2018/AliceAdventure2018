@@ -380,12 +380,12 @@ Parser = function (jsonPath, buildPath){
 
 		for (let i = 0; i < arrayLength; i++){
 			
-			var result = translateObj_properties.call(this, this.objectList[i], callback) + '\n';
+			var result = translateObj_properties.call(this, this.objectList[i], callback);
 			
 			if (result === false){
 				return false;
 			}else{
-				toReturn += result;
+				toReturn += result  + '\n';
 			}
 			
 		}
