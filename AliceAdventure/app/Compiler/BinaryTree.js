@@ -29,7 +29,7 @@ ITree.prototype.getEverything = function () {
 
 function _putNode(n, eventString, eventType, args, condWithReact){
 	if (n == null){
-		console.log(1);
+		//console.log(1);
 		var toReturn = new INode(eventString, eventType, args, condWithReact);
 		return toReturn;
 	}

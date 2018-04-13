@@ -136,13 +136,19 @@ File.BuildProject = function(){
 	// check if project saved
 	if (File.instance.path == null){ // no existing file
 		if (confirm('Your project is unsaved. \nSave it first?')){
-			File.SaveAsNewProject(()=>{File.Build()});
+			File.SaveAsNewProject(()=>{
+				File.Build(()=>{
+					File.OpenBuildFolder();
+				});
+			});
 		} else {
 			return;
 		}
 	} else {
 		File.SaveToPath(File.instance.path);
-		File.Build();
+		File.Build(()=>{
+			File.OpenBuildFolder();
+		});
 	}	
 }
 
@@ -151,15 +157,25 @@ File.RunProject = function(){
 	// check if project saved
 	if (File.instance.path == null){ // no existing file
 		if (confirm('Your project is unsaved. \nSave it first?')){
-			File.SaveAsNewProject(()=>{File.Build();File.Run();});
+			File.SaveAsNewProject(()=>{
+				File.Build(()=>{
+					File.Run();					
+				});
+			});
 		} else {
 			return;
 		}
 	} else {
 		File.SaveToPath(File.instance.path);
-		File.Build();
-		File.Run();
+		File.Build(()=>{
+			File.Run();
+		});
 	}	
+}
+
+File.OpenBuildFolder = function(){
+	var commandLine = "start " + PATH.join(PATH.dirname(File.instance.path), 'Build').replace(/\\/g, "\\\\");
+	require('child_process').exec(commandLine);
 }
 
 File.ImportAssets = function(){
@@ -321,10 +337,11 @@ File.OpenFromPath = function(_path){
 	Event.Broadcast("reload-project");
 }
 
-File.Build = function(){
-	var compiler = new Compiler(File.instance.path, (_err)=>{ Debug.LogError(_err); });
+File.Build = function(successCallback){
+	var compiler = new Compiler(File.instance.path, (_err)=>{Debug.LogError(_err);});
 	if (compiler.build((_err)=>{ Debug.LogError(_err); })){ // success
-		Debug.Log("Build succeeded")
+		Debug.Log("Build succeeded");
+		if (typeof successCallback == "function") successCallback();
 	} else { // fail
 		Debug.Log("Build failed with error");
 	}
