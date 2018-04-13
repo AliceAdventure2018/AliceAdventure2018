@@ -1,16 +1,24 @@
-var myGame = new GameManager();
-//myGame.init(1280,720,8);
+
+
+myGame.init(1280,720,8);
+
+var reaction = myGame.reactionSystem;
 //myGame.init(600,400,5);
-myGame.init(1280*2/4,720*2/4,5);
+//myGame.init(1280*2/4,720*2/4,5);
 myGame.sceneManager.createScenes(3);
 //myGame.states = {cat_is_feeded:false}
 myGame.initStateManager({cat_is_feeded:false});
 
 ///------------------------------------------------------------///
-myGame.sound.add('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
-myGame.sound.add('meow_happy', baseURL.nomalAssets + 'meow_happy.wav');
-myGame.sound.add('door', baseURL.nomalAssets + 'door.wav');
-myGame.sound.add('win', baseURL.nomalAssets + 'win.wav');
+//myGame.sound.add('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
+//myGame.sound.add('meow_happy', baseURL.nomalAssets + 'meow_happy.wav');
+//myGame.sound.add('door', baseURL.nomalAssets + 'door.wav');
+//myGame.sound.add('win', baseURL.nomalAssets + 'win.wav');
+
+myGame.soundManager.load('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
+myGame.soundManager.load('meow_happy', baseURL.nomalAssets + 'meow_happy.wav');
+myGame.soundManager.load('door', baseURL.nomalAssets + 'door.wav');
+myGame.soundManager.load('win', baseURL.nomalAssets + 'win.wav');
 
 ///-----------------------------------------------------------///
 
@@ -28,12 +36,16 @@ door.x = myGame.screenWidth / 2;
 door.y = myGame.screenHeight / 2 + 5;
 door.scale.set(1);
 door.name = "door";
-door.interactive = true;
-door.buttonMode = true;
-door.on('pointerdown',function() {
-    myGame.sound.play('door');
-    myGame.sceneManager.nextScene();
-});
+reaction.makeClickable(door);
+
+//door.interactive = true;
+//door.buttonMode = true;
+//door.on('pointerdown',function() {
+//    //myGame.sound.play('door');
+//    reaction.playAudio('door');
+//    //myGame.sceneManager.jumpToScene(1);
+//    reaction.transitToScene(1);
+//});
 
 myGame.scene(0).addChild(door);
 
@@ -43,23 +55,12 @@ cat.x = 250;
 cat.y = 500;
 cat.scale.set(0.8);
 cat.name = "cat";
-cat.interactive = true;
-cat.buttonMode = true;
-
-cat.on('pointerdown',function() {
-    
-        myGame.sound.play('meow_unhappy');
-        myGame.messageBox.startConversation(["Hungry..."], function() {
-            myGame.sound.play('meow_unhappy');
-            myGame.messageBox.startConversation(["Want a bread with jam.."], function() {
-                //myGame.sound.play('meow_unhappy');
-            });
-            
-        });
-});
-
-
+reaction.makeClickable(cat);
+reaction.makeDraggable(cat);
+//cat.interactive = true;
+//cat.buttonMode = true;
 myGame.scene(0).addChild(cat);
+
 
 var cat_sad = Alice.Object.fromImage(baseURL.nomalAssets + 'cat.png');
 cat_sad.anchor.set(0.5);
@@ -86,12 +87,16 @@ door2.x = 330;
 door2.y = 390;
 door2.scale.set(0.9);
 door2.name = "door2";
-door2.interactive = true;
-door2.buttonMode = true;
-door2.on('pointerdown',function() {
-    myGame.sound.play('door');
-    myGame.sceneManager.jumpToScene(0);
-});
+reaction.makeClickable(door2);
+
+//door2.interactive = true;
+//door2.buttonMode = true;
+//door2.on('pointerdown',function() {
+//    //myGame.sound.play('door');
+//    reaction.playAudio('door');
+//    //myGame.sceneManager.jumpToScene(0);
+//    reaction.transitToScene(0);
+//});
 
 myGame.scene(1).addChild(door2);
 
@@ -102,11 +107,13 @@ knife.x = 680;
 knife.y = 300;
 knife.scale.set(0.3);
 knife.name = "knife";
-knife.interactive = true;
-knife.buttonMode = true;
-knife.on('pointerdown',function() {
-    myGame.inventory.add(knife);
-});
+//knife.interactive = true;
+//knife.buttonMode = true;
+reaction.makeClickable(knife);
+//knife.on('pointerdown',function() {
+//    //myGame.inventory.add(knife);
+//    reaction.addToInventory(knife);
+//});
 
 myGame.scene(1).addChild(knife);
 
@@ -116,11 +123,13 @@ jam.x = 1030;
 jam.y = 300;
 jam.scale.set(0.3);
 jam.name = "jam";
-jam.interactive = true;
-jam.buttonMode = true;
-jam.on('pointerdown',function() {
-    myGame.inventory.add(jam);
-});
+//jam.interactive = true;
+//jam.buttonMode = true;
+reaction.makeClickable(jam);
+//jam.on('pointerdown',function() {
+//    //myGame.inventory.add(jam);
+//    reaction.addToInventory(jam);
+//});
 
 myGame.scene(1).addChild(jam);
 
@@ -131,11 +140,10 @@ bread.x = 550;
 bread.y = 400;
 bread.scale.set(0.4);
 bread.name = "bread";
-bread.interactive = true;
-bread.buttonMode = true;
-bread.on('pointerdown',function() {
-    myGame.inventory.add(bread);
-});
+//bread.interactive = true;
+//bread.buttonMode = true;
+reaction.makeClickable(bread);
+
 
 myGame.scene(1).addChild(bread);
 
@@ -171,48 +179,117 @@ myGame.scene(2).addChild(winScene);
 //register events
 
 
-myGame.inventory.interactionSystem.addCombineEvent(knife,jam,function(){
+cat.DIY_CLICK = function() {
+    //console.log("in DIY function");
+    reaction.playAudio("meow_unhappy");
+    myGame.messageBox.startConversation(["Hungry... ... .... ..... .. .... ........ ...... ...... ...... ..... ....... ........ .......... ...... ...... ...... ....... ...... ....... ........ ......... ........... ........ ..... ...."], function() {
+            myGame.messageBox.startConversation(["Want a bread with jam.."], function() {
+            });
+        });
+}
+
+//cat.DIY_DROP = function() {
+//    console.log("in DIYDROP function");
+//}
+
+door.DIY_CLICK = function(){
+    reaction.playAudio('door');
+    reaction.transitToScene(1);
+};
+
+door2.DIY_CLICK = function(){
+    reaction.playAudio('door');
+    reaction.transitToScene(0);
+};
+
+jam.DIY_CLICK = function() {
+    //myGame.inventory.add(jam);
+    reaction.addToInventory(jam);
+    reaction.playAudio('add');
+}
+
+knife.DIY_CLICK = function() {
+    //myGame.inventory.add(knife);
+    reaction.addToInventory(knife);
+    reaction.playAudio('add');
+}
+
+
+bread.DIY_CLICK = function() {
+    //myGame.inventory.add(bread);
+    reaction.addToInventory(bread);
+    reaction.playAudio('add');
+}
+
+
+
+myGame.eventSystem.addCombineEvent(knife,jam,function(){
+    reaction.playAudio('good');
+    //myGame.inventory.remove(knife);
+    reaction.removeFromInventory(knife);
+    //myGame.inventory.remove(jam);
+    reaction.removeFromInventory(jam);
+    //knifewithjam.visible = true;
+    reaction.makeObjVisible(knifewithjam);
+    //myGame.inventory.add(knifewithjam);
+    reaction.addToInventory(knifewithjam);
+
+});
+
+myGame.eventSystem.addCombineEvent(knifewithjam,bread,function(){
+    reaction.playAudio('good');
+    //myGame.inventory.remove(knifewithjam);
+    reaction.removeFromInventory(knifewithjam);
+    //myGame.inventory.remove(bread);
+    reaction.removeFromInventory(bread);
+    //breadwithjam.visible = true;
+    reaction.makeObjVisible(breadwithjam);
+    //myGame.inventory.add(breadwithjam);
+    reaction.addToInventory(breadwithjam);
+});
+
+
+
+myGame.eventSystem.addUsedEvent(breadwithjam,cat,function(){
     
-    myGame.inventory.remove(knife);
-    myGame.inventory.remove(jam);
-    knifewithjam.visible = true;
-    myGame.inventory.add(knifewithjam);
-
-});
-
-myGame.inventory.interactionSystem.addCombineEvent(knifewithjam,bread,function(){
-    myGame.inventory.remove(knifewithjam);
-    myGame.inventory.remove(bread);
-    breadwithjam.visible = true;
-    myGame.inventory.add(breadwithjam);
-
-});
-
-
-myGame.inventory.interactionSystem.addUsedEvent(breadwithjam,cat,function(){
-
-    cat.visible = false;
-    cat_sad.visible = true;
-    myGame.inventory.remove(breadwithjam);
-    myGame.sound.play("meow_happy");
+    //cat.visible = false;
+    reaction.makeObjInvisible(cat);
+    //cat_sad.visible = true;
+    reaction.makeObjVisible(cat_sad);
+    //myGame.inventory.remove(breadwithjam);
+    reaction.removeFromInventory(breadwithjam);
+    //myGame.sound.play("meow_happy");
+    reaction.playAudio("meow_happy");
+    
     myGame.messageBox.startConversation(["Yummy","I love you ~"], function(){
-        myGame.stateManager.setState('cat_is_feeded', true)
+        //myGame.stateManager.setState('cat_is_feeded', true)
+        //myGame.stateManager.setState('cat_is_feeded', true)
+        reaction.setState('cat_is_feeded',true);
     });
     
 });
 
 
-//cat.on('pointerdown',function() {
-//    myGame.stateManager.setState('cat_is_feeded', true)
-//})
-
-
-myGame.stateManager.addStateEvent('cat_is_feeded', true, function(){
-    myGame.sound.play('win');
-    myGame.sceneManager.jumpToScene(2);
-    myGame.hideInventory();
+myGame.eventSystem.addStateEvent('cat_is_feeded', true, function(){
+    //myGame.sound.play('win');
+    reaction.playAudio("win");
+    //myGame.sceneManager.jumpToScene(2);
+    reaction.transitToScene(2);
+    //myGame.hideInventory();
+    reaction.hideInventory();
 })
 
+myGame.eventSystem.addSceneTransitEvent(1, function(){
+    myGame.messageBox.startConversation(["There are some ingredient...", "On the table..."]);
+})
+
+
+
+
+
+//cat.on('pointerdown',function() {
+//    reaction.moveObjectToScene(cat,1);
+//});
 
 
 //--//
