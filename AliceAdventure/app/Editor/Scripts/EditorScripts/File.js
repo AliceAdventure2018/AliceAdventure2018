@@ -271,7 +271,7 @@ File.SaveToPath = function(_path){
 	// projData
 	File.tempJsonObj.projectData.idCounter = ID._counter;
 	File.tempJsonObj.projectData.viewWidth = GameProperties.instance.projectData.viewWidth;
-	File.tempJsonObj.projectData.viewHeight = GameProperties.instance.projectData.viewWidth;
+	File.tempJsonObj.projectData.viewHeight = GameProperties.instance.projectData.viewHeight;
     
 	// Write JSON file
 	FS.writeJsonSync(File.instance.path, File.tempJsonObj, {spaces:'\t', EOL:'\n'});
