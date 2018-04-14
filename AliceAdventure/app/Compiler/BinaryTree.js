@@ -14,23 +14,41 @@ function INode(eventString, eventType, args, condWithReact){
 
 function ITree(){
 	this.root = null;
+	this.treeSize = 0;
+	this.total = 0;
 }
 
 ITree.prototype.putNode = function(eventString, eventType, args, condWithReact){
 
+	this.total += 1;
 	this.root = _putNode.call(this, this.root, eventString, eventType, args, condWithReact);
 }
 
 ITree.prototype.getEverything = function () {
+	console.log("total: " + this.total + ", size: " + this.treeSize + ", depth: " + _getMaxDepth.call(this));
 	
-	return _postOrder.call(this, this.root, "");
+	var result = "";
+    var node = this.root;
+    var traverse = function(node) {
+
+    	var end;
+		if (node.type == 0) end = "}//interaction end\n";
+		else end = "}); //interaction end\n";
+
+		result +=  _getString(node) + end;
+        
+        node.left && traverse(node.left);
+        node.right && traverse(node.right);
+    };
+    traverse(node);
+    return result;
 }
 
 
 function _putNode(n, eventString, eventType, args, condWithReact){
 	if (n == null){
-		//console.log(1);
 		var toReturn = new INode(eventString, eventType, args, condWithReact);
+		this.treeSize += 1;
 		return toReturn;
 	}
 	// if equals to the current node, append condWithReact to the node
@@ -41,27 +59,29 @@ function _putNode(n, eventString, eventType, args, condWithReact){
 	//add new ones
 	else{
 
-		if (n.left == null || (n.left != null && n.right != null)) n.left = _putNode(n.left, eventString, eventType, args, condWithReact);
+		if (n.left == null || (n.left != null && n.right != null)) n.left = _putNode.call(this, n.left, eventString, eventType, args, condWithReact);
 	
-		else n.right = _putNode(n.right, eventString, eventType, args, condWithReact);
+		else n.right = _putNode.call(this, n.right, eventString, eventType, args, condWithReact);
 
 		return n;
 	}
 }
 
-function _postOrder(n, string){
-	if (n != null){
-		var end;
-		if (n.type == 0) end = "}//interaction end\n";
-		else end = "}); //interaction end\n";
 
-		if (n.left !== null) 
-			return _postOrder(n.left, string + _getString(n) + end);
 
-		if(n.right !== null) return  _postOrder(n.right, string + _getString(n)+ end);
-	}else{
-		return string;
-	}
+function _getMaxDepth(){
+	 var node = this.root;
+    var maxDepth = 0;
+    var traverse = function(node, depth) {
+        if (!node) return null;
+        if (node) {
+            maxDepth = depth > maxDepth ? depth : maxDepth;
+            traverse(node.left, depth + 1);
+            traverse(node.right, depth + 1);
+        }
+    };
+    traverse(node, 0);
+    return maxDepth;
 }
 
 function _getString(n){
