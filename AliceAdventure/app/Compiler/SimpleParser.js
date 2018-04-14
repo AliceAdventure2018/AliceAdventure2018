@@ -13,6 +13,8 @@ Parser = function (jsonPath, buildPath){
 	this.build = buildPath;
 	this.game = fs.readJsonSync(jsonPath);
 
+
+
 	this.assetPath = FileSys.merge(this.build, 'Resources/Assets');
 	this.sceneList = this.game.sceneList;
 	this.objectList = this.game.objectList;
@@ -20,8 +22,8 @@ Parser = function (jsonPath, buildPath){
 	this.interactionList=this.game.interactionList;
 	this.stateList = this.game.stateList;
 	this.soundList = this.game.soundList;
-	this.scalarX = this.game.projectData.scalarX;
-	this.scalarY = this.game.projectData.scalarY;
+	this.scalarX = this.settings.resWidth / this.projectData.viewWidth;
+	this.scalarY = this.settings.resHeight / this.projectData.viewHeight;
 	this.iTree = new ITree();
 
 }
