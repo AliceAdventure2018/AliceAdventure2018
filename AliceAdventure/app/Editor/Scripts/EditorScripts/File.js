@@ -270,6 +270,8 @@ File.SaveToPath = function(_path){
 
 	// projData
 	File.tempJsonObj.projectData.idCounter = ID._counter;
+	File.tempJsonObj.projectData.viewWidth = GameProperties.instance.projectData.viewWidth;
+	File.tempJsonObj.projectData.viewHeight = GameProperties.instance.projectData.viewWidth;
     
 	// Write JSON file
 	FS.writeJsonSync(File.instance.path, File.tempJsonObj, {spaces:'\t', EOL:'\n'});
@@ -339,7 +341,7 @@ File.OpenFromPath = function(_path){
 
 File.Build = function(successCallback){
 	var compiler = new Compiler(File.instance.path, (_err)=>{Debug.LogError(_err);});
-	if (compiler.build((_err)=>{ Debug.LogError(_err); })){ // success
+	if (compiler.build((_err)=>{Debug.LogError(_err);})){ // success
 		Debug.Log("Build succeeded");
 		if (typeof successCallback == "function") successCallback();
 	} else { // fail

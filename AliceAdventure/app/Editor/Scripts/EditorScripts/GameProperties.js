@@ -10,14 +10,16 @@ GameProperties = function(){
     this.soundList = [];
     this.imageList = [];
 	this.settings = {
-		resWidth: 640, 
-		resHeight: 360, 
+		resWidth: 1280, 
+		resHeight: 960, 
 		inventoryGridNum: 5,
 		startScene: -1,
 		projectName: "untitled"
 	};
 	this.projectData = {
-		idCounter: 0
+		idCounter: 0,
+		viewWidth: 480, 
+		viewHeight: 360
 	};
 
 	GameProperties.instance = this;
@@ -31,8 +33,14 @@ GameProperties.ProjectLoaded = function(){
 	return (GameProperties.instance != null);
 };
 
+GameProperties.SetViewSize = function(w, h){
+	if (!GameProperties.ProjectLoaded()) return null;
+	GameProperties.instance.projectData.viewWidth = w;
+	GameProperties.instance.projectData.viewHeight = h;
+};
+
 GameProperties.GetSceneById = function(_id){
-	if (GameProperties.instance == null) return null;
+	if (!GameProperties.ProjectLoaded()) return null;
 	for (let i in GameProperties.instance.sceneList){
 		if (GameProperties.instance.sceneList[i].id == _id){
 			return GameProperties.instance.sceneList[i];
@@ -41,7 +49,7 @@ GameProperties.GetSceneById = function(_id){
 	return null;
 };
 GameProperties.GetObjectById = function(_id){
-	if (GameProperties.instance == null) return null;
+	if (!GameProperties.ProjectLoaded()) return null;
 	for (let i in GameProperties.instance.objectList){
 		if (GameProperties.instance.objectList[i].id == _id){
 			return GameProperties.instance.objectList[i];
@@ -50,7 +58,7 @@ GameProperties.GetObjectById = function(_id){
 	return null;
 };
 GameProperties.GetInteractionById = function(_id){
-	if (GameProperties.instance == null) return null;
+	if (!GameProperties.ProjectLoaded()) return null;
 	for (let i in GameProperties.instance.interactionList){
 		if (GameProperties.instance.interactionList[i].id == _id){
 			return GameProperties.instance.interactionList[i];
@@ -59,7 +67,7 @@ GameProperties.GetInteractionById = function(_id){
 	return null;
 };
 GameProperties.GetStateById = function(_id){
-	if (GameProperties.instance == null) return null;
+	if (!GameProperties.ProjectLoaded()) return null;
 	for (let i in GameProperties.instance.stateList){
 		if (GameProperties.instance.stateList[i].id == _id){
 			return GameProperties.instance.stateList[i];
@@ -68,7 +76,7 @@ GameProperties.GetStateById = function(_id){
 	return null;
 };
 GameProperties.GetSoundById = function(_id){
-	if (GameProperties.instance == null) return null;
+	if (!GameProperties.ProjectLoaded()) return null;
 	for (let i in GameProperties.instance.soundList){
 		if (GameProperties.instance.soundList[i].id == _id){
 			return GameProperties.instance.soundList[i];
@@ -77,7 +85,7 @@ GameProperties.GetSoundById = function(_id){
 	return null;
 };
 GameProperties.GetImageById = function(_id){
-	if (GameProperties.instance == null) return null;
+	if (!GameProperties.ProjectLoaded()) return null;
 	for (let i in GameProperties.instance.imageList){
 		if (GameProperties.instance.imageList[i].id == _id){
 			return GameProperties.instance.imageList[i];
@@ -87,12 +95,12 @@ GameProperties.GetImageById = function(_id){
 };
 
 GameProperties.AddScene = function(_scene){
-	if (GameProperties.instance == null) return false;
+	if (!GameProperties.ProjectLoaded()) return false;
 	GameProperties.instance.sceneList.push(_scene);
 	return true;
 };
 GameProperties.DeleteScene = function(_scene){
-	if (GameProperties.instance == null) return false; 
+	if (!GameProperties.ProjectLoaded()) return false; 
 	var i = GameProperties.instance.sceneList.indexOf(_scene);
 	if (i >= 0){
 		GameProperties.instance.sceneList.splice(i, 1);
@@ -102,12 +110,12 @@ GameProperties.DeleteScene = function(_scene){
 };
 
 GameProperties.AddObject = function(_obj){
-	if (GameProperties.instance == null) return false;
+	if (!GameProperties.ProjectLoaded()) return false;
 	GameProperties.instance.objectList.push(_obj);
 	return true;
 };
 GameProperties.DeleteObject = function(_obj){
-	if (GameProperties.instance == null) return false; 
+	if (!GameProperties.ProjectLoaded()) return false; 
 	var i = GameProperties.instance.objectList.indexOf(_obj);
 	if (i >= 0){
 		GameProperties.instance.objectList.splice(i, 1);
@@ -117,12 +125,12 @@ GameProperties.DeleteObject = function(_obj){
 };
 
 GameProperties.AddInteraction = function(_ntra){
-	if (GameProperties.instance == null) return false;
+	if (!GameProperties.ProjectLoaded()) return false;
 	GameProperties.instance.interactionList.push(_ntra);
 	return true;
 };
 GameProperties.DeleteInteraction = function(_ntra){
-	if (GameProperties.instance == null) return false; 
+	if (!GameProperties.ProjectLoaded()) return false; 
 	var i = GameProperties.instance.interactionList.indexOf(_ntra);
 	if (i >= 0){
 		GameProperties.instance.interactionList.splice(i, 1);
@@ -132,12 +140,12 @@ GameProperties.DeleteInteraction = function(_ntra){
 };
 
 GameProperties.AddState = function(_state){
-	if (GameProperties.instance == null) return false;
+	if (!GameProperties.ProjectLoaded()) return false;
 	GameProperties.instance.stateList.push(_state);
 	return true;
 };
 GameProperties.DeleteState = function(_state){
-	if (GameProperties.instance == null) return false; 
+	if (!GameProperties.ProjectLoaded()) return false; 
 	var i = GameProperties.instance.stateList.indexOf(_state);
 	if (i >= 0){
 		GameProperties.instance.stateList.splice(i, 1);
@@ -147,12 +155,12 @@ GameProperties.DeleteState = function(_state){
 };
 
 GameProperties.AddSound = function(_sound){
-	if (GameProperties.instance == null) return false;
+	if (!GameProperties.ProjectLoaded()) return false;
 	GameProperties.instance.soundList.push(_sound);
 	return true;
 };
 GameProperties.DeleteSound = function(_sound){
-	if (GameProperties.instance == null) return false; 
+	if (!GameProperties.ProjectLoaded()) return false; 
 	var i = GameProperties.instance.soundList.indexOf(_sound);
 	if (i >= 0){
 		GameProperties.instance.soundList.splice(i, 1);
@@ -162,13 +170,13 @@ GameProperties.DeleteSound = function(_sound){
 };
 
 GameProperties.AddImage = function(_image){
-	if (GameProperties.instance == null) return false;
+	if (!GameProperties.ProjectLoaded()) return false;
 	// TODO detect repetitive path
 	GameProperties.instance.imageList.push(_image);
 	return true;
 };
 GameProperties.DeleteImage = function(_image){
-	if (GameProperties.instance == null) return false; 
+	if (!GameProperties.ProjectLoaded()) return false; 
 	var i = GameProperties.instance.imageList.indexOf(_image);
 	if (i >= 0){
 		GameProperties.instance.imageList.splice(i, 1);

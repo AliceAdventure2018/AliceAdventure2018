@@ -42,12 +42,13 @@ SceneView.prototype.InitView = function(){
 	});
 	// Init app
 	this.app = new PIXI.Application({
-		width: 640,
+		width: 480,
 		height: 360, 
 		antialiasing: true, 
 		backgroundcolor: 0xFFFFFF
 	});
 	document.getElementById('canvas-container').appendChild(this.app.view);
+	GameProperties.SetViewSize(480, 360);
 
 	// events
 	Event.AddListener('reload-project', ()=>{this.ReloadView();});

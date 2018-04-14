@@ -43,33 +43,9 @@ SceneObject.LoadObject = function(_data){ // I AM HERE
 	return _obj;
 };
 
-/*SceneObject.Selection = { 
-	objects: [], // Reference
-	set: function(_obj){
-		this.objects = [_obj];
-		Event.Broadcast("update-selected-object");
-	}, 
-	add: function(_obj){
-		this.objects.push(_obj);
-		Event.Broadcast("update-selected-object");
-	},
-	remove: function(_obj){
-		var i = this.objects.indexOf(_obj);
-		if (i >= 0) {
-			this.objects.splice(i, 1);
-			Event.Broadcast("update-selected-object");
-		} else {
-			Debug.LogWarning("Trying to remove missing selection object: " + _obj.name);
-		}
-	},
-	clear: function(){
-		this.objects = [];
-		Event.Broadcast("update-selected-object");
-	},
-	contain: function(_obj){
-		return (this.objects.indexOf(_obj) >= 0);
-	}
-};*/
+SceneObject.SetViewSize = function(w, h){
+	viewW = w; viewH = h;
+};
 
 var pixiFilters = { // private
 	outlineFilterBlue: new PIXI.filters.OutlineFilter(4, 0x99ff99), 
@@ -188,9 +164,9 @@ SceneObject.prototype.toJsonObject = function(){
 		name: this.name, 
 		src: this.src, 
 		//isDefault: this.isDefault, 
-		pos: {x: Number(this.sprite.x), y: Number(this.sprite.y)}, 
-		anchor: {x: Number(this.sprite.anchor.x), y: Number(this.sprite.anchor.y)}, 
-		scale: {x: Number(this.sprite.scale.x), y: Number(this.sprite.scale.y)}, 
+		pos: {x: this.sprite.x, y: this.sprite.y}, 
+		anchor: {x: this.sprite.anchor.x, y: this.sprite.anchor.y}, 
+		scale: {x: this.sprite.scale.x, y: this.sprite.scale.y}, 
 		active: this.sprite.visible, 
 		clickable: this.clickable, 
 		draggable: this.draggable, 
