@@ -39,7 +39,7 @@ door.name = "door";
 //reaction.makeClickable(door);
 door.interactive = true;
 door.on('pointerdown',function() {
-    helper.showHelper(door, myGame.scene(0));
+    helper.showHelper(door);
 })
 
 //door.interactive = true;
@@ -77,7 +77,7 @@ cat.on('pointerdown',function() {
 //    graphics.drawShape(cat.getBounds());
 //    myGame.scene(0).addChild(graphics);
     //console.log("hehe")
-    helper.showHelper(cat, myGame.scene(0));
+    helper.showHelper(cat);
 //    console.log(cat.width)
 //    cat.scale.set(2);
 //    console.log(cat.width)
@@ -172,7 +172,7 @@ function ScaleHelper() {
     }
     
     this.showHelper = function(_obj, _scene) {
-        this.curScene = _scene;
+        this.curScene = _obj.parent;
         this.curObj = _obj;
         
         this.setSquares(this.curObj.getBounds());
