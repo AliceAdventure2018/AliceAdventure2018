@@ -144,6 +144,8 @@ function ScaleHelper() {
         cornerPos[3] = [(this.curObj.scale.x > 0)? center.x + bound.width/2 : center.x - bound.width/2,
                         this.curObj.scale.y > 0? center.y + bound.height/2 : center.y - bound.height/2];
         
+        
+        
         for(var i = 0; i < 4; i++) {
             this.helperContainer.getChildAt(i+1).position.set(cornerPos[i][0],cornerPos[i][1]);
         }
@@ -159,6 +161,7 @@ function ScaleHelper() {
         square.interactive = true;
         
         square.buttonMode = true;
+        square.cursor = 'crosshair'
         square
                 .on('pointerdown', helperDragStart)
                 .on('pointerup', helperDragEnd)
