@@ -129,7 +129,7 @@ SceneObject.prototype.SelectOff = function(){
 SceneObject.prototype.SelectOn = function(){
 	//this.sprite.alpha = 0.9; // TODO
 	this.sprite.filters = [pixiFilters.outlineFilterBlue];
-	Resizer.showHelper(this.sprite);	
+	//Resizer.showHelper(this.sprite);	
 };
 
 SceneObject.prototype.OnPointerDown = function(_event){
@@ -142,6 +142,7 @@ SceneObject.prototype.OnPointerDown = function(_event){
 	if (this.dragAllowed){
 		this.drag.on = true;
 		this.drag.eventData = _event.data;
+		Resizer.showHelper(this.sprite);
 	}
 };
 

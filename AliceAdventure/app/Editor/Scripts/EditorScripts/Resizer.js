@@ -102,11 +102,14 @@ Resizer = function() {
     }
     
     this.hideHelper = function() {
-        this.graphics.clear();
-        this.curScene.removeChild(this.helperContainer);
-        this.curScene = null;
-        this.curObj = null;
-        this.helperContainer.visible = false;
+        if(this.curScene && this.curObj)
+        {
+            this.graphics.clear();
+            this.curScene.removeChild(this.helperContainer);
+            this.curScene = null;
+            this.curObj = null;
+            this.helperContainer.visible = false;
+        }
     }
     
     this.updateSquares = function(dragSqr) {
