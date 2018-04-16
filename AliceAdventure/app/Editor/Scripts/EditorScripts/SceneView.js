@@ -76,9 +76,9 @@ SceneView.prototype.AddObject = function(_objInfo){
 	if (View.Selection.scene == null) return;
 	var _bindScene = View.Selection.scene;
 	var _obj = SceneObject.AddObject(_objInfo, _bindScene, this.app.screen.width / 2, this.app.screen.height / 2);
-	this.SelectObject(_obj);
-	//this.app.stage.addChild(_obj.sprite);
 	_bindScene.container.addChild(_obj.sprite);
+	window.setTimeout(()=>{this.SelectObject(_obj);}, 10);
+	//this.app.stage.addChild(_obj.sprite);
 };
 
 SceneView.prototype.AddScene = function(_name = null){

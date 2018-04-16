@@ -15,6 +15,7 @@ Utilities = (function(){
 		ID: require('./ID'), 
 		Debug: require('./Debug'),
 		Event: require('./Event'), 
+		//Resizer: require('./Resizer'),
 	}
 })();
 

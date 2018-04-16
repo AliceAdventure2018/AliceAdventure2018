@@ -2,6 +2,7 @@
 
 const {PIXI, FS, ID, Debug, Event} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
+const Resizer = require('./Resizer');
 
 // class
 var SceneObject;
@@ -122,11 +123,13 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 SceneObject.prototype.SelectOff = function(){
 	//this.sprite.alpha = 1;
 	this.sprite.filters = [];
+	Resizer.hideHelper(this.sprite);
 };
 
 SceneObject.prototype.SelectOn = function(){
 	//this.sprite.alpha = 0.9; // TODO
 	this.sprite.filters = [pixiFilters.outlineFilterBlue];
+	Resizer.showHelper(this.sprite);	
 };
 
 SceneObject.prototype.OnPointerDown = function(_event){
@@ -148,6 +151,7 @@ SceneObject.prototype.OnPointerMove = function(_event){
 		var newPosition = this.drag.eventData.getLocalPosition(this.sprite.parent);
 		this.sprite.x = Math.floor(newPosition.x);
 		this.sprite.y = Math.floor(newPosition.y);
+		Resizer.updateBox();
 	}
 };
 
