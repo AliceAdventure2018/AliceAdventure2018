@@ -36,7 +36,11 @@ door.x = myGame.screenWidth / 2;
 door.y = myGame.screenHeight / 2 + 5;
 door.scale.set(1);
 door.name = "door";
-reaction.makeClickable(door);
+//reaction.makeClickable(door);
+door.interactive = true;
+door.on('pointerdown',function() {
+    helper.showHelper(door);
+})
 
 //door.interactive = true;
 //door.buttonMode = true;
@@ -73,14 +77,12 @@ cat.on('pointerdown',function() {
 //    graphics.drawShape(cat.getBounds());
 //    myGame.scene(0).addChild(graphics);
     //console.log("hehe")
-    helper.showHelper(cat, myGame.scene(0));
+    helper.showHelper(cat);
 //    console.log(cat.width)
 //    cat.scale.set(2);
 //    console.log(cat.width)
 //    console.log(cat.texture.orig.width)
 })
-
-
 
 var helper = new ScaleHelper();
 
@@ -93,15 +95,12 @@ function ScaleHelper() {
     this.init = function() {
         this.helperContainer = new PIXI.Container();
         this.graphics = new PIXI.Graphics();
-        this.graphics.lineStyle(4, 0xffd900, 1);
-        
-        this.initSquare();
-        this.helperContainer.visible = false;
         this.helperContainer.addChild(this.graphics);
+        this.initSquares();
+        this.helperContainer.visible = false;
     }
     
-    this.initSquare = function() {
-        this.helperContainer.removeChildren();
+    this.initSquares = function() {
         for(var i = 0; i < 4; i++) {
             var sqr = this.createSquare(0,0);
                 switch(i) {
@@ -117,114 +116,73 @@ function ScaleHelper() {
                 case 3:
                     break;
                 }
+            sqr.idx = i;
             this.helperContainer.addChild(sqr);
-            
         }
     }
     
     this.drawLines = function(rect) {
+        this.graphics.clear();
+        this.graphics.lineStyle(2, 0xffffff, 1);
         this.graphics.drawShape(rect);
     }
     
     this.setSquares = function(bound) {
-        console.log(this.curObj.scale.x)
-        console.log(this.curObj.scale.y)
-        if(this.curObj.scale.x > 0 && this.curObj.scale.y > 0) {
-            this.helperContainer.getChildAt(0).x = bound.x;
-            this.helperContainer.getChildAt(0).y = bound.y;
 
-            this.helperContainer.getChildAt(1).x = bound.x + bound.width;
-            this.helperContainer.getChildAt(1).y = bound.y;
-
-            this.helperContainer.getChildAt(2).x = bound.x;
-            this.helperContainer.getChildAt(2).y = bound.y + bound.height;
-
-            this.helperContainer.getChildAt(3).x = bound.x + bound.width;
-            this.helperContainer.getChildAt(3).y = bound.y + bound.height;
-            
-        } else if(this.curObj.scale.x < 0 && this.curObj.scale.y > 0) {
-            
-            this.helperContainer.getChildAt(1).x = bound.x;
-            this.helperContainer.getChildAt(1).y = bound.y;
-
-            this.helperContainer.getChildAt(0).x = bound.x + bound.width;
-            this.helperContainer.getChildAt(0).y = bound.y;
-
-            this.helperContainer.getChildAt(3).x = bound.x;
-            this.helperContainer.getChildAt(3).y = bound.y + bound.height;
-
-            this.helperContainer.getChildAt(2).x = bound.x + bound.width;
-            this.helperContainer.getChildAt(2).y = bound.y + bound.height;
-            
-        } else if(this.curObj.scale.x > 0 && this.curObj.scale.y < 0) {
-            
-            this.helperContainer.getChildAt(2).x = bound.x;
-            this.helperContainer.getChildAt(2).y = bound.y;
-
-            this.helperContainer.getChildAt(3).x = bound.x + bound.width;
-            this.helperContainer.getChildAt(3).y = bound.y;
-
-            this.helperContainer.getChildAt(0).x = bound.x;
-            this.helperContainer.getChildAt(0).y = bound.y + bound.height;
-
-            this.helperContainer.getChildAt(1).x = bound.x + bound.width;
-            this.helperContainer.getChildAt(1).y = bound.y + bound.height;
-            
-        } else {
-            
-            this.helperContainer.getChildAt(3).x = bound.x;
-            this.helperContainer.getChildAt(3).y = bound.y;
-
-            this.helperContainer.getChildAt(2).x = bound.x + bound.width;
-            this.helperContainer.getChildAt(2).y = bound.y;
-
-            this.helperContainer.getChildAt(1).x = bound.x;
-            this.helperContainer.getChildAt(1).y = bound.y + bound.height;
-
-            this.helperContainer.getChildAt(0).x = bound.x + bound.width;
-            this.helperContainer.getChildAt(0).y = bound.y + bound.height;
-            
-        }
+        var center = {x: bound.x+bound.width/2, y:bound.y+bound.height/2}
+        var cornerPos = [0,0,0,0]
         
+        cornerPos[0] = [(this.curObj.scale.x > 0)? center.x - bound.width/2 : center.x + bound.width/2,
+                        this.curObj.scale.y > 0? center.y - bound.height/2 : center.y + bound.height/2];
+        
+        cornerPos[1] = [(this.curObj.scale.x > 0)? center.x + bound.width/2 : center.x - bound.width/2,
+                        this.curObj.scale.y > 0? center.y - bound.height/2 : center.y + bound.height/2];
+        
+        cornerPos[2] = [(this.curObj.scale.x > 0)? center.x - bound.width/2 : center.x + bound.width/2,
+                        this.curObj.scale.y > 0? center.y + bound.height/2 : center.y - bound.height/2];
+        
+        cornerPos[3] = [(this.curObj.scale.x > 0)? center.x + bound.width/2 : center.x - bound.width/2,
+                        this.curObj.scale.y > 0? center.y + bound.height/2 : center.y - bound.height/2];
+        
+        
+        
+        for(var i = 0; i < 4; i++) {
+            this.helperContainer.getChildAt(i+1).position.set(cornerPos[i][0],cornerPos[i][1]);
+        }
+ 
     }
     
-    this.count = 0
     
     this.createSquare = function(x, y) {
         var square = new PIXI.Sprite(PIXI.Texture.WHITE);
-        
-        
-        
-        //square.tint = 0xff0000;
         square.factor = 1;
         square.anchor.set(0.5);
         square.position.set(x, y);
         square.interactive = true;
         
-        square.cursor = 'grab'
+        square.buttonMode = true;
+        square.cursor = 'crosshair'
         square
                 .on('pointerdown', helperDragStart)
                 .on('pointerup', helperDragEnd)
-                //.on('pointerupoutside', onDragEnd)
+                .on('pointerupoutside', helperDragEnd)
                 .on('pointermove', helperDragMove);
-        this.count++;
-        
+
         return square;
     }
     
     this.showHelper = function(_obj, _scene) {
-        //console.log(_obj.name)
-        this.curScene = _scene;
+        this.curScene = _obj.parent;
         this.curObj = _obj;
         
-        //this.drawLines(this.curObj.getBounds());
-        //this.helperContainer.addChild(this.graphics);
         this.setSquares(this.curObj.getBounds());
+        this.drawLines(this.curObj.getBounds());
         this.helperContainer.visible = true;
         this.curScene.addChild(this.helperContainer)
     }
     
     this.hideHelper = function() {
+        this.graphics.clear();
         this.curScene.remove(this.helperContainer);
         this.curScene = null;
         this.curObj = null;
@@ -232,39 +190,15 @@ function ScaleHelper() {
     }
     
     this.updateSquares = function(dragSqr) {
+        var x_up = ((dragSqr.idx == 0)||(dragSqr.idx == 2)) ? (this.curObj.x - dragSqr.x) : (dragSqr.x - this.curObj.x)
+        var y_up = ((dragSqr.idx == 0)||(dragSqr.idx == 1)) ? (this.curObj.y - dragSqr.y) : (dragSqr.y - this.curObj.y)
         
+        var x_scale = x_up/(this.curObj.texture.orig.width/2)
+        var y_scale = y_up/(this.curObj.texture.orig.height/2)
         
-        var x_scale = (dragSqr.x - this.curObj.x)/(this.curObj.texture.orig.width/2)
-        var y_scale = (dragSqr.y - this.curObj.y)/(this.curObj.texture.orig.height/2)
-        //console.log(x_scale)
         this.curObj.scale.set(x_scale,y_scale);
-
-        this.setSquares(this.curObj.getBounds())
-    }
-    
-    this.checkMoveable = function(dragSqr, newPos) {
-        var index = this.helperContainer.getChildIndex(dragSqr);
-        switch(index) {
-            case 0:
-                if(newPos.x < this.curObj.x && newPos.y < this.curObj.y)
-                    return true;
-                break;
-            case 1:
-                if(newPos.x > this.curObj.x && newPos.y < this.curObj.y)
-                    return true;
-                break;
-            case 2:
-                if(newPos.x < this.curObj.x && newPos.y > this.curObj.y)
-                    return true;
-                break;
-            default:
-                if(newPos.x > this.curObj.x && newPos.y > this.curObj.y)
-                    return true;
-                break;
-        }
-        
-        return false;
-        
+        this.drawLines(this.curObj.getBounds());
+        this.setSquares(this.curObj.getBounds());
     }
     
     this.init();
@@ -273,28 +207,21 @@ function ScaleHelper() {
 
 
 function helperDragStart(event) {
-    // store a reference to the data
-    // the reason for this is because of multitouch
-    // we want to track the movement of this particular touch
     this.data = event.data;
     this.alpha = 0.5;
     this.dragging = true;
+   
 }
 
 function helperDragEnd() {
     this.alpha = 1;
     this.dragging = false;
-    // set the interaction data to null
     this.data = null;
 }
 
 function helperDragMove() {
     if (this.dragging) {
         var newPosition = this.data.getLocalPosition(this.parent);
-        //if(newPosition.x > helper.curObj.x)
-//        if(!helper.checkMoveable(this, newPosition))
-//            return;
-        
         this.x = newPosition.x;
         this.y = newPosition.y;
         helper.updateSquares(this);
