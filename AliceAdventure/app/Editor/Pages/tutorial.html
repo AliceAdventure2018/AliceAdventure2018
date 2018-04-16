@@ -25,8 +25,11 @@
 <style rel="stylesheet">
 .sys-button{
   display: block;
-  margin:auto;
+
+  float: right;
   padding:1%;
+  margin-right: 5%;
+  margin-top:10%;
    color:#fff;
    font-weight: 480;
    font-size: 1.8em;
@@ -44,11 +47,12 @@
   <div style="
   display: block;
   margin-top:10%;
+  margin-left:2%;
 
   ">
   
   <p>
-    <h6 class="window-title" style="color:#ffc107; font-size: 1.5em !important;">Where does the story happen?</h6>
+    <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;">Where does the story happen?</h6> <img style="cursor: pointer; width:30px; height: 30px; margin-left:1%; display: inline-block;" src="src/plus.png"/>
     <div class="table-responsive">
     <table class="table table-bordered" id="table1">
       <thread>
@@ -72,7 +76,7 @@
   </p>
 
   <p>
-    <h6 class="window-title" style="color:#ffc107; font-size: 1.5em !important;" >Who are the characters in your game?</h6>
+    <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;" >Who are the characters in your game?</h6><img style="cursor: pointer; width:30px; height: 30px; margin-left:1%; display: inline-block;" src="src/plus.png"/>
     <div class="table-responsive">
      <table class="table table-bordered" id="table2">
       <thread>
@@ -102,7 +106,7 @@
   </p>
 
   <p>
-    <h6 class="window-title" style="color:#ffc107;font-size: 1.5em !important;">What kind of items do you need in your game?</h6>
+    <h6 class="window-title" style="display: inline-block; color:#ffc107;font-size: 1.5em !important;">What kind of items do you need in your game?</h6><img style="cursor: pointer; width:30px; height: 30px; margin-left:1%; display: inline-block;" src="src/plus.png"/>
     <div class="table-responsive">
      <table class="table table-bordered" id="table3">
       <thread>
@@ -129,8 +133,9 @@
   </div>
   </p>
 	
-  <button class="sys-button" onclick="goToNext()" > Next </button>
+  
    <button class="sys-button" onclick="goSkip()"> Skip </button>
+   <button class="sys-button" onclick="goToNext()" > Next </button>
  </div>
 
 
