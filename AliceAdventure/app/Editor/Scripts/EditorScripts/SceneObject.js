@@ -26,7 +26,7 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 	this.properties = [];
 	this.sprite = null;
 
-	GameProperties.AddObject(this);
+	//GameProperties.AddObject(this);
 };
 
 // static properties
@@ -35,6 +35,7 @@ SceneObject.AddObject = function(_objInfo, _bindScene, _x, _y){
 	let _path = _objInfo.src;
 	let _obj = new SceneObject(null, _objInfo.name, _path, _bindScene);
 	_obj.InitSprite('../../' + _path, {x: _x, y: _y});
+    //_obj.sprite.
 	return _obj;
 };
 
