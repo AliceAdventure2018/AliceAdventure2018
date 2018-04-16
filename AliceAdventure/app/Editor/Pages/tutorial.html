@@ -18,8 +18,8 @@
   <script type="text/javascript" src="../../Resources/util.js"></script>
   <script type="text/javascript" src="../../Resources/vue.js"></script>
   <script type="text/javascript" src="../Scripts/index.js"></script>
-	
-
+	 <script type="text/javascript" src="js/tutorial.js"> </script>
+ <script type="text/javascript" src="js/switch.js"> </script>
 </head>
 
 <style rel="stylesheet">
@@ -44,7 +44,7 @@
 }
 </style>
 <body style="background-color:#28a745;">
-  <div style="
+  <div id="step_1" style="
   display: block;
   margin-top:10%;
   margin-left:2%;
@@ -59,7 +59,7 @@
       <tr>
         <th > #
         </th>
-        <th  >where is the item?
+        <th  >background name
         </th>
       </tr>
       </thread>
@@ -139,15 +139,109 @@
  </div>
 
 
-  <script>
-    function goToNext(){
+ <div id="step_2" style="
+  display: none;
+  margin-top:10%;
+  margin-left:2%;
 
-    }
+  ">
+  
+  <p>
+    <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;">Let's decorate the scenes!</h6> 
+   </p>
+   <div style="margin-right:100px;">
+   <div id="design-editor" style=" float: left;margin:10px; position: relative !important; display: inline-block !important; height:500px; width: 48% !important;">
+            <h6 class="window-title">SCENE EDITOR</h6>            
+        <!--DO NOT DELETE THIS, for canvas initialization. Can add style for it-->
+        <div id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'></div>
 
-    function goSkip(){
+        <div id="add-scene">
+          <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene()'> Add Scene</button></div>
+      </div>
+     
 
-    }
-  </script>
+      <div id="gallery" style="float: left; position: relative !important; display: inline-block !important; height:500px !important; width: 30% !important; margin:10px;">
+            <h6 class="window-title" >GALLERY</h6>
+            <div id="tabList">
+              <ul >
+                <li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="selected">
+                Images</a></li>
+                <li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
+                <!--<div class="tab-list" id="tabList">
+                <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical"-->
+              </ul>
+            </div>
+            <div id="tabContent">
+              <div id="door-asset" style="display: block;">
+                <div class="assets">
+                  <ul>
+                  <!-- bind the gallery data -->
+                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="'../../'+img.src"> </div><p v-html='img.name'></p>
+                    </li>
+                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                    </li>
+                    
+                  </ul>
+                </div>
+              </div>
+
+              <div id="key-asset" style="display: none;">
+                <div class="assets">
+                  <ul>
+                  <!-- bind the gallery data -->
+                    <li v-for="sound in sounds"> <div class="asset"><img v-bind:src="'../../'+sound.src"> </div><p v-html='sound.name'></p>
+                    </li>
+                    <li v-for="sound in importedSounds"> <div class="asset"><img v-bind:src='sound.src'> </div><p v-html='sound.name'></p>
+                    </li>  
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div id="object-list" style="float:left; margin:10px; position: relative !important; display: inline-block !important;  height:500px !important; width: 15% !important; left:0 !important;" >
+            <h6 class="window-title" >OBJECT LIST</h6>
+            <!-- if show object list on -->
+            <ol v-if='projectLoaded' class="object-tree">
+              <li v-for="scene in sceneList">
+                <!-- loop all scenes and objects 
+                <label class="object_label" v-html="scene.name"></label>
+                <input type="checkbox" /> -->
+                <i class="down" onclick="showListView(event)"></i><button v-html="scene.name" v-on:click="onSceneSelect(scene)"></button>
+                <ol class="object_label" style="display:block;">
+                  <li v-for="object in objectList" v-on:click="onObjectSelect(object)" v-if="object.bindScene.id == scene.id">
+                    <!--<label class="object_label" v-html="object.name"></label>
+                    <input type="checkbox"/>-->
+                    <button v-html="object.name" v-on:dblclick='deleteObject(object)'></button>
+                  </li>           
+                </ol>
+              </li>
+              <!--li>
+                <label class="object_label" for="inventory">Inventory</label>
+              </li-->
+            </ol>
+          </div>
+
+        </div>
+
+   <button class="sys-button" onclick="goSkip()"> Skip </button>
+   <button class="sys-button" onclick="goToNext()" > Next </button>
+   <button class="sys-button" onclick="goBack()"> Back </button>
+ </div>
+ <div id="state_3" style="display: none;">
+  <button class="sys-button" onclick="goSkip()"> Skip </button>
+   <button class="sys-button" onclick="goToNext()" > Next </button>
+   <button class="sys-button" onclick="goBack()"> Back </button>
+ </div>
+ </div>
+ <div id="state_4" style="display: none;">
+  <button class="sys-button" onclick="goSkip()"> Skip </button>
+   <button class="sys-button" onclick="goToNext()" > Next </button>
+   <button class="sys-button" onclick="goBack()"> Back </button>
+ </div>
+ </div>
+
+
+
 
 
   
