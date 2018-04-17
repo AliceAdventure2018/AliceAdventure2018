@@ -17,6 +17,9 @@
 	<script src="js/interact.js"></script>	  
 	<script src="js/drag.js"></script>	 
 	<script src="js/dropdown.js"></script>	
+	<script src="js/hierarchy.js"></script>
+	<script src="js/switch.js"></script>
+	 <script type="text/javascript" src="js/switch.js"> </script>
 	<link rel="stylesheet" href="../../Resources/bootstrap.min.css"/>
 	<script type="text/javascript" src="../../Resources/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" src="../../Resources/modal.js"></script>
@@ -137,78 +140,7 @@
 		}
 	</script>
 
-	<script type="text/javascript">
-		function switchGalleryView() {
-				var x = document.getElementById("gallery");
-				var y = document.getElementById("object-list");
 
-				if (x.style.display === "none" || y.style.display ==="block") {
-						x.style.display = "block";
-						y.style.display = "none";
-				} else {
-					
-				}
-		}
-
-		function switchListView() {
-				var y = document.getElementById("gallery");
-				var x = document.getElementById("object-list");
-
-				if (x.style.display === "none" || y.style.display ==="block") {
-						x.style.display = "block";
-						y.style.display = "none";
-				} else {
-					
-				}
-		}
-
-		function switchCategoryView() {
-			
-			/*if (document.addEventListener){}else if (document.attachEvent) {  }
-			*/
-			
-			document.addEventListener("click", function(event){
-
-				var selected = document.getElementsByClassName("selected");
-				var unselecteds = document.getElementsByClassName("unselecteds");
-
-				for(i=0;i<selected.length;i++){
-					selected[i].className ="unselecteds";
-				}
-				
-				var targetElement = event.target || event.srcElement;
-				if(targetElement.tagName === 'A'){
-				targetElement.className = "selected";
-				unselecteds = document.getElementsByClassName("unselecteds");
-				}
-
-				if(selected.length === 1){
-
-					var assetName = targetElement.getAttribute("aria-controls");
-					document.getElementById(assetName).style.display = "block";
-					//console.log(document.getElementById(assetName));
-
-					var assetName_unselected = [];
-
-
-					if(unselecteds.length !== null){
-						for(j=0; j<unselecteds.length;j++){
-							assetName_unselected[j]= unselecteds[j].getAttribute("aria-controls");
-						}
-
-						for(t=0; t<unselecteds.length;t++){
-							document.getElementById(assetName_unselected[t]).style.display = "none";
-						} 
-
-						assetName_unselected = null;
-						unselecteds = null;
-						
-					//console.log(targetElement.getAttribute("aria-controls"));
-					}
-				} 
-			});
-		}
-	</script>
 
 				<!-- Modal -->
   <div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
@@ -261,7 +193,7 @@
             <h6 class="window-title" >GALLERY</h6>
       			<div id="tabList">
         			<ul >
-    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="unselecteds">
+    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="selected">
     						Images</a></li>
     						<li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
           			<!--<div class="tab-list" id="tabList">
@@ -269,7 +201,7 @@
               </ul>
   		      </div>
 						<div id="tabContent">
-							<div id="door-asset" style="display: none;">
+							<div id="door-asset" style="display: block;">
 								<div class="assets">
 									<ul>
 									<!-- bind the gallery data -->
@@ -296,55 +228,7 @@
 						</div>
 		      </div>
 
-<script type="text/javascript" >
-			function showListView(event) {
-				//document.addEventListener("click", function(event){
-					var targetElement = event.target || event.srcElement;
-					var parentTargetElement = targetElement.parentElement;
-					console.log(parentTargetElement.nodeName);
-					var childTargetElements = parentTargetElement.childNodes;
-					var childTargetElement;
-					var childTargetElementLi;
 
-					var icon;
-	
-
-					for(k=0;k<parentTargetElement.childNodes.length;k++){
-						if(parentTargetElement.childNodes[k].tagName === 'I')
-						icon = parentTargetElement.childNodes[k];
-					}
-					
-
-					if(childTargetElements !== null){
-						for(t=0; t<childTargetElements.length; t++){
-							if(childTargetElements[t].tagName === 'OL'){
-								childTargetElement = childTargetElements[t];
-							} 
-						}
-
-						
-					}
-
-					for(j=0; j<childTargetElement.childNodes.length; j++){
-						if(childTargetElement.childNodes[j].tagName === 'LI'){
-							childTargetElementLi = childTargetElement.childNodes[j];
-						}
-					}
-
-					
-					if(childTargetElementLi !== null){ 
-							if(childTargetElement.style.display === "none"){
-								icon.className = "down";
-								childTargetElement.style.display = "block";
-							}else if(childTargetElement.style.display === "block"){
-										childTargetElement.style.display = "none";
-										icon.className = "right";
-							} 
-					}
-					
-				//});
-			}
-		</script>
 
       		<div id="object-list" >
       			<h6 class="window-title" >OBJECT LIST</h6>
