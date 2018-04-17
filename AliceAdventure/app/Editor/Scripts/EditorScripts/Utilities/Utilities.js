@@ -8,6 +8,7 @@ Utilities = (function(){
 	return {
 		PIXI: PIXI, 
 		ELECTRON: require('electron').remote,
+		IPC: require('electron').ipcRenderer,
 		//MENU: require('electron').remote.Menu, 
 		FS: require('fs-extra'), 
 		PATH: require('path'),
@@ -15,7 +16,6 @@ Utilities = (function(){
 		ID: require('./ID'), 
 		Debug: require('./Debug'),
 		Event: require('./Event'), 
-		//Resizer: require('./Resizer'),
 	}
 })();
 

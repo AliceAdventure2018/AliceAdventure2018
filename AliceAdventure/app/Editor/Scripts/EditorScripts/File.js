@@ -44,24 +44,43 @@ File.tempJsonObj = {
 	}
 };
 
+File.NewEmptyProject = function(callback){ // TUT
+	if (File.instance != null){ // have opened proj
+		File.CloseProject();
+	}
+	PROMPT({
+		title: "New project", 
+		label: "Give it a name: ", 
+		value: "my-project", 
+	}).then((_name)=>{
+		if (_name != null) {
+			new File(null, new GameProperties());
+			File.instance.gameProperties.settings.projectName = _name;			
+			Event.Broadcast("reload-project");
+			if (typeof callback == "function"){
+				callback(_name);
+			}
+		}
+	});
+};
+
 File.NewProject = function(_template = null){ // TODO: load from template
 	if (File.instance != null){ // have opened proj
 		File.CloseProject();
 	}
 	PROMPT({
 		title: "New project", 
-		label: "Input new project name: ", 
-		value: "untitled-project", 
+		label: "Input project name: ", 
+		value: "my-project", 
 	}).then((_name)=>{
 		if (_name != null) {
 			new File(null, new GameProperties());
 			File.instance.gameProperties.settings.projectName = _name;
 			// Default settings
 			let firstScene = Scene.AddScene("First scene");
+			firstScene.SelectOn();
 			
 			Event.Broadcast("reload-project");
-
-			View.Selection.selectScene(firstScene);
 		}
 	});
 };
@@ -102,7 +121,7 @@ File.SaveAsNewProject = function(callback){
 	});
 }
 
-File.OpenProject = function(){
+File.OpenProject = function(callback){
 	if (File.instance != null){ // have opened proj
 		File.CloseProject();
 	}
@@ -117,6 +136,9 @@ File.OpenProject = function(){
 	}, (_paths)=>{ // callback
 		if (_paths == null) return;
 		File.OpenFromPath(_paths[0]);
+		if (typeof callback == "function"){
+			callback();
+		}
 	});	
 };
 

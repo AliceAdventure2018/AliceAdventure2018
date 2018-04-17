@@ -41,7 +41,7 @@
 }
 </style>
 <body style="background-color:#28a745;">
-  <div style="
+  <div id="welcome-view" style="
   display: block;
   margin-top:10%;
 
@@ -53,20 +53,13 @@
   margin:auto;
   "/>
 	
-  <button class="sys-button" onclick="createNewProject()" > Create New Project </button>
-   <button class="sys-button" onclick=""> Open Project </button>
+  <button class="sys-button" v-on:click='newProj()' > Create New Project </button>
+   <button class="sys-button" v-on:click='openProj()'> Open Project </button>
+   <button class="sys-button" v-on:click='exit()'>(For test) Exit</button>
  </div>
 
 
-  <script>
-    function createNewProject(){
-
-      var newProject = window.open("index.html","Alice's Adventure", "width=1920, height=1080");
-      newProject.focus();
-      window.close();
-
-    }
-  </script>
+  <script>InitWelcomePage();</script>
 
 
   

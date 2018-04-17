@@ -1,6 +1,6 @@
 'use strict';
 
-const electron = require('electron').remote;
+const {ipcRenderer} = require('electron');
 //const AliceEngine = require('../../Engine/AliceEngine');
 const AliceEditor = require('../Scripts/AliceEditor');
 
@@ -15,6 +15,11 @@ function isBooleanOr(_value, _default){
 
 function isStringOr(_value, _default){
 	return (typeof _value == "string" ? _value : _default);
+}
+
+// welcome page
+function InitWelcomePage(){
+	var welcomeView = AliceEditor.WelcomeView.NewView('welcome-view');
 }
 
 // variables
