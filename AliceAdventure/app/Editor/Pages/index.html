@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="css/layout.css">	 
 	<script>document.write('<base href="' + document.location + '" />');</script>	 
-	<script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script> 
+	<!--script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script--> 
 	 <script src="js/app.js"></script>
 	<script src="js/resizer.js"></script>	
 	<script src="js/interact.js"></script>	  
@@ -65,7 +65,7 @@
     	<a class="dropdown-item" onclick="AliceEditor.File.OpenProject()"> Open project</a>
     	<a class="dropdown-item" onclick="AliceEditor.File.SaveProject()"> Save project</a>
     	<a class="dropdown-item" onclick="AliceEditor.File.BuildProject()"> Build project</a>
-    	<a class="dropdown-item" onclick="AliceEditor.File.RunProject()"> Run project</a>
+    	<a class="dropdown-item" data-toggle="modal" data-target="#run-view" onclick="AliceEditor.File.RunProject()"> Run project</a>
     </div>
 	</div>
     
@@ -143,7 +143,7 @@
 
 
 				<!-- Modal -->
-  <div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
+  <div class="modal" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" id="game-setting">
       <div class="modal-content">
         <div class="modal-header">
@@ -180,7 +180,9 @@
 			<div id="design-editor">
         		<h6 class="window-title">SCENE EDITOR</h6>        		
 				<!--DO NOT DELETE THIS, for canvas initialization. Can add style for it-->
-				<div id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'></div>
+				<div style="text-align: center; margin-top:20px;" id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'>
+					
+				</div>
 
 				<div id="add-scene">
 					<button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene()'> Add Scene</button></div>
@@ -280,7 +282,8 @@
 		    <div  class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' max='true'>
 
 				<div>
-          <span ondblclick="editInPlace(event)" class="editInPlace">Title</span>
+          <!--span ondblclick="editInPlace(event)" class="editInPlace" >Title</span-->
+          <span style="cursor:text;" class="editInPlace" onclick="editInPlace(event)">Title</span>
           <a v-on:click="deleteInteraction(ntra)"><img id="interaction-box-close" src="src/close.png"/></a>
           <a onclick="minimizeWindow(event)"><img id="interaction-box-minimize" min-src="src/minimize.png" max-src="src/maximize.png" src="src/minimize.png"></a>
           
@@ -478,7 +481,7 @@
 					<!-- bind info -->
 					<div v-if='showObject' class="property-info">
 						<ul>
-							<li><span ondblclick="//editInPlace(event)" class="editInPlace"/></span><input style="width:100px" v-model='object.name'/></li>
+							<li><span contenteditable="true"/></span><input style="width:100px" v-model='object.name'/></li>
 
 							<!--<input v-model='bindObj.name'/>-->
 							<li>
@@ -519,90 +522,27 @@
 				resizer-height="6" 
 				resizer-top="#interaction-library" 
 				resizer-bottom="#design-property"
-				resizer-min="350"
+				resizer-min="380"
 				>
 			</div>
 		</div>
-		<div style="position:fixed;top:30%;left:30%" id="run-view" v-if='showRunView'>
-			<div style="text-align: center"><button v-on:click='stop();'>Stop</button></div>
-			<webview id="foo" v-bind:src='src' style="display:inline-flex; width:640px; height:480px"></webview>
+		<div  class="modal"  tabindex="-1" role="dialog" id="run-view" v-if='showRunView'>
+			<div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 80%;">
+			<div class="modal-content" style="text-align: center">
+				<div class="modal-header">
+			<div ><button class="close" data-dismiss="modal" aria-label="Close" v-on:click='stop();'>stop</button></div>
+		</div>
+		<div class="modal-body">
+			<webview id="foo" v-bind:src='src' style="display:inline-flex; margin:0 !important; padding:0; width: 640px; height: 480px; overflow:visible !important;"></webview><!-- 640/480 -->
+		</div>
+			</div>
+			</div>
 		</div>		
 
 	</div> <!-- end of design view -->
 	<script>InitAllViews();</script>
 
-<!--
-	<div id="code-view" style="display: none;">
 
-		<div id="code-library">
-			
-				<h6 class="window-title">CODE LIBRARY</h6>
-		</div>
-	
-		<div id="code-content">
-
-			<div id="code-preview">
-				<h6 class="window-title">PREVIEW</h6></div>
-	
-			<div id="code-editor">
-				<h6 class="window-title">CODE EDITOR</h6></div>
-	
-			<div id="code-editor-resizer" 
-				resizer="horizontal" 
-				resizer-height="6" 
-				resizer-top="#code-preview" 
-				resizer-bottom="#code-editor">
-			</div>
-	
-		</div>
-
-		<div id="code-library-resizer" 
-			resizer="vertical-left" 
-			resizer-width="6" 
-			resizer-left="#code-library" 
-			resizer-right="#code-content"
-			resizer-max="400">
-		</div>
-		<div id="code-side-resizer" 
-			resizer="vertical-right" 
-			resizer-width="6" 
-			resizer-left="#code-content" 
-			resizer-right="#code-side-common"
-			resizer-max="400">
-		</div>
-
-
-		<div id="code-side-common">
-			
-			<div id="code-object-list">
-			 
-				<h6 class="window-title">OBJECTS IN THE SCENES</h6>
-			</div>
-			<div id="code-property">
-
-				<h6 class="window-title">PROPERTIES</h6>
-			</div>
-			<div id="code-property-resizer" 
-				resizer="horizontal" 
-				resizer-height="6" 
-				resizer-top="#code-object-list" 
-				resizer-bottom="#code-property">
-			</div>
-		</div>
-
-
-	</div>  end of code view -->
-
-		
-	
-		
-
-		
-
-		
-
-
-	
 	
 	<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
