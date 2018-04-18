@@ -17,8 +17,13 @@ AliceEditor = (function(){
 		get IReaction() {return getModule('IReaction');},
 		get Interaction() {return getModule('Interaction');},
 		get Sound() {return getModule('Sound');},
+
+		get File() {return getModule('File');}, 
+		//get Menu() {return getModule('Menu');},
 		
 		get View() {return getModule('View');},
+		get WelcomeView() {return getModule('WelcomeView');},
+		get TutorialView() {return getModule('TutorialView');},
 		get RunView() {return getModule('RunView');},
 		get GalleryView() {return getModule('GalleryView');}, 
 		get SceneView (){return getModule('SceneView');},
@@ -27,8 +32,6 @@ AliceEditor = (function(){
 		get ILibraryView() {return getModule('ILibraryView');},
 		get InteractionView() {return getModule('InteractionView');}, 
 		get GameSettingView() {return getModule('GameSettingView');},
-		get File() {return getModule('File');}, 
-		//get Menu() {return getModule('Menu');},
 	};
 })();
 

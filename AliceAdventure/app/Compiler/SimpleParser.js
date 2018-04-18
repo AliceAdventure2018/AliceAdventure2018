@@ -22,8 +22,8 @@ Parser = function (jsonPath, buildPath){
 	this.interactionList=this.game.interactionList;
 	this.stateList = this.game.stateList;
 	this.soundList = this.game.soundList;
-	this.scalarX = this.settings.resWidth / this.projectData.viewWidth;
-	this.scalarY = this.settings.resHeight / this.projectData.viewHeight;
+	this.scalarX = this.settings.resWidth / this.game.projectData.viewWidth;
+	this.scalarY = this.settings.resHeight / this.game.projectData.viewHeight;
 	this.iTree = new ITree();
 
 }

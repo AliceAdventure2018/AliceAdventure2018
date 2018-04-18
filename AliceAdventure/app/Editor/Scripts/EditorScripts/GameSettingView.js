@@ -33,7 +33,7 @@ GameSettingView.prototype.InitView = function(){
 			projLoaded: false,
 			sceneOptions: null,
 			gridNumOptions: [0, 5, 6, 7, 8, 9, 10],
-			resOptions: [{w: 1280, h: 720}, {w: 640, h: 360}], 
+			resOptions: [{w: 1600, h: 1200}, {w: 1280, h: 960}, {w: 800, h: 600}, {w: 640, h: 480}], 
 			res: {w: null, h:null},
 			settings: null
 		}, 

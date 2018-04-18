@@ -42,12 +42,13 @@ SceneView.prototype.InitView = function(){
 	});
 	// Init app
 	this.app = new PIXI.Application({
-		width: 640,
+		width: 480,
 		height: 360, 
 		antialiasing: true, 
 		backgroundcolor: 0xFFFFFF
 	});
 	document.getElementById('canvas-container').appendChild(this.app.view);
+	GameProperties.SetViewSize(480, 360);
 
 	// events
 	Event.AddListener('reload-project', ()=>{this.ReloadView();});
@@ -62,12 +63,18 @@ SceneView.prototype.ReloadView = function(){
 		this.vModel.projectLoaded = false;
 	} else { // load current project
 		this.vModel.projectLoaded = true;
-		for (let i in GameProperties.instance.sceneList){
-			this.app.stage.addChild(GameProperties.instance.sceneList[i].container);
-		}
-		for (let i in GameProperties.instance.objectList){
-			GameProperties.instance.objectList[i].bindScene.container.addChild(GameProperties.instance.objectList[i].sprite);
-		}
+		GameProperties.instance.sceneList.forEach((scn)=>{
+			this.app.stage.addChild(scn.container);
+			if (scn.selected){
+				View.Selection.selectScene(scn);
+			}
+		});
+		GameProperties.instance.objectList.forEach((obj)=>{
+			obj.bindScene.container.addChild(obj.sprite);
+			if (obj.selected){
+				View.Selection.selectObject(obj);
+			}
+		});
 	}
 };
 
@@ -75,9 +82,10 @@ SceneView.prototype.AddObject = function(_objInfo){
 	if (View.Selection.scene == null) return;
 	var _bindScene = View.Selection.scene;
 	var _obj = SceneObject.AddObject(_objInfo, _bindScene, this.app.screen.width / 2, this.app.screen.height / 2);
+	_bindScene.container.addChild(_obj.sprite);
+	//window.setTimeout(()=>{this.SelectObject(_obj);}, 10);
 	this.SelectObject(_obj);
 	//this.app.stage.addChild(_obj.sprite);
-	_bindScene.container.addChild(_obj.sprite);
 };
 
 SceneView.prototype.AddScene = function(_name = null){

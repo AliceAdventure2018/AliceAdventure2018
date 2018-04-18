@@ -2,6 +2,7 @@
 
 const {PIXI, FS, ID, Debug, Event} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
+const Resizer = require('./Resizer');
 
 // class
 var SceneObject;
@@ -43,33 +44,9 @@ SceneObject.LoadObject = function(_data){ // I AM HERE
 	return _obj;
 };
 
-/*SceneObject.Selection = { 
-	objects: [], // Reference
-	set: function(_obj){
-		this.objects = [_obj];
-		Event.Broadcast("update-selected-object");
-	}, 
-	add: function(_obj){
-		this.objects.push(_obj);
-		Event.Broadcast("update-selected-object");
-	},
-	remove: function(_obj){
-		var i = this.objects.indexOf(_obj);
-		if (i >= 0) {
-			this.objects.splice(i, 1);
-			Event.Broadcast("update-selected-object");
-		} else {
-			Debug.LogWarning("Trying to remove missing selection object: " + _obj.name);
-		}
-	},
-	clear: function(){
-		this.objects = [];
-		Event.Broadcast("update-selected-object");
-	},
-	contain: function(_obj){
-		return (this.objects.indexOf(_obj) >= 0);
-	}
-};*/
+SceneObject.SetViewSize = function(w, h){
+	viewW = w; viewH = h;
+};
 
 var pixiFilters = { // private
 	outlineFilterBlue: new PIXI.filters.OutlineFilter(4, 0x99ff99), 
@@ -144,13 +121,15 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 };
 
 SceneObject.prototype.SelectOff = function(){
-	//this.sprite.alpha = 1;
+	this.selected = false;
 	this.sprite.filters = [];
+	Resizer.hideHelper(this.sprite);
 };
 
 SceneObject.prototype.SelectOn = function(){
-	//this.sprite.alpha = 0.9; // TODO
+	this.selected = true;
 	this.sprite.filters = [pixiFilters.outlineFilterBlue];
+	//Resizer.showHelper(this.sprite);	
 };
 
 SceneObject.prototype.OnPointerDown = function(_event){
@@ -163,6 +142,7 @@ SceneObject.prototype.OnPointerDown = function(_event){
 	if (this.dragAllowed){
 		this.drag.on = true;
 		this.drag.eventData = _event.data;
+		Resizer.showHelper(this.sprite);
 	}
 };
 
@@ -172,6 +152,7 @@ SceneObject.prototype.OnPointerMove = function(_event){
 		var newPosition = this.drag.eventData.getLocalPosition(this.sprite.parent);
 		this.sprite.x = Math.floor(newPosition.x);
 		this.sprite.y = Math.floor(newPosition.y);
+		Resizer.updateBox();
 	}
 };
 
@@ -188,9 +169,9 @@ SceneObject.prototype.toJsonObject = function(){
 		name: this.name, 
 		src: this.src, 
 		//isDefault: this.isDefault, 
-		pos: {x: Number(this.sprite.x), y: Number(this.sprite.y)}, 
-		anchor: {x: Number(this.sprite.anchor.x), y: Number(this.sprite.anchor.y)}, 
-		scale: {x: Number(this.sprite.scale.x), y: Number(this.sprite.scale.y)}, 
+		pos: {x: this.sprite.x, y: this.sprite.y}, 
+		anchor: {x: this.sprite.anchor.x, y: this.sprite.anchor.y}, 
+		scale: {x: this.sprite.scale.x, y: this.sprite.scale.y}, 
 		active: this.sprite.visible, 
 		clickable: this.clickable, 
 		draggable: this.draggable, 

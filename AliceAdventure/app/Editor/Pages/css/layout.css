@@ -5,6 +5,18 @@ button{
     background: none;
 }
 
+table {
+    text-align: left !important;
+    background: #fff !important;
+    width:1200px !important;
+    margin-left: 1%;
+    margin-top:1%;
+}
+
+td, th {
+    max-width: 100px !important;
+}
+
 i {
   border: solid black;
   opacity: 0.5;
@@ -104,23 +116,17 @@ input:checked + .slider:before {
     float: right;
     position: relative;
     display: inline-block;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-.dropbtn{
-    float:right;
 
 }
+
 .dropdown-content {
+    cursor: pointer;
     float: right;
     display: none;
     position: absolute;
     top:40px;
     background-color: #f1f1f1;
-    min-width: 160px;
+    min-width: 120px;
     overflow: auto;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
@@ -214,7 +220,7 @@ input:checked + .slider:before {
 
 #add-interaction{
     position: absolute;
-    margin:10px;
+    margin:30px;
     bottom:0;
     right: 0;
     float: right;
@@ -324,9 +330,10 @@ input:checked + .slider:before {
     
 }
 
-#object-list button:focus{
+.object-selected{
    background-color: #fff;
-   outline-color: #aaa;
+   border-color: #aaa;
+   border: solid;
 }
 
 #object-list button{
@@ -514,7 +521,7 @@ input:checked + .slider:before {
     bottom:0; /* 130 + 6 */
     left: 0;
     right: 0;
-    background-color: #fff;
+    background-color: #eee;
     overflow: auto;
 }
 
@@ -526,6 +533,7 @@ input:checked + .slider:before {
     float:right;
     margin-top:7px;
     margin-right: 7px;
+
 
 }
 #interaction-box-minimize:hover{
@@ -549,12 +557,12 @@ input:checked + .slider:before {
     width: 300px;
      display: inline-block;
     */
-    
+    box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.2);
     position: absolute;
     border-radius: 10px;
     border-width: thin;
     border-style: solid;
-    border-color: #aaa;
+    border-color: #ccc;
     background-color: #fff;
 }
 
@@ -687,7 +695,7 @@ input:checked + .slider:before {
     list-style: none;
     margin: 10px;
     padding: 10px;
-    max-height: 200px;
+    max-height: 300px;
     overflow: auto;
 
 }
@@ -703,7 +711,7 @@ input:checked + .slider:before {
     list-style: none;
     margin: 10px;
     padding: 10px;
-    max-height: 400px;
+    max-height: 600px;
     overflow: auto;
 
 }
@@ -749,7 +757,7 @@ input:checked + .slider:before {
 
 #design-property{
     position: absolute;
-    height: 350px;
+    height: 380px;
     bottom: 0;
     left: 0;
     right: 0;
@@ -910,15 +918,6 @@ input:checked + .slider:before {
     cursor: e-resize;
 }
 
-#code-side-resizer{
-    background-color: #EEE;
-    position: absolute;
-    top: 40px;
-    bottom: 0;
-    right: 250px;
-    width: 6px;
-    cursor: e-resize;
-}
 
 #design-editor-resizer {
     position: absolute;
@@ -930,43 +929,19 @@ input:checked + .slider:before {
     background-color: #EEE;
     cursor: n-resize;
 }
-#code-library-resizer {
-    background-color: #EEE;
-    position: absolute;
-    top: 40px;
-    bottom: 0;
-    left: 220px;
-    width: 6px;
-    cursor: e-resize;
-}
+
 #design-property-resizer {
     position: absolute;
     height: 6px;
-    bottom: 350px;
-    left: 0;
-    right: 0;
-    background-color: #EEE;
-    cursor: n-resize;
-}
-#code-property-resizer {
-    position: absolute;
-    height: 6px;
-    bottom: 350px;
+    bottom: 380px;
     left: 0;
     right: 0;
     background-color: #EEE;
     cursor: n-resize;
 }
 
-#code-editor-resizer {
-    position: absolute;
-    height: 6px;
-    bottom: 450px;
-    left: 0;
-    right: 0;
-    background-color: #EEE;
-    cursor: n-resize;
-}
+
+
 
 #gallery-list-resizer:hover,
 #gallery-resizer:hover,
