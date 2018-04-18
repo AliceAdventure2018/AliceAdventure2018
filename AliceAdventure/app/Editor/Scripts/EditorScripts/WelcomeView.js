@@ -30,8 +30,14 @@ WelcomeView.prototype.InitView = function(){
 		data: {
 		}, 
 		methods: {
-			newProj: ()=>{File.NewEmptyProject(()=>{IPC.send('new-proj');});}, 
-			openProj: ()=>{File.OpenProject(()=>{IPC.send('open-proj');});}, 
+			newProj: ()=>{
+				File.NewEmptyProject(()=>{
+					File.SaveAsNewProject((path)=>{
+						IPC.send('new-proj', path);
+					});
+				});
+			}, 
+			openProj: ()=>{File.OpenProject((path)=>{IPC.send('open-proj', path);});}, 
 			exit: ()=>{IPC.send('exit');}
 		}
 	});

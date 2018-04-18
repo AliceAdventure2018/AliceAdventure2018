@@ -1,6 +1,6 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 
-const path = require('path')
+const PATH = require('path')
 const url = require('url')
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -16,22 +16,19 @@ function createWelWin () {
     show: false
   });
   welWin.loadURL(url.format({
-    pathname: path.join(__dirname, 'Editor/Pages/welcome.html'),
+    pathname: PATH.join(__dirname, 'Editor/Pages/welcome.html'),
     protocol: 'file:',
     slashes: true,
   }));
   welWin.once('ready-to-show', ()=>{
   	welWin.show();
   });
-  welWin.webContents.on('did-finish-load', () => {
-	welWin.webContents.send('set-editor', {A: 1, B: ()=>{return 1}});
-  });
   welWin.on('closed', ()=>{
   	welWin = null;
   });
 }
 
-function createTutWin(){
+function createTutWin(path){
 	tutWin = new BrowserWindow({
 	  	width: 1280, 
 	  	height: 720,
@@ -39,19 +36,20 @@ function createTutWin(){
 	    show: false
   	})
   	tutWin.loadURL(url.format({
-	    pathname: path.join(__dirname, 'Editor/Pages/tutorial.html'),
+	    pathname: PATH.join(__dirname, 'Editor/Pages/tutorial.html'),
 	    protocol: 'file:',
 	    slashes: true,
   	}));
   	tutWin.once('ready-to-show', ()=>{
   		tutWin.show();
+  		tutWin.webContents.send('load-file', path);
   	});
   	tutWin.on('closed', ()=>{
     	tutWin = null;
   	});
 }
 
-function createMainWin(){
+function createMainWin(path){
   mainWin = new BrowserWindow({
   	width: 1920, 
   	height: 1080,
@@ -59,12 +57,13 @@ function createMainWin(){
     show: false
   })
   mainWin.loadURL(url.format({
-    pathname: path.join(__dirname, 'Editor/Pages/index.html'),
+    pathname: PATH.join(__dirname, 'Editor/Pages/index.html'),
     protocol: 'file:',
     slashes: true,
   }));
   mainWin.once('ready-to-show', ()=>{
   	mainWin.show();
+  	mainWin.webContents.send('load-file', path);
   });
   mainWin.on('closed', ()=>{
     mainWin = null;
@@ -79,17 +78,17 @@ ipcMain.on('get-editor', (event, data)=>{
 });
 
 ipcMain.on('new-proj', (event, data)=>{
-	if (tutWin == null)	createTutWin();
+	if (tutWin == null)	createTutWin(data);
 	if (welWin != null) welWin.close();
 });
 
 ipcMain.on('open-proj', (event, data)=>{
-	if (mainWin == null) createMainWin();
+	if (mainWin == null) createMainWin(data);
 	if (welWin != null) welWin.close();
 });
 
 ipcMain.on('complete-tut', (event, data)=>{
-	if (mainWin == null) createMainWin();
+	if (mainWin == null) createMainWin(data);
 	if (tutWin != null) tutWin.close();
 });	
 
@@ -102,7 +101,7 @@ ipcMain.on('exit', (event, data)=>{
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createMainWin)
+app.on('ready', createWelWin)
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

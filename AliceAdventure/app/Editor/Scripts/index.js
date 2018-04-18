@@ -4,14 +4,9 @@ const IPC = require('electron').ipcRenderer;
 //const AliceEngine = require('../../Engine/AliceEngine');
 
 let AliceEditor = require('../Scripts/AliceEditor');
-// = (function(){
-//	let e = require('../Scripts/AliceEditor');
-//	console.log(ipcRenderer.sendSync('get-editor', e));
-//	return ipcRenderer.sendSync('get-editor', e);
-//})();
 
-IPC.on('set-editor', (event, data)=>{
-	AliceEditor = data;
+IPC.on('load-file', (event, data)=>{
+	AliceEditor.File.OpenFromPath(data);
 });
 
 // utilities

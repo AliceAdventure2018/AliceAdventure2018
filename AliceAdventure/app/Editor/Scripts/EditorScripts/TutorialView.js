@@ -1,6 +1,7 @@
 'use strict';
 
 const {IPC} = require('./Utilities/Utilities');
+const GameProperties = require('./GameProperties');
 const File = require('./File');
 const View = require('./View');
 
@@ -28,8 +29,13 @@ TutorialView.prototype.InitView = function(){
 	this.vModel = new Vue({
 		el: '#' + this.bindElementID,
 		data: {
+			sceneList: null,
+			objectList: null,
 		}, 
 		methods: {
+			addScene: ()=>{},
+			addObject: ()=>{}, 
+
 			newProj: ()=>{File.NewEmptyProject(()=>{/*IPC.send('new-proj');*/});}, 
 			openProj: ()=>{File.OpenProject(()=>{IPC.send('open-proj');});}, 
 			exit: ()=>{IPC.send('exit');}
@@ -39,6 +45,7 @@ TutorialView.prototype.InitView = function(){
 
 TutorialView.prototype.ReloadView = function(){
 	View.prototype.ReloadView.apply(this); // call super method
+	if ()
 };
 
 module.exports = TutorialView;

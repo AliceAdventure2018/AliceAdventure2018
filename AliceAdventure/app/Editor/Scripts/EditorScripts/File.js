@@ -94,7 +94,7 @@ File.NewProject = function(_template = null){ // TODO: load from template
 	
 };
 
-File.SaveProject = function(){
+File.SaveProject = function(callback){
 	if (File.instance == null){return;}
 	if (File.instance.path == null){ // No path saved
 		// Open file selector
@@ -106,9 +106,15 @@ File.SaveProject = function(){
 		}, (_path)=>{ // callback
 			if (_path == null) return;
 			File.SaveToPath(_path);
+			if (typeof callback == "function"){
+				callback(_path);
+			}
 		});
 	} else { // Has path saved
 		File.SaveToPath(File.instance.path);
+		if (typeof callback == "function"){
+			callback();
+		}
 	}
 };
 
@@ -125,7 +131,7 @@ File.SaveAsNewProject = function(callback){
 		if (_path == null) return;
 		File.SaveToPath(_path);
 		if (typeof callback == "function"){
-			callback();
+			callback(_path);
 		}
 	});
 }
@@ -143,7 +149,7 @@ File.OpenProject = function(callback){
 			if (_paths == null) return;
 			File.OpenFromPath(_paths[0]);
 			if (typeof callback == "function"){
-				callback();
+				callback(_paths[0]);
 			}
 		});	
 	}
