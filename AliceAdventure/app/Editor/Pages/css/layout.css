@@ -330,9 +330,10 @@ input:checked + .slider:before {
     
 }
 
-#object-list button:focus{
+.object-selected{
    background-color: #fff;
-   outline-color: #aaa;
+   border-color: #aaa;
+   border: solid;
 }
 
 #object-list button{

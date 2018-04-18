@@ -240,12 +240,12 @@
         				<!-- loop all scenes and objects 
         				<label class="object_label" v-html="scene.name"></label>
         				<input type="checkbox" /> -->
-        				<i class="down" onclick="showListView(event)"></i><button v-html="scene.name" v-on:click="onSceneSelect(scene)"></button>
+        				<i class="down" onclick="showListView(event)"></i><button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)"></button>
       					<ol class="object_label" style="display:block;">
       						<li v-for="object in objectList" v-on:click="onObjectSelect(object)" v-if="object.bindScene.id == scene.id">
       							<!--<label class="object_label" v-html="object.name"></label>
       							<input type="checkbox"/>-->
-      							<button v-html="object.name" v-on:dblclick='deleteObject(object)'></button>
+      							<button v-bind:class="{'object-selected': object.selected}" v-html="object.name" v-on:dblclick='deleteObject(object)'></button>
       						</li>						
       					</ol>
       				</li>
@@ -279,7 +279,7 @@
 		<div id="second-column">
 			<div id="interaction-editor">
         <h6 class="window-title">INTERACTION EDITOR</h6>
-		    <div  class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' max='true'>
+		    <div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' max='true'>
 
 				<div>
           <!--span ondblclick="editInPlace(event)" class="editInPlace" >Title</span-->
