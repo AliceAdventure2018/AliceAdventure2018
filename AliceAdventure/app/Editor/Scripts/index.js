@@ -1,8 +1,18 @@
 'use strict';
 
-const {ipcRenderer} = require('electron');
+const IPC = require('electron').ipcRenderer;
 //const AliceEngine = require('../../Engine/AliceEngine');
-const AliceEditor = require('../Scripts/AliceEditor');
+
+let AliceEditor = require('../Scripts/AliceEditor');
+// = (function(){
+//	let e = require('../Scripts/AliceEditor');
+//	console.log(ipcRenderer.sendSync('get-editor', e));
+//	return ipcRenderer.sendSync('get-editor', e);
+//})();
+
+IPC.on('set-editor', (event, data)=>{
+	AliceEditor = data;
+});
 
 // utilities
 function isNumberOr(_value, _default){
@@ -20,6 +30,11 @@ function isStringOr(_value, _default){
 // welcome page
 function InitWelcomePage(){
 	var welcomeView = AliceEditor.WelcomeView.NewView('welcome-view');
+}
+
+// tutorial page
+function InitTutorialPage(){
+	var tutorialView = AliceEditor.TutorialView.NewView('tutorial-view');
 }
 
 // variables

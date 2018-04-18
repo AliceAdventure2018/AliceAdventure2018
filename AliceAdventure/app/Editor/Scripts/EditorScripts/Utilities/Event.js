@@ -27,8 +27,6 @@ Event = (function(){
 			else
 				Debug.LogError("Parameter added to event \"" + _event + "\" is not a function. ");
 		},
-		$on: (_event, _function)=>{this.AddListener(_event, _function);}, 
-		$emit: (_event, _parameters)=>{this.Broadcast(_event, _parameters);}
 	}
 })();
 

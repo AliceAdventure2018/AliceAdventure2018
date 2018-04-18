@@ -23,6 +23,7 @@ AliceEditor = (function(){
 		
 		get View() {return getModule('View');},
 		get WelcomeView() {return getModule('WelcomeView');},
+		get TutorialView() {return getModule('TutorialView');},
 		get RunView() {return getModule('RunView');},
 		get GalleryView() {return getModule('GalleryView');}, 
 		get SceneView (){return getModule('SceneView');},

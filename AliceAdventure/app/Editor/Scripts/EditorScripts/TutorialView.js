@@ -5,24 +5,24 @@ const File = require('./File');
 const View = require('./View');
 
 // class
-var WelcomeView;
+var TutorialView; // working on this
 
 // variables
-WelcomeView = function(_bindElementID, _height = -1, _width = -1){
-	View.call(this, "WelcomeView", _height, _width, _bindElementID);
+TutorialView = function(_bindElementID, _height = -1, _width = -1){
+	View.call(this, "TutorialView", _height, _width, _bindElementID);
 	this.vModel = null;
 };
-WelcomeView.prototype = new View();
+TutorialView.prototype = new View();
 
 // static
-WelcomeView.NewView = function(_elementID){
-	var view = new WelcomeView(_elementID);
+TutorialView.NewView = function(_elementID){
+	var view = new TutorialView(_elementID);
 	view.InitView();
 	return view;
 };
 
 // functions
-WelcomeView.prototype.InitView = function(){
+TutorialView.prototype.InitView = function(){
 	View.prototype.InitView.apply(this); // call super method
 	// init data binding
 	this.vModel = new Vue({
@@ -30,15 +30,15 @@ WelcomeView.prototype.InitView = function(){
 		data: {
 		}, 
 		methods: {
-			newProj: ()=>{File.NewEmptyProject(()=>{IPC.send('new-proj');});}, 
+			newProj: ()=>{File.NewEmptyProject(()=>{/*IPC.send('new-proj');*/});}, 
 			openProj: ()=>{File.OpenProject(()=>{IPC.send('open-proj');});}, 
 			exit: ()=>{IPC.send('exit');}
 		}
 	});
 };
 
-WelcomeView.prototype.ReloadView = function(){
+TutorialView.prototype.ReloadView = function(){
 	View.prototype.ReloadView.apply(this); // call super method
 };
 
-module.exports = WelcomeView;
+module.exports = TutorialView;
