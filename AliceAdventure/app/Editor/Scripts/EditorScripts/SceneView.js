@@ -63,12 +63,18 @@ SceneView.prototype.ReloadView = function(){
 		this.vModel.projectLoaded = false;
 	} else { // load current project
 		this.vModel.projectLoaded = true;
-		for (let i in GameProperties.instance.sceneList){
-			this.app.stage.addChild(GameProperties.instance.sceneList[i].container);
-		}
-		for (let i in GameProperties.instance.objectList){
-			GameProperties.instance.objectList[i].bindScene.container.addChild(GameProperties.instance.objectList[i].sprite);
-		}
+		GameProperties.instance.sceneList.forEach((scn)=>{
+			this.app.stage.addChild(scn.container);
+			if (scn.selected){
+				View.Selection.selectScene(scn);
+			}
+		});
+		GameProperties.instance.objectList.forEach((obj)=>{
+			obj.bindScene.container.addChild(obj.sprite);
+			if (obj.selected){
+				View.Selection.selectObject(obj);
+			}
+		});
 	}
 };
 

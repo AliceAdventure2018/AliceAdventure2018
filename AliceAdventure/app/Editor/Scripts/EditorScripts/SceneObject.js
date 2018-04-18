@@ -122,13 +122,13 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 };
 
 SceneObject.prototype.SelectOff = function(){
-	//this.sprite.alpha = 1;
+	this.selected = false;
 	this.sprite.filters = [];
 	Resizer.hideHelper(this.sprite);
 };
 
 SceneObject.prototype.SelectOn = function(){
-	//this.sprite.alpha = 0.9; // TODO
+	this.selected = true;
 	this.sprite.filters = [pixiFilters.outlineFilterBlue];
 	//Resizer.showHelper(this.sprite);	
 };

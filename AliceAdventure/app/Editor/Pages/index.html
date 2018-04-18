@@ -11,12 +11,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="css/layout.css">	 
 	<script>document.write('<base href="' + document.location + '" />');</script>	 
-	<script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script> 
+	<!--script data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js" data-require="angular.js@1.2.x"></script--> 
 	 <script src="js/app.js"></script>
 	<script src="js/resizer.js"></script>	
 	<script src="js/interact.js"></script>	  
 	<script src="js/drag.js"></script>	 
 	<script src="js/dropdown.js"></script>	
+	<script src="js/hierarchy.js"></script>
+	<script src="js/switch.js"></script>
+	 <script type="text/javascript" src="js/switch.js"> </script>
 	<link rel="stylesheet" href="../../Resources/bootstrap.min.css"/>
 	<script type="text/javascript" src="../../Resources/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" src="../../Resources/modal.js"></script>
@@ -62,7 +65,7 @@
     	<a class="dropdown-item" onclick="AliceEditor.File.OpenProject()"> Open project</a>
     	<a class="dropdown-item" onclick="AliceEditor.File.SaveProject()"> Save project</a>
     	<a class="dropdown-item" onclick="AliceEditor.File.BuildProject()"> Build project</a>
-    	<a class="dropdown-item" onclick="AliceEditor.File.RunProject()"> Run project</a>
+    	<a class="dropdown-item" data-toggle="modal" data-target="#run-view" onclick="AliceEditor.File.RunProject()"> Run project</a>
     </div>
 	</div>
     
@@ -137,81 +140,10 @@
 		}
 	</script>
 
-	<script type="text/javascript">
-		function switchGalleryView() {
-				var x = document.getElementById("gallery");
-				var y = document.getElementById("object-list");
 
-				if (x.style.display === "none" || y.style.display ==="block") {
-						x.style.display = "block";
-						y.style.display = "none";
-				} else {
-					
-				}
-		}
-
-		function switchListView() {
-				var y = document.getElementById("gallery");
-				var x = document.getElementById("object-list");
-
-				if (x.style.display === "none" || y.style.display ==="block") {
-						x.style.display = "block";
-						y.style.display = "none";
-				} else {
-					
-				}
-		}
-
-		function switchCategoryView() {
-			
-			/*if (document.addEventListener){}else if (document.attachEvent) {  }
-			*/
-			
-			document.addEventListener("click", function(event){
-
-				var selected = document.getElementsByClassName("selected");
-				var unselecteds = document.getElementsByClassName("unselecteds");
-
-				for(i=0;i<selected.length;i++){
-					selected[i].className ="unselecteds";
-				}
-				
-				var targetElement = event.target || event.srcElement;
-				if(targetElement.tagName === 'A'){
-				targetElement.className = "selected";
-				unselecteds = document.getElementsByClassName("unselecteds");
-				}
-
-				if(selected.length === 1){
-
-					var assetName = targetElement.getAttribute("aria-controls");
-					document.getElementById(assetName).style.display = "block";
-					//console.log(document.getElementById(assetName));
-
-					var assetName_unselected = [];
-
-
-					if(unselecteds.length !== null){
-						for(j=0; j<unselecteds.length;j++){
-							assetName_unselected[j]= unselecteds[j].getAttribute("aria-controls");
-						}
-
-						for(t=0; t<unselecteds.length;t++){
-							document.getElementById(assetName_unselected[t]).style.display = "none";
-						} 
-
-						assetName_unselected = null;
-						unselecteds = null;
-						
-					//console.log(targetElement.getAttribute("aria-controls"));
-					}
-				} 
-			});
-		}
-	</script>
 
 				<!-- Modal -->
-  <div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
+  <div class="modal" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" id="game-setting">
       <div class="modal-content">
         <div class="modal-header">
@@ -248,7 +180,9 @@
 			<div id="design-editor">
         		<h6 class="window-title">SCENE EDITOR</h6>        		
 				<!--DO NOT DELETE THIS, for canvas initialization. Can add style for it-->
-				<div id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'></div>
+				<div style="text-align: center; margin-top:20px;" id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'>
+					
+				</div>
 
 				<div id="add-scene">
 					<button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene()'> Add Scene</button></div>
@@ -261,7 +195,7 @@
             <h6 class="window-title" >GALLERY</h6>
       			<div id="tabList">
         			<ul >
-    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="unselecteds">
+    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="selected">
     						Images</a></li>
     						<li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
           			<!--<div class="tab-list" id="tabList">
@@ -269,7 +203,7 @@
               </ul>
   		      </div>
 						<div id="tabContent">
-							<div id="door-asset" style="display: none;">
+							<div id="door-asset" style="display: block;">
 								<div class="assets">
 									<ul>
 									<!-- bind the gallery data -->
@@ -296,55 +230,7 @@
 						</div>
 		      </div>
 
-<script type="text/javascript" >
-			function showListView(event) {
-				//document.addEventListener("click", function(event){
-					var targetElement = event.target || event.srcElement;
-					var parentTargetElement = targetElement.parentElement;
-					console.log(parentTargetElement.nodeName);
-					var childTargetElements = parentTargetElement.childNodes;
-					var childTargetElement;
-					var childTargetElementLi;
 
-					var icon;
-	
-
-					for(k=0;k<parentTargetElement.childNodes.length;k++){
-						if(parentTargetElement.childNodes[k].tagName === 'I')
-						icon = parentTargetElement.childNodes[k];
-					}
-					
-
-					if(childTargetElements !== null){
-						for(t=0; t<childTargetElements.length; t++){
-							if(childTargetElements[t].tagName === 'OL'){
-								childTargetElement = childTargetElements[t];
-							} 
-						}
-
-						
-					}
-
-					for(j=0; j<childTargetElement.childNodes.length; j++){
-						if(childTargetElement.childNodes[j].tagName === 'LI'){
-							childTargetElementLi = childTargetElement.childNodes[j];
-						}
-					}
-
-					
-					if(childTargetElementLi !== null){ 
-							if(childTargetElement.style.display === "none"){
-								icon.className = "down";
-								childTargetElement.style.display = "block";
-							}else if(childTargetElement.style.display === "block"){
-										childTargetElement.style.display = "none";
-										icon.className = "right";
-							} 
-					}
-					
-				//});
-			}
-		</script>
 
       		<div id="object-list" >
       			<h6 class="window-title" >OBJECT LIST</h6>
@@ -354,12 +240,12 @@
         				<!-- loop all scenes and objects 
         				<label class="object_label" v-html="scene.name"></label>
         				<input type="checkbox" /> -->
-        				<i class="down" onclick="showListView(event)"></i><button v-html="scene.name" v-on:click="onSceneSelect(scene)"></button>
+        				<i class="down" onclick="showListView(event)"></i><button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)"></button>
       					<ol class="object_label" style="display:block;">
       						<li v-for="object in objectList" v-on:click="onObjectSelect(object)" v-if="object.bindScene.id == scene.id">
       							<!--<label class="object_label" v-html="object.name"></label>
       							<input type="checkbox"/>-->
-      							<button v-html="object.name" v-on:dblclick='deleteObject(object)'></button>
+      							<button v-bind:class="{'object-selected': object.selected}" v-html="object.name" v-on:dblclick='deleteObject(object)'></button>
       						</li>						
       					</ol>
       				</li>
@@ -393,10 +279,11 @@
 		<div id="second-column">
 			<div id="interaction-editor">
         <h6 class="window-title">INTERACTION EDITOR</h6>
-		    <div  class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' max='true'>
+		    <div class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' max='true'>
 
 				<div>
-          <span ondblclick="editInPlace(event)" class="editInPlace">Title</span>
+          <!--span ondblclick="editInPlace(event)" class="editInPlace" >Title</span-->
+          <span style="cursor:text;" class="editInPlace" onclick="editInPlace(event)">Title</span>
           <a v-on:click="deleteInteraction(ntra)"><img id="interaction-box-close" src="src/close.png"/></a>
           <a onclick="minimizeWindow(event)"><img id="interaction-box-minimize" min-src="src/minimize.png" max-src="src/maximize.png" src="src/minimize.png"></a>
           
@@ -594,7 +481,7 @@
 					<!-- bind info -->
 					<div v-if='showObject' class="property-info">
 						<ul>
-							<li><span ondblclick="//editInPlace(event)" class="editInPlace"/></span><input style="width:100px" v-model='object.name'/></li>
+							<li><span contenteditable="true"/></span><input style="width:100px" v-model='object.name'/></li>
 
 							<!--<input v-model='bindObj.name'/>-->
 							<li>
@@ -635,90 +522,27 @@
 				resizer-height="6" 
 				resizer-top="#interaction-library" 
 				resizer-bottom="#design-property"
-				resizer-min="350"
+				resizer-min="380"
 				>
 			</div>
 		</div>
-		<div style="position:fixed;top:30%;left:30%" id="run-view" v-if='showRunView'>
-			<div style="text-align: center"><button v-on:click='stop();'>Stop</button></div>
-			<webview id="foo" v-bind:src='src' style="display:inline-flex; width:640px; height:480px"></webview>
+		<div  class="modal"  tabindex="-1" role="dialog" id="run-view" v-if='showRunView'>
+			<div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 80%;">
+			<div class="modal-content" style="text-align: center">
+				<div class="modal-header">
+			<div ><button class="close" data-dismiss="modal" aria-label="Close" v-on:click='stop();'>stop</button></div>
+		</div>
+		<div class="modal-body">
+			<webview id="foo" v-bind:src='src' style="display:inline-flex; margin:0 !important; padding:0; width: 640px; height: 480px; overflow:visible !important;"></webview><!-- 640/480 -->
+		</div>
+			</div>
+			</div>
 		</div>		
 
 	</div> <!-- end of design view -->
 	<script>InitAllViews();</script>
 
-<!--
-	<div id="code-view" style="display: none;">
 
-		<div id="code-library">
-			
-				<h6 class="window-title">CODE LIBRARY</h6>
-		</div>
-	
-		<div id="code-content">
-
-			<div id="code-preview">
-				<h6 class="window-title">PREVIEW</h6></div>
-	
-			<div id="code-editor">
-				<h6 class="window-title">CODE EDITOR</h6></div>
-	
-			<div id="code-editor-resizer" 
-				resizer="horizontal" 
-				resizer-height="6" 
-				resizer-top="#code-preview" 
-				resizer-bottom="#code-editor">
-			</div>
-	
-		</div>
-
-		<div id="code-library-resizer" 
-			resizer="vertical-left" 
-			resizer-width="6" 
-			resizer-left="#code-library" 
-			resizer-right="#code-content"
-			resizer-max="400">
-		</div>
-		<div id="code-side-resizer" 
-			resizer="vertical-right" 
-			resizer-width="6" 
-			resizer-left="#code-content" 
-			resizer-right="#code-side-common"
-			resizer-max="400">
-		</div>
-
-
-		<div id="code-side-common">
-			
-			<div id="code-object-list">
-			 
-				<h6 class="window-title">OBJECTS IN THE SCENES</h6>
-			</div>
-			<div id="code-property">
-
-				<h6 class="window-title">PROPERTIES</h6>
-			</div>
-			<div id="code-property-resizer" 
-				resizer="horizontal" 
-				resizer-height="6" 
-				resizer-top="#code-object-list" 
-				resizer-bottom="#code-property">
-			</div>
-		</div>
-
-
-	</div>  end of code view -->
-
-		
-	
-		
-
-		
-
-		
-
-
-	
 	
 	<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

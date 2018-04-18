@@ -44,29 +44,57 @@ File.tempJsonObj = {
 	}
 };
 
-File.NewProject = function(_template = null){ // TODO: load from template
-	if (File.instance != null){ // have opened proj
-		File.CloseProject();
+File.NewEmptyProject = function(callback){ // TUT
+	let newEmpty = function(){
+		PROMPT({
+			title: "New project", 
+			label: "Give it a name: ", 
+			value: "my-project", 
+		}).then((_name)=>{
+			if (_name != null) {
+				new File(null, new GameProperties());
+				File.instance.gameProperties.settings.projectName = _name;			
+				Event.Broadcast("reload-project");
+				if (typeof callback == "function"){
+					callback(_name);
+				}
+			}
+		});
 	}
-	PROMPT({
-		title: "New project", 
-		label: "Input new project name: ", 
-		value: "untitled-project", 
-	}).then((_name)=>{
-		if (_name != null) {
-			new File(null, new GameProperties());
-			File.instance.gameProperties.settings.projectName = _name;
-			// Default settings
-			let firstScene = Scene.AddScene("First scene");
-			
-			Event.Broadcast("reload-project");
-
-			View.Selection.selectScene(firstScene);
-		}
-	});
+	if (File.instance != null){ // have opened proj
+		File.CloseProject(()=>{newEmpty();});
+	} else {
+		newEmpty();
+	}
 };
 
-File.SaveProject = function(){
+File.NewProject = function(_template = null){ // TODO: load from template
+	let func = function(){
+		PROMPT({
+			title: "New project", 
+			label: "Input project name: ", 
+			value: "my-project", 
+		}).then((_name)=>{
+			if (_name != null) {
+				new File(null, new GameProperties());
+				File.instance.gameProperties.settings.projectName = _name;
+				// Default settings
+				let firstScene = Scene.AddScene("First scene");
+				firstScene.SelectOn();
+				
+				Event.Broadcast("reload-project");
+			}
+		});
+	}
+	if (File.instance != null){ // have opened proj
+		File.CloseProject(()=>{func();});
+	} else{
+		func();
+	}
+	
+};
+
+File.SaveProject = function(callback){
 	if (File.instance == null){return;}
 	if (File.instance.path == null){ // No path saved
 		// Open file selector
@@ -78,9 +106,15 @@ File.SaveProject = function(){
 		}, (_path)=>{ // callback
 			if (_path == null) return;
 			File.SaveToPath(_path);
+			if (typeof callback == "function"){
+				callback(_path);
+			}
 		});
 	} else { // Has path saved
 		File.SaveToPath(File.instance.path);
+		if (typeof callback == "function"){
+			callback();
+		}
 	}
 };
 
@@ -97,37 +131,46 @@ File.SaveAsNewProject = function(callback){
 		if (_path == null) return;
 		File.SaveToPath(_path);
 		if (typeof callback == "function"){
-			callback();
+			callback(_path);
 		}
 	});
 }
 
-File.OpenProject = function(){
-	if (File.instance != null){ // have opened proj
-		File.CloseProject();
+File.OpenProject = function(callback){
+	let func = function(){
+		// Open file selector
+		ELECTRON.dialog.showOpenDialog({
+			title: 'Select project',  
+			defaultPath: '', 
+			buttonLabel: 'Select', 
+			filters: [{name: 'AliceAdventureProject', extensions: [File.extension]}], 
+			properties: ['openFile']
+		}, (_paths)=>{ // callback
+			if (_paths == null) return;
+			File.OpenFromPath(_paths[0]);
+			if (typeof callback == "function"){
+				callback(_paths[0]);
+			}
+		});	
 	}
-
-	// Open file selector
-	ELECTRON.dialog.showOpenDialog({
-		title: 'Select project',  
-		defaultPath: '', 
-		buttonLabel: 'Select', 
-		filters: [{name: 'AliceAdventureProject', extensions: [File.extension]}], 
-		properties: ['openFile']
-	}, (_paths)=>{ // callback
-		if (_paths == null) return;
-		File.OpenFromPath(_paths[0]);
-	});	
+	if (File.instance != null){ // have opened proj
+		File.CloseProject(()=>{func();});
+	} else {
+		func();
+	}
 };
 
-File.CloseProject = function(){
+File.CloseProject = function(callback){
 	if (File.instance == null){
 		return; // No project loaded
 	}
 	if (confirm("Are you sure to close this project? \nUnsaved changes may be lost. ")){ // test
 		File.instance = null;
 		GameProperties.instance = null;
-		Event.Broadcast("reload-project")
+		Event.Broadcast("reload-project");
+		if (typeof callback == "function"){
+			callback();
+		}
 	}
 }
 
