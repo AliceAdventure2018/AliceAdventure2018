@@ -56,7 +56,7 @@ Parser = function (jsonPath, buildPath){
 		if (interaction === false) return false;
 		else toReturn += interaction;
 
-		toReturn += 'myGame.start(0);'
+		toReturn += 'myGame.start(' + this.settings.startScene + ');'
 		return toReturn;
 	}
 
