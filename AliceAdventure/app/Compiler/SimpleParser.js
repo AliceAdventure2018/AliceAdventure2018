@@ -33,11 +33,14 @@ Parser = function (jsonPath, buildPath){
 	Parser.prototype.translate = function (callback){
 
 
-
+		if (this.settings.startScene < 0 || this.settings.inventoryGridNum < 5 || this.settings.resWidth < 100 || this.settings.resHeight < 100){
+			callback("Settings ERROR: start scene must be larger or equal to 0 \nthe number of grim in inventory must be larger or equal to 5");
+			return false;
+		}
 
 		var toReturn= '\n';
 		var sound = createSoundList.call(this,callback);
-		if (sound ===false) return false;
+		if (sound == false) return false;
 
 		toReturn += "//===============create Game==================\n" + createGame.call(this);
 		toReturn += "\n//===============add Sound==================\n" + sound;
@@ -46,14 +49,14 @@ Parser = function (jsonPath, buildPath){
 
 		toReturn += "\n//===============create Objects==================\n";
 		var mustHave = translateObjects.call(this,callback);
-		if (mustHave===false) {
+		if (mustHave== false) {
 			return false;
 		}
 		else toReturn += mustHave;
 
 		toReturn += "\n//================interaction=====================\n";
 		var interaction = interactionListParser.call(this, callback);
-		if (interaction === false) return false;
+		if (interaction == false) return false;
 		else toReturn += interaction;
 
 		toReturn += 'myGame.start(' + this.settings.startScene + ');'
@@ -352,7 +355,7 @@ Parser = function (jsonPath, buildPath){
 
 					var sceneIndex =findSceneByID.call(this,object.bindScene);
 					
-					if (sceneIndex === false){
+					if (sceneIndex == false){
 						callback("Compile ERROR: cannot find scene id = " + object.bindScene  + ".");
 						return false;
 					}else{
@@ -386,7 +389,7 @@ Parser = function (jsonPath, buildPath){
 			
 			var result = translateObj_properties.call(this, this.objectList[i], callback);
 			
-			if (result === false){
+			if (result == false){
 				return false;
 			}else{
 				toReturn += result  + '\n';
@@ -405,7 +408,7 @@ Parser = function (jsonPath, buildPath){
 		for(let i = 0; i< arrayLength;i++){
 			var result = interactionParser.call(this, this.interactionList[i], callback)+ '\n';
 
-			if (result === false){
+			if (result == false){
 				return false;
 			}else{
 				toReturn+= result;
@@ -461,11 +464,13 @@ Parser = function (jsonPath, buildPath){
 	function interactionListParser(callback){
 
 		var toReturn = "";
+		if (this.interactionList.length == 0) return toReturn;
+
 		for (let i = 0; i < this.interactionList.length; i++){
 			//add everyting to the tree
 			var result = interactionParser.call(this, this.interactionList[i], callback);
 
-			if (result === false) return false;
+			if (result == false) return false;
 		}
 
 		toReturn += this.iTree.getEverything();
@@ -479,28 +484,29 @@ Parser = function (jsonPath, buildPath){
 		var conditions = "";
 		var reactions = "";
 		var indent = 0;
-		if (interaction.hasOwnProperty("event") && interaction.hasOwnProperty("conditionList") && interaction.hasOwnProperty("reactionList")){
+		if (interaction.hasOwnProperty("eventList") && interaction.hasOwnProperty("conditionList") && interaction.hasOwnProperty("reactionList")){
 
 			var hasCondition = (interaction.conditionList.length > 0);
 
-			var event = eventParser.call(this, interaction.event, callback);
-			if (event === false) return false;
+			var eventList = eventListParser.call(this, interaction.eventList, callback);
+			if (eventList == false) return false;
 
 			
 			if (hasCondition){
 				indent++;
 				conditions  = conditionListParser.call(this, interaction.conditionList, callback);
-				if (conditions === false ) return false;
+				if (conditions == false ) return false;
 			}
 
 
 			reactions = reactionListParser.call(this, interaction.reactionList, indent, callback);
-			if (reactions === false) return false;
+			if (reactions == false) return false;
 
 			if (hasCondition) reactions += "		return;\n	}//if statement end\n"; //if statementend
 
 
-			this.iTree.putNode(event, interaction.event.type, interaction.event.args, conditions + reactions);
+			//this.iTree.putNode(event, interaction.event.type, interaction.event.args, conditions + reactions);
+			this.eventListAddNode.call(this, eventList, conditions + reactions);
 			return true;
 
 		}else{
@@ -508,6 +514,13 @@ Parser = function (jsonPath, buildPath){
 			return false;
 		}
 
+	}
+
+	//eventList[(event, type, args)]
+	function eventListAddNode(eventList, conditionAndReactions){
+		for(let i = 0; i < eventList.length; i++){
+			this.iTree.putNode(eventList[i * 3], eventList[i * 3 + 1], eventList[i * 3 + 2], conditionAndReactions);
+		}
 	}
 //-------------------------CONDITION----------------------------------------
 
@@ -518,7 +531,7 @@ Parser = function (jsonPath, buildPath){
 			var state = findStateByID.call(this,conditionList[i].id);
 			var value = conditionList[i].value;
 
-			if (state === false){
+			if (state == false){
 				callback("Compile ERROR: conditionList: cannot find state of id : " + conditionList[i].id);
 				return false;
 			}else{
@@ -550,7 +563,7 @@ Parser = function (jsonPath, buildPath){
 				indentCounter++;
 			}		
 
-			if (result === false) return false;
+			if (result == false) return false;
 			else if (reactionList[i].type == 8) toReturn += indent(indentCounter - 1, "") + result;
 			else toReturn +=  indent(indentCounter, "") + result;
 		}
@@ -584,63 +597,63 @@ Parser = function (jsonPath, buildPath){
 			case 0:
 				toReturn = translate_reactionType_0.call(this,reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 			case 1:
 				toReturn = translate_reactionType_1.call(this,reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 			case 2:
 				toReturn = translate_reactionType_2.call(this, reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 			case 3:
 				toReturn = translate_reactionType_3.call(this, reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 			case 4:
 				toReturn = translate_reactionType_4.call(this,reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 			case 5:
 				toReturn = translate_reactionType_5.call(this,reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 			case 6:
 				toReturn = translate_reactionType_6.call(this,reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 			case 7:
 				toReturn = translate_reactionType_7.call(this,reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 			case 8:
 				toReturn = translate_reactionType_8.call(this,reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 
 			case 9:
 				toReturn = translate_reactionType_9.call(this,reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 			case 10:
 				toReturn = translate_reactionType_10.call(this,reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 			case 11:
 				toReturn = translate_reactionType_11.call(this,reaction.args, callback);
 
-				if (toReturn === false) return false;
+				if (toReturn == false) return false;
 				else return toReturn;
 			default:
 				callback("WRONG REACTION TYPE");
@@ -654,7 +667,7 @@ Parser = function (jsonPath, buildPath){
 
 			var state = findStateByID.call(this, args[0]);
 
-			if (state === false ){
+			if (state == false ){
 				callback("Compile ERROR: for reaction type 0 cannot find state of id: " + args[0] + ".");
 				return false;
 
@@ -680,7 +693,7 @@ Parser = function (jsonPath, buildPath){
 
 			var sceneIndex = findSceneByID.call(this, args[0]);
 
-			if (sceneIndex === false){
+			if (sceneIndex == false){
 				callback("Compile ERROR: cannot find scene of id for reaction type 1: " + args[0] + ".");
 				return false;
 
@@ -700,7 +713,7 @@ Parser = function (jsonPath, buildPath){
 
 			var obj= findObjectByID.call(this, args[0]);
 
-			if (obj === false){
+			if (obj == false){
 				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
@@ -720,7 +733,7 @@ Parser = function (jsonPath, buildPath){
 
 			var obj= findObjectByID.call(this, args[0]);
 
-			if (obj === false){
+			if (obj == false){
 				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
@@ -741,7 +754,7 @@ Parser = function (jsonPath, buildPath){
 
 			var obj= findObjectByID.call(this, args[0]);
 
-			if (obj === false){
+			if (obj == false){
 				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
@@ -761,7 +774,7 @@ Parser = function (jsonPath, buildPath){
 
 			var obj= findObjectByID.call(this, args[0]);
 
-			if (obj === false){
+			if (obj == false){
 				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
@@ -781,7 +794,7 @@ Parser = function (jsonPath, buildPath){
 
 			var obj= findObjectByID.call(this, args[0]);
 
-			if (obj === false){
+			if (obj == false){
 				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
@@ -801,7 +814,7 @@ Parser = function (jsonPath, buildPath){
 
 			var obj= findObjectByID.call(this, args[0]);
 
-			if (obj === false){
+			if (obj == false){
 				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
@@ -834,7 +847,7 @@ Parser = function (jsonPath, buildPath){
 
 			var sound = findSoundByID.call(this, args[0]);
 
-			if (sound === false){
+			if (sound == false){
 				callback("Compile ERROR: cannot find sound of id: " + args[0] + ".");
 				return false;
 
@@ -873,6 +886,28 @@ Parser = function (jsonPath, buildPath){
 
 
 //-------------------------EVENT----------------------------------------------
+	function eventListParser(eventList, callback){
+
+		if(eventList.length == 0){
+			callback("Compiler ERROR: for an interaction, it MUST have one or more events.");
+			return false;
+		}
+
+		//[eventstring, type, args]
+		var toReturn = [];
+		for (let i = 0; i < eventList.length; i++){
+			var event = eventParser.call(this, eventList[i], callback);
+
+			if (event == false) return false;
+
+			toReturn.push(event);
+			toReturn.push(eventList[i].type);
+			toReturn.push(eventList[i].args);
+		}
+
+		return toReturn; 
+	}
+
 	function eventParser(event, callback){
 
 		if (event.hasOwnProperty("type") && event.hasOwnProperty("args")){
@@ -883,32 +918,32 @@ Parser = function (jsonPath, buildPath){
 				case 0: 
 					toReturn = translate_eventType_0.call(this, event.args, callback);
 
-					if (toReturn === false) return false;
+					if (toReturn == false) return false;
 					else return toReturn;
 				case 1:
 					toReturn = translate_eventType_1.call(this, event.args, callback);
 
-					if (toReturn === false) return false;
+					if (toReturn == false) return false;
 					else return toReturn;
 				// case 2: 
 				// 	toReturn = translate_eventType_2.call(this, event.args, callback);
 
-				// 	if (toReturn === false) return false;
+				// 	if (toReturn == false) return false;
 				//	else return toReturn;
 				case 3:
 					toReturn = translate_eventType_3.call(this, event.args, callback);
 
-					if (toReturn === false) return false;
+					if (toReturn == false) return false;
 					else return toReturn;
 				case 4:
 					toReturn = translate_eventType_4.call(this, event.args, callback);
 
-					if (toReturn === false) return false;
+					if (toReturn == false) return false;
 					else return toReturn;
 				case 5:
 					toReturn = translate_eventType_5.call(this, event.args, callback);
 
-					if (toReturn === false) return false;
+					if (toReturn == false) return false;
 					else return toReturn;
 
 				default:
@@ -927,7 +962,7 @@ Parser = function (jsonPath, buildPath){
 		if (args.length == 1){
 			var objName = findObjectByID.call(this, args[0]);
 
-			if (objName === false){
+			if (objName == false){
 				callback("Compile ERROR: Cannot find the object of ID: " + objID + ".") ;
 				return false;
 			}else{
@@ -965,7 +1000,7 @@ Parser = function (jsonPath, buildPath){
 	// 		var objID = args[0];
 	// 		var objName = findObjectByID.call(this,objID);
 
-	// 		if (objName === false){
+	// 		if (objName == false){
 	// 			callback("Compile ERROR: Cannot find the object of ID: " + objID + ".") ;
 	// 			return false;
 	// 		}else{
@@ -1002,7 +1037,7 @@ Parser = function (jsonPath, buildPath){
 		if (args.length == 2){
 			var state = findStateByID.call(this, args[0]);
 
-			if (state === false ){
+			if (state == false ){
 
 				if (args[1] == null) callback("JSON ERROR: state_to_be of event Type 4 ( when state A is changed to state B) cannnot be null");
 				else callback("Compile ERROR: For event Type 4, cannot find state of id : " + args[0] + ".");
