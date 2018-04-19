@@ -36,7 +36,8 @@ ObjectListView.prototype.InitView = function(){
         objectDragStart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.ListedObject, d);},
         objectDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.ListedObject, ()=>{});},
         objectDrop: (ev, scene, object)=>{View.HandleDrop(ev, View.DragInfo.ListedObject, (dragObj)=>{
-            ObjectListView.prototype.updateOrder(dragObj, scene, object);
+            dragObj.SwitchScene(scene, object);
+            View.Selection.selectObject(dragObj);
         });}, 
 	  	onObjectSelect: (obj)=>{View.Selection.selectObject(obj);}, 
 	  	onSceneSelect: (scn)=>{View.Selection.selectScene(scn);}, 
@@ -63,7 +64,7 @@ ObjectListView.prototype.ReloadView = function(){
 	}
 };
 
-ObjectListView.prototype.updateOrder = function(dragedObj, toScene, aboveObj) {
+/*ObjectListView.prototype.updateOrder = function(dragedObj, toScene, aboveObj) {
 
     if(!aboveObj) {
         toScene.container.addChildAt(dragedObj.sprite, 0);
@@ -103,7 +104,7 @@ ObjectListView.prototype.updateOrder = function(dragedObj, toScene, aboveObj) {
     dragedObj.bindScene = toScene;
     GameProperties.updateOrderByScene(toScene);
     View.Selection.selectObject(dragedObj)
-}
+}*/
 
 
 

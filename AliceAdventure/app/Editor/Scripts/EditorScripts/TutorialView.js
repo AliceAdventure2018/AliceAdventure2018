@@ -35,13 +35,13 @@ TutorialView.prototype.InitView = function(){
 			projectName: null,
 		}, 
 		methods: {
-			addScene: ()=>{Scene.AddScene("new scene")},
-			addObject: ()=>{SceneObject.AddEmptyObject("new object")}, 
+			addScene: ()=>{this.AddScene("new scene")},
+			addObject: ()=>{this.AddEmptyObject("new object")}, 
 
 			changeName: (event, thing)=>{if (thing.name != null) thing.name = event.target.innerHTML}, 
+			changeScene: (obj, toScene)=>{obj.SwitchScene(toScene);},
 
-			newProj: ()=>{File.NewEmptyProject(()=>{/*IPC.send('new-proj');*/});}, 
-			openProj: ()=>{File.OpenProject(()=>{IPC.send('open-proj');});}, 
+			next: ()=>{Event.Broadcast("reload-project")},
 			exit: ()=>{IPC.send('exit');}
 		}
 	});
@@ -61,6 +61,15 @@ TutorialView.prototype.ReloadView = function(){
 		this.vModel.objectList = GameProperties.instance.objectList;
 		this.vModel.projectName = GameProperties.instance.settings.projectName;
 	}
+};
+
+TutorialView.prototype.AddEmptyObject = function(_name){
+	var _obj = SceneObject.AddEmptyObject(_name, {id: 0});
+};
+
+TutorialView.prototype.AddScene = function(_name){
+	var _scene = Scene.AddScene(_name);
+	//this.app.stage.addChild(_scene.container);
 };
 
 module.exports = TutorialView;

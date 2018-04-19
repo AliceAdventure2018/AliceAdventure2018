@@ -128,8 +128,9 @@
           <td v-html='(index+1)'>
           </td>
           <td contenteditable="true">
-            <select v-model='obj.bindScene'>
+            <select v-model='obj.bindScene' v-on:change='changeScene(obj, obj.bindScene)'>
               <option v-for='scene in sceneList' v-bind:value='scene' v-html='scene.name'></option>
+              <option v-bind:value='{id: 0}'> Inventory </option>
             </select>
           </td>
           <td contenteditable="true" v-on:input='changeName(event, obj)'> new object
@@ -142,7 +143,7 @@
 	
   
    <button class="sys-button" onclick="goSkip()"> Skip </button>
-   <button class="sys-button" onclick="goToNext()" > Next </button>
+   <button class="sys-button" v-on:click='goToNext();next();' > Next </button>
  </div>
 
 

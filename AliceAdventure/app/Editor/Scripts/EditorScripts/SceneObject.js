@@ -23,7 +23,7 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 	this.dragAllowed = true;
 	this.drag = { on: false, eventData: {} };
 
-	this.properties = [];
+	//this.properties = [];
 	this.sprite = null;
 };
 
@@ -99,6 +99,54 @@ SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active)
 		.on("pointermove", (e)=>{this.OnPointerMove(e);})
 		.on("pointerup", (e)=>{this.OnPointerUp(e);})
 		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
+};
+
+SceneObject.prototype.SwitchScene = function(toScene, aboveObj) {
+	if (toScene.id == 0){ // inventory
+		if (this.sprite.parent != null){
+			this.sprite.parent.removeChild(this.sprite);
+		}
+    	this.bindScene = toScene;
+    	return;
+	} 
+
+	if(aboveObj == null) {
+        toScene.container.addChildAt(this.sprite, 0);
+    } else {
+        if(this.id == aboveObj.id) return;
+        let indexA = -1;
+        let indexB = -1;
+        for(var i = 0; i<toScene.container.children.length; i++) {
+            if(toScene.container.children[i].id == aboveObj.id) {
+                indexB = i;
+                continue;
+            }
+            if(toScene.container.children[i].id == this.id) {
+                indexA = i;
+                continue;
+            }
+
+            if(indexA != -1 && indexB!=-1) {
+                break;
+            }
+        }
+
+        if(indexA == indexB + 1) {
+            return;
+        }
+
+        if(indexA == -1) {
+            toScene.container.addChildAt(this.sprite,indexB+1);
+        } else if(indexA > indexB) {
+            var index = indexB+1
+            toScene.container.addChildAt(this.sprite,index);
+        } else {
+            toScene.container.addChildAt(this.sprite,indexB);
+        }
+    }
+    
+    this.bindScene = toScene;
+    GameProperties.updateOrderByScene(toScene);
 }
 
 SceneObject.prototype.DeleteThis = function(){
@@ -106,7 +154,7 @@ SceneObject.prototype.DeleteThis = function(){
 	GameProperties.DeleteObject(this);
 };
 
-SceneObject.prototype.AddUserProperty = function(_key, _type, _value){
+/*SceneObject.prototype.AddUserProperty = function(_key, _type, _value){
 	this.properties.push({
 		key: _key,
 		type: _type, 
@@ -150,18 +198,18 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 	}
 
 	this.properties[_name].value = _value;
+};*/
+
+SceneObject.prototype.SelectOn = function(){
+	this.selected = true;
+	this.sprite.filters = [pixiFilters.outlineFilterBlue];
+	//Resizer.showHelper(this.sprite);	
 };
 
 SceneObject.prototype.SelectOff = function(){
 	this.selected = false;
 	this.sprite.filters = [];
 	Resizer.hideHelper(this.sprite);
-};
-
-SceneObject.prototype.SelectOn = function(){
-	this.selected = true;
-	this.sprite.filters = [pixiFilters.outlineFilterBlue];
-	//Resizer.showHelper(this.sprite);	
 };
 
 SceneObject.prototype.OnPointerDown = function(_event){
