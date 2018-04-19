@@ -24,7 +24,54 @@
  <script src="js/interact.js"></script> 
  <script src="js/drag.js"></script>
 </head>
+<script type="text/javascript">
+    
+      function editInPlace(event){
+      
+          var targetTitle = event.target || event.srcElement;
+          targetTitle.setAttribute('oldText', targetTitle.innerHTML); // not actually required. I use target just in case you want to cancel and set the original text back.
+          var origianalText = targetTitle.innerHTML;
 
+          var textBox = document.createElement('INPUT');
+            textBox.setAttribute('type', 'text');
+            textBox.style['width'] ='100px';
+            textBox.value = targetTitle.innerHTML;
+
+            
+            textBox.onblur = function() {
+              
+              var newValue = textBox.value; //targetTitle.value
+              console.log("on blur");
+              console.log(newValue);
+
+              if(newValue === ''){
+                console.log("null detected");
+                //targetTitle.parentNode.innerHTML = origianalText;
+                targetTitle.innerHTML = origianalText;
+
+              } else {
+                if(newValue.length >25){
+                  alert("Name should be less than 25 characters");
+                  targetTitle.innerHTML = origianalText;
+                  //targetTitle.parentNode.innerHTML = origianalText;
+                } else {
+                  //if (obj == null){
+                    targetTitle.innerHTML = newValue;
+                  //} else {
+                    //obj.name = newValue;
+                   //targetTitle.parentNode.innerHTML = newValue;
+                  //}
+                 }
+              }
+             // alert("Your new value: \n\n" + newValue);
+            }
+
+          targetTitle.innerHTML = '';
+
+          targetTitle.appendChild(textBox);
+      
+    }
+</script>
 <style rel="stylesheet">
 .sys-button{
   
@@ -33,7 +80,7 @@
   display: block;
   float: right;
   margin-right: 5%;
-  margin-top:8%;
+  margin-top:1%;
    color:#fff;
    font-weight: 480;
    font-size: 1.8em;
@@ -47,10 +94,10 @@
   opacity: 0.5;
 }
 </style>
-<body style="background-color:#28a745;">
+<body style="background-color:#28a745;" >
   <div id="step_1" style="
   display: block;
-  margin-top:10%;
+  margin-top:5%;
   margin-left:2%;
 
   ">  
@@ -71,7 +118,7 @@
         <tr v-for='(scene, index) in sceneList'>
           <td v-html='(index+1)'>
           </td>
-          <td contenteditable="true" v-on:input='changeName(event, scene)'> new scene
+          <td> <input type="text" v-model='scene.name'>
           </td>
         </tr>
       </tbody>
@@ -99,9 +146,9 @@
         <tr>
           <td> 1
           </td>
-          <td contenteditable="true"> hello world
+          <td > <input type="text">
           </td>
-          <td contenteditable="true"> Alice
+          <td > <input type="text">
           </td>
         </tr>
       </tbody>
@@ -127,13 +174,13 @@
         <tr v-for='(obj, index) in objectList'>
           <td v-html='(index+1)'>
           </td>
-          <td contenteditable="true">
+          <td>
             <select v-model='obj.bindScene' v-on:change='changeScene(obj, obj.bindScene)'>
               <option v-for='scene in sceneList' v-bind:value='scene' v-html='scene.name'></option>
               <option v-bind:value='{id: 0}'> Inventory </option>
             </select>
           </td>
-          <td contenteditable="true" v-on:input='changeName(event, obj)'> new object
+          <td> <input type="text" v-model='obj.name'>
           </td>
         </tr>
       </tbody>
@@ -149,7 +196,7 @@
 
  <div id="step_2" style="
   display: none;
-  margin-top:10%;
+  margin-top:5%;
   margin-left:2%;
 
   ">
@@ -184,9 +231,9 @@
                 <div class="assets">
                   <ul>
                   <!-- bind the gallery data -->
-                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="'../../'+img.src"> </div><p v-html='img.name'></p>
+                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="'../../'+img.src"> </div><p v-html='img.name'></p>
                     </li>
-                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                     </li>
                     
                   </ul>
@@ -242,7 +289,7 @@
  </div>
 
 
- <div id="step_3" style="display: none;margin-top:10%;
+ <div id="step_3" style="display: none;margin-top:5%;
   margin-left:2%;
 
   ">
