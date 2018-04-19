@@ -101,8 +101,8 @@ ipcMain.on('exit', (event, data)=>{
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWelWin)
-
+//app.on('ready', createWelWin)
+app.on('ready',createMainWin)
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar

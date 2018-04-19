@@ -34,14 +34,15 @@ SceneObject.AddObject = function(_objInfo, _bindScene, _x, _y){
 	// test TODO: should read from objIndex // currently _objIndex is the file name
 	let _path = _objInfo.src;
 	let _obj = new SceneObject(null, _objInfo.name, _path, _bindScene);
-	_obj.InitSprite('../../' + _path, {x: _x, y: _y});
-    //_obj.sprite.
+	_obj.InitSprite(_obj.id ,'../../' + _path, {x: _x, y: _y});
+    GameProperties.AddObject(_obj);
 	return _obj;
 };
 
 SceneObject.LoadObject = function(_data){ // I AM HERE
 	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene), _data.clickable, _data.draggable);
-	_obj.InitSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
+	_obj.InitSprite(_data.id, '../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
+    GameProperties.AddObject(_obj);
 	return _obj;
 };
 
@@ -54,7 +55,7 @@ var pixiFilters = { // private
 }; 
 
 // functions
-SceneObject.prototype.InitSprite = function(_url, _pos, _scale, _anchor, _active){
+SceneObject.prototype.InitSprite = function(_objID ,_url, _pos, _scale, _anchor, _active){
 	if (!(this instanceof SceneObject)) return;
 	this.sprite = PIXI.Sprite.fromImage(_url);
 	this.sprite.x = (_pos != null)?_pos.x: 0;
@@ -68,6 +69,7 @@ SceneObject.prototype.InitSprite = function(_url, _pos, _scale, _anchor, _active
 		.on("pointermove", (e)=>{this.OnPointerMove(e);})
 		.on("pointerup", (e)=>{this.OnPointerUp(e);})
 		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
+    this.sprite.id = _objID;
 };
 
 SceneObject.prototype.DeleteThis = function(){
