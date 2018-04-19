@@ -187,6 +187,23 @@
 
 				
 			</div>
+
+			<script type="text/javascript">
+				function imgLockSwap(event){
+					var target = document.getElementById('img-lock');
+					
+					var lockSrc = target.getAttribute('lock-src');
+					var unlockSrc = target.getAttribute('unlock-src');
+
+					if(target.getAttribute('lock') == 'false'){
+						target.setAttribute('lock', 'true');
+						target.setAttribute('src', lockSrc);
+					} else if (target.getAttribute('lock') == 'true'){
+						target.setAttribute('lock','false');
+						target.setAttribute('src', unlockSrc);
+					}
+				}
+			</script>
 			<div id="design-property">
 				<!--h6 class="window-title">PROPERTIES</h6-->
 				<!-- bind img src -->
@@ -195,7 +212,9 @@
 					<!-- bind info -->
 					<div v-if='showObject' class="property-info">
 						<ul>
-							<li><span contenteditable="true"/></span><input style="width:100px" v-model='object.name'/></li>
+							<li><span contenteditable="true"/></span><input style="width:80px" v-model='object.name'/>
+								<a onclick="imgLockSwap(event)"><img  id="img-lock" lock="false" lock-src="src/locked.png" unlock-src="src/unlocked.png" src="src/unlocked.png"></a>
+							</li>
 
 							<!--<input v-model='bindObj.name'/>-->
 							<li>

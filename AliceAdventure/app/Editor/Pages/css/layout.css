@@ -829,7 +829,12 @@ input:checked + .slider:before {
     overflow: hidden;
 }
 
-
+#img-lock{
+    width:20px;
+    height: 20px;
+    opacity: 0.5;
+    cursor: pointer;
+}
 .property-img {
     /*max-width: 70px;
     max-height: 70px;*/
