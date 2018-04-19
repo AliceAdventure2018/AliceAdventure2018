@@ -41,7 +41,7 @@ SceneObject.AddObject = function(_objInfo, _bindScene){
 	let _path = _objInfo.src;
 	let _obj = new SceneObject(null, _objInfo.name, _path, _bindScene);
 	GameProperties.AddObject(_obj);
-	_obj.InitSprite(_obj.id, '../../' + _path);
+	_obj.InitSprite('../../' + _path);
 	return _obj;
 };
 
@@ -49,7 +49,7 @@ SceneObject.LoadObject = function(_data){
 	if (GameProperties.instance == null) return null; // no proj loaded
 	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene), _data.clickable, _data.draggable);
 	GameProperties.AddObject(_obj);
-	_obj.SetSprite(_data.id, '../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
+	_obj.SetSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
 	return _obj;
 };
 
@@ -62,7 +62,7 @@ var pixiFilters = { // private
 }; 
 
 // functions
-SceneObject.prototype.InitSprite = function(_objID, _url){
+SceneObject.prototype.InitSprite = function(_url){
 	if (!(this instanceof SceneObject)) return;
 	this.sprite = PIXI.Sprite.fromImage(_url);
 	this.sprite.x = GameProperties.instance.projectData.viewWidth / 2;
@@ -76,7 +76,7 @@ SceneObject.prototype.InitSprite = function(_objID, _url){
 		.on("pointermove", (e)=>{this.OnPointerMove(e);})
 		.on("pointerup", (e)=>{this.OnPointerUp(e);})
 		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
-    this.sprite.id = _objID;
+    this.sprite.id = this.id;
 };
 
 SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active){
@@ -99,6 +99,7 @@ SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active)
 		.on("pointermove", (e)=>{this.OnPointerMove(e);})
 		.on("pointerup", (e)=>{this.OnPointerUp(e);})
 		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
+	this.sprite.id = this.id;
 };
 
 SceneObject.prototype.SwitchScene = function(toScene, aboveObj) {
