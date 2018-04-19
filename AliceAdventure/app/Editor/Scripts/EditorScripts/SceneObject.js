@@ -21,7 +21,7 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 	this.selectAllowed = true;
 	this.selected = false;
 	this.dragAllowed = true;
-	this.drag = { on: false, eventData: {} };
+	this.drag = { on: false, eventData: {}, offset: {x: 0, y: 0} };
 
 	//this.properties = [];
 	this.sprite = null;
@@ -58,7 +58,8 @@ SceneObject.SetViewSize = function(w, h){
 };
 
 var pixiFilters = { // private
-	outlineFilterBlue: new PIXI.filters.OutlineFilter(4, 0x99ff99), 
+	outlineFilterGreen: new PIXI.filters.OutlineFilter(4, 0x99ff99), 
+	outlineFilterRed: new PIXI.filters.OutlineFilter(2, 0xff9999), 
 }; 
 
 // functions
@@ -105,7 +106,9 @@ SceneObject.prototype.SpriteInfoDefault = function(){
 		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
 		.on("pointermove", (e)=>{this.OnPointerMove(e);})
 		.on("pointerup", (e)=>{this.OnPointerUp(e);})
-		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
+		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);})
+		.on("pointerover", (e)=>{this.OnPointerOver(e);})
+		.on("pointerout", (e)=>{this.OnPointerOut(e);});
     this.sprite.id = this.id;	
 }
 
@@ -155,6 +158,15 @@ SceneObject.prototype.SwitchScene = function(toScene, aboveObj) {
     
     this.bindScene = toScene;
     GameProperties.updateOrderByScene(toScene);
+};
+
+SceneObject.prototype.ToggleLock = function(){
+	this.dragAllowed = !this.dragAllowed;
+	if (this.dragAllowed){
+		
+	} else {
+		Resizer.hideHelper();
+	}
 }
 
 SceneObject.prototype.DeleteThis = function(){
@@ -210,7 +222,7 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 
 SceneObject.prototype.SelectOn = function(){
 	this.selected = true;
-	this.sprite.filters = [pixiFilters.outlineFilterBlue];
+	this.sprite.filters = [pixiFilters.outlineFilterGreen];
 	//Resizer.showHelper(this.sprite);	
 };
 
@@ -248,6 +260,20 @@ SceneObject.prototype.OnPointerUp = function(_event){
 	// Stop dragging
 	if (this.dragAllowed){
 		this.drag.on = false;
+	}
+};
+
+SceneObject.prototype.OnPointerOver = function(_event){
+	// Stop dragging
+	if (this.dragAllowed && this.selected){
+		Resizer.showHelper(this.sprite);
+	}
+};
+
+SceneObject.prototype.OnPointerOut = function(_event){
+	// Stop dragging
+	if (this.dragAllowed && this.selected){
+		//Resizer.hideHelper();
 	}
 };
 
