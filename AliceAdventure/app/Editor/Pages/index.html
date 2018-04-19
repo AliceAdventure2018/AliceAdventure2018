@@ -29,44 +29,44 @@
 </head>
 <body ng-controller="MainCtrl">
 
-	<nav  id="topnav">
+	
+   <nav  id="topnav">
     <a class="float-left" id="brand" href="#">
     <img src="./src/AliceAdventure_logo.svg" width="25" height="25" alt="">&nbsp; Alice's Adventure
     </a>			 
     <!--button  onclick="switchDesignView()" class="float-left" id="design-button" >Design </button>
 
     <button  onclick="switchCodeView()"  class="float-left"  id ="code-button" >Code</button-->
-
-    <button id="setting-button"  class="float-right" data-toggle="modal" data-target="#setting">
-               Setting
-    </button>
-
+   	<div class="dropdown" id="setting-button">
+   		<img  src="src/setting.png" class="topnav-icon float-right" data-toggle="modal" data-target="#setting"  class="dropbtn"/>
+   	</div>
+   
     
     <!--button onclick="AliceEditor.File.RunProject()" id="run-button"  class="float-right" >
     					 Run
     </button-->
-   	<img  src="src/import.png" class="topnav-icon" />
-   	<div class="dropdown">
-    <button  onmouseover="dropdownShow(event)" id="save-button"  class="dropbtn float-right">
-	Import
-    </button>
+   	
+   	<div class="dropdown" id="import-button">
+   
+   		<img  src="src/import.png" class="topnav-icon"  onmouseover="dropdownShow(event)"   class="dropbtn"/>
     <div id="import-dropdown" class="dropdown-content">
     	<a class="dropdown-item"  onclick="AliceEditor.File.ImportImage()"> Image</a>
     	<a class="dropdown-item" onclick="AliceEditor.File.ImportSound()"> Sound</a>
 
     </div>
 	</div>
-   <div class="dropdown" >
-    <button  onmouseover="dropdownShow(event)"  id="save-button"  class="dropbtn">
-	File
-    </button>
+   <div class="dropdown" id="file-button" >
+   <img  src="src/file.png" class="topnav-icon"  onmouseover="dropdownShow(event)"  class="dropbtn float-right"/>
     <div id="import-dropdown" class="dropdown-content">
     	<a class="dropdown-item" onclick="AliceEditor.File.NewProject()" > New project</a>
     	<a class="dropdown-item" onclick="AliceEditor.File.OpenProject()"> Open project</a>
     	<a class="dropdown-item" onclick="AliceEditor.File.SaveProject()"> Save project</a>
     	<a class="dropdown-item" onclick="AliceEditor.File.BuildProject()"> Build project</a>
-    	<a class="dropdown-item" data-toggle="modal" data-target="#run-view" onclick="AliceEditor.File.RunProject()"> Run project</a>
+    	
     </div>
+	</div>
+	<div class="dropdown" id="run-button">
+		<img   src="src/run.png" class="topnav-icon"  data-toggle="modal" data-target="#run-view" onclick="AliceEditor.File.RunProject()"  class="float-right"/>
 	</div>
     
 

@@ -121,6 +121,8 @@ input:checked + .slider:before {
 
 }
 
+
+
 .dropdown-content {
     cursor: pointer;
     float: right;
@@ -168,16 +170,16 @@ input:checked + .slider:before {
     opacity:0.5;
 }
 #setting-button{
-    right:50px;
+    right:60px;
 }
 #file-button{
-    right:200px;
+    right:240px;
 }
 #run-button{
-    right:150px;
+    right:180px;
 }
 #import-button{
-    right:100px;
+    right:120px;
 }
 
 
