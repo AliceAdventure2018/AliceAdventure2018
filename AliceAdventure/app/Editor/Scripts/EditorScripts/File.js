@@ -326,6 +326,7 @@ File.SaveToPath = function(_path){
 File.OpenFromPath = function(_path){
 
 	// Load JSON file
+	if (typeof _path != "string") Debug.LogError("Path is not string");
 	new File(_path, new GameProperties());
 	let data = FS.readJsonSync(_path); 
 

@@ -14,6 +14,8 @@ Scene = function(_id, _name = "untitledScene"){
 
 	this.container = null;
 	this.selected = false;
+    
+    this.objectList = [];
 
 	GameProperties.AddScene(this);
 };
@@ -30,6 +32,20 @@ Scene.LoadScene = function(_data){
 	scene.InitContainer();
 	return scene;
 }
+
+Scene.addObj = function(_obj) {
+    this.objectList.push(_obj)
+}
+
+Scene.removeObj = function(_obj){
+    for(var i in this.objectList) {
+        if(this.objectList[i]._id == _obj.id) {
+            this.objectList.splice(i,1);
+            return;
+        }
+    }
+}
+
 
 /*Scene.Selection = { // only 1 selection is supported 
 	scene: null, // Dont set this directly
