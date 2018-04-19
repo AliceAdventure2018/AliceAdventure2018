@@ -21,10 +21,10 @@ interact('.interaction-box')
     },
     // enable autoScroll
    // autoScroll: true,
-
+   //stopImmediatePropagation();
   
     
-  });
+  }, false);
 
   function minimizeWindow(event){
   		var eventTarget = event.target.parentNode;
@@ -80,4 +80,4 @@ interact('.interaction-box')
   }
 
   // this is used later in the resizing and gesture demos
-  window.dragMoveListener = dragMoveListener;
+  //window.dragMoveListener = dragMoveListener;
