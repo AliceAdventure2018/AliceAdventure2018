@@ -41,7 +41,7 @@ SceneObject.AddObject = function(_objInfo, _bindScene){
 	let _path = _objInfo.src;
 	let _obj = new SceneObject(null, _objInfo.name, _path, _bindScene);
 	GameProperties.AddObject(_obj);
-	_obj.InitSprite('../../' + _path);
+	_obj.InitSprite(_path);
 	return _obj;
 };
 
@@ -49,7 +49,7 @@ SceneObject.LoadObject = function(_data){
 	if (GameProperties.instance == null) return null; // no proj loaded
 	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene), _data.clickable, _data.draggable);
 	GameProperties.AddObject(_obj);
-	_obj.SetSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
+	_obj.SetSprite(_data.src, _data.pos, _data.scale, _data.anchor, _data.active);
 	return _obj;
 };
 

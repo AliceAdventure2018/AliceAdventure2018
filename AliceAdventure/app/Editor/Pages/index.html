@@ -208,7 +208,7 @@
 				<!--h6 class="window-title">PROPERTIES</h6-->
 				<!-- bind img src -->
 				<div v-if='projectLoaded'>
-					<!--div v-if='showObject' class="property-img-bg"> <img class="property-img" v-bind:src="'../../'+object.src"></div-->
+					<!--div v-if='showObject' class="property-img-bg"> <img class="property-img" v-bind:src="object.src"></div-->
 					<!-- bind info -->
 					<div v-if='showObject' class="property-info">
 						<ul>
@@ -279,7 +279,7 @@
 								<div class="assets">
 									<ul>
 									<!-- bind the gallery data -->
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="'../../'+img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
@@ -292,7 +292,7 @@
 								<div class="assets">
 									<ul>
                   <!-- bind the gallery data -->
-                    <li v-for="sound in sounds"> <div class="asset"><img v-bind:src="'../../'+sound.src"> </div><p v-html='sound.name'></p>
+                    <li v-for="sound in sounds"> <div class="asset"><img v-bind:src="sound.src"> </div><p v-html='sound.name'></p>
                     </li>
                     <li v-for="sound in importedSounds"> <div class="asset"><img v-bind:src='sound.src'> </div><p v-html='sound.name'></p>
                     </li>  
