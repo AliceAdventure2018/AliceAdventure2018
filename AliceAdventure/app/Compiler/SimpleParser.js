@@ -516,10 +516,10 @@ Parser = function (jsonPath, buildPath){
 
 	}
 
-	//eventList[(event, type, args)]
+	//eventList[event, type, args]
 	function eventListAddNode(eventList, conditionAndReactions){
-		for(let i = 0; i < eventList.length; i++){
-			this.iTree.putNode(eventList[i * 3], eventList[i * 3 + 1], eventList[i * 3 + 2], conditionAndReactions);
+		for(let i = 0; i < eventList.length; i += 3){
+			this.iTree.putNode(eventList[i], eventList[i + 1], eventList[i + 2], conditionAndReactions);
 		}
 	}
 //-------------------------CONDITION----------------------------------------
