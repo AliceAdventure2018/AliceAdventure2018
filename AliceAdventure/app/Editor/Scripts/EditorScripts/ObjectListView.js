@@ -30,9 +30,15 @@ ObjectListView.prototype.InitView = function(){
 	  data: {
 	  	projectLoaded: false, 
 	    sceneList: null, 
-	    objectList: null, 
-	  }, 
+	    objectList: null,
+      }, 
 	  methods: {
+        objectDragStart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.ListedObject, d);},
+        objectDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.ListedObject, ()=>{});},
+        objectDrop: (ev, scene, object)=>{View.HandleDrop(ev, View.DragInfo.ListedObject, (dragObj)=>{
+            dragObj.SwitchScene(scene, object);
+            View.Selection.selectObject(dragObj);
+        });}, 
 	  	onObjectSelect: (obj)=>{View.Selection.selectObject(obj);}, 
 	  	onSceneSelect: (scn)=>{View.Selection.selectScene(scn);}, 
 	  	deleteObject: (obj)=>{View.Selection.deSelect();obj.DeleteThis();},
@@ -57,5 +63,49 @@ ObjectListView.prototype.ReloadView = function(){
 	    this.vModel.objectList = GameProperties.instance.objectList; 
 	}
 };
+
+/*ObjectListView.prototype.updateOrder = function(dragedObj, toScene, aboveObj) {
+
+    if(!aboveObj) {
+        toScene.container.addChildAt(dragedObj.sprite, 0);
+    }else {
+        if(dragedObj.id == aboveObj.id) return;
+        let indexA = -1;
+        let indexB = -1;
+        for(var i = 0; i<toScene.container.children.length; i++) {
+            if(toScene.container.children[i].id == aboveObj.id) {
+                indexB = i;
+                continue;
+            }
+            if(toScene.container.children[i].id == dragedObj.id) {
+                indexA = i;
+                continue;
+            }
+
+            if(indexA != -1 && indexB!=-1) {
+                break;
+            }
+        }
+
+        if(indexA == indexB + 1) {
+            return;
+        }
+
+        if(indexA == -1) {
+            toScene.container.addChildAt(dragedObj.sprite,indexB+1);
+        } else if(indexA > indexB) {
+            var index = indexB+1
+            toScene.container.addChildAt(dragedObj.sprite,index);
+        } else {
+            toScene.container.addChildAt(dragedObj.sprite,indexB);
+        }
+    }
+    
+    dragedObj.bindScene = toScene;
+    GameProperties.updateOrderByScene(toScene);
+    View.Selection.selectObject(dragedObj)
+}*/
+
+
 
 module.exports = ObjectListView;

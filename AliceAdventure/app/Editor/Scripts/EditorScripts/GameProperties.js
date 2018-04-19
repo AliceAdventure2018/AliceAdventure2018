@@ -29,6 +29,48 @@ GameProperties = function(){
 GameProperties.instance = null;
 
 // static functions
+
+//GameProperties.moveObjectAfter(obj, index) {
+//    
+//    
+
+function printID(array) {
+    var toPrint = [];
+    for(var i in array) {
+        toPrint.push(array[i].id)
+    }
+    console.log(toPrint)
+}
+
+GameProperties.updateOrderByScene = function(_scene) {   
+    var objInScene = _scene.container.children;
+    
+    var original = [];
+    var organized = [];
+    for(var i in GameProperties.instance.objectList) {
+        var objInList = GameProperties.instance.objectList[i];
+        if(objInList.bindScene.id == _scene.id) { 
+            for(var j in objInScene) {
+                if(objInScene[j].id == objInList.id) {
+                    organized[j] = objInList;
+                }
+            }
+            original.push(objInList);
+        }
+    }
+
+    var index = 0;
+    for(var i in GameProperties.instance.objectList) {
+        var objInList = GameProperties.instance.objectList[i];
+        if(objInList.bindScene.id == _scene.id) {
+            GameProperties.instance.objectList.splice(i,1,organized[index]);
+            index++;
+        }
+    }
+    
+}
+
+
 GameProperties.ProjectLoaded = function(){
 	return (GameProperties.instance != null);
 };

@@ -1,6 +1,9 @@
 'use strict';
 
-const {IPC} = require('./Utilities/Utilities');
+const {IPC, Event} = require('./Utilities/Utilities');
+const GameProperties = require('./GameProperties');
+const Scene = require('./Scene');
+const SceneObject = require('./SceneObject');
 const File = require('./File');
 const View = require('./View');
 
@@ -28,17 +31,49 @@ TutorialView.prototype.InitView = function(){
 	this.vModel = new Vue({
 		el: '#' + this.bindElementID,
 		data: {
+			sceneList: null,
+			objectList: null,
+			projectName: null,
 		}, 
 		methods: {
-			newProj: ()=>{File.NewEmptyProject(()=>{/*IPC.send('new-proj');*/});}, 
-			openProj: ()=>{File.OpenProject(()=>{IPC.send('open-proj');});}, 
+			addScene: ()=>{this.AddScene("new scene")},
+			addObject: ()=>{this.AddEmptyObject("new object")}, 
+
+			changeName: (event, thing)=>{if (thing.name != null) thing.name = event.target.innerHTML}, 
+			changeScene: (obj, toScene)=>{obj.SwitchScene(toScene);},
+
+			back: ()=>{Event.Broadcast("reload-project")},
+			next: ()=>{Event.Broadcast("reload-project")},
+			skip: ()=>{File.SaveProject((path)=>{IPC.send('complete-tut', path);});},
+			finish: ()=>{File.SaveProject((path)=>{IPC.send('complete-tut', path);});},
 			exit: ()=>{IPC.send('exit');}
 		}
 	});
+
+	Event.AddListener('reload-project', ()=>{this.ReloadView();});
 };
 
 TutorialView.prototype.ReloadView = function(){
 	View.prototype.ReloadView.apply(this); // call super method
+
+	if (GameProperties.instance == null){ // no proj loaded
+		this.vModel.sceneList = null;
+		this.vModel.objectList = null;
+		this.vModel.projectName = null;
+	} else { // proj loaded
+		this.vModel.sceneList = GameProperties.instance.sceneList;
+		this.vModel.objectList = GameProperties.instance.objectList;
+		this.vModel.projectName = GameProperties.instance.settings.projectName;
+	}
+};
+
+TutorialView.prototype.AddEmptyObject = function(_name){
+	var _obj = SceneObject.AddEmptyObject(_name, {id: 0});
+};
+
+TutorialView.prototype.AddScene = function(_name){
+	var _scene = Scene.AddScene(_name);
+	//this.app.stage.addChild(_scene.container);
 };
 
 module.exports = TutorialView;

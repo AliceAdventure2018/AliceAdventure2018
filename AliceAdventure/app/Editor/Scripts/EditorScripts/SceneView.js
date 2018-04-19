@@ -42,13 +42,13 @@ SceneView.prototype.InitView = function(){
 	});
 	// Init app
 	this.app = new PIXI.Application({
-		width: 480,
-		height: 360, 
+		width: 640,
+		height: 480, 
 		antialiasing: true, 
 		backgroundcolor: 0xFFFFFF
 	});
 	document.getElementById('canvas-container').appendChild(this.app.view);
-	GameProperties.SetViewSize(480, 360);
+	GameProperties.SetViewSize(640, 480);
 
 	// events
 	Event.AddListener('reload-project', ()=>{this.ReloadView();});
@@ -70,6 +70,7 @@ SceneView.prototype.ReloadView = function(){
 			}
 		});
 		GameProperties.instance.objectList.forEach((obj)=>{
+			if (obj.bindScene == null || obj.bindScene.id == 0) return;
 			obj.bindScene.container.addChild(obj.sprite);
 			if (obj.selected){
 				View.Selection.selectObject(obj);

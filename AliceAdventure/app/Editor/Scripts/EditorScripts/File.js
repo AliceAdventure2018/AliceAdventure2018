@@ -53,7 +53,10 @@ File.NewEmptyProject = function(callback){ // TUT
 		}).then((_name)=>{
 			if (_name != null) {
 				new File(null, new GameProperties());
-				File.instance.gameProperties.settings.projectName = _name;			
+				File.instance.gameProperties.settings.projectName = _name;
+				// Default settings
+				let firstScene = Scene.AddScene("New scene");
+				//firstScene.SelectOn();			
 				Event.Broadcast("reload-project");
 				if (typeof callback == "function"){
 					callback(_name);
@@ -94,7 +97,7 @@ File.NewProject = function(_template = null){ // TODO: load from template
 	
 };
 
-File.SaveProject = function(){
+File.SaveProject = function(callback){
 	if (File.instance == null){return;}
 	if (File.instance.path == null){ // No path saved
 		// Open file selector
@@ -106,9 +109,15 @@ File.SaveProject = function(){
 		}, (_path)=>{ // callback
 			if (_path == null) return;
 			File.SaveToPath(_path);
+			if (typeof callback == "function"){
+				callback(_path);
+			}
 		});
 	} else { // Has path saved
 		File.SaveToPath(File.instance.path);
+		if (typeof callback == "function"){
+			callback(File.instance.path);
+		}
 	}
 };
 
@@ -125,7 +134,7 @@ File.SaveAsNewProject = function(callback){
 		if (_path == null) return;
 		File.SaveToPath(_path);
 		if (typeof callback == "function"){
-			callback();
+			callback(_path);
 		}
 	});
 }
@@ -143,7 +152,7 @@ File.OpenProject = function(callback){
 			if (_paths == null) return;
 			File.OpenFromPath(_paths[0]);
 			if (typeof callback == "function"){
-				callback();
+				callback(_paths[0]);
 			}
 		});	
 	}
@@ -320,6 +329,11 @@ File.SaveToPath = function(_path){
 File.OpenFromPath = function(_path){
 
 	// Load JSON file
+	if (typeof _path != "string") {
+		Debug.LogError("Path is not string: ");
+		Debug.Log(_path);
+		return;
+	}
 	new File(_path, new GameProperties());
 	let data = FS.readJsonSync(_path); 
 
@@ -364,11 +378,11 @@ File.OpenFromPath = function(_path){
     }
 
 	// Settings
-	File.instance.gameProperties.resWidth = data.settings.resWidth; 
-	File.instance.gameProperties.resHeight = data.settings.resHeight; 
-	File.instance.gameProperties.inventoryGridNum = data.settings.inventoryGridNum;
-	File.instance.gameProperties.startScene = data.settings.startScene; 
-	File.instance.gameProperties.projectName = data.settings.projectName;
+	File.instance.gameProperties.settings.resWidth = data.settings.resWidth; 
+	File.instance.gameProperties.settings.resHeight = data.settings.resHeight; 
+	File.instance.gameProperties.settings.inventoryGridNum = data.settings.inventoryGridNum;
+	File.instance.gameProperties.settings.startScene = data.settings.startScene; 
+	File.instance.gameProperties.settings.projectName = data.settings.projectName;
 
 	// ProjData
 	ID.setCounter(data.projectData.idCounter);

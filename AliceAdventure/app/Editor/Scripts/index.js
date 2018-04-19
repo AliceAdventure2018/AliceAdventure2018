@@ -4,14 +4,9 @@ const IPC = require('electron').ipcRenderer;
 //const AliceEngine = require('../../Engine/AliceEngine');
 
 let AliceEditor = require('../Scripts/AliceEditor');
-// = (function(){
-//	let e = require('../Scripts/AliceEditor');
-//	console.log(ipcRenderer.sendSync('get-editor', e));
-//	return ipcRenderer.sendSync('get-editor', e);
-//})();
 
-IPC.on('set-editor', (event, data)=>{
-	AliceEditor = data;
+IPC.on('load-file', (event, data)=>{
+	AliceEditor.File.OpenFromPath(data);
 });
 
 // utilities
@@ -30,11 +25,28 @@ function isStringOr(_value, _default){
 // welcome page
 function InitWelcomePage(){
 	var welcomeView = AliceEditor.WelcomeView.NewView('welcome-view');
+	return welcomeView;
 }
 
 // tutorial page
+var transit; // temp
 function InitTutorialPage(){
-	var tutorialView = AliceEditor.TutorialView.NewView('tutorial-view');
+	let views = {
+		tutorialView: AliceEditor.TutorialView.NewView('step_1'),
+    	sceneView: AliceEditor.SceneView.NewView('design-editor'),
+		galleryView: AliceEditor.GalleryView.NewView('gallery'),
+		objectListView: AliceEditor.ObjectListView.NewView('object-list'),
+		interactionView: AliceEditor.InteractionView.NewView('interaction-editor'),
+		iLibraryView: AliceEditor.ILibraryView.NewView('interaction-library'),
+	};
+	transit = {
+		back: ()=>{views.tutorialView.vModel.back()},
+		next: ()=>{views.tutorialView.vModel.next()},
+		skip: ()=>{views.tutorialView.vModel.skip()},
+		finish: ()=>{views.tutorialView.vModel.finish()},
+		exit: ()=>{views.tutorialView.vModel.exit()}
+	}
+	return views;
 }
 
 // variables
