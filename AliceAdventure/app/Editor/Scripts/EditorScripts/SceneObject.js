@@ -65,23 +65,22 @@ var pixiFilters = { // private
 SceneObject.prototype.InitSprite = function(_url){
 	if (!(this instanceof SceneObject)) return;
 	this.sprite = PIXI.Sprite.fromImage(_url);
-	this.sprite.x = GameProperties.instance.projectData.viewWidth / 2;
-	this.sprite.y = GameProperties.instance.projectData.viewHeight / 2;
-	this.sprite.scale.set(0.5, 0.5);
-	this.sprite.anchor.set(0.5, 0.5);
-	this.sprite.visible = true;
-	this.sprite.interactive = true;
-	this.sprite
-		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
-		.on("pointermove", (e)=>{this.OnPointerMove(e);})
-		.on("pointerup", (e)=>{this.OnPointerUp(e);})
-		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
-    this.sprite.id = this.id;
+	this.SpriteInfoDefault();
 };
 
 SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active){
-	if (_url != null)
-		this.sprite = PIXI.Sprite.fromImage(_url);
+	if (_url != null){
+		if (this.sprite == null){ // no sprite
+			this.sprite = PIXI.Sprite.fromImage(_url);
+		} else {
+			let parent = this.sprite.parent;
+			if (parent != null) parent.removeChild(this.sprite);
+			this.sprite.destroy();
+			this.sprite = PIXI.Sprite.fromImage(_url);
+			if (parent != null) parent.addChild(this.sprite);
+		}
+	}
+	this.SpriteInfoDefault();
 	if (_pos != null){
 		this.sprite.x = _pos.x;
 		this.sprite.y = _pos.y;		
@@ -92,15 +91,23 @@ SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active)
 		this.sprite.anchor.set(_anchor.x, _anchor.y);
 	if (_active != null)
 		this.sprite.visible = _active;
+};
 
+SceneObject.prototype.SpriteInfoDefault = function(){
+	if (this.sprite == null) return;
+	this.sprite.x = 320;
+	this.sprite.y = 240;
+	this.sprite.scale.set(0.5, 0.5);
+	this.sprite.anchor.set(0.5, 0.5);
+	this.sprite.visible = true;
 	this.sprite.interactive = true;
 	this.sprite
 		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
 		.on("pointermove", (e)=>{this.OnPointerMove(e);})
 		.on("pointerup", (e)=>{this.OnPointerUp(e);})
 		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
-	this.sprite.id = this.id;
-};
+    this.sprite.id = this.id;	
+}
 
 SceneObject.prototype.SwitchScene = function(toScene, aboveObj) {
 	if (toScene.id == 0){ // inventory
@@ -151,7 +158,7 @@ SceneObject.prototype.SwitchScene = function(toScene, aboveObj) {
 }
 
 SceneObject.prototype.DeleteThis = function(){
-	this.sprite.destroy({children:true, texture:true, baseTexture:true});
+	this.sprite.destroy();
 	GameProperties.DeleteObject(this);
 };
 

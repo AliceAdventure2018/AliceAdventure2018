@@ -55,7 +55,6 @@ TutorialView.prototype.InitView = function(){
 
 TutorialView.prototype.ReloadView = function(){
 	View.prototype.ReloadView.apply(this); // call super method
-
 	if (GameProperties.instance == null){ // no proj loaded
 		this.vModel.sceneList = null;
 		this.vModel.objectList = null;

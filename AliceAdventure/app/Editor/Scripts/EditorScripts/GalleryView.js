@@ -102,6 +102,7 @@ GalleryView.prototype.InitView = function(){
 			imageDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.GalleryImage, d);},
 			soundDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.GallerySound, d);},
 			chooseObj: (_obj)=>{ this.ChooseObj(_obj); },
+			setImage: (img)=>{this.SetImage(img);}
 		}
 	});
 
@@ -124,6 +125,14 @@ GalleryView.prototype.ReloadView = function(){
 GalleryView.prototype.ChooseObj = function(_obj){
 	this.objSelected = _obj;
 	Event.Broadcast('add-gallery-object', this.objSelected);
+};
+
+GalleryView.prototype.SetImage = function(img){
+	let obj = View.Selection.object;
+	console.log(obj);
+	if (obj == null) return;
+	obj.SetSprite('../../' + img.src);
+	View.Selection.selectObject(obj);
 }
 
 module.exports = GalleryView;

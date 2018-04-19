@@ -127,7 +127,7 @@
         <tr v-for='(obj, index) in objectList'>
           <td v-html='(index+1)'>
           </td>
-          <td contenteditable="true">
+          <td>
             <select v-model='obj.bindScene' v-on:change='changeScene(obj, obj.bindScene)'>
               <option v-for='scene in sceneList' v-bind:value='scene' v-html='scene.name'></option>
               <option v-bind:value='{id: 0}'> Inventory </option>
@@ -184,9 +184,9 @@
                 <div class="assets">
                   <ul>
                   <!-- bind the gallery data -->
-                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="'../../'+img.src"> </div><p v-html='img.name'></p>
+                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="'../../'+img.src"> </div><p v-html='img.name'></p>
                     </li>
-                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                     </li>
                     
                   </ul>
