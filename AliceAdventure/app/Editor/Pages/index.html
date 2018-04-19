@@ -267,23 +267,63 @@
             <h6 class="window-title" >GALLERY</h6>
       			<div id="tabList">
         			<ul >
-    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="selected">
-    						Images</a></li>
+    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#backdrop-asset" aria-controls="backdrop-asset" class="selected">
+    						Backdrops</a></li>
+    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#character-asset" aria-controls="character-asset" class="unselecteds">
+    						Characters</a></li>
+    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#item-asset" aria-controls="item-asset" class="unselecteds">
+    						Items</a></li>
+    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#other-asset" aria-controls="other-asset" class="unselecteds">
+    						Others</a></li>
+    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#imported-asset" aria-controls="imported-asset" class="unselecteds">
+    						Imported</a></li>
     						<li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
           			<!--<div class="tab-list" id="tabList">
           			<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical"-->
               </ul>
   		      </div>
 						<div id="tabContent">
-							<div id="door-asset" style="display: block;">
+							<div id="backdrop-asset" style="display: block;">
 								<div class="assets">
 									<ul>
-									<!-- bind the gallery data -->
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.backdrop" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
+									</ul>
+								</div>
+							</div>
+
+							<div id="character-asset" style="display: none;">
+								<div class="assets">
+									<ul>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.character" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+							<div id="item-asset" style="display: none;">
+								<div class="assets">
+									<ul>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.item" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+							<div id="other-asset" style="display: none;">
+								<div class="assets">
+									<ul>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.other" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+							<div id="imported-asset" style="display: none;">
+								<div class="assets">
+									<ul>
 										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
-										
 									</ul>
 								</div>
 							</div>

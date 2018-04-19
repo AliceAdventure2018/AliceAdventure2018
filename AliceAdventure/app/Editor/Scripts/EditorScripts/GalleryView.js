@@ -16,59 +16,28 @@ GalleryView = function(_bindElementID, _height = -1, _width = -1){
 };
 GalleryView.prototype = new View();
 
-GalleryView.ImageLibrary = [
-	{
-		index: 0, 
-		src: "../../Assets/kitchen.png", 
-		name: "Kitchen"
-	}, 
-	{
-		index: 1, 
-		src: "../../Assets/door.png", 
-		name: "Door"
-	}, 
-	{
-		index: 2,
-		src: "../../Assets/knife.png", 
-		name: "Knife"
-	}, 
-	{
-		index: 3, 
-		src: "../../Assets/jam.png", 
-		name: "Jam"
-	}, 
-	{
-		index: 4, 
-		src: "../../Assets/knifewithjam.png", 
-		name: "Knife with jam"
-	}, 
-	{
-		index: 5, 
-		src: "../../Assets/bread.png", 
-		name: "Bread"
-	}, 
-	{
-		index: 6, 
-		src: "../../Assets/breadwithjam.png", 
-		name: "Bread with jam"
-	}, 
-	{
-		index: 7, 
-		src: "../../Assets/cat.png", 
-		name: "Cat"
-	}, 
-	{
-		index: 8, 
-		src: "../../Assets/room_basic.png", 
-		name: "Living room"
-	},
-    {
-		index: 9, 
-		src: "../../Assets/win.png", 
-		name: "Win"
-	}
-    
-];
+GalleryView.ImageLibrary = {
+	backdrop:[
+		{name:'Backdrop', src:'../../Assets/backdrop/backdrop.png'},
+		{name:'Beach', src:'../../Assets/backdrop/beach_org.png'},
+		{name:'Kitchen', src:'../../Assets/backdrop/kitchen.png'},
+		{name:'Mountain view', src:'../../Assets/backdrop/mountainView.png'},
+		{name:'Room', src:'../../Assets/backdrop/room_basic.png'},
+		{name:'Win', src:'../../Assets/backdrop/win.png'},
+	],
+	character:[
+		{name:'Cat happy', src:'../../Assets/character/cat.png'},
+		// {...}
+	],
+	item:[
+		{name:'Key', src:'../../Assets/item/key.png'},
+		// {...}
+	],
+	other:[
+		{name:'Arrow', src:'../../Assets/other/arrow_plain.png'},
+		// {...}
+	],
+};
 
 GalleryView.SoundLibrary = [
 	/*{
