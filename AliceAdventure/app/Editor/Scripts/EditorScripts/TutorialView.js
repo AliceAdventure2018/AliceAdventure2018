@@ -4,6 +4,7 @@ const {IPC, Event} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
 const Scene = require('./Scene');
 const SceneObject = require('./SceneObject');
+const File = require('./File');
 const View = require('./View');
 
 // class
@@ -41,7 +42,10 @@ TutorialView.prototype.InitView = function(){
 			changeName: (event, thing)=>{if (thing.name != null) thing.name = event.target.innerHTML}, 
 			changeScene: (obj, toScene)=>{obj.SwitchScene(toScene);},
 
+			back: ()=>{Event.Broadcast("reload-project")},
 			next: ()=>{Event.Broadcast("reload-project")},
+			skip: ()=>{File.SaveProject((path)=>{IPC.send('complete-tut', path);});},
+			finish: ()=>{File.SaveProject((path)=>{IPC.send('complete-tut', path);});},
 			exit: ()=>{IPC.send('exit');}
 		}
 	});

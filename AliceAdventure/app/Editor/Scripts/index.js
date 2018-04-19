@@ -29,15 +29,24 @@ function InitWelcomePage(){
 }
 
 // tutorial page
+var transit; // temp
 function InitTutorialPage(){
-	return {
+	let views = {
 		tutorialView: AliceEditor.TutorialView.NewView('step_1'),
     	sceneView: AliceEditor.SceneView.NewView('design-editor'),
 		galleryView: AliceEditor.GalleryView.NewView('gallery'),
 		objectListView: AliceEditor.ObjectListView.NewView('object-list'),
 		interactionView: AliceEditor.InteractionView.NewView('interaction-editor'),
 		iLibraryView: AliceEditor.ILibraryView.NewView('interaction-library'),
+	};
+	transit = {
+		back: ()=>{views.tutorialView.vModel.back()},
+		next: ()=>{views.tutorialView.vModel.next()},
+		skip: ()=>{views.tutorialView.vModel.skip()},
+		finish: ()=>{views.tutorialView.vModel.finish()},
+		exit: ()=>{views.tutorialView.vModel.exit()}
 	}
+	return views;
 }
 
 // variables
