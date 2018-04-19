@@ -53,7 +53,10 @@ File.NewEmptyProject = function(callback){ // TUT
 		}).then((_name)=>{
 			if (_name != null) {
 				new File(null, new GameProperties());
-				File.instance.gameProperties.settings.projectName = _name;			
+				File.instance.gameProperties.settings.projectName = _name;
+				// Default settings
+				let firstScene = Scene.AddScene("New scene");
+				//firstScene.SelectOn();			
 				Event.Broadcast("reload-project");
 				if (typeof callback == "function"){
 					callback(_name);
@@ -113,7 +116,7 @@ File.SaveProject = function(callback){
 	} else { // Has path saved
 		File.SaveToPath(File.instance.path);
 		if (typeof callback == "function"){
-			callback();
+			callback(File.instance.path);
 		}
 	}
 };
@@ -326,7 +329,11 @@ File.SaveToPath = function(_path){
 File.OpenFromPath = function(_path){
 
 	// Load JSON file
-	if (typeof _path != "string") Debug.LogError("Path is not string");
+	if (typeof _path != "string") {
+		Debug.LogError("Path is not string: ");
+		Debug.Log(_path);
+		return;
+	}
 	new File(_path, new GameProperties());
 	let data = FS.readJsonSync(_path); 
 

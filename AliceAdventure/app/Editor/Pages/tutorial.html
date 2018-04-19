@@ -142,8 +142,8 @@
   </p>
 	
   
-   <button class="sys-button" onclick="goSkip()"> Skip </button>
-   <button class="sys-button" v-on:click='goToNext();next();' > Next </button>
+   <button class="sys-button" v-on:click="goSkip();skip();"> Skip </button>
+   <button class="sys-button" v-on:click='goToNext();next();'> Next </button>
  </div>
 
 
@@ -236,10 +236,9 @@
           </div>
 
         </div>
-
-   <button class="sys-button" onclick="goSkip()"> Skip </button>
-   <button class="sys-button" onclick="goToNext()" > Next </button>
-   <button class="sys-button" onclick="goBack()"> Back </button>
+   <button class="sys-button" onclick="goSkip();transit.skip()"> Skip </button>
+   <button class="sys-button" onclick="goToNext();transit.next()" > Next </button>
+   <button class="sys-button" onclick="goBack();transit.back();"> Back </button> 
  </div>
 
 
@@ -426,19 +425,19 @@
         </div>
       </div>
     
-  <button class="sys-button" onclick="goSkip()"> Skip </button>
-   <button class="sys-button" onclick="goToNext()" > Next </button>
-   <button class="sys-button" onclick="goBack()"> Back </button>
+  <button class="sys-button" onclick="goSkip();transit.skip()"> Skip </button>
+   <button class="sys-button" onclick="transit.finish()" > Finish </button>
+   <button class="sys-button" onclick="goBack();transit.back();"> Back </button>
  </div>
 
 
 
  <div id="step_4" style="display: none;">
-  <button class="sys-button" onclick="goSkip()"> Skip </button>
-   <button class="sys-button" onclick="goToNext()" > Next </button>
-   <button class="sys-button" onclick="goBack()"> Back </button>
+  <button class="sys-button" onclick="goSkip();transit.skip()"> Skip </button>
+   <button class="sys-button" onclick="goToNext();transit.next()" > Next </button>
+   <button class="sys-button" onclick="goBack();transit.back();"> Back </button>
  </div>
  </div>
- <script>var tutorialView = InitTutorialPage();</script>
+ <script>var views = InitTutorialPage();</script>
 </body>
 </html>
