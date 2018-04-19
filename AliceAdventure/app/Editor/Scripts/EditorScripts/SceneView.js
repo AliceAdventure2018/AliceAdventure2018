@@ -70,6 +70,7 @@ SceneView.prototype.ReloadView = function(){
 			}
 		});
 		GameProperties.instance.objectList.forEach((obj)=>{
+			if (obj.bindScene == null || obj.bindScene.id == 0) return;
 			obj.bindScene.container.addChild(obj.sprite);
 			if (obj.selected){
 				View.Selection.selectObject(obj);
