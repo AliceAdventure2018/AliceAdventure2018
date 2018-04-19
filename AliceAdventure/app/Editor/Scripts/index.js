@@ -25,11 +25,19 @@ function isStringOr(_value, _default){
 // welcome page
 function InitWelcomePage(){
 	var welcomeView = AliceEditor.WelcomeView.NewView('welcome-view');
+	return welcomeView;
 }
 
 // tutorial page
 function InitTutorialPage(){
-	var tutorialView = AliceEditor.TutorialView.NewView('tutorial-view');
+	return {
+		tutorialView: AliceEditor.TutorialView.NewView('step_1'),
+    	sceneView: AliceEditor.SceneView.NewView('design-editor'),
+		galleryView: AliceEditor.GalleryView.NewView('gallery'),
+		objectListView: AliceEditor.ObjectListView.NewView('object-list'),
+		interactionView: AliceEditor.InteractionView.NewView('interaction-editor'),
+		iLibraryView: AliceEditor.ILibraryView.NewView('interaction-library'),
+	}
 }
 
 // variables

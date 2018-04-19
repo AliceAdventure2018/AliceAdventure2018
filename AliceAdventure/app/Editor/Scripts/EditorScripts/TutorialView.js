@@ -1,8 +1,9 @@
 'use strict';
 
-const {IPC} = require('./Utilities/Utilities');
+const {IPC, Event} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
-const File = require('./File');
+const Scene = require('./Scene');
+const SceneObject = require('./SceneObject');
 const View = require('./View');
 
 // class
@@ -31,21 +32,35 @@ TutorialView.prototype.InitView = function(){
 		data: {
 			sceneList: null,
 			objectList: null,
+			projectName: null,
 		}, 
 		methods: {
-			addScene: ()=>{},
-			addObject: ()=>{}, 
+			addScene: ()=>{Scene.AddScene("new scene")},
+			addObject: ()=>{SceneObject.AddEmptyObject("new object")}, 
+
+			changeName: (event, thing)=>{if (thing.name != null) thing.name = event.target.innerHTML}, 
 
 			newProj: ()=>{File.NewEmptyProject(()=>{/*IPC.send('new-proj');*/});}, 
 			openProj: ()=>{File.OpenProject(()=>{IPC.send('open-proj');});}, 
 			exit: ()=>{IPC.send('exit');}
 		}
 	});
+
+	Event.AddListener('reload-project', ()=>{this.ReloadView();});
 };
 
 TutorialView.prototype.ReloadView = function(){
 	View.prototype.ReloadView.apply(this); // call super method
-	if ()
+
+	if (GameProperties.instance == null){ // no proj loaded
+		this.vModel.sceneList = null;
+		this.vModel.objectList = null;
+		this.vModel.projectName = null;
+	} else { // proj loaded
+		this.vModel.sceneList = GameProperties.instance.sceneList;
+		this.vModel.objectList = GameProperties.instance.objectList;
+		this.vModel.projectName = GameProperties.instance.settings.projectName;
+	}
 };
 
 module.exports = TutorialView;

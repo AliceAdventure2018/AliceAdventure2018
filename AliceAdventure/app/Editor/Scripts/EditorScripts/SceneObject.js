@@ -25,22 +25,31 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 
 	this.properties = [];
 	this.sprite = null;
-
-	GameProperties.AddObject(this);
 };
 
 // static properties
-SceneObject.AddObject = function(_objInfo, _bindScene, _x, _y){
-	// test TODO: should read from objIndex // currently _objIndex is the file name
+SceneObject.AddEmptyObject = function(_name, _bindScene){
+	let _defaultObj = {
+		src: 'Assets/inventory.png',
+		name: _name
+	};
+	return SceneObject.AddObject(_defaultObj, _bindScene);
+}
+
+SceneObject.AddObject = function(_objInfo, _bindScene){
+	if (GameProperties.instance == null) return null; // no proj loaded
 	let _path = _objInfo.src;
 	let _obj = new SceneObject(null, _objInfo.name, _path, _bindScene);
-	_obj.InitSprite('../../' + _path, {x: _x, y: _y});
+	GameProperties.AddObject(_obj);
+	_obj.InitSprite('../../' + _path);
 	return _obj;
 };
 
-SceneObject.LoadObject = function(_data){ // I AM HERE
+SceneObject.LoadObject = function(_data){
+	if (GameProperties.instance == null) return null; // no proj loaded
 	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene), _data.clickable, _data.draggable);
-	_obj.InitSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
+	GameProperties.AddObject(_obj);
+	_obj.SetSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
 	return _obj;
 };
 
@@ -53,14 +62,14 @@ var pixiFilters = { // private
 }; 
 
 // functions
-SceneObject.prototype.InitSprite = function(_url, _pos, _scale, _anchor, _active){
+SceneObject.prototype.InitSprite = function(_url){
 	if (!(this instanceof SceneObject)) return;
 	this.sprite = PIXI.Sprite.fromImage(_url);
-	this.sprite.x = (_pos != null)?_pos.x: 0;
-	this.sprite.y = (_pos != null)?_pos.y: 0;
-	this.sprite.scale.set((_scale != null)?_scale.x: 0.5, (_scale != null)?_scale.y: 0.5);
-	this.sprite.anchor.set((_anchor != null)?_anchor.x: 0.5, (_anchor != null)?_anchor.y: 0.5);
-	this.sprite.visible = (_active != null)?_active:true;
+	this.sprite.x = GameProperties.instance.projectData.viewWidth / 2;
+	this.sprite.y = GameProperties.instance.projectData.viewHeight / 2;
+	this.sprite.scale.set(0.5, 0.5);
+	this.sprite.anchor.set(0.5, 0.5);
+	this.sprite.visible = true;
 	this.sprite.interactive = true;
 	this.sprite
 		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
@@ -68,6 +77,28 @@ SceneObject.prototype.InitSprite = function(_url, _pos, _scale, _anchor, _active
 		.on("pointerup", (e)=>{this.OnPointerUp(e);})
 		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
 };
+
+SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active){
+	if (_url != null)
+		this.sprite = PIXI.Sprite.fromImage(_url);
+	if (_pos != null){
+		this.sprite.x = _pos.x;
+		this.sprite.y = _pos.y;		
+	}
+	if (_scale != null)
+		this.sprite.scale.set(_scale.x, _scale.y);
+	if (_anchor != null)
+		this.sprite.anchor.set(_anchor.x, _anchor.y);
+	if (_active != null)
+		this.sprite.visible = _active;
+
+	this.sprite.interactive = true;
+	this.sprite
+		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
+		.on("pointermove", (e)=>{this.OnPointerMove(e);})
+		.on("pointerup", (e)=>{this.OnPointerUp(e);})
+		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
+}
 
 SceneObject.prototype.DeleteThis = function(){
 	this.sprite.destroy({children:true, texture:true, baseTexture:true});

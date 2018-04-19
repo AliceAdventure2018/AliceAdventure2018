@@ -370,11 +370,11 @@ File.OpenFromPath = function(_path){
     }
 
 	// Settings
-	File.instance.gameProperties.resWidth = data.settings.resWidth; 
-	File.instance.gameProperties.resHeight = data.settings.resHeight; 
-	File.instance.gameProperties.inventoryGridNum = data.settings.inventoryGridNum;
-	File.instance.gameProperties.startScene = data.settings.startScene; 
-	File.instance.gameProperties.projectName = data.settings.projectName;
+	File.instance.gameProperties.settings.resWidth = data.settings.resWidth; 
+	File.instance.gameProperties.settings.resHeight = data.settings.resHeight; 
+	File.instance.gameProperties.settings.inventoryGridNum = data.settings.inventoryGridNum;
+	File.instance.gameProperties.settings.startScene = data.settings.startScene; 
+	File.instance.gameProperties.settings.projectName = data.settings.projectName;
 
 	// ProjData
 	ID.setCounter(data.projectData.idCounter);
