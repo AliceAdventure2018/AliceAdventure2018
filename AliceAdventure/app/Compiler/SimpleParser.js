@@ -56,7 +56,7 @@ Parser = function (jsonPath, buildPath){
 		if (interaction === false) return false;
 		else toReturn += interaction;
 
-		toReturn += 'myGame.start(0);'
+		toReturn += 'myGame.start(' + this.settings.startScene + ');'
 		return toReturn;
 	}
 
@@ -184,7 +184,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	function getNameWithID(obj, id){
-		return obj.replace(/ +/g, "_") + '_' +  id;
+		return '_' + obj.replace(/ +/g, "_") + '_' +  id;
 	}
 
 	function setPos(obj, pos){
@@ -211,11 +211,11 @@ Parser = function (jsonPath, buildPath){
 		// src, anchor, scale, interactive, buttonMode, pos, name, sceneParent, ID
 		if (object.hasOwnProperty("name")&& object.hasOwnProperty("id")){
 
-			if (typeof (object.name) === "number"){
-				error = "Compile ERROR: Name of the object:  " + object.name + " cannot be numbers. Must have letters.";
-				callback(error);
-				return false;
-			}else{
+			// if (typeof (object.name) === "number"){
+			// 	error = "Compile ERROR: Name of the object:  " + object.name + " cannot be numbers. Must have letters.";
+			// 	callback(error);
+			// 	return false;
+			// }else{
 
 				var name = getNameWithID(object.name, object.id);
 				
@@ -365,7 +365,7 @@ Parser = function (jsonPath, buildPath){
 				}
 
 
-			}//end name
+			//}//end name
 
 		}else{
 			error = "Compile ERROR: Object must have a name !!"
