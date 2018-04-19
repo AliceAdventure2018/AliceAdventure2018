@@ -42,6 +42,13 @@ function printID(array) {
     console.log(toPrint)
 }
 
+GameProperties.showObjNames = function(){
+	if (GameProperties.instance == null) return;
+	GameProperties.instance.objectList.forEach((obj)=>{
+		console.log(obj.name);
+	});
+}
+
 GameProperties.updateOrderByScene = function(_scene) {   
     var objInScene = _scene.container.children;
     

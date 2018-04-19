@@ -21,7 +21,7 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 	this.selectAllowed = true;
 	this.selected = false;
 	this.dragAllowed = true;
-	this.drag = { on: false, eventData: {} };
+	this.drag = { on: false, eventData: {}, offset: {x: 0, y: 0} };
 
 	//this.properties = [];
 	this.sprite = null;
@@ -41,7 +41,7 @@ SceneObject.AddObject = function(_objInfo, _bindScene){
 	let _path = _objInfo.src;
 	let _obj = new SceneObject(null, _objInfo.name, _path, _bindScene);
 	GameProperties.AddObject(_obj);
-	_obj.InitSprite('../../' + _path);
+	_obj.InitSprite(_path);
 	return _obj;
 };
 
@@ -49,7 +49,7 @@ SceneObject.LoadObject = function(_data){
 	if (GameProperties.instance == null) return null; // no proj loaded
 	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene), _data.clickable, _data.draggable);
 	GameProperties.AddObject(_obj);
-	_obj.SetSprite('../../' + _data.src, _data.pos, _data.scale, _data.anchor, _data.active);
+	_obj.SetSprite(_data.src, _data.pos, _data.scale, _data.anchor, _data.active);
 	return _obj;
 };
 
@@ -58,30 +58,30 @@ SceneObject.SetViewSize = function(w, h){
 };
 
 var pixiFilters = { // private
-	outlineFilterBlue: new PIXI.filters.OutlineFilter(4, 0x99ff99), 
+	outlineFilterGreen: new PIXI.filters.OutlineFilter(4, 0x99ff99), 
+	outlineFilterRed: new PIXI.filters.OutlineFilter(2, 0xff9999), 
 }; 
 
 // functions
 SceneObject.prototype.InitSprite = function(_url){
 	if (!(this instanceof SceneObject)) return;
 	this.sprite = PIXI.Sprite.fromImage(_url);
-	this.sprite.x = GameProperties.instance.projectData.viewWidth / 2;
-	this.sprite.y = GameProperties.instance.projectData.viewHeight / 2;
-	this.sprite.scale.set(0.5, 0.5);
-	this.sprite.anchor.set(0.5, 0.5);
-	this.sprite.visible = true;
-	this.sprite.interactive = true;
-	this.sprite
-		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
-		.on("pointermove", (e)=>{this.OnPointerMove(e);})
-		.on("pointerup", (e)=>{this.OnPointerUp(e);})
-		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
-    this.sprite.id = this.id;
+	this.SpriteInfoDefault();
 };
 
 SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active){
-	if (_url != null)
-		this.sprite = PIXI.Sprite.fromImage(_url);
+	if (_url != null){
+		if (this.sprite == null){ // no sprite
+			this.sprite = PIXI.Sprite.fromImage(_url);
+		} else {
+			let parent = this.sprite.parent;
+			if (parent != null) parent.removeChild(this.sprite);
+			this.sprite.destroy();
+			this.sprite = PIXI.Sprite.fromImage(_url);
+			if (parent != null) parent.addChild(this.sprite);
+		}
+	}
+	this.SpriteInfoDefault();
 	if (_pos != null){
 		this.sprite.x = _pos.x;
 		this.sprite.y = _pos.y;		
@@ -92,15 +92,25 @@ SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active)
 		this.sprite.anchor.set(_anchor.x, _anchor.y);
 	if (_active != null)
 		this.sprite.visible = _active;
+};
 
+SceneObject.prototype.SpriteInfoDefault = function(){
+	if (this.sprite == null) return;
+	this.sprite.x = 320;
+	this.sprite.y = 240;
+	this.sprite.scale.set(0.5, 0.5);
+	this.sprite.anchor.set(0.5, 0.5);
+	this.sprite.visible = true;
 	this.sprite.interactive = true;
 	this.sprite
 		.on("pointerdown", (e)=>{this.OnPointerDown(e);})
 		.on("pointermove", (e)=>{this.OnPointerMove(e);})
 		.on("pointerup", (e)=>{this.OnPointerUp(e);})
-		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);});
-	this.sprite.id = this.id;
-};
+		.on("pointerupoutside", (e)=>{this.OnPointerUp(e);})
+		.on("pointerover", (e)=>{this.OnPointerOver(e);})
+		.on("pointerout", (e)=>{this.OnPointerOut(e);});
+    this.sprite.id = this.id;	
+}
 
 SceneObject.prototype.SwitchScene = function(toScene, aboveObj) {
 	if (toScene.id == 0){ // inventory
@@ -148,10 +158,19 @@ SceneObject.prototype.SwitchScene = function(toScene, aboveObj) {
     
     this.bindScene = toScene;
     GameProperties.updateOrderByScene(toScene);
+};
+
+SceneObject.prototype.ToggleLock = function(){
+	this.dragAllowed = !this.dragAllowed;
+	if (this.dragAllowed){
+		
+	} else {
+		Resizer.hideHelper();
+	}
 }
 
 SceneObject.prototype.DeleteThis = function(){
-	this.sprite.destroy({children:true, texture:true, baseTexture:true});
+	this.sprite.destroy();
 	GameProperties.DeleteObject(this);
 };
 
@@ -203,7 +222,7 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 
 SceneObject.prototype.SelectOn = function(){
 	this.selected = true;
-	this.sprite.filters = [pixiFilters.outlineFilterBlue];
+	this.sprite.filters = [pixiFilters.outlineFilterGreen];
 	//Resizer.showHelper(this.sprite);	
 };
 
@@ -241,6 +260,20 @@ SceneObject.prototype.OnPointerUp = function(_event){
 	// Stop dragging
 	if (this.dragAllowed){
 		this.drag.on = false;
+	}
+};
+
+SceneObject.prototype.OnPointerOver = function(_event){
+	// Stop dragging
+	if (this.dragAllowed && this.selected){
+		Resizer.showHelper(this.sprite);
+	}
+};
+
+SceneObject.prototype.OnPointerOut = function(_event){
+	// Stop dragging
+	if (this.dragAllowed && this.selected){
+		//Resizer.hideHelper();
 	}
 };
 

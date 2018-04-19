@@ -9,7 +9,7 @@ Event = (function(){
 	return {
 		Broadcast: function(_event, _parameters){
 			if (events[_event] == undefined){
-				Debug.LogWarning("Event \"" + _event + "\" is not defined. ");
+				//Debug.LogWarning("Event \"" + _event + "\" is not defined. ");
 			}
 			else {
 				for (var i in events[_event]){

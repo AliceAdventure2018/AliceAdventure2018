@@ -25,15 +25,16 @@ Resizer = function() {
             var sqr = this.createSquare(0,0);
                 switch(i) {
                 case 0:
-                    sqr.tint = 0xff0000;
+                    sqr.tint = 0x00ff00;
                     break;
                 case 1:
                     sqr.tint = 0x00ff00;
                     break;
                 case 2:
-                    sqr.tint = 0x0000ff;
+                    sqr.tint = 0x00ff00;
                     break;
                 case 3:
+                    sqr.tint = 0x00ff00;
                     break;
                 }
             sqr.idx = i;
