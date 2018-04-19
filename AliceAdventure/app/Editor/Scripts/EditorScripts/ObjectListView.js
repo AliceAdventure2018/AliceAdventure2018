@@ -31,6 +31,8 @@ ObjectListView.prototype.InitView = function(){
 	  	projectLoaded: false, 
 	    sceneList: null, 
 	    objectList: null,
+        isDraggingObject: false,
+        isDraggingScene: false,
       }, 
 	  methods: {
         objectDragStart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.ListedObject, d);},
@@ -39,6 +41,19 @@ ObjectListView.prototype.InitView = function(){
             dragObj.SwitchScene(scene, object);
             View.Selection.selectObject(dragObj);
         });}, 
+          
+        sceneDragStart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.ListedScene, d);},
+        sceneDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.ListedScene, ()=>{});},
+        sceneDrop: (ev, aboveScene)=>{View.HandleDrop(ev, View.DragInfo.ListedScene, (dragScene)=>{
+            if(aboveScene) {
+                console.log("has above")
+                GameProperties.moveSceneAfterScene(dragScene,aboveScene);
+            }else{
+                console.log("no above")
+                GameProperties.popSceneToTop(dragScene);
+            }
+        });}, 
+          
 	  	onObjectSelect: (obj)=>{View.Selection.selectObject(obj);}, 
 	  	onSceneSelect: (scn)=>{View.Selection.selectScene(scn);}, 
 	  	deleteObject: (obj)=>{View.Selection.deSelect();obj.DeleteThis();},
