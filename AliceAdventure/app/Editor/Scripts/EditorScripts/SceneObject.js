@@ -8,7 +8,7 @@ const Resizer = require('./Resizer');
 var SceneObject;
 
 // variables
-SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = null, _clickable = false, _draggable = false){
+SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = null, _clickable = true, _draggable = false){
 	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
 	this.id = _id;
 	this.name = _name;
@@ -98,8 +98,8 @@ SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active)
 
 SceneObject.prototype.SpriteInfoDefault = function(){
 	if (this.sprite == null) return;
-	this.sprite.x = 320;
-	this.sprite.y = 240;
+	this.sprite.x = 240;
+	this.sprite.y = 180;
 	this.sprite.scale.set(0.5, 0.5);
 	this.sprite.anchor.set(0.5, 0.5);
 	this.sprite.visible = true;
