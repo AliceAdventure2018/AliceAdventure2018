@@ -69,6 +69,8 @@ Scene.removeObj = function(_obj){
 	}
 };*/
 
+
+
 // functions
 Scene.prototype.InitContainer = function(){
 	this.container = new PIXI.Container();

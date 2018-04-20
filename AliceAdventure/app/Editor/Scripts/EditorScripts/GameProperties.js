@@ -30,16 +30,66 @@ GameProperties.instance = null;
 
 // static functions
 
-//GameProperties.moveObjectAfter(obj, index) {
-//    
-//    
+//function printID(array) {
+//    var toPrint = [];
+//    for(var i in array) {
+//        toPrint.push(array[i].id)
+//    }
+//    console.log(toPrint)
+//}
+//
+//function printName(array) {
+//    var toPrint = [];
+//    for(var i in array) {
+//        toPrint.push(array[i].name)
+//    }
+//    console.log(toPrint)
+//}
 
-function printID(array) {
-    var toPrint = [];
-    for(var i in array) {
-        toPrint.push(array[i].id)
+
+GameProperties.popSceneToTop = function(_scene) {
+    var index = -1;
+    for(var i = 0; i < GameProperties.instance.sceneList.length; i++) {
+        var scene = GameProperties.instance.sceneList[i];
+        if(scene.id == _scene.id) {
+            index = i;
+            break;
+        }
     }
-    console.log(toPrint)
+    
+    GameProperties.instance.sceneList.splice(index, 1);
+    GameProperties.instance.sceneList.splice(0, 0, _scene);
+    
+}
+
+GameProperties.moveSceneAfterScene = function(_sceneA, _sceneB) {
+    if(_sceneA.id == _sceneB.id) return;
+    
+    var indexA = -1;
+    var indexB = -1;
+    
+    for(var i  = 0; i < GameProperties.instance.sceneList.length; i++) {
+        var scene = GameProperties.instance.sceneList[i];
+        if(scene.id == _sceneA.id) {
+            indexA = i;
+        }
+        if(scene.id == _sceneB.id) {
+            indexB = i;
+        }
+        if(indexA!=-1 && indexB!=-1)
+            break;
+    }
+
+    if(indexA == indexB + 1) return;
+    
+    if(indexA < indexB) {
+        GameProperties.instance.sceneList.splice(indexB + 1, 0, _sceneA);
+        GameProperties.instance.sceneList.splice(indexA, 1);
+    } else {
+        GameProperties.instance.sceneList.splice(indexA, 1);
+        GameProperties.instance.sceneList.splice(indexB + 1, 0, _sceneA);
+    }
+
 }
 
 GameProperties.showObjNames = function(){
