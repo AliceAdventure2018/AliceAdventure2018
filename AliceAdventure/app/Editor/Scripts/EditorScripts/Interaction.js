@@ -8,11 +8,16 @@ const IReaction = require('./IReaction');
 var Interaction;
 
 // variables
-Interaction = function(_id, _event = null, _conditionList = [], _reactionList = []){
+Interaction = function(_id, _title = "Title", _event = null, _conditionList = [], _reactionList = []){
 	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
 	this.id = _id;
 
-	this.event = _event;
+    if(_title)
+        this.title = _title
+    else
+        this.title = "Title";
+	
+    this.event = _event;
 	this.conditionList = _conditionList;
 	this.reactionList = _reactionList;
 
@@ -33,7 +38,7 @@ Interaction.LoadInteraction = function(_data){
         let react = IReaction.prototype.fromJsonObject(_data.reactionList[i]);
         reactionList.push(react);
     }    
-    GameProperties.AddInteraction(new Interaction(_data.id, eve, _data.conditionList, reactionList));
+    GameProperties.AddInteraction(new Interaction(_data.id, _data.title, eve, _data.conditionList, reactionList));
 };
 
 // functions
@@ -90,8 +95,8 @@ Interaction.prototype.DeleteThis = function(){
 
 Interaction.prototype.toJsonObject = function() {
     let obj = {};
-    
-    obj.id = this.id;    
+    obj.id = this.id;
+    obj.title = this.title;
     obj.event = this.event.toJsonObject();    
     obj.conditionList = this.conditionList;        
     obj.reactionList = [];
