@@ -46,6 +46,7 @@ GameProperties.instance = null;
 //    console.log(toPrint)
 //}
 
+
 GameProperties.popSceneToTop = function(_scene) {
     var index = -1;
     for(var i = 0; i < GameProperties.instance.sceneList.length; i++) {
