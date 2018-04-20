@@ -21,10 +21,11 @@ interact('.interaction-box')
     },
     // enable autoScroll
    // autoScroll: true,
-   //stopImmediatePropagation();
-  
-    
-  }, false);
+
+  });
+
+
+interact('.interaction-box').ignoreFrom('li');
 
   function minimizeWindow(event){
   		var eventTarget = event.target.parentNode;
@@ -77,6 +78,8 @@ interact('.interaction-box')
     // update the posiion attributes
     target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
+      
+    event.stopImmediatePropagation();
   }
 
   // this is used later in the resizing and gesture demos

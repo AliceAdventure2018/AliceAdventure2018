@@ -72,6 +72,11 @@ Interaction.prototype.AddIReaction = function(_reactType, _index = null){
 	}
 };
 
+Interaction.prototype.AddExistIReaction = function(_iReact) {
+    this.reactionList.push(_iReact);
+    return this.reactionList.length - 1;
+}
+
 Interaction.prototype.DeleteIReaction = function(_iReact){
 	let i = this.reactionList.indexOf(_iReact);
 	if (i >= 0) { // exist
@@ -97,5 +102,42 @@ Interaction.prototype.toJsonObject = function() {
     
     return obj;
 };
+
+Interaction.prototype.popElemToTopInList = function(_index, _list) {
+    var selectElem = _list[_index];
+    _list.splice(_index, 1);
+    _list.splice(0, 0, selectElem);
+}
+
+Interaction.prototype.moveElemAfterElemInList = function(_indexA, _indexB, _list) {
+    
+    if(_indexB == -1) {
+        console.log()
+        this.popElemToTopInList(_indexA, _list);
+        return;
+    }
+    
+    if(_indexA == _indexB || _indexA == _indexB + 1 ) return;
+    
+    var movedElem = _list[_indexA];
+    console.log("before:" + movedElem.type);
+    console.log("la " + _indexA + "-" + _indexB)
+    
+    if(_indexA < _indexB) {
+        console.log("<")
+        _list.splice(_indexB + 1, 0, movedElem);
+        _list.splice(_indexA, 1);
+    } else {
+        //console.log(">")
+        _list.splice(_indexA, 1);
+        
+        //console.log("after:" + movedElem.type);
+       
+        _list.splice(_indexB + 1, 0, movedElem);
+    }
+    
+    
+
+}
 
 module.exports = Interaction;

@@ -43,6 +43,15 @@ View.HandleDragover = function(ev, infoType, operation){
 	}
 };
 
+View.HandleDragEnter = function(ev, infoType, operation){
+	if (infoType == dragData.type){
+		ev.preventDefault();
+		if (typeof operation == "function"){
+			operation(dragData.data);
+		}
+	}
+};
+
 View.HandleDrop = function(ev, infoType, operation){
 	//var info = JSON.parse(ev.dataTransfer.getData("text"));
 	if (infoType == dragData.type){
