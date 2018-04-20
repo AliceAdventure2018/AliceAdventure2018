@@ -259,7 +259,9 @@ function Inventory(game) { //always on the top
     this.scaleDown = function(tool) {
         tool.scale.set(1);
         //
-        tool.scale.set((this.inventory_w/tool.width) * this.magic_scale);
+        
+        var scale = Math.min(this.inventory_w/tool.width, this.inventory_w/tool.height)
+        tool.scale.set(scale * this.magic_scale);
         
     }
     
@@ -348,7 +350,7 @@ function Inventory(game) { //always on the top
             var message = tool.name + this.game.eventSystem.template.combine + inventoryCollider.pop().name;
             if(this.game.eventSystem.checkEventExist(message)){
                 //game.sound.play('good');
-                this.game.soundManager.play('good');
+                //this.game.soundManager.play('good');
                 this.game.eventSystem.callEvent(message);
                 return;
             }
@@ -359,7 +361,7 @@ function Inventory(game) { //always on the top
             //console.log(message);
             if(this.game.eventSystem.checkEventExist(message)){
                 //game.sound.play('good');
-                this.game.soundManager.play('good');
+                //this.game.soundManager.play('good');
                 this.game.eventSystem.callEvent(message);
                 return;
             }
@@ -1025,7 +1027,6 @@ function onMouseUp() {
             var item = sceneCollider.pop();
             var message = this.name + myGame.eventSystem.template.use + item.name;
             //console.log(message);
-            console.log("use msg: " + message)
             if(myGame.eventSystem.checkEventExist(message)){
                 myGame.soundManager.play('good');
                 myGame.eventSystem.callEvent(message);
@@ -1034,7 +1035,7 @@ function onMouseUp() {
             
             message = this.name + myGame.eventSystem.template.combine + item.name;
             
-            console.log("combine msg: " + message)
+            //console.log("combine msg: " + message)
             if(myGame.eventSystem.checkEventExist(message)){
                 myGame.soundManager.play('good');
                 myGame.eventSystem.callEvent(message);

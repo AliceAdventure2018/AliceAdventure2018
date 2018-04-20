@@ -259,7 +259,9 @@ function Inventory(game) { //always on the top
     this.scaleDown = function(tool) {
         tool.scale.set(1);
         //
-        tool.scale.set((this.inventory_w/tool.width) * this.magic_scale);
+        
+        var scale = Math.min(this.inventory_w/tool.width, this.inventory_w/tool.height)
+        tool.scale.set(scale * this.magic_scale);
         
     }
     
