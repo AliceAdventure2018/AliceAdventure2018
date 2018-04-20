@@ -518,7 +518,7 @@ Parser = function (jsonPath, buildPath){
 			if (hasCondition) reactions += "		return;\n	}//if statement end\n"; //if statementend
 
 
-			this.iTree.putNode(event, interaction.event.type, interaction.event.args, conditions + reactions);
+			this.iTree.putNode(eventList, interaction.event.type, interaction.event.args, conditions + reactions);
 			//this.eventListAddNode.call(this, eventList, conditions + reactions);
 			return true;
 
