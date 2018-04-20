@@ -9,13 +9,13 @@ Debug = function(){};
 // functions
 Debug.Log = function(something){
 	console.log("LOG: " + something);
-	//alert(something);
+	alert(something);
 	// TODO: Reserved for later output functionality
 }
 
 Debug.LogError = function(something){
 	console.log("ERROR: " + something);
-	//alert("ERROR: " + something);
+	alert("ERROR: " + something);
 	// TODO: Reserved for later output functionality
 }
 
