@@ -375,8 +375,8 @@ Parser = function (jsonPath, buildPath){
 					var sceneIndex =findSceneByID.call(this,object.bindScene);
 					
 					if (sceneIndex === false){
-						callback("Compile ERROR: cannot find scene id = " + object.bindScene  + ".");
-						return false;
+						//callback("Compile ERROR: cannot find scene id = " + object.bindScene  + ".");
+						//return false;
 					}else{
 						toReturn+= addObjectToScene(name, sceneIndex);
 					}
