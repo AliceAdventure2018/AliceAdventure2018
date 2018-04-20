@@ -66,7 +66,12 @@ Parser = function (jsonPath, buildPath){
 		if (interaction === false) return false;
 		else toReturn += interaction;
 
-		toReturn += 'myGame.start(' + this.settings.startScene + ');'
+		var startScene = findSceneByID.call(this, this.settings.startScene);
+		if (startScene === false) {
+			callback("Compiler ERROR: cannot find the scene stated as the start scene.");
+			return false;
+		}
+		toReturn += 'myGame.start(' +  startScene + ');'
 		return toReturn;
 	}
 

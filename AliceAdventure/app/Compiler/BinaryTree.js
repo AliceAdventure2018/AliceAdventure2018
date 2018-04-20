@@ -25,7 +25,7 @@ ITree.prototype.putNode = function(eventString, eventType, args, condWithReact){
 }
 
 ITree.prototype.getEverything = function () {
-	console.log("total: " + this.total + ", size: " + this.treeSize + ", depth: " + _getMaxDepth.call(this));
+	//console.log("total: " + this.total + ", size: " + this.treeSize + ", depth: " + _getMaxDepth.call(this));
 	
 	var result = "";
     var node = this.root;
