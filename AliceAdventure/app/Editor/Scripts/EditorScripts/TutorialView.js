@@ -38,6 +38,8 @@ TutorialView.prototype.InitView = function(){
 		methods: {
 			addScene: ()=>{this.AddScene("new scene")},
 			addObject: ()=>{this.AddEmptyObject("new object")}, 
+			addCharacter: ()=>{this.AddEmptyObject("new object", true)}, 
+			deleteThing: (thing)=>{thing.DeleteThis()},
 
 			changeName: (event, thing)=>{if (thing.name != null) thing.name = event.target.innerHTML}, 
 			changeScene: (obj, toScene)=>{obj.SwitchScene(toScene);},
@@ -66,8 +68,9 @@ TutorialView.prototype.ReloadView = function(){
 	}
 };
 
-TutorialView.prototype.AddEmptyObject = function(_name){
+TutorialView.prototype.AddEmptyObject = function(_name, _isCharacter = false){
 	var _obj = SceneObject.AddEmptyObject(_name, {id: 0});
+	_obj.isCharacter = _isCharacter;
 };
 
 TutorialView.prototype.AddScene = function(_name){

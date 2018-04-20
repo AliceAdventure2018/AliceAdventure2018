@@ -72,6 +72,7 @@ SceneObject.prototype.InitSprite = function(_url){
 
 SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active){
 	if (_url != null){
+		this.src = _url;
 		if (this.sprite == null){ // no sprite
 			this.sprite = PIXI.Sprite.fromImage(_url);
 		} else {
