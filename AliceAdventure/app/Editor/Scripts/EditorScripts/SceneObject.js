@@ -25,12 +25,13 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 
 	//this.properties = [];
 	this.sprite = null;
+	this.filter = pixiFilters.outlineFilterGreen;
 };
 
 // static properties
 SceneObject.AddEmptyObject = function(_name, _bindScene){
 	let _defaultObj = {
-		src: 'Assets/inventory.png',
+		src: '../../Assets/inventory.png',
 		name: _name
 	};
 	return SceneObject.AddObject(_defaultObj, _bindScene);
@@ -59,7 +60,7 @@ SceneObject.SetViewSize = function(w, h){
 
 var pixiFilters = { // private
 	outlineFilterGreen: new PIXI.filters.OutlineFilter(4, 0x99ff99), 
-	outlineFilterRed: new PIXI.filters.OutlineFilter(2, 0xff9999), 
+	outlineFilterRed: new PIXI.filters.OutlineFilter(4, 0xff9999), 
 }; 
 
 // functions
@@ -71,6 +72,7 @@ SceneObject.prototype.InitSprite = function(_url){
 
 SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active){
 	if (_url != null){
+		this.src = _url;
 		if (this.sprite == null){ // no sprite
 			this.sprite = PIXI.Sprite.fromImage(_url);
 		} else {
@@ -163,8 +165,11 @@ SceneObject.prototype.SwitchScene = function(toScene, aboveObj) {
 SceneObject.prototype.ToggleLock = function(){
 	this.dragAllowed = !this.dragAllowed;
 	if (this.dragAllowed){
-		
+		this.filter = pixiFilters.outlineFilterGreen;
+		if (this.selected) this.sprite.filters = [this.filter];
 	} else {
+		this.filter = pixiFilters.outlineFilterRed;
+		if (this.selected) this.sprite.filters = [this.filter];
 		Resizer.hideHelper();
 	}
 }
@@ -222,7 +227,7 @@ SceneObject.prototype.EditUserProperty = function(_name, _value){
 
 SceneObject.prototype.SelectOn = function(){
 	this.selected = true;
-	this.sprite.filters = [pixiFilters.outlineFilterGreen];
+	this.sprite.filters = [this.filter];
 	//Resizer.showHelper(this.sprite);	
 };
 
@@ -242,6 +247,9 @@ SceneObject.prototype.OnPointerDown = function(_event){
 	if (this.dragAllowed){
 		this.drag.on = true;
 		this.drag.eventData = _event.data;
+		this.drag.offset = this.drag.eventData.getLocalPosition(this.sprite.parent);
+		this.drag.offset.x -= this.sprite.x;
+		this.drag.offset.y -= this.sprite.y;
 		Resizer.showHelper(this.sprite);
 	}
 };
@@ -250,8 +258,8 @@ SceneObject.prototype.OnPointerMove = function(_event){
 	// While dragging
 	if (this.dragAllowed && this.drag.on){
 		var newPosition = this.drag.eventData.getLocalPosition(this.sprite.parent);
-		this.sprite.x = Math.floor(newPosition.x);
-		this.sprite.y = Math.floor(newPosition.y);
+		this.sprite.x = Math.floor(newPosition.x) - this.drag.offset.x;
+		this.sprite.y = Math.floor(newPosition.y) - this.drag.offset.y;
 		Resizer.updateBox();
 	}
 };

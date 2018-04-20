@@ -41,7 +41,7 @@ ObjectListView.prototype.InitView = function(){
         });}, 
 	  	onObjectSelect: (obj)=>{View.Selection.selectObject(obj);}, 
 	  	onSceneSelect: (scn)=>{View.Selection.selectScene(scn);}, 
-	  	deleteObject: (obj)=>{View.Selection.deSelect();obj.DeleteThis();},
+	  	deleteObject: (obj)=>{View.Selection.deSelectObject();obj.DeleteThis();},
 	  	deleteScene: (scn)=>{View.Selection.deSelect();scn.DeleteThis();},
 	  }
 	});

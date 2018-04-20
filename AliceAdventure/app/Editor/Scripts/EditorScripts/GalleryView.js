@@ -146,9 +146,8 @@ GalleryView.prototype.ChooseObj = function(_obj){
 
 GalleryView.prototype.SetImage = function(img){
 	let obj = View.Selection.object;
-	console.log(obj);
 	if (obj == null) return;
-	obj.SetSprite('../../' + img.src);
+	obj.SetSprite(img.src);
 	View.Selection.selectObject(obj);
 }
 
