@@ -31,7 +31,7 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 // static properties
 SceneObject.AddEmptyObject = function(_name, _bindScene){
 	let _defaultObj = {
-		src: '../Assets/inventory.png',
+		src: '../../Assets/inventory.png',
 		name: _name
 	};
 	return SceneObject.AddObject(_defaultObj, _bindScene);
