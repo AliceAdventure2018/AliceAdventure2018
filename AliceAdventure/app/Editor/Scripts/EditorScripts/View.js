@@ -86,6 +86,10 @@ View.Selection = (function(){ // WORKING ON: MOVE TO GLOBAL
 			_scnOff();
 			Event.Broadcast("update-selection");
 		},
+		deSelectObject: function(){
+			_objOff();
+			Event.Broadcast("update-selection");
+		},
 		selectObject: function(obj){
 			_objOn(obj);
 			if (obj.bindScene != null) _scnOn(obj.bindScene);
