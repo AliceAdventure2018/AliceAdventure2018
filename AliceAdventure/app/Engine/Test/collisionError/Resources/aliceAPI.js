@@ -765,7 +765,7 @@ function MessageBox(background, avatarEnable, game) {
     
     this.defaltStyle = new PIXI.TextStyle({
         fontFamily: 'Arial',
-        fontSize: 23 * scale,
+        fontSize: 35 * scale,
         fontWeight: 'bold',
         wordWrap: true,
         wordWrapWidth: 1051 * scale * 0.8
