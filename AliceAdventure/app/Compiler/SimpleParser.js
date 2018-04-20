@@ -1112,7 +1112,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 			}
 			else{
-				return "\n-----------------When Scene transit to A------------------\nmygame.eventSystem.addSceneTransitEvent( " + sceneIndex +", function(){\n";
+				return "\n//-----------------When Scene transit to A------------------\nmygame.eventSystem.addSceneTransitEvent( " + sceneIndex +", function(){\n";
 			}
 		}
 		else{
