@@ -446,6 +446,20 @@
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 							</select> , 
 						</span>
+						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 4'>
+              When State
+							<select v-model="ntra.event.args[0]">
+									<option v-for="state in states" v-html="state.name" v-bind:value="state"></option>
+							</select> 
+							is changed to
+							<label class="switch"><input type="checkbox" v-model='ntra.event.args[1]'><span class="slider round"></span></label>
+						</span>
+						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 5'>
+              When player entering scene
+							<select v-model="ntra.event.args[0]">
+									<option v-for="scene in scenes" v-html="scene.name" v-bind:value="scene"></option>
+							</select> , 
+						</span>
 					</li>
 				</ul>
 				<h6 id="condition-box-title" class="window-title">Condition</h6>
@@ -532,6 +546,14 @@
 								<select v-model="react.args[0]">
 										<option v-for="sound in sounds" v-html="sound.name" v-bind:value="sound"></option>
 								</select>
+						</span>
+
+						<span class="badge badge-pill badge-reaction" v-if='react.type == 10'>
+								Show the inventory
+						</span>
+
+						<span class="badge badge-pill badge-reaction" v-if='react.type == 11'>
+								Hide the inventory
 						</span>
 					</li><span style="text-align: center;opacity: 0.7;">Drag any reaction here</span>
 				</ul>
