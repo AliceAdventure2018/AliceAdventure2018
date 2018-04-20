@@ -62,11 +62,17 @@ i {
   position: relative;
   
   float:right;
+
   width: 30px;
   height: 17px;
 
 }
 
+.property-info .switch{
+    float:none !important;
+    margin-left: 6px;
+    margin-bottom: -3px;
+}
 .switch input {display:none;}
 
 .slider {
@@ -359,21 +365,33 @@ input:checked + .slider:before {
    
 }
 
-
+.nav-item{
+    margin-top: 12px;
+    font-size: 0.9em;
+}
 .nav-item a {
 
     color: #28a745;
-    margin-left: 10px;
+    
     margin-right: 10px;
 
 }
 
 .nav-item a:hover{
-    color: #155724;
-    margin-left: 10px;
+    color: #28a745;
+     opacity: 0.6;
+    
      margin-right: 10px;
+     text-decoration: none;
+
 }
 
+.nav-item a.selected{
+    font-weight: 700;
+    color:#28a745;
+     
+    
+}
 #first-column-second-row{
     background-color: #FFF;
     position: absolute;
@@ -416,9 +434,11 @@ input:checked + .slider:before {
 
 .object-selected{
    background-color: #fff;
+   opacity: 0.7;
    border-color: #aaa;
    border: solid;
    border-width: thin;
+   border-style: dotted;
 }
 
 #object-list button{
@@ -519,13 +539,6 @@ input:checked + .slider:before {
      height: 80px;
 }
 
-.nav-tem a.active{
-    color: #ffffff;
-    background-color: #28a745;
-    margin-left: 10px;
-     margin-right: 10px;
-
-}
 
 
 #key-tab.active{
@@ -841,7 +854,7 @@ input:checked + .slider:before {
 
 .object-tree li {
    list-style: none;   
-   font-size: 1em;
+   font-size: 0.9em;
    margin:0;       /* all list item li dots invisible */
 }
 
@@ -926,8 +939,11 @@ input:checked + .slider:before {
 }
 
 .property-info input{
-    width: 27px;
+ width: 27px;
  height:18px;
+ border-style: none;
+ background-color: #eee;
+ border-radius: 10px;
     
 }
 
