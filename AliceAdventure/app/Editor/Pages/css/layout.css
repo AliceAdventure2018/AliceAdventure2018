@@ -939,11 +939,12 @@ input:checked + .slider:before {
 }
 
 .property-info input{
- width: 27px;
+ width: 29px;
  height:18px;
  border-style: none;
  background-color: #eee;
  border-radius: 10px;
+ padding-left: 3px;
     
 }
 
