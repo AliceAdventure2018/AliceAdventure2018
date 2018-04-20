@@ -1,10 +1,10 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const pixi = '../../Resources/pixi/pixi.js';
-const pixi_sound = '../../Resources/pixi/pixi-sound.js';
-const aliceAPI = '../../Engine/aliceAPI.js';	
-const pixi_sound_map_src = '../../Resources/pixi/pixi-sound.js.map';
+const pixi = 'Resources/pixi/pixi.js';
+const pixi_sound = 'Resources/pixi/pixi-sound.js';
+const aliceAPI = 'Engine/aliceAPI.js';	
+const pixi_sound_map_src = 'Resources/pixi/pixi-sound.js.map';
 
 
 //1) create a build folder. If it already exists, delete all the files within
@@ -83,7 +83,7 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	var buildPath = path.join(jsonPath, 'Build');
 	var resourcesDest = path.join(buildPath, 'Resources');
 
-	var assetSrc = '../../Assets';
+	var assetSrc = 'Assets';
 	var assetDest = path.join(resourcesDest, 'Assets');
 	
 
