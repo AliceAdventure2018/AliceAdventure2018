@@ -4,7 +4,7 @@ const path = require('path');
 const pixi = '../../Resources/pixi/pixi.js';
 const pixi_sound = '../../Resources/pixi/pixi-sound.js';
 const aliceAPI = '../../Engine/aliceAPI.js';	
-const pixi_sound_map_src = path.join(path.dirname(pixi),'pixi-sound.js.map');
+const pixi_sound_map_src = '../../Resources/pixi/pixi-sound.js.map';
 
 
 //1) create a build folder. If it already exists, delete all the files within
@@ -59,23 +59,23 @@ FileSys.folder = function(p){
 FileSys.ensureAndCreate = function(jsonPath, callback){
 
 	if (!fs.pathExistsSync(jsonPath)) {
-		callback("json path : "+ path.resolve(jsonPath) + ' is not valid\n');
+		callback("Filesys : json path : "+ path.resolve(jsonPath) + ' is not valid\n');
 		return false;
 	}
 	if (!fs.pathExistsSync(pixi)) {
-		callback("pixi path : "+ path.resolve(pixi) + ' is not valid\n');
+		callback("Filesys : pixi path : "+ path.resolve(pixi) + ' is not valid\n');
 		return false;
 	}
 	if (!fs.pathExistsSync(pixi_sound)) {
-		callback("pixi_sound : "+ path.resolve(pixi_sound) + ' is not valid\n');
+		callback("Filesys : pixi_sound : "+ path.resolve(pixi_sound) + ' is not valid\n');
 		return false;
 	}
 	if (!fs.pathExistsSync(aliceAPI)) {
-		callback("aliceAPI : "+ path.resolve(aliceAPI) + ' is not valid\n');
+		callback("Filesys : aliceAPI : "+ path.resolve(aliceAPI) + ' is not valid\n');
 		return false;
 	}
 	if (!fs.pathExistsSync(pixi_sound_map_src)) {
-		callback("pixi_sound_map_src : "+ path.resolve(pixi_sound_map_src) + ' is not valid\n');
+		callback("Filesys : pixi_sound_map_src : "+ path.resolve(pixi_sound_map_src) + ' is not valid\n');
 		return false;
 	}
 
@@ -97,24 +97,6 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 
 	var requireSrc = path.join(assetSrc, 'require');
 	var requireDest = path.join(assetDest, 'require');
-
-
-	if (aliceAPI == null){
-		callback("Cannot find aliceAPI.js, which should be under ../Engine/aliceAPI.js");
-		return false;
-	}
-	if (pixi == null){
-		callback("Cannot find pixi.js, which should be under ../Resources/pixi.js");
-		return false;
-	}
-	if (pixi_sound==null){
-		callback("Cannot find pixi-sound.js, which should be under ../Resources/pixi-sound.js");
-		return false;
-	}
-	if (pixi_sound_map_src ==null){
-		callback("Cannot find the Linker Address Map:pixi-sound.js.map, which should be under Resources/pixi-sound.js.map");
-		return false;
-	}
 
 	FileSys.createBuildFolder(buildPath);
 	FileSys.createBuildFolder(resourcesDest);
