@@ -1,5 +1,15 @@
 
+.tutorial-delete{
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+    cursor: pointer;
+    margin-left:10px;
+}
 
+.tutorial-delete: hover{
+    opacity:0.2;
+}
 button{
 
     border: none; 
@@ -118,7 +128,10 @@ input:checked + .slider:before {
     position: relative;
     display: inline-block;
 
+
 }
+
+
 
 .dropdown-content {
     cursor: pointer;
@@ -127,7 +140,7 @@ input:checked + .slider:before {
     position: absolute;
     top:40px;
     background-color: #f1f1f1;
-    min-width: 120px;
+    min-width: 110px;
     overflow: auto;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
@@ -153,11 +166,30 @@ input:checked + .slider:before {
 
 }
 
-.topnav-icon{
+.topnav-icon {
+    cursor: pointer;
     position: absolute;
     top:10px;
+     
     width:20px;
     height: 20px;
+    margin-right: 70px !important;
+}
+
+.topnav-icon:hover{
+    opacity:0.5;
+}
+#setting-button{
+    right:60px;
+}
+#file-button{
+    right:240px;
+}
+#run-button{
+    right:180px;
+}
+#import-button{
+    right:120px;
 }
 
 
@@ -1000,3 +1032,4 @@ input:checked + .slider:before {
         height: 300px;
     }
 }
+

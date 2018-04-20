@@ -97,7 +97,7 @@
 <body style="background-color:#28a745;" >
   <div id="step_1" style="
   display: block;
-  margin-top:5%;
+  margin-top:2%;
   margin-left:2%;
 
   ">  
@@ -118,7 +118,7 @@
         <tr v-for='(scene, index) in sceneList'>
           <td v-html='(index+1)'>
           </td>
-          <td> <input type="text" v-model='scene.name'>
+          <td> <input type="text" v-model='scene.name'> <img src="src/delete.png" class="tutorial-delete"/>
           </td>
         </tr>
       </tbody>
@@ -148,7 +148,7 @@
           </td>
           <td > <input type="text">
           </td>
-          <td > <input type="text">
+          <td > <input type="text"><img src="src/delete.png" class="tutorial-delete"/>
           </td>
         </tr>
       </tbody>
@@ -180,7 +180,7 @@
               <option v-bind:value='{id: 0}'> Inventory </option>
             </select>
           </td>
-          <td> <input type="text" v-model='obj.name'>
+          <td> <input type="text" v-model='obj.name'><img src="src/delete.png" class="tutorial-delete"/>
           </td>
         </tr>
       </tbody>
@@ -196,7 +196,7 @@
 
  <div id="step_2" style="
   display: none;
-  margin-top:5%;
+  margin-top:1%;
   margin-left:2%;
 
   ">
@@ -205,37 +205,77 @@
     <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;">Let's decorate the scenes!</h6> 
    </p>
    <div style="margin-right:100px;">
-   <div id="design-editor" style=" float: left;margin:10px; position: relative !important; display: inline-block !important; height:500px; width: 48% !important;">
+   <div id="design-editor" style=" float: left;margin:10px; position: relative !important; display: inline-block !important; height:480px; width: 48% !important;">
             <h6 class="window-title">SCENE EDITOR</h6>            
         <!--DO NOT DELETE THIS, for canvas initialization. Can add style for it-->
         <div id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'></div>
 
-        <div id="add-scene">
-          <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene()'> Add Scene</button></div>
+        <!--div id="add-scene">
+          <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene()'> Add Scene</button></div-->
       </div>
      
 
-      <div id="gallery" style="float: left; position: relative !important; display: inline-block !important; height:500px !important; width: 30% !important; margin:10px;">
+      <div id="gallery" style="float: left; position: relative !important; display: inline-block !important; height:480px !important; width: 30% !important; margin:10px;">
             <h6 class="window-title" >GALLERY</h6>
             <div id="tabList">
               <ul >
-                <li class="nav-item"><a onclick="switchCategoryView()"  href="#door-asset" aria-controls="door-asset" class="selected">
-                Images</a></li>
+               <li class="nav-item"><a onclick="switchCategoryView()"  href="#backdrop-asset" aria-controls="backdrop-asset" class="selected">
+                Backdrops</a></li>
+                <li class="nav-item"><a onclick="switchCategoryView()"  href="#character-asset" aria-controls="character-asset" class="unselecteds">
+                Characters</a></li>
+                <li class="nav-item"><a onclick="switchCategoryView()"  href="#item-asset" aria-controls="item-asset" class="unselecteds">
+                Items</a></li>
+                <li class="nav-item"><a onclick="switchCategoryView()"  href="#other-asset" aria-controls="other-asset" class="unselecteds">
+                Others</a></li>
+                <li class="nav-item"><a onclick="switchCategoryView()"  href="#imported-asset" aria-controls="imported-asset" class="unselecteds">
+                Imported</a></li>
                 <li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
                 <!--<div class="tab-list" id="tabList">
                 <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical"-->
               </ul>
             </div>
             <div id="tabContent">
-              <div id="door-asset" style="display: block;">
+              <div id="backdrop-asset" style="display: block;">
                 <div class="assets">
                   <ul>
-                  <!-- bind the gallery data -->
-                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="'../../'+img.src"> </div><p v-html='img.name'></p>
+                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.backdrop" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                     </li>
-                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                  </ul>
+                </div>
+              </div>
+
+              <div id="character-asset" style="display: none;">
+                <div class="assets">
+                  <ul>
+                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.character" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                     </li>
-                    
+                  </ul>
+                </div>
+              </div>
+
+              <div id="item-asset" style="display: none;">
+                <div class="assets">
+                  <ul>
+                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.item" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div id="other-asset" style="display: none;">
+                <div class="assets">
+                  <ul>
+                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.other" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div id="imported-asset" style="display: none;">
+                <div class="assets">
+                  <ul>
+                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -244,7 +284,7 @@
                 <div class="assets">
                   <ul>
                   <!-- bind the gallery data -->
-                    <li v-for="sound in sounds"> <div class="asset"><img v-bind:src="'../../'+sound.src"> </div><p v-html='sound.name'></p>
+                    <li v-for="sound in sounds"> <div class="asset"><img v-bind:src="sound.src"> </div><p v-html='sound.name'></p>
                     </li>
                     <li v-for="sound in importedSounds"> <div class="asset"><img v-bind:src='sound.src'> </div><p v-html='sound.name'></p>
                     </li>  
@@ -253,7 +293,7 @@
               </div>
             </div>
           </div>
-          <div id="object-list" style="float:left; margin:10px; position: relative !important; display: inline-block !important;  height:500px !important; width: 15% !important; left:0 !important;" >
+          <div id="object-list" style="float:left; margin:10px; position: relative !important; display: inline-block !important;  height:480px !important; width: 15% !important; left:0 !important;" >
             <h6 class="window-title" >OBJECT LIST</h6>
             <!-- if show object list on -->
             <ol v-if='projectLoaded' class="object-tree">
@@ -289,13 +329,13 @@
  </div>
 
 
- <div id="step_3" style="display: none;margin-top:5%;
+ <div id="step_3" style="display: none;margin-top:1%;
   margin-left:2%;
 
   ">
   <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;">Let's create the first interaction box! Think about how to win or finish the game.</h6> 
   <div>
-    <div id="interaction-editor" style="float:left; display: inline-block !important; position: relative !important; width:65%; height: 500px; margin:10px;">
+    <div id="interaction-editor" style="top:0; float:left; display: inline-block !important; position: relative !important; width:65%; height: 500px; margin:10px;">
         <h6 class="window-title">INTERACTION EDITOR</h6>
         <div  class="interaction-box" v-if='viewEnabled' v-for='ntra in interactions' max='true'>
 
