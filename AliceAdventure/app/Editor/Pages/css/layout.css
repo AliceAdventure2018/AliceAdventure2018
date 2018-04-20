@@ -1,5 +1,15 @@
 
+.tutorial-delete{
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+    cursor: pointer;
+    margin-left:10px;
+}
 
+.tutorial-delete: hover{
+    opacity:0.2;
+}
 button{
 
     border: none; 
