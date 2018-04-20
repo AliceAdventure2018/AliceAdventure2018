@@ -41,7 +41,7 @@ IReaction.Library = [
 	}, 
 	{
 		type: 2,
-		name: "Put into inventory", 
+		name: "Add into inventory", 
 		inputLength: 1, 
 		inputTypes: [IReaction.InputModel.Object],
 		template: "Put <select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> into inventory"
@@ -109,7 +109,7 @@ IReaction.Library = [
         inputTypes: [],
         template: "Hide inventory"
     },
-    {
+    /*{
         type: 12,
         name: "Move object to scene", 
         inputLength: 2, 
@@ -122,7 +122,7 @@ IReaction.Library = [
         inputLength: 3, 
         inputTypes: [],
         template: "Move object to position"
-    },
+    },*/
 ];
 
 // functions
@@ -147,16 +147,13 @@ IReaction.prototype.toJsonObject = function() {
             break;
         case 4:
             args[0] = this.args[0].id;
-            break;
-            
+            break;            
         case 5:
             args[0] = this.args[0].id;
-            break;
-            
+            break;            
         case 6:
             args[0] = this.args[0].id;
-            break;
-            
+            break;            
         case 7:
             args[0] = this.args[0].id;
             break;
@@ -165,6 +162,10 @@ IReaction.prototype.toJsonObject = function() {
             break;
         case 9:
             args[0] = this.args[0].id;
+            break;
+        case 10:
+            break;
+        case 11:
             break;
         default:
             args = [];
@@ -209,6 +210,10 @@ IReaction.prototype.fromJsonObject = function(data) {
             break;
         case 9:
             args[0] = GameProperties.GetSoundById(data.args[0]);
+            break;
+        case 10:
+            break;
+        case 11:
             break;
         default:
             args = [];

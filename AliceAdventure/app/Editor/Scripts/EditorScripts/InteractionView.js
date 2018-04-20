@@ -35,7 +35,8 @@ InteractionView.prototype.InitView = function(){
             objects: null,
             states: null,
             scenes: null,
-            sounds: null
+            sounds: null,
+            isDraggingReact: false,
 		}, 
 		methods: {
 			eventDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.IEvent);},
@@ -47,7 +48,30 @@ InteractionView.prototype.InitView = function(){
 			addInteraction: ()=>{this.AddNewInteraction();}, 
 			deleteInteraction: (ntra)=>{ntra.DeleteThis();}, 
 			removeCondition: (state, ntra)=>{ntra.RemoveCondition(state);}, 
-			deleteReaction: (react, ntra)=>{ntra.DeleteIReaction(react);}
+			deleteReaction: (react, ntra)=>{ntra.DeleteIReaction(react);},
+            
+            //order:
+            reactDragStart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.ListedIReaction, d); ev.stopPropagation();},
+            reactDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.ListedIReaction, ()=>{
+                //console.log(ev.target);
+            });},
+            reactDrop: (ev, aboveReactIndex, toNtra)=>{View.HandleDrop(ev, View.DragInfo.ListedIReaction, (data)=>{
+                
+                //console.log(data)
+                //console.log(typeof(data.index))
+                if(toNtra.id == data.fromNtra.id) {
+                    //console.log("the same list");
+                    toNtra.moveElemAfterElemInList(data.reactIndex, aboveReactIndex, toNtra.reactionList)
+                }
+                else {
+                    //console.log("the diff list");
+                    var endOfthelist = toNtra.AddExistIReaction(data.react);
+                    toNtra.moveElemAfterElemInList(endOfthelist, aboveReactIndex, toNtra.reactionList)
+                    //console.log(endOfthelist + ":" + aboveReactIndex)
+                    data.fromNtra.DeleteIReaction(data.react);
+                }
+                
+            });}, 
 		}
 	});
 

@@ -69,13 +69,6 @@ function createMainWin(path){
     mainWin = null;
   });
 }
-ipcMain.on('get-editor', (event, data)=>{
-	console.log(data);
-	if (AliceEditor == null) {
-		AliceEditor = data;
-	}
-	event.returnValue = AliceEditor;
-});
 
 ipcMain.on('new-proj', (event, data)=>{
 	if (tutWin == null)	createTutWin(data);

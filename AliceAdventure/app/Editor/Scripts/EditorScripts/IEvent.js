@@ -78,6 +78,13 @@ IEvent.prototype.toJsonObject = function() {
             args[0] = this.args[0].id;
             args[1] = this.args[1].id;
             break;
+        case 4://state A change to V
+            args[0] = this.args[0].id;
+            args[1] = (this.args[1] != null)?this.args[1]:false;
+            break;
+        case 5://enter scene A
+            args[0] = this.args[0].id;
+            break;
         default:
             break;
     }
@@ -104,6 +111,13 @@ IEvent.prototype.fromJsonObject = function(_event) {
         case 3://combine a and b
             args[0] = GameProperties.GetObjectById(_event.args[0]);
             args[1] = GameProperties.GetObjectById(_event.args[1]);
+            break;
+        case 4://state A change to V
+            args[0] = GameProperties.GetStateById(_event.args[0]);
+            args[1] = _event.args[1]
+            break;
+        case 5://enter scene A
+            args[0] = GameProperties.GetSceneById(_event.args[0]);
             break;
         default:
             break;

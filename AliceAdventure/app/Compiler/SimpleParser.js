@@ -202,7 +202,8 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	function getNameWithID(obj, id){
-		return '_' + obj.replace(/ +/g, "_") + '_' +  id;
+		var name = obj.replace(/\W/g, "");
+		return '_' + name + '_' +  id;
 	}
 
 	function setPos(obj, pos){
