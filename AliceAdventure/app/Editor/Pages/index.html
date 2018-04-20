@@ -493,7 +493,6 @@
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 0'>
 								Set state 
 								<select v-model="react.args[0]">
-<!--                        <option selected>win</option>-->
 										<option v-for="stat in states" v-html="stat.name" v-bind:value="stat"></option>
 								</select> to 
                 <label class="switch"><input type="checkbox" v-model='react.args[1]'><span class="slider round"></span></label>

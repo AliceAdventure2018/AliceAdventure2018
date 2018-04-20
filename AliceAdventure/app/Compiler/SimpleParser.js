@@ -902,7 +902,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "reaction.playAudio(" + sound + ");\n";
+				return "reaction.playAudio(\'" + sound + "\');\n";
 			}
 
 		}else{
