@@ -33,11 +33,20 @@ Parser = function (jsonPath, buildPath){
 	Parser.prototype.translate = function (callback){
 
 
+		if (this.settings.startScene < 0 ||this.settings.resWidth < 100 || this.settings.resHeight < 100){
+			callback("Settings ERROR: start scene must be larger or equal to 0");
+			return false;
+		}
 
+		if (this.settings.inventoryGridNum < 5 ){
+			callback("the number of grim in inventory must be larger or equal to 5");
+			return false;
+		}
 
 		var toReturn= '\n';
-		var sound = createSoundList.call(this,callback);
-		if (sound ===false) return false;
+		var sound = createSoundList.call(this, callback);
+
+		if (sound === false) return false;
 
 		toReturn += "//===============create Game==================\n" + createGame.call(this);
 		toReturn += "\n//===============add Sound==================\n" + sound;
@@ -46,7 +55,8 @@ Parser = function (jsonPath, buildPath){
 
 		toReturn += "\n//===============create Objects==================\n";
 		var mustHave = translateObjects.call(this,callback);
-		if (mustHave===false) {
+		if (mustHave=== false) {
+
 			return false;
 		}
 		else toReturn += mustHave;
@@ -98,7 +108,7 @@ Parser = function (jsonPath, buildPath){
 	function createSoundList(callback){
 		var toReturn = '';
 		
-		//if (!this.soundList) return true;
+		if (!this.soundList.length == 0) return toReturn;
 
 		for (let i = 0; i < this.soundList.length; i++){
 			var sound = this.soundList[i];
@@ -112,6 +122,7 @@ Parser = function (jsonPath, buildPath){
 						FileSys.copyFileOrFolder(sound.src, dest);
 
 					toReturn += addSound(sound.name, sound.id, "./Resources/Assets/" + FileSys.filename(sound.src));
+
 
 				}else{
 					callback("Compiler ERROR: sound {id = " +sound.id + ", name = " + sound.name + "} has INVALID source: \n" + sound.src + "\nEither the path is not correct or the file format is not WAV/MP4.");
@@ -232,7 +243,7 @@ Parser = function (jsonPath, buildPath){
 						toReturn += setName(name,name);
 
 					}else{
-						error = "Compile ERROR: Object: " + object.name + " File path does not exist or the file extention does not match jpg/jpeg/png.\n Invalid Path:**********\n" + object.src + '\n';
+						error = "Compile ERROR: Object: " + object.name + " File path does not exist or the file extention does not match jpg/jpeg/png.\n **********Invalid Path: " + FileSys.getAbs(object.src) + '\n';
 						callback(error);	
 						return false;				
 					}
@@ -461,6 +472,8 @@ Parser = function (jsonPath, buildPath){
 	function interactionListParser(callback){
 
 		var toReturn = "";
+		if (this.interactionList.length == 0) return toReturn;
+
 		for (let i = 0; i < this.interactionList.length; i++){
 			//add everyting to the tree
 			var result = interactionParser.call(this, this.interactionList[i], callback);
@@ -479,12 +492,14 @@ Parser = function (jsonPath, buildPath){
 		var conditions = "";
 		var reactions = "";
 		var indent = 0;
+
+
 		if (interaction.hasOwnProperty("event") && interaction.hasOwnProperty("conditionList") && interaction.hasOwnProperty("reactionList")){
 
 			var hasCondition = (interaction.conditionList.length > 0);
 
-			var event = eventParser.call(this, interaction.event, callback);
-			if (event === false) return false;
+			var eventList = eventParser.call(this, interaction.event, callback);
+			if (eventList === false) return false;
 
 			
 			if (hasCondition){
@@ -501,13 +516,50 @@ Parser = function (jsonPath, buildPath){
 
 
 			this.iTree.putNode(event, interaction.event.type, interaction.event.args, conditions + reactions);
+			//this.eventListAddNode.call(this, eventList, conditions + reactions);
 			return true;
 
 		}else{
 			callback("JSON Format ERROR: interaction must have: event, conditionList, reactionList");
 			return false;
 		}
+		// if (interaction.hasOwnProperty("eventList") && interaction.hasOwnProperty("conditionList") && interaction.hasOwnProperty("reactionList")){
 
+		// 	var hasCondition = (interaction.conditionList.length > 0);
+
+		// 	var eventList = eventListParser.call(this, interaction.eventList, callback);
+		// 	if (eventList === false) return false;
+
+			
+		// 	if (hasCondition){
+		// 		indent++;
+		// 		conditions  = conditionListParser.call(this, interaction.conditionList, callback);
+		// 		if (conditions === false ) return false;
+		// 	}
+
+
+		// 	reactions = reactionListParser.call(this, interaction.reactionList, indent, callback);
+		// 	if (reactions === false) return false;
+
+		// 	if (hasCondition) reactions += "		return;\n	}//if statement end\n"; //if statementend
+
+
+		// 	//this.iTree.putNode(event, interaction.event.type, interaction.event.args, conditions + reactions);
+		// 	this.eventListAddNode.call(this, eventList, conditions + reactions);
+		// 	return true;
+
+		// }else{
+		// 	callback("JSON Format ERROR: interaction must have: event, conditionList, reactionList");
+		// 	return false;
+		// }
+
+	}
+
+	//eventList[event, type, args]
+	function eventListAddNode(eventList, conditionAndReactions){
+		for(let i = 0; i < eventList.length; i += 3){
+			this.iTree.putNode(eventList[i], eventList[i + 1], eventList[i + 2], conditionAndReactions);
+		}
 	}
 //-------------------------CONDITION----------------------------------------
 
@@ -873,6 +925,28 @@ Parser = function (jsonPath, buildPath){
 
 
 //-------------------------EVENT----------------------------------------------
+	function eventListParser(eventList, callback){
+
+		if(eventList.length == 0){
+			callback("Compiler ERROR: for an interaction, it MUST have one or more events.");
+			return false;
+		}
+
+		//[eventstring, type, args]
+		var toReturn = [];
+		for (let i = 0; i < eventList.length; i++){
+			var event = eventParser.call(this, eventList[i], callback);
+
+			if (event === false) return false;
+
+			toReturn.push(event);
+			toReturn.push(eventList[i].type);
+			toReturn.push(eventList[i].args);
+		}
+
+		return toReturn; 
+	}
+
 	function eventParser(event, callback){
 
 		if (event.hasOwnProperty("type") && event.hasOwnProperty("args")){
@@ -1022,7 +1096,7 @@ Parser = function (jsonPath, buildPath){
 		if (args.length == 1){
 			var sceneIndex = findSceneByID.call(this, args[0]);
 
-			if (sceneIndex == false){
+			if (sceneIndex === false){
 				callback("Compile ERROR: for event type 5(sceneTransitEvent), cannot find scene id： " + args[0] +".");
 				return false;
 			}

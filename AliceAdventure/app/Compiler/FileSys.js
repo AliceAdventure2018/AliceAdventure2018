@@ -1,9 +1,10 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const pixi = require.resolve('../Resources/pixi/pixi.js');
-const pixi_sound = require.resolve('../Resources/pixi/pixi-sound');
-const aliceAPI = require.resolve('../Engine/aliceAPI.js');
+const pixi = '../../Resources/pixi/pixi.js';
+const pixi_sound = '../../Resources/pixi/pixi-sound.js';
+const aliceAPI = '../../Engine/aliceAPI.js';	
+const pixi_sound_map_src = path.join(path.dirname(pixi),'pixi-sound.js.map');
 
 
 //1) create a build folder. If it already exists, delete all the files within
@@ -27,7 +28,9 @@ FileSys.copyFileOrFolder= function(src, dest){
 	fs.copySync(src, dest);
 }
 
-
+FileSys.getAbs = function(src){
+	return path.resolve(src);
+}
 //Ensures that a directory is empty. Deletes directory contents 
 //if the directory is not empty. If the directory does not exist, it is created.
 // The directory itself is not deleted.
@@ -56,7 +59,23 @@ FileSys.folder = function(p){
 FileSys.ensureAndCreate = function(jsonPath, callback){
 
 	if (!fs.pathExistsSync(jsonPath)) {
-		callback("json path : "+ jsonPath + ' is not valid\n');
+		callback("json path : "+ path.resolve(jsonPath) + ' is not valid\n');
+		return false;
+	}
+	if (!fs.pathExistsSync(pixi)) {
+		callback("pixi path : "+ path.resolve(pixi) + ' is not valid\n');
+		return false;
+	}
+	if (!fs.pathExistsSync(pixi_sound)) {
+		callback("pixi_sound : "+ path.resolve(pixi_sound) + ' is not valid\n');
+		return false;
+	}
+	if (!fs.pathExistsSync(aliceAPI)) {
+		callback("aliceAPI : "+ path.resolve(aliceAPI) + ' is not valid\n');
+		return false;
+	}
+	if (!fs.pathExistsSync(pixi_sound_map_src)) {
+		callback("pixi_sound_map_src : "+ path.resolve(pixi_sound_map_src) + ' is not valid\n');
 		return false;
 	}
 
@@ -64,10 +83,10 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	var buildPath = path.join(jsonPath, 'Build');
 	var resourcesDest = path.join(buildPath, 'Resources');
 
-	var assetSrc = './Assets';
+	var assetSrc = '../../Assets';
 	var assetDest = path.join(resourcesDest, 'Assets');
 	
-	var pixi_sound_map_src = path.join(path.dirname(pixi),'pixi-sound.js.map');
+
 	var pixiFolder = path.join(resourcesDest, 'pixi');
 
 	var aliceAPIDest = path.join(resourcesDest, 'aliceAPI.js');
@@ -81,15 +100,15 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 
 
 	if (aliceAPI == null){
-		callback("Cannot find aliceAPI.js, which should be under Engine/aliceAPI.js");
+		callback("Cannot find aliceAPI.js, which should be under ../Engine/aliceAPI.js");
 		return false;
 	}
 	if (pixi == null){
-		callback("Cannot find pixi.js, which should be under Resources/pixi.js");
+		callback("Cannot find pixi.js, which should be under ../Resources/pixi.js");
 		return false;
 	}
 	if (pixi_sound==null){
-		callback("Cannot find pixi-sound.js, which should be under Resources/pixi-sound.js");
+		callback("Cannot find pixi-sound.js, which should be under ../Resources/pixi-sound.js");
 		return false;
 	}
 	if (pixi_sound_map_src ==null){
