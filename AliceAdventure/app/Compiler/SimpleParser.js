@@ -234,12 +234,15 @@ Parser = function (jsonPath, buildPath){
 				//check if the path is valid, then copy the picture to the build folder
 				if (object.hasOwnProperty("src")){
 
-					if (fs.pathExistsSync(object.src)&& FileSys.filename(object.src).match(/\.(jpg|jpeg|png)$/) )
+					var src = object.src;
+					if (src.charAt(0) == ".")src = object.src.slice(4);
+					
+					if (fs.pathExistsSync(src)&& FileSys.filename(src).match(/\.(jpg|jpeg|png)$/) )
 					{	
-						var dest = FileSys.merge(this.assetPath, FileSys.filename(object.src));
+						var dest = FileSys.merge(this.assetPath, FileSys.filename(src));
 						dest= dest.replace(/\\/g, "/");
-						FileSys.copyFileOrFolder(object.src, dest);
-						toReturn += createPIXIObject(name,"./Resources/Assets/" + FileSys.filename(object.src));
+						FileSys.copyFileOrFolder(src, dest);
+						toReturn += createPIXIObject(name,"./Resources/Assets/" + FileSys.filename(src));
 						toReturn += setName(name,name);
 
 					}else{
