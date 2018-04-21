@@ -288,7 +288,7 @@
 							<div id="backdrop-asset" style="display: block;">
 								<div class="assets">
 									<ul>
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.backdrop" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.backdrop" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 									</ul>
 								</div>
@@ -297,7 +297,7 @@
 							<div id="character-asset" style="display: none;">
 								<div class="assets">
 									<ul>
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.character" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.character" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 									</ul>
 								</div>
@@ -306,7 +306,7 @@
 							<div id="item-asset" style="display: none;">
 								<div class="assets">
 									<ul>
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.item" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.item" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 									</ul>
 								</div>
@@ -315,7 +315,7 @@
 							<div id="other-asset" style="display: none;">
 								<div class="assets">
 									<ul>
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.other" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.other" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 									</ul>
 								</div>
@@ -324,7 +324,7 @@
 							<div id="imported-asset" style="display: none;">
 								<div class="assets">
 									<ul>
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 									</ul>
 								</div>

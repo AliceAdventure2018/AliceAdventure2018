@@ -30,11 +30,23 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 
 // static properties
 SceneObject.AddEmptyObject = function(_name, _bindScene){
+	if (GameProperties.instance == null) return null; // no proj loaded
 	let _defaultObj = {
 		src: '../../Assets/inventory.png',
 		name: _name
 	};
-	return SceneObject.AddObject(_defaultObj, _bindScene);
+	let index = GameProperties.instance.objectList.length;
+	let xStep = 100, yStep = 100, xNum = 4, yNum = 2;
+	let defaultPos = {
+		x: (index % xNum + 1) * xStep,
+		y: (Math.floor(index / xNum) % yNum + 1) * yStep
+	}
+	
+	let _obj = new SceneObject(null, _defaultObj.name, _defaultObj.src, _bindScene);
+	GameProperties.AddObject(_obj);
+	_obj.InitSprite(_defaultObj.src);
+	_obj.SetSprite(null, defaultPos);
+	return _obj;
 }
 
 SceneObject.AddObject = function(_objInfo, _bindScene){
@@ -50,7 +62,8 @@ SceneObject.LoadObject = function(_data){
 	if (GameProperties.instance == null) return null; // no proj loaded
 	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene), _data.clickable, _data.draggable);
 	GameProperties.AddObject(_obj);
-	_obj.SetSprite(_data.src, _data.pos, _data.scale, _data.anchor, _data.active);
+	_obj.InitSprite(_data.src);
+	_obj.SetSprite(null, _data.pos, _data.scale, _data.anchor, _data.active);
 	return _obj;
 };
 
@@ -71,19 +84,12 @@ SceneObject.prototype.InitSprite = function(_url){
 };
 
 SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active){
+	if (this.sprite == null) return; // must be initiated before
 	if (_url != null){
 		this.src = _url;
-		if (this.sprite == null){ // no sprite
-			this.sprite = PIXI.Sprite.fromImage(_url);
-		} else {
-			let parent = this.sprite.parent;
-			if (parent != null) parent.removeChild(this.sprite);
-			this.sprite.destroy();
-			this.sprite = PIXI.Sprite.fromImage(_url);
-			if (parent != null) parent.addChild(this.sprite);
-		}
+		this.sprite.setTexture(PIXI.Texture.fromImage(_url));
 	}
-	this.SpriteInfoDefault();
+	//this.SpriteInfoDefault();
 	if (_pos != null){
 		this.sprite.x = _pos.x;
 		this.sprite.y = _pos.y;		
