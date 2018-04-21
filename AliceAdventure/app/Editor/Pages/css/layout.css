@@ -10,6 +10,37 @@
 .tutorial-delete: hover{
     opacity:0.2;
 }
+.interaction-box select{
+    border-style:none;
+    border-radius: 20px;
+    padding:3px;
+    margin-right: 3px;
+    margin-left: 3px;
+}
+.modal-body select{
+    border-style:none;
+    border-radius: 20px;
+    padding:3px;
+    margin-right: 3px;
+    margin-left: 3px;
+    background-color: #eee;
+}
+
+
+
+.modal-body input{
+    border-style: none;
+    border-radius: 20px;
+    background-color: #eee;
+    padding-left: 10px;
+}
+
+.modal-body input:focus{
+    outline: none;
+}
+select:focus{
+    outline: none;
+}
 button{
 
     border: none; 
@@ -875,10 +906,22 @@ input:checked + .slider:before {
 }
 
 #img-lock{
+    width:25px;
+    height: 25px;
+    opacity: 0.5;
+    cursor: pointer;
+}
+#object-delete{
     width:20px;
     height: 20px;
     opacity: 0.5;
     cursor: pointer;
+    margin-top: -5px;
+    margin-left: 20px;
+}
+
+#object-delete:hover {
+    opacity: 0.3;
 }
 .property-img {
     /*max-width: 70px;
@@ -924,7 +967,7 @@ input:checked + .slider:before {
 .property-info li{
     font-size: 0.8em;
     list-style: none;
-    width: 145px;
+    width: 150px;
 
     display: inline-block;
    padding-bottom: 15px;
@@ -934,17 +977,18 @@ input:checked + .slider:before {
 
 
 .property-input{
-   
+
     height: 15px;
+
 }
 
 .property-info input{
- width: 29px;
+ width: 31px;
  height:18px;
  border-style: none;
  background-color: #eee;
  border-radius: 10px;
- padding-left: 3px;
+ padding-left: 4px;
     
 }
 
