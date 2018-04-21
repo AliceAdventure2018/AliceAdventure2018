@@ -788,7 +788,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "reaction.removeFromInventory(" + obj +  ");\n";
+				return "reaction.removeObject(" + obj +  ");\n";
 			}
 
 		}else{
@@ -902,7 +902,7 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "reaction.playAudio(" + sound + ");\n";
+				return "reaction.playAudio(\'" + sound + "\');\n";
 			}
 
 		}else{

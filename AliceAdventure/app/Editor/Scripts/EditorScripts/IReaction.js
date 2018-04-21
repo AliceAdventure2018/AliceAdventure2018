@@ -34,7 +34,7 @@ IReaction.Library = [
 	}, 
 	{
 		type: 1,
-		name: "Transit to scene", 
+		name: "Go to scene", 
 		inputLength: 1, 
 		inputTypes: [IReaction.InputModel.Scene],
 		template: "Transit to scene <select><option selected>Kitchen</option><option>Living room</option><option>Win scene</option></select>"
@@ -48,21 +48,21 @@ IReaction.Library = [
 	}, 
 	{
 		type: 3,
-		name: "Remove out of inventory", 
+		name: "Remove object", 
 		inputLength: 1, 
 		inputTypes: [IReaction.InputModel.Object],
 		template: "Remove out of inventory"
 	}, 
 	{
 		type: 4,
-		name: "Make visible", 
+		name: "Show object", 
 		inputLength: 2, 
 		inputTypes: [IReaction.InputModel.Object, IReaction.InputModel.Checkbox],
 		template: "Make <select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> visible"
 	}, 
 	{
 		type: 5,
-		name: "Make invisible", 
+		name: "Hide object", 
 		inputLength: 2, 
 		inputTypes: [IReaction.InputModel.Object, IReaction.InputModel.Checkbox],
 		template: "Make <select><option selected>Knife</option><option>Jam</option><option>Knife with jam</option><option>Bread with jam</option><option>Bread</option><option>Cat</option><option>Door</option></select> invisible"
@@ -83,14 +83,14 @@ IReaction.Library = [
 	}, 
 	{
 		type: 8,
-		name: "Show textbox", 
+		name: "Show dialog", 
 		inputLength: 1, 
 		inputTypes: [IReaction.InputModel.Textbox],
 		template: "Show textbox: <input type='textbox'>"
 	}, 
 	{
 		type: 9,
-		name: "Play audio", 
+		name: "Play sound", 
 		inputLength: 1, 
 		inputTypes: [IReaction.InputModel.Audio],
 		template: "Play audio"
