@@ -60,17 +60,32 @@ function AliceReactionSystem(_game) {
         this.game.inventory.add(_obj);
     }
     
+    this.removeObject = function(_obj) {
+        if(!_obj.parent) return;
+        _obj.prevParent = _obj.parent;
+        _obj.prevParent.removeChild(_obj);
+        //_obj.inInventory = false;
+    }
+    
     this.removeFromInventory = function(_obj) {
         this.game.inventory.remove(_obj);
     }
     
     this.makeObjVisible = function(_obj) {
         _obj.visible = true;
+        if(_obj.inInventory) {
+            this.game.inventory.update();
+        }
     }
     
     this.makeObjInvisible = function(_obj) {
         _obj.visible = false;
+        if(_obj.inInventory) {
+            console.log(_obj.name +": hide")
+            this.game.inventory.update();
+        }
     }
+    
     
     this.makeInteractive = function(_obj) {
         if(_obj.interactive)
@@ -299,35 +314,31 @@ function Inventory(game) { //always on the top
         //!???????????!
         this.game.reactionSystem.makeDraggable(tool);
         
-//        tool.interactive = true;
-//        tool.buttonMode = true;
-//        
-        //this.game.reactionSystem.makeUnClickable(tool);
-//        tool.off('pointerdown', tool.onClick);
-////        tool.on('rightclick', function(){myGame.inventory.inventoryObserved(tool)});
-//        
-//        //enable drag and drop
-//        tool
-//            .on('pointerdown', onDragStart)
-//            .on('pointerup', onDragEnd)
-//            .on('pointermove', onDragMove);
-
+        tool.inInventory = true;
+        
         this.update();
     }
     
     this.remove = function(tool) {
         this.inventoryContainer.removeChild(tool);
+        tool.inInventory = false;
         this.update();
     }
     
     this.update = function() {
         var len  = this.inventoryContainer.children.length;
         //console.log("invent len = " + len);
+        var index = 0;
         for(var i = 0; i < len ; i++) {
             var child = this.inventoryContainer.getChildAt(i);
+            if(!child.visible) {
+                continue;
+            }
             child.x = this.baseX;
-            child.y = this.baseY + i * this.inventory_w;
+            child.y = this.baseY + index * this.inventory_w;
             child.inventPos = {x:child.x, y:child.y}
+            index ++;
+            
         }
     }
     
@@ -765,7 +776,7 @@ function MessageBox(background, avatarEnable, game) {
     
     this.defaltStyle = new PIXI.TextStyle({
         fontFamily: 'Arial',
-        fontSize: 23 * scale,
+        fontSize: 46 * scale,
         fontWeight: 'bold',
         wordWrap: true,
         wordWrapWidth: 1051 * scale * 0.8
@@ -975,6 +986,11 @@ function onMouseMove() {
     }
 }
 
+function backToOrigin(obj,x,y) {
+    obj.x = x;
+    obj.y = y;
+}
+
 
 function onMouseUp() {
     
@@ -1012,13 +1028,13 @@ function onMouseUp() {
             var message = this.name + myGame.eventSystem.template.use + item.name;
             if(myGame.eventSystem.checkEventExist(message)){
                 myGame.eventSystem.callEvent(message);
-                return;
+                //return;
             }
             
             message = this.name + myGame.eventSystem.template.combine + item.name;
             if(myGame.eventSystem.checkEventExist(message)){
                 myGame.eventSystem.callEvent(message);
-                return;
+                //return;
             }
         }
         
@@ -1030,7 +1046,7 @@ function onMouseUp() {
             if(myGame.eventSystem.checkEventExist(message)){
                 myGame.soundManager.play('good');
                 myGame.eventSystem.callEvent(message);
-                return;
+                //return;
             }
             
             message = this.name + myGame.eventSystem.template.combine + item.name;
@@ -1039,15 +1055,16 @@ function onMouseUp() {
             if(myGame.eventSystem.checkEventExist(message)){
                 myGame.soundManager.play('good');
                 myGame.eventSystem.callEvent(message);
-                return;
+                //return;
             }
         }
         
         
         
-        myGame.soundManager.play('bad');
-        this.x = this.original[0];
-        this.y = this.original[1];
+        //myGame.soundManager.play('bad');
+        backToOrigin(this,this.original[0],this.original[1]);
+//        this.x = this.original[0];
+//        this.y = this.original[1];
         
     }
     
