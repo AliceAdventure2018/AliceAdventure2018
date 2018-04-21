@@ -406,17 +406,17 @@
 	
 		<div id="second-column">
 			<div id="interaction-float">
-        <h6 class="window-title" style="display: inline-block;">INTERACTION EDITOR</h6><button type="button"   id="add-interaction-button" v-on:click='addInteraction()'> Add Interaction Box</button>    
+        <h6 class="window-title" style="display: inline-block;">INTERACTION EDITOR</h6><button type="button" id="add-interaction-button" v-on:click='addInteraction()'> Add Interaction Box</button>    
         <!--p style="text-align: center; margin-top:35%; opacity: 0.4; font-size: 1.5em;">Do you want to create your own interaction?<br>Add interaction box first!</p--></div>
 			<div id="interaction-editor">				
-		    <div class="interaction-box" v-if='viewEnabled' v-for='(ntra, ntraIndex) in interactions' max='true'>
+		    <div class="interaction-box" v-if='viewEnabled' v-for='(ntra, ntraIndex) in interactions' max='ntra.max' >
 
 
 				<div>
           <!--span ondblclick="editInPlace(event)" class="editInPlace" >Title</span-->
           <span style="cursor:text;" class="editInPlace" v-on:click="editTitle(event, ntra)" v-html="ntra.title" v-bind:class="ntra"></span>
           <a v-on:click="deleteInteraction(ntra)"><img id="interaction-box-close" src="src/close.png"/></a>
-          <a onclick="minimizeWindow(event)"><img id="interaction-box-minimize" min-src="src/minimize.png" max-src="src/maximize.png" src="src/minimize.png"></a>
+          <a v-on:click="resizeClick(event, ntra)" v-on:init='initBox(ntra, this)'><img id="interaction-box-minimize" min-src="src/minimize.png" max-src="src/maximize.png" src="src/minimize.png"></a>
           
         </div>
 				<h6 id="event-box-title" class="window-title" >Event</h6>
