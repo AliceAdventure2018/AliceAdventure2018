@@ -39,6 +39,7 @@ InteractionView.prototype.InitView = function(){
             isDraggingReact: false,
 		}, 
 		methods: {
+            editTitle: (ev, ntra) => {InteractionView.prototype.editInPlace(ev,ntra)},
 			eventDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.IEvent);},
 			eventDrop: (ev, ntra)=>{View.HandleDrop(ev, View.DragInfo.IEvent, (data)=>{ntra.SetIEvent(data);});}, 
 			stateDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.State);},
@@ -79,6 +80,8 @@ InteractionView.prototype.InitView = function(){
 	Event.AddListener("reload-project", ()=>{this.ReloadView();});
 };
 
+
+
 InteractionView.prototype.ReloadView = function(){
 	View.prototype.ReloadView.apply(this); // call super method
 
@@ -104,5 +107,54 @@ InteractionView.prototype.AddNewInteraction = function(){
 		Interaction.NewInteraction();
 	}
 };
+
+InteractionView.prototype.editInPlace = function(event, ntra){
+			
+                    //console.log(event);
+                
+					var targetTitle = event.target || event.srcElement;
+					targetTitle.setAttribute('oldText', targetTitle.innerHTML); // not actually required. I use target just in case you want to cancel and set the original text back.
+					var origianalText = targetTitle.innerHTML;
+
+					var textBox = document.createElement('INPUT');
+						textBox.setAttribute('type', 'text');
+						textBox.style['width'] ='100px';
+						textBox.value = targetTitle.innerHTML;
+
+						
+						textBox.onblur = function() {
+							
+							var newValue = textBox.value; //targetTitle.value
+							//console.log("on blur");
+							//console.log(newValue);
+
+							if(newValue === ''){
+								console.log("null detected");
+								//targetTitle.parentNode.innerHTML = origianalText;
+								targetTitle.innerHTML = origianalText;
+
+							} else {
+								if(newValue.length >25){
+									alert("Name should be less than 25 characters");
+									targetTitle.innerHTML = origianalText;
+									//targetTitle.parentNode.innerHTML = origianalText;
+								} else {
+									//if (obj == null){
+										targetTitle.innerHTML = newValue;
+                                        ntra.title = newValue;
+									//} else {
+										//obj.name = newValue;
+									 //targetTitle.parentNode.innerHTML = newValue;
+									//}
+								 }
+							}
+						 // alert("Your new value: \n\n" + newValue);
+						}
+
+					targetTitle.innerHTML = '';
+
+					targetTitle.appendChild(textBox);
+			
+		}
 
 module.exports = InteractionView;

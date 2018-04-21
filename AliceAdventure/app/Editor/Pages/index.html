@@ -77,6 +77,8 @@
 		
 			function editInPlace(event){
 			
+                    console.log(event);
+                
 					var targetTitle = event.target || event.srcElement;
 					targetTitle.setAttribute('oldText', targetTitle.innerHTML); // not actually required. I use target just in case you want to cancel and set the original text back.
 					var origianalText = targetTitle.innerHTML;
@@ -412,57 +414,59 @@
 
 				<div>
           <!--span ondblclick="editInPlace(event)" class="editInPlace" >Title</span-->
-          <span style="cursor:text;" class="editInPlace" onclick="editInPlace(event)">Title</span>
+          <span style="cursor:text;" class="editInPlace" v-on:click="editTitle(event, ntra)" v-html="ntra.title" v-bind:class="ntra"></span>
           <a v-on:click="deleteInteraction(ntra)"><img id="interaction-box-close" src="src/close.png"/></a>
           <a onclick="minimizeWindow(event)"><img id="interaction-box-minimize" min-src="src/minimize.png" max-src="src/maximize.png" src="src/minimize.png"></a>
           
         </div>
-				<h6 id="event-box-title" class="window-title">Event</h6>
+				<h6 id="event-box-title" class="window-title" >Event</h6>
 				<ul class="event-box" v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'>
 					<li>
 						<span v-if='ntra.event==null' style="opacity: 0.7;">Drag an event here</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 0'>
-              When 
+              When clicking
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-							</select> is clicked, 
+							</select> ,
 						</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 1'>
-              When
+              When using 
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 							</select> 
-							is used on
+							 on
 							<select v-model="ntra.event.args[1]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option> ,
-							</select> 
+							</select> ,
 						</span>              
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 2'>
-              When
+              <!-- OBSERVE COMMENTED OUT
+			  When
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 							</select> is observed, 
 						</span>              
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 3'>
-              When
+			  -->
+              When combining
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 							</select> 
-							is combined with
+							with
 							<select v-model="ntra.event.args[1]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 							</select> , 
 						</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 4'>
-              When State
+              When changing state
 							<select v-model="ntra.event.args[0]">
 									<option v-for="state in states" v-html="state.name" v-bind:value="state"></option>
 							</select> 
-							is changed to
+							to
 							<label class="switch"><input type="checkbox" v-model='ntra.event.args[1]'><span class="slider round"></span></label>
 						</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 5'>
-              When player entering scene
+              When player enters scene
 							<select v-model="ntra.event.args[0]">
 									<option v-for="scene in scenes" v-html="scene.name" v-bind:value="scene"></option>
 							</select> , 
@@ -491,7 +495,6 @@
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 0'>
 								Set state 
 								<select v-model="react.args[0]">
-<!--                        <option selected>win</option>-->
 										<option v-for="stat in states" v-html="stat.name" v-bind:value="stat"></option>
 								</select> to 
                 <label class="switch"><input type="checkbox" v-model='react.args[1]'><span class="slider round"></span></label>
@@ -512,24 +515,24 @@
 						</span>
 						
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 3'>
-								Remove 
+								Remove object
 								<select v-model="react.args[0]">
 										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> out of inventory
+								</select> 
 						</span>
 						
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 4'>
-								Make 
+								Show object 
 								<select v-model="react.args[0]">
 										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> visible
+								</select> 
 						</span>
 						
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 5'>
-								Make 
+								Hide object
 								<select v-model="react.args[0]">
 										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> invisible
+								</select> 
 						</span>
 						
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 6'>
@@ -547,7 +550,7 @@
 						</span>
 						
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 8'>
-								Show dialog
+								Show dialog: 
 								<input v-model='react.args[0]'/>
 						</span>
 
