@@ -1,6 +1,6 @@
 
 
-myGame.init(1280,720,8);
+myGame.init(1280,720,5);
 
 var reaction = myGame.reactionSystem;
 //myGame.init(600,400,5);
@@ -182,7 +182,7 @@ myGame.scene(2).addChild(winScene);
 cat.DIY_CLICK = function() {
     //console.log("in DIY function");
     reaction.playAudio("meow_unhappy");
-    myGame.messageBox.startConversation(["Hungry... ... .... ..... .. .... ........ ...... ...... ...... ..... ....... ........ .......... ...... ...... ...... ....... ...... ....... ........ ......... ........... ........ ..... ...."], function() {
+    myGame.messageBox.startConversation(["Hungry........................ ............."], function() {
             myGame.messageBox.startConversation(["Want a bread with jam.."], function() {
             });
         });
@@ -226,9 +226,11 @@ bread.DIY_CLICK = function() {
 myGame.eventSystem.addCombineEvent(knife,jam,function(){
     reaction.playAudio('good');
     //myGame.inventory.remove(knife);
-    reaction.removeFromInventory(knife);
+    //reaction.removeFromInventory(knife);
+    reaction.makeObjInvisible(knife);
     //myGame.inventory.remove(jam);
-    reaction.removeFromInventory(jam);
+    //reaction.removeFromInventory(jam);
+    reaction.makeObjInvisible(jam);
     //knifewithjam.visible = true;
     reaction.makeObjVisible(knifewithjam);
     //myGame.inventory.add(knifewithjam);
@@ -239,9 +241,12 @@ myGame.eventSystem.addCombineEvent(knife,jam,function(){
 myGame.eventSystem.addCombineEvent(knifewithjam,bread,function(){
     reaction.playAudio('good');
     //myGame.inventory.remove(knifewithjam);
-    reaction.removeFromInventory(knifewithjam);
+    //reaction.removeFromInventory(knifewithjam);
+    reaction.makeObjInvisible(knifewithjam);
     //myGame.inventory.remove(bread);
-    reaction.removeFromInventory(bread);
+    //reaction.removeFromInventory(bread);
+    //reaction.makeObjInvisible(bread);
+    reaction.removeObject(bread);
     //breadwithjam.visible = true;
     reaction.makeObjVisible(breadwithjam);
     //myGame.inventory.add(breadwithjam);
@@ -257,7 +262,8 @@ myGame.eventSystem.addUsedEvent(breadwithjam,cat,function(){
     //cat_sad.visible = true;
     reaction.makeObjVisible(cat_sad);
     //myGame.inventory.remove(breadwithjam);
-    reaction.removeFromInventory(breadwithjam);
+    //reaction.removeFromInventory(breadwithjam);
+    //reaction.makeObjInvisible(breadwithjam);
     //myGame.sound.play("meow_happy");
     reaction.playAudio("meow_happy");
     
