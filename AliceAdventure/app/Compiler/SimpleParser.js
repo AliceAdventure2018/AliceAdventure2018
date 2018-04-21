@@ -883,7 +883,7 @@ Parser = function (jsonPath, buildPath){
 	function translate_reactionType_8( args, callback){
 		if (args.length == 1){
 	
-			return "myGame.messageBox.startConversation(['" + args[0] + "'], function(){\n";
+			return "myGame.messageBox.startConversation(['" + args[0].replace(/\\/g,"/").replace(/"|'/g, "\"") + "'], function(){\n";
 
 		}else{
 			callback("JSON Format ERROR: reaction type 9 (show messageBox) should have ONE argument.");
