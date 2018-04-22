@@ -351,7 +351,9 @@ myGame.eventSystem.addSceneTransitEvent(1, function(){
     myGame.messageBox.startConversation(["There are some ingredient...", "On the table..."]);
 })
 
-
+myGame.eventSystem.addSceneTransitEvent(0, function(){
+    myGame.messageBox.startConversation(["A cat?"]);
+})
 
 
 

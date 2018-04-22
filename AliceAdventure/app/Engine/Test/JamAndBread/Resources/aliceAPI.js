@@ -618,19 +618,16 @@ function SceneManager(game) {
         this.game.eventSystem.callEvent(message);
         
         var toScene = this.sceneContainer.getChildAt(scene);
-        this.currentScene.visible = false;
+        
+        if(this.currentScene)
+            this.currentScene.visible = false;
+        
         toScene.visible = true;
         this.currentScene = toScene;
-    
-        
     }
     
     this.start = function(index) {
-        //console.log("width: " + window.screen.width);
-        //console.log("height: " + window.screen.height);
-
-        this.currentScene = this.sceneContainer.getChildAt(index);
-        this.currentScene.visible = true;
+        this.jumpToScene(index);
     }
     
 }
