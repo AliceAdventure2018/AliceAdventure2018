@@ -87,6 +87,19 @@ View.Selection = (function(){ // WORKING ON: MOVE TO GLOBAL
 		_scn = scn;
 		scn.SelectOn();
 	};
+	Event.AddListener("delete-scene", (_id)=>{
+		if (_scn.id == _id){
+			_objOff();
+			_scnOff();
+			Event.Broadcast("update-selection");
+		}
+	});
+	Event.AddListener("delete-object", (_id)=>{
+		if (_obj.id == _id){
+			_objOff();
+			Event.Broadcast("update-selection");
+		}
+	});
 	return {
 		get object() {return _obj},
 		get scene() {return _scn},
