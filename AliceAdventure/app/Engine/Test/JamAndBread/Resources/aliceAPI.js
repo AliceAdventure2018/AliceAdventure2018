@@ -300,14 +300,14 @@ function Inventory(game) { //always on the top
     inventDown.interactive = true;
     inventDown.buttonMode = true;
     inventDown.on('click', nextPage);
-    inventDown.on('pointerover',function() {
-        this.alpha = 0.8;
-    })
-    
-    
-    inventDown.on('pointerout',function() {
-        this.alpha = 1;
-    })
+//    inventDown.on('pointerover',function() {
+//        this.alpha = 0.8;
+//    })
+//    
+//    
+//    inventDown.on('pointerout',function() {
+//        this.alpha = 1;
+//    })
     this.inventoryBackgroundGrp.addChild(inventDown); 
     
     ////////functions//////////
