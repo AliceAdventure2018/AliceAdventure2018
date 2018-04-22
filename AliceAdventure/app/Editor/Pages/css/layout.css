@@ -25,9 +25,7 @@
     margin-right: 3px;
     margin-left: 3px;
 }
-.interaction-box .switch {
-    margin-top:10px;
-}
+
 
 .interaction-box input:focus{
     outline: none;
