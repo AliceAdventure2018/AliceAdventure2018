@@ -428,7 +428,7 @@
 				<h6 id="event-box-title" class="window-title" >Event</h6>
 				<ul class="event-box" v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'>
 					<li>
-						<span v-if='ntra.event==null' style="opacity: 0.7;">Drag an event here</span>
+						<span v-if='ntra.event==null' style="opacity: 0.5;">Drag an event here</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 0'>
               When clicking
 							<select v-model="ntra.event.args[0]">
@@ -663,6 +663,7 @@
 			<webview id="foo" v-bind:src='src'> </webview><!-- 640/480 -->
 			<div id="run-buttons">
 				<button  data-dismiss="modal" aria-label="Close" v-on:click='stop();'>stop</button><button >replay</button>
+
 			</div>
 		</div>
 			</div>
