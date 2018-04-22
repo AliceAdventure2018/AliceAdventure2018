@@ -55,8 +55,10 @@ File.NewEmptyProject = function(callback){ // TUT
 				new File(null, new GameProperties());
 				File.instance.gameProperties.settings.projectName = _name;
 				// Default settings
-				let firstScene = Scene.AddScene("New scene");
-				//firstScene.SelectOn();			
+				let firstScene = Scene.AddScene("new scene");
+				firstScene.SetAsStartScene();
+				firstScene.SelectOn();
+							
 				Event.Broadcast("reload-project");
 				if (typeof callback == "function"){
 					callback(_name);
@@ -82,7 +84,8 @@ File.NewProject = function(_template = null){ // TODO: load from template
 				new File(null, new GameProperties());
 				File.instance.gameProperties.settings.projectName = _name;
 				// Default settings
-				let firstScene = Scene.AddScene("First scene");
+				let firstScene = Scene.AddScene("default scene");
+				firstScene.SetAsStartScene();
 				firstScene.SelectOn();
 				
 				Event.Broadcast("reload-project");

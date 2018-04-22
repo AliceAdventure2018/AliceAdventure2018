@@ -116,7 +116,7 @@
       <tbody>
         <tr v-for='(scene, index) in sceneList'>
           
-          <td> <input type="text" v-model='scene.name'> <img src="src/delete.png" class="tutorial-delete" v-on:click='deleteThing(scene)'/>
+          <td> <input type="text" v-model='scene.name'> <img src="src/delete.png" class="tutorial-delete" v-on:click='deleteScene(scene)'/>
           </td>
         </tr>
       </tbody>
@@ -144,12 +144,12 @@
         <tr v-for='(obj, index) in objectList' v-if='obj.isCharacter'>
           
          
-          <td> <input type="text" v-model='obj.name'><img src="src/delete.png" class="tutorial-delete" v-on:click='deleteThing(obj)'/>
+          <td> <input type="text" v-model='obj.name'><img src="src/delete.png" class="tutorial-delete" v-on:click='deleteObject(obj)'/>
           </td>
            <td>
             <select v-model='obj.bindScene' v-on:change='changeScene(obj, obj.bindScene)'>
               <option v-for='scene in sceneList' v-bind:value='scene' v-html='scene.name'></option>
-              <option v-bind:value='{id: 0}'> Inventory </option>
+              <!--option v-bind:value='{id: 0}'> Inventory </option-->
             </select>
           </td>
         </tr>
@@ -176,12 +176,12 @@
         <tr v-for='(obj, index) in objectList' v-if='!obj.isCharacter'>
         
           
-          <td> <input type="text" v-model='obj.name'><img src="src/delete.png" class="tutorial-delete" v-on:click='deleteThing(obj)'/>
+          <td> <input type="text" v-model='obj.name'><img src="src/delete.png" class="tutorial-delete" v-on:click='deleteObject(obj)'/>
           </td>
           <td>
             <select v-model='obj.bindScene' v-on:change='changeScene(obj, obj.bindScene)'>
               <option v-for='scene in sceneList' v-bind:value='scene' v-html='scene.name'></option>
-              <option v-bind:value='{id: 0}'> Inventory </option>
+              <!--option v-bind:value='{id: 0}'> Inventory </option-->
             </select>
           </td>
         </tr>

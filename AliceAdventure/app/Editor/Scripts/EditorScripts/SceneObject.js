@@ -8,7 +8,7 @@ const Resizer = require('./Resizer');
 var SceneObject;
 
 // variables
-SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = null, _clickable = true, _draggable = false){
+SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = {id:0, name:'inventory'}, _clickable = true, _draggable = false){
 	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
 	this.id = _id;
 	this.name = _name;
@@ -24,6 +24,7 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 	this.drag = { on: false, eventData: {}, offset: {x: 0, y: 0} };
 
 	//this.properties = [];
+	this.isCharacter = false;
 	this.sprite = null;
 	this.filter = pixiFilters.outlineFilterGreen;
 };
@@ -41,7 +42,9 @@ SceneObject.AddEmptyObject = function(_name, _bindScene){
 		x: (index % xNum + 1) * xStep,
 		y: (Math.floor(index / xNum) % yNum + 1) * yStep
 	}
-	
+	if (_bindScene == null){
+		_bindScene = GameProperties.instance.sceneList[0];
+	}
 	let _obj = new SceneObject(null, _defaultObj.name, _defaultObj.src, _bindScene);
 	GameProperties.AddObject(_obj);
 	_obj.InitSprite(_defaultObj.src);
@@ -80,11 +83,12 @@ var pixiFilters = { // private
 SceneObject.prototype.InitSprite = function(_url){
 	if (!(this instanceof SceneObject)) return;
 	this.sprite = PIXI.Sprite.fromImage(_url);
+	if (this.bindScene.container != null) this.bindScene.container.addChild(this.sprite);
 	this.SpriteInfoDefault();
 };
 
 SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active){
-	if (this.sprite == null) return; // must be initiated before
+	if (this.sprite == null) {console.log('sprite not inited');return}; // must be initiated before
 	if (_url != null){
 		this.src = _url;
 		this.sprite.setTexture(PIXI.Texture.fromImage(_url));
@@ -122,6 +126,7 @@ SceneObject.prototype.SpriteInfoDefault = function(){
 
 SceneObject.prototype.SwitchScene = function(toScene, aboveObj) {
 	if (toScene.id == 0){ // inventory
+		console.log('to inv');
 		if (this.sprite.parent != null){
 			this.sprite.parent.removeChild(this.sprite);
 		}
@@ -181,8 +186,12 @@ SceneObject.prototype.ToggleLock = function(){
 }
 
 SceneObject.prototype.DeleteThis = function(){
-	this.sprite.destroy();
+	if (this.sprite != null){
+		if (this.sprite.parent != null) this.sprite.parent.removeChild(this.sprite);
+		this.sprite.destroy();
+	}
 	GameProperties.DeleteObject(this);
+	Event.Broadcast('delete-object', this.id);
 };
 
 /*SceneObject.prototype.AddUserProperty = function(_key, _type, _value){

@@ -56,8 +56,8 @@ ObjectListView.prototype.InitView = function(){
           
 	  	onObjectSelect: (obj)=>{View.Selection.selectObject(obj);}, 
 	  	onSceneSelect: (scn)=>{View.Selection.selectScene(scn);}, 
-	  	deleteObject: (obj)=>{View.Selection.deSelectObject();obj.DeleteThis();},
-	  	deleteScene: (scn)=>{View.Selection.deSelect();scn.DeleteThis();},
+	  	deleteObject: (obj)=>{if(confirm("Are you sure to delete the object?\nYou may not be able to recover it.")) View.Selection.deSelectObject();obj.DeleteThis();},
+	  	deleteScene: (scn)=>{if(confirm("Are you sure to delete the scene?\nYou may not be able to recover it.\n\nWARNING: All the objects in the scene will also be deleted. Please move the objects under the other scenes if you need them."))View.Selection.deSelect();scn.DeleteThis();},
 	  }
 	});
 
