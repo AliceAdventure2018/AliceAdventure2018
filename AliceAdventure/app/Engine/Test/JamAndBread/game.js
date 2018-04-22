@@ -179,6 +179,68 @@ myGame.scene(2).addChild(winScene);
 //register events
 
 
+var cat2 = Alice.Object.fromImage(baseURL.nomalAssets + 'cat_sad.png');
+cat2.anchor.set(0.5);
+cat2.x = 250;
+cat2.y = 500;
+cat2.scale.set(0.8);
+cat2.name = "cat2";
+reaction.makeClickable(cat2);
+reaction.makeDraggable(cat2);
+//cat.interactive = true;
+//cat.buttonMode = true;
+myGame.scene(0).addChild(cat2);
+cat2.DIY_CLICK = function() {
+    //console.log("in DIY function");
+    reaction.addToInventory(cat2);
+}
+
+var cat3 = Alice.Object.fromImage(baseURL.nomalAssets + 'cat_sad.png');
+cat3.anchor.set(0.5);
+cat3.x = 250;
+cat3.y = 500;
+cat3.scale.set(0.8);
+cat3.name = "cat3";
+reaction.makeClickable(cat3);
+reaction.makeDraggable(cat3);
+myGame.scene(0).addChild(cat3);
+cat3.DIY_CLICK = function() {
+    //console.log("in DIY function");
+    reaction.addToInventory(cat3);
+}
+
+var cat4 = Alice.Object.fromImage(baseURL.nomalAssets + 'cat_sad.png');
+cat4.anchor.set(0.5);
+cat4.x = 250;
+cat4.y = 500;
+cat4.scale.set(0.8);
+cat4.name = "cat4";
+reaction.makeClickable(cat4);
+reaction.makeDraggable(cat4);
+myGame.scene(0).addChild(cat4);
+cat4.DIY_CLICK = function() {
+    //console.log("in DIY function");
+    reaction.addToInventory(cat4);
+}
+
+
+var cat5 = Alice.Object.fromImage(baseURL.nomalAssets + 'cat_sad.png');
+cat5.anchor.set(0.5);
+cat5.x = 250;
+cat5.y = 500;
+cat5.scale.set(0.8);
+cat5.name = "cat5";
+reaction.makeClickable(cat5);
+reaction.makeDraggable(cat5);
+myGame.scene(0).addChild(cat5);
+cat5.DIY_CLICK = function() {
+    //console.log("in DIY function");
+    reaction.addToInventory(cat5);
+}
+
+
+
+
 cat.DIY_CLICK = function() {
     //console.log("in DIY function");
     reaction.playAudio("meow_unhappy");
