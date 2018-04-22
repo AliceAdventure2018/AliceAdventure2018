@@ -33,6 +33,7 @@ ObjectListView.prototype.InitView = function(){
 	    objectList: null,
         isDraggingObject: false,
         isDraggingScene: false,
+        settings: null,
       }, 
 	  methods: {
         objectDragStart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.ListedObject, d);},
@@ -56,8 +57,8 @@ ObjectListView.prototype.InitView = function(){
           
 	  	onObjectSelect: (obj)=>{View.Selection.selectObject(obj);}, 
 	  	onSceneSelect: (scn)=>{View.Selection.selectScene(scn);}, 
-	  	deleteObject: (obj)=>{if(confirm("Are you sure to delete the object?\nYou may not be able to recover it.")) View.Selection.deSelectObject();obj.DeleteThis();},
-	  	deleteScene: (scn)=>{if(confirm("Are you sure to delete the scene?\nYou may not be able to recover it.\n\nWARNING: All the objects in the scene will also be deleted. Please move the objects under the other scenes if you need them."))View.Selection.deSelect();scn.DeleteThis();},
+	  	deleteObject: (obj)=>{if(confirm("Are you sure you want to delete the object?")) obj.DeleteThis();},
+	  	deleteScene: (scn)=>{if(confirm("Are you sure you want to delete the scene?\n\nDeleting the scene will also delete every object in it.")) scn.DeleteThis();},
 	  }
 	});
 
@@ -72,10 +73,12 @@ ObjectListView.prototype.ReloadView = function(){
 		this.vModel.projectLoaded = false;
 		this.vModel.sceneList = null;
 		this.vModel.objectList = null;
+        this.vModel.settings = null;
 	} else {
 	  	this.vModel.projectLoaded = true; 
 	    this.vModel.sceneList = GameProperties.instance.sceneList; 
 	    this.vModel.objectList = GameProperties.instance.objectList; 
+        this.vModel.settings = GameProperties.instance.settings;
 	}
 };
 

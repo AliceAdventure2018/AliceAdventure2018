@@ -390,6 +390,9 @@ File.OpenFromPath = function(_path){
 	// ProjData
 	ID.setCounter(data.projectData.idCounter);
 
+	// Init operation
+	GameProperties.GetSceneById(GameProperties.instance.settings.startScene).SelectOn();
+
 	Event.Broadcast("reload-project");
 }
 

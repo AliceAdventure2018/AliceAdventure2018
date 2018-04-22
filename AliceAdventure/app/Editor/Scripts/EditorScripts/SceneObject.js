@@ -13,7 +13,7 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = {
 	this.id = _id;
 	this.name = _name;
 	this.src = _src; // "Assets/xxx"
-	//this.isDefault = true; // TODO
+	//this.isDefault = true;
 	this.bindScene = _bindScene;
 	this.clickable = _clickable;
 	this.draggable = _draggable;
@@ -33,11 +33,11 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = {
 SceneObject.AddEmptyObject = function(_name, _bindScene){
 	if (GameProperties.instance == null) return null; // no proj loaded
 	let _defaultObj = {
-		src: '../../Assets/inventory.png',
+		src: '../../Assets/placeholder.png',
 		name: _name
 	};
 	let index = GameProperties.instance.objectList.length;
-	let xStep = 100, yStep = 100, xNum = 4, yNum = 2;
+	let xStep = 80, yStep = 72, xNum = 5, yNum = 4;
 	let defaultPos = {
 		x: (index % xNum + 1) * xStep,
 		y: (Math.floor(index / xNum) % yNum + 1) * yStep

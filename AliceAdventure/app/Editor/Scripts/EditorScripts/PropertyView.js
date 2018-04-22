@@ -39,6 +39,8 @@ PropertyView.prototype.InitView = function(){
 	  }, 
 	  methods:{
 	  	toggleLock: ()=>{this.vModel.object.ToggleLock()},
+	  	deleteObject: ()=>{this.DeleteObject()},
+	  	deleteScene: ()=>{this.DeleteScene()},
 	  	//addProperty: ()=>{ this.bindObject.AddUserProperty(this.vModel.propertyKey, this.vModel.propertyType, this.vModel.propertyValue); }
 	  }
 	});
@@ -65,5 +67,17 @@ PropertyView.prototype.UpdateSelection = function(){
 	this.vModel.showScene = (View.Selection.object == null) && (View.Selection.scene != null);
 	this.vModel.scene = View.Selection.scene;
 };
+
+PropertyView.prototype.DeleteObject = function(){
+	if (confirm("Are you sure you want to delete the object?")){
+		this.vModel.object.DeleteThis();
+	}
+}
+
+PropertyView.prototype.DeleteScene = function(){
+	if (confirm("Are you sure you want to delete the scene?\n\nDeleting the scene will also delete every object in it.")){
+		this.vModel.scene.DeleteThis();
+	}
+}
 
 module.exports = PropertyView;

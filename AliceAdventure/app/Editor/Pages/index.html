@@ -244,7 +244,7 @@
 							<li>
 								<label for="clickable">draggable</label>
 								<label class="switch"><input type="checkbox" v-model='object.draggable' id ="visible" ><span class="slider round"></span></label>
-								<img id="object-delete" src="src/delete.png">						 
+								<img id="object-delete" src="src/delete.png" v-on:click='deleteObject()'>						 
 							</li>
 							<!-- user properties -->
 							<!--li v-for='property in bindObj.properties'>
@@ -255,7 +255,10 @@
 
 					</div>
 					<div v-if='showScene' class="property-info">
-					<ul><li><input style="width:80px" v-model='scene.name'/></li></ul>
+					<ul>
+					<li><input style="width:80px" v-model='scene.name'/></li>
+					<li><img id="object-delete" src="src/delete.png" v-on:click='deleteScene()'></li>
+					</ul>
 					</div>
 				</div>
 			</div>
@@ -363,7 +366,7 @@
         				<input type="checkbox" /> -->
         				<i class="down" onclick="showListView(event)"></i>
                         
-                        <button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)" v-on:dragstart='sceneDragStart(event, scene); isDraggingScene=true;' v-on:dragend='isDraggingScene=false;' draggable="true"></button><img class="start-star" src="src/star.png"/>
+                        <button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)" v-on:dragstart='sceneDragStart(event, scene); isDraggingScene=true;' v-on:dragend='isDraggingScene=false;' draggable="true"></button><img class="start-star" src="src/star.png" v-if='scene.id==settings.startScene'/>
                         
       					<ol class="object_label" style="display:block;">
                             <hr class="obj-top" style="height: 5px !important; margin: 0px" v-show="isDraggingObject" v-on:drop='objectDrop(event,scene);isDraggingObject=false;' v-on:dragover='objectDragover(event)' v-on:dragenter='event.target.style.height="35px"' v-on:dragleave='event.target.style.height="5px"'>

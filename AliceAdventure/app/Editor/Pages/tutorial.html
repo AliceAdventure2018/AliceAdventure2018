@@ -304,7 +304,7 @@
                 <!-- loop all scenes and objects 
                 <label class="object_label" v-html="scene.name"></label>
                 <input type="checkbox" /> -->
-                <i class="down" onclick="showListView(event)"></i><button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)"></button>
+                <i class="down" onclick="showListView(event)"></i><button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)"></button><img class="start-star" src="src/star.png" v-if='scene.id==settings.startScene'/>
                   <hr style="height: 0.5px !important; margin: 1px" v-show="true" v-on:drop='objectDrop(event,scene)' v-on:dragover='objectDragover(event)'>
                 <ol class="object_label" style="display:block;">
                   <li v-for="object in objectList" v-on:click="onObjectSelect(object)" v-if="object.bindScene.id == scene.id" >

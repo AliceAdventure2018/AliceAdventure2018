@@ -39,8 +39,8 @@ TutorialView.prototype.InitView = function(){
 			addScene: ()=>{this.AddScene("new scene")},
 			addObject: ()=>{this.AddEmptyObject("new object")}, 
 			addCharacter: ()=>{this.AddEmptyObject("new object", true)}, 
-			deleteObject: (object)=>{if(confirm("Are you sure to delete the object?\nYou may not be able to recover it.")) object.DeleteThis()},
-			deleteScene: (scene)=>{if(confirm("Are you sure to delete the scene?\nYou may not be able to recover it.\n\nWARNING: All the objects in the scene will also be deleted. Please move the objects under the other scenes if you need them.")) scene.DeleteThis()},
+			deleteObject: (object)=>{this.DeleteObject(object);},
+			deleteScene: (scene)=>{this.DeleteScene(scene)},
 
 			changeName: (event, thing)=>{if (thing.name != null) thing.name = event.target.innerHTML}, 
 			changeScene: (obj, toScene)=>{obj.SwitchScene(toScene);},
@@ -77,7 +77,18 @@ TutorialView.prototype.AddEmptyObject = function(_name, _isCharacter = false){
 
 TutorialView.prototype.AddScene = function(_name){
 	var _scene = Scene.AddScene(_name);
-	//this.app.stage.addChild(_scene.container);
+};
+
+TutorialView.prototype.DeleteObject = function(_object){
+	//if(confirm("Are you sure to delete the object?\nYou may not be able to recover it.")) {
+		_object.DeleteThis();
+	//}
+};
+
+TutorialView.prototype.DeleteScene = function(_scene){
+	if(confirm("Are you sure you want to delete the scene?\n\nDeleting the scene will also delete every object in it.")) {
+		_scene.DeleteThis();
+	}
 };
 
 TutorialView.prototype.HandleDeleteScene = function(_id){
