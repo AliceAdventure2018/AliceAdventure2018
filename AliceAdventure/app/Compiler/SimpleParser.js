@@ -883,7 +883,7 @@ Parser = function (jsonPath, buildPath){
 	function translate_reactionType_8( args, callback){
 		if (args.length == 1){
 	
-			return "myGame.messageBox.startConversation(['" + args[0] + "'], function(){\n";
+			return "myGame.messageBox.startConversation(['" + args[0].replace(/\\/g,"/").replace(/"|'/g, "\"") + "'], function(){\n";
 
 		}else{
 			callback("JSON Format ERROR: reaction type 9 (show messageBox) should have ONE argument.");
@@ -1013,7 +1013,7 @@ Parser = function (jsonPath, buildPath){
 			var objName = findObjectByID.call(this, args[0]);
 
 			if (objName === false){
-				callback("Compile ERROR: Cannot find the object of ID: " + objID + ".") ;
+				callback("Compile ERROR: Cannot find the object of ID: " + args[0] + ".") ;
 				return false;
 			}else{
 				return "\n//--------------Click--------------\n" +  objName + ".DIY_CLICK = function(){\n";		

@@ -1,6 +1,6 @@
 
 
-myGame.init(1280,720,8);
+myGame.init(1280,720,5);
 
 var reaction = myGame.reactionSystem;
 //myGame.init(600,400,5);
@@ -179,10 +179,72 @@ myGame.scene(2).addChild(winScene);
 //register events
 
 
+var cat2 = Alice.Object.fromImage(baseURL.nomalAssets + 'cat_sad.png');
+cat2.anchor.set(0.5);
+cat2.x = 250;
+cat2.y = 500;
+cat2.scale.set(0.8);
+cat2.name = "cat2";
+reaction.makeClickable(cat2);
+reaction.makeDraggable(cat2);
+//cat.interactive = true;
+//cat.buttonMode = true;
+myGame.scene(0).addChild(cat2);
+cat2.DIY_CLICK = function() {
+    //console.log("in DIY function");
+    reaction.addToInventory(cat2);
+}
+
+var cat3 = Alice.Object.fromImage(baseURL.nomalAssets + 'cat_sad.png');
+cat3.anchor.set(0.5);
+cat3.x = 250;
+cat3.y = 500;
+cat3.scale.set(0.8);
+cat3.name = "cat3";
+reaction.makeClickable(cat3);
+reaction.makeDraggable(cat3);
+myGame.scene(0).addChild(cat3);
+cat3.DIY_CLICK = function() {
+    //console.log("in DIY function");
+    reaction.addToInventory(cat3);
+}
+
+var cat4 = Alice.Object.fromImage(baseURL.nomalAssets + 'cat_sad.png');
+cat4.anchor.set(0.5);
+cat4.x = 250;
+cat4.y = 500;
+cat4.scale.set(0.8);
+cat4.name = "cat4";
+reaction.makeClickable(cat4);
+reaction.makeDraggable(cat4);
+myGame.scene(0).addChild(cat4);
+cat4.DIY_CLICK = function() {
+    //console.log("in DIY function");
+    reaction.addToInventory(cat4);
+}
+
+
+var cat5 = Alice.Object.fromImage(baseURL.nomalAssets + 'cat_sad.png');
+cat5.anchor.set(0.5);
+cat5.x = 250;
+cat5.y = 500;
+cat5.scale.set(0.8);
+cat5.name = "cat5";
+reaction.makeClickable(cat5);
+reaction.makeDraggable(cat5);
+myGame.scene(0).addChild(cat5);
+cat5.DIY_CLICK = function() {
+    //console.log("in DIY function");
+    reaction.addToInventory(cat5);
+}
+
+
+
+
 cat.DIY_CLICK = function() {
     //console.log("in DIY function");
     reaction.playAudio("meow_unhappy");
-    myGame.messageBox.startConversation(["Hungry... ... .... ..... .. .... ........ ...... ...... ...... ..... ....... ........ .......... ...... ...... ...... ....... ...... ....... ........ ......... ........... ........ ..... ...."], function() {
+    myGame.messageBox.startConversation(["Hungry........................ ............."], function() {
             myGame.messageBox.startConversation(["Want a bread with jam.."], function() {
             });
         });
@@ -226,9 +288,11 @@ bread.DIY_CLICK = function() {
 myGame.eventSystem.addCombineEvent(knife,jam,function(){
     reaction.playAudio('good');
     //myGame.inventory.remove(knife);
-    reaction.removeFromInventory(knife);
+    //reaction.removeFromInventory(knife);
+    reaction.makeObjInvisible(knife);
     //myGame.inventory.remove(jam);
-    reaction.removeFromInventory(jam);
+    //reaction.removeFromInventory(jam);
+    reaction.makeObjInvisible(jam);
     //knifewithjam.visible = true;
     reaction.makeObjVisible(knifewithjam);
     //myGame.inventory.add(knifewithjam);
@@ -239,9 +303,12 @@ myGame.eventSystem.addCombineEvent(knife,jam,function(){
 myGame.eventSystem.addCombineEvent(knifewithjam,bread,function(){
     reaction.playAudio('good');
     //myGame.inventory.remove(knifewithjam);
-    reaction.removeFromInventory(knifewithjam);
+    //reaction.removeFromInventory(knifewithjam);
+    reaction.makeObjInvisible(knifewithjam);
     //myGame.inventory.remove(bread);
-    reaction.removeFromInventory(bread);
+    //reaction.removeFromInventory(bread);
+    //reaction.makeObjInvisible(bread);
+    reaction.removeObject(bread);
     //breadwithjam.visible = true;
     reaction.makeObjVisible(breadwithjam);
     //myGame.inventory.add(breadwithjam);
@@ -257,7 +324,8 @@ myGame.eventSystem.addUsedEvent(breadwithjam,cat,function(){
     //cat_sad.visible = true;
     reaction.makeObjVisible(cat_sad);
     //myGame.inventory.remove(breadwithjam);
-    reaction.removeFromInventory(breadwithjam);
+    //reaction.removeFromInventory(breadwithjam);
+    //reaction.makeObjInvisible(breadwithjam);
     //myGame.sound.play("meow_happy");
     reaction.playAudio("meow_happy");
     
@@ -283,7 +351,9 @@ myGame.eventSystem.addSceneTransitEvent(1, function(){
     myGame.messageBox.startConversation(["There are some ingredient...", "On the table..."]);
 })
 
-
+myGame.eventSystem.addSceneTransitEvent(0, function(){
+    myGame.messageBox.startConversation(["A cat?"]);
+})
 
 
 
