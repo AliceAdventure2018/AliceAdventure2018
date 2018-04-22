@@ -46,7 +46,7 @@ TutorialView.prototype.InitView = function(){
 			changeScene: (obj, toScene)=>{obj.SwitchScene(toScene);},
 
 			back: ()=>{/*Event.Broadcast("reload-project")*/},
-			next: ()=>{/*Event.Broadcast("reload-project")*/},
+			next: ()=>{Event.Broadcast("reload-project")},
 			skip: ()=>{File.SaveProject((path)=>{IPC.send('complete-tut', path);});},
 			finish: ()=>{File.SaveProject((path)=>{IPC.send('complete-tut', path);});},
 			exit: ()=>{IPC.send('exit');}

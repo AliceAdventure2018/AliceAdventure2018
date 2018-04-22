@@ -59,14 +59,14 @@ File.NewEmptyProject = function(callback){ // TUT
 				firstScene.SetAsStartScene();
 				firstScene.SelectOn();
 				Sound.NewSound("correct", "./Assets/sound/correct.mp3");
-				Sound.NewSound("wrong", "./Assets/sound/wrong.mp3");
-				Sound.NewSound("lock", "./Assets/sound/lock.mp3");
-				Sound.NewSound("unlock", "./Assets/sound/unlock.mp3");
-				Sound.NewSound("put", "./Assets/sound/put.mp3");
-				Sound.NewSound("win", "./Assets/sound/win.mp3");
-				Sound.NewSound("door", "./Assets/sound/door.mp3");
-				Sound.NewSound("meow_1", "./Assets/sound/meow_happy.mp3");
-				Sound.NewSound("meow_2", "./Assets/sound/meow_unhappy.mp3");
+				Sound.NewSound("wrong", "./Assets/sound/wrong.wav");
+				Sound.NewSound("lock", "./Assets/sound/lock.wav");
+				Sound.NewSound("unlock", "./Assets/sound/unlock.wav");
+				Sound.NewSound("put", "./Assets/sound/put.wav");
+				Sound.NewSound("win", "./Assets/sound/win.wav");
+				Sound.NewSound("door", "./Assets/sound/door.wav");
+				Sound.NewSound("meow_1", "./Assets/sound/meow_happy.wav");
+				Sound.NewSound("meow_2", "./Assets/sound/meow_unhappy.wav");
 							
 				Event.Broadcast("reload-project");
 				if (typeof callback == "function"){
@@ -97,14 +97,14 @@ File.NewProject = function(_template = null){ // TODO: load from template
 				firstScene.SetAsStartScene();
 				firstScene.SelectOn();
 				Sound.NewSound("correct", "./Assets/sound/correct.mp3");
-				Sound.NewSound("wrong", "./Assets/sound/wrong.mp3");
-				Sound.NewSound("lock", "./Assets/sound/lock.mp3");
-				Sound.NewSound("unlock", "./Assets/sound/unlock.mp3");
-				Sound.NewSound("put", "./Assets/sound/put.mp3");
-				Sound.NewSound("win", "./Assets/sound/win.mp3");
-				Sound.NewSound("door", "./Assets/sound/door.mp3");
-				Sound.NewSound("meow_1", "./Assets/sound/meow_happy.mp3");
-				Sound.NewSound("meow_2", "./Assets/sound/meow_unhappy.mp3");
+				Sound.NewSound("wrong", "./Assets/sound/wrong.wav");
+				Sound.NewSound("lock", "./Assets/sound/lock.wav");
+				Sound.NewSound("unlock", "./Assets/sound/unlock.wav");
+				Sound.NewSound("put", "./Assets/sound/put.wav");
+				Sound.NewSound("win", "./Assets/sound/win.wav");
+				Sound.NewSound("door", "./Assets/sound/door.wav");
+				Sound.NewSound("meow_1", "./Assets/sound/meow_happy.wav");
+				Sound.NewSound("meow_2", "./Assets/sound/meow_unhappy.wav");
 				
 				Event.Broadcast("reload-project");
 			}
