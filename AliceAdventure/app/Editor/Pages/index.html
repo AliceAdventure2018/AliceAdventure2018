@@ -363,7 +363,7 @@
         				<input type="checkbox" /> -->
         				<i class="down" onclick="showListView(event)"></i>
                         
-                        <button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)" v-on:dragstart='sceneDragStart(event, scene); isDraggingScene=true;' v-on:dragend='isDraggingScene=false;' draggable="true"></button>
+                        <button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)" v-on:dragstart='sceneDragStart(event, scene); isDraggingScene=true;' v-on:dragend='isDraggingScene=false;' draggable="true"></button><img class="start-star" src="src/star.png"/>
                         
       					<ol class="object_label" style="display:block;">
                             <hr class="obj-top" style="height: 5px !important; margin: 0px" v-show="isDraggingObject" v-on:drop='objectDrop(event,scene);isDraggingObject=false;' v-on:dragover='objectDragover(event)' v-on:dragenter='event.target.style.height="35px"' v-on:dragleave='event.target.style.height="5px"'>
@@ -375,7 +375,7 @@
                                 
                                 <hr class="obj" style="height: 5px !important; margin: 0px" v-show="isDraggingObject" v-on:drop='objectDrop(event,scene,object);' v-on:dragover='objectDragover(event)' v-on:dragenter='event.target.style.height="30px"' v-on:dragleave='event.target.style.height="5px"' >
                                 
-      						</li>
+      						</li> 
       					</ol>
                         
                         <hr class="sce" style="height: 5px !important; margin: 0px" v-show="isDraggingScene" v-on:drop='sceneDrop(event,scene);' v-on:dragover='sceneDragover(event)' v-on:dragenter='event.target.style.height="30px"' v-on:dragleave='event.target.style.height="5px"'>
@@ -656,7 +656,7 @@
           </button></div>
 		</div>
 		<div class="modal-body" id="run-modal-body">
-			
+
 			<webview id="foo" v-bind:src='src'> </webview><!-- 640/480 -->
 			<div id="run-buttons">
 				<button  data-dismiss="modal" aria-label="Close" v-on:click='stop();'>stop</button><button >replay</button>

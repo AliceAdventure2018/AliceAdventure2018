@@ -513,7 +513,12 @@ input:checked + .slider:before {
     width: 180px; /*254? */
     
 }
+.start-star {
+    width:20px;
+    height: 20px;
 
+    opacity: 0.5;
+}
 .object-selected{
    background-color: #fff;
    opacity: 0.7;
