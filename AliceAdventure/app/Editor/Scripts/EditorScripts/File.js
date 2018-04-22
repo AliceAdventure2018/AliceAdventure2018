@@ -58,6 +58,15 @@ File.NewEmptyProject = function(callback){ // TUT
 				let firstScene = Scene.AddScene("new scene");
 				firstScene.SetAsStartScene();
 				firstScene.SelectOn();
+				Sound.NewSound("correct", "./Assets/sound/correct.mp3");
+				Sound.NewSound("wrong", "./Assets/sound/wrong.wav");
+				Sound.NewSound("lock", "./Assets/sound/lock.wav");
+				Sound.NewSound("unlock", "./Assets/sound/unlock.wav");
+				Sound.NewSound("put", "./Assets/sound/put.wav");
+				Sound.NewSound("win", "./Assets/sound/win.wav");
+				Sound.NewSound("door", "./Assets/sound/door.wav");
+				Sound.NewSound("meow_1", "./Assets/sound/meow_happy.wav");
+				Sound.NewSound("meow_2", "./Assets/sound/meow_unhappy.wav");
 							
 				Event.Broadcast("reload-project");
 				if (typeof callback == "function"){
@@ -87,6 +96,15 @@ File.NewProject = function(_template = null){ // TODO: load from template
 				let firstScene = Scene.AddScene("default scene");
 				firstScene.SetAsStartScene();
 				firstScene.SelectOn();
+				Sound.NewSound("correct", "./Assets/sound/correct.mp3");
+				Sound.NewSound("wrong", "./Assets/sound/wrong.wav");
+				Sound.NewSound("lock", "./Assets/sound/lock.wav");
+				Sound.NewSound("unlock", "./Assets/sound/unlock.wav");
+				Sound.NewSound("put", "./Assets/sound/put.wav");
+				Sound.NewSound("win", "./Assets/sound/win.wav");
+				Sound.NewSound("door", "./Assets/sound/door.wav");
+				Sound.NewSound("meow_1", "./Assets/sound/meow_happy.wav");
+				Sound.NewSound("meow_2", "./Assets/sound/meow_unhappy.wav");
 				
 				Event.Broadcast("reload-project");
 			}
