@@ -248,6 +248,9 @@ function AliceEventSystem() {
 function Inventory(game) { //always on the top
     //tools container
     this.game = game;
+    
+    this.inventory_area = {x1: game.screenWidth, x2:game.screenWidth+game.inventoryWidth, y1:0, y2: game.screenHeight}
+    
     this.inventory_w = game.inventoryWidth;
     this.gridStartY = game.inventoryWidth / 2;
     
@@ -274,14 +277,6 @@ function Inventory(game) { //always on the top
     inventUp.interactive = true;
     inventUp.buttonMode = true;
     inventUp.on('click', prevPage);
-//    inventUp.on('pointerover',function() {
-//        this.alpha = 0.8;
-//    })
-//    
-//    inventUp.on('pointerout',function() {
-//        this.alpha = 1;
-//    })
-    
     this.inventoryBackgroundGrp.addChild(inventUp);
     
     
@@ -300,15 +295,8 @@ function Inventory(game) { //always on the top
     inventDown.interactive = true;
     inventDown.buttonMode = true;
     inventDown.on('click', nextPage);
-//    inventDown.on('pointerover',function() {
-//        this.alpha = 0.8;
-//    })
-//    
-//    
-//    inventDown.on('pointerout',function() {
-//        this.alpha = 1;
-//    })
     this.inventoryBackgroundGrp.addChild(inventDown); 
+    
     
     ////////functions//////////
     
@@ -384,7 +372,8 @@ function Inventory(game) { //always on the top
                 count++;
             }
         }
-        debug.log(this.page)
+        this.updateArrow();
+        //debug.log(this.page)
     }
     
     this.countValidObj = function() {
@@ -438,6 +427,22 @@ function Inventory(game) { //always on the top
             this.update();
         }
     } 
+    
+    this.updateArrow = function() {
+//        if(this.hasPrevPage()) {
+//            inventUp.alpha = 1
+//        }else {
+//            inventUp.alpha = 0.8
+//        }
+//        
+//        if(this.hasNextPage()) {
+//            inventDown.alpha = 1
+//        }else {
+//            inventDown.alpha = 0.8
+//        }
+        inventUp.interactive = this.hasPrevPage();
+        inventDown.interactive = this.hasNextPage();
+    }
     
     
     this.inventoryObserved = function(tool) {
@@ -520,13 +525,11 @@ function Inventory(game) { //always on the top
         InventoryCollideList.forEach(function(obj){
             invObjName.push(obj.name);
         })
-//        console.log("sceneObjName:");
-//        console.log(sceneObjName);
-//        console.log("invObjName:");
-//        console.log(invObjName);
-        
+
         return {scene:SceneCollideList,inventory:InventoryCollideList};
     }
+    
+    this.update();
     
 }
 
@@ -927,6 +930,8 @@ function MessageBox(background, avatarEnable, game) {
     }
 }
 
+
+
 /*
     2D collision detection
 */
@@ -1068,9 +1073,9 @@ function onMouseDown(event) {
 
 function onMouseMove() {
     if (this.mouseIsDown && this.dragable) {
-        var newPosition = this.data.getLocalPosition(this.parent);
-        this.x = newPosition.x - this.offset.x;
-        this.y = newPosition.y - this.offset.y;
+        this.newPosition = this.data.getLocalPosition(this.parent);
+        this.x = this.newPosition.x - this.offset.x;
+        this.y = this.newPosition.y - this.offset.y;
         
         if(distance(this.x,this.y, this.original[0],this.original[1]) > 0.3) {
             this.alpha = 0.5;
@@ -1084,12 +1089,11 @@ function onMouseMove() {
 }
 
 function backToOrigin(obj,x,y) {
-    obj.x = x;
-    obj.y = y;
+    myGame.inventory.update();
 }
 
 
-function onMouseUp() {
+function onMouseUp(e) {
     
     if(!this.mouseIsDown)
         return;
@@ -1118,9 +1122,9 @@ function onMouseUp() {
         var sceneCollider = res.scene;
         var inventoryCollider = res.inventory;
         
-        if(inventoryCollider.length > 0) {
-            
-            var item = inventoryCollider.pop();
+        for(var i in inventoryCollider) {
+        //if(inventoryCollider.length > 0) {
+            var item = inventoryCollider[i];
             
             var message = this.name + myGame.eventSystem.template.use + item.name;
             if(myGame.eventSystem.checkEventExist(message)){
@@ -1135,9 +1139,10 @@ function onMouseUp() {
             }
         }
         
-        if(sceneCollider.length > 0) {
+        for(var i in sceneCollider) {
+        //if(sceneCollider.length > 0) {
             
-            var item = sceneCollider.pop();
+            var item = sceneCollider[i];
             var message = this.name + myGame.eventSystem.template.use + item.name;
             //console.log(message);
             if(myGame.eventSystem.checkEventExist(message)){
@@ -1175,8 +1180,25 @@ function prevPage() {
     myGame.inventory.prevPage();
 }
 
+//mousPos Point
+//area rectangular
+function mouseInArea(mousePos, area) {
+    if(mousePos.x > area.x1 && mousePos.x < area.x2 && mousePos.y > area.y1 && mousePos.y < area.y2)
+        return true;
+    else {
+        return false;
+    }
+}
 
+document.addEventListener('mousewheel', (ev) => {
 
+    if(ev.wheelDelta > 0) {
+        prevPage()
+    } else if(ev.wheelDelta < 0) {
+        nextPage()
+    }
+    
+});
 
 
 
