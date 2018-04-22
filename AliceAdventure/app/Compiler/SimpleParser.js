@@ -1013,7 +1013,7 @@ Parser = function (jsonPath, buildPath){
 			var objName = findObjectByID.call(this, args[0]);
 
 			if (objName === false){
-				callback("Compile ERROR: Cannot find the object of ID: " + objID + ".") ;
+				callback("Compile ERROR: Cannot find the object of ID: " + args[0] + ".") ;
 				return false;
 			}else{
 				return "\n//--------------Click--------------\n" +  objName + ".DIY_CLICK = function(){\n";		
