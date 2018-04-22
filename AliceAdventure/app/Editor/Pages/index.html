@@ -145,7 +145,7 @@
 
 
 				<!-- Modal -->
-  <div class="modal" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
+  <div class="modal" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle"  data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" id="game-setting">
       <div class="modal-content">
         <div class="modal-header">
@@ -160,7 +160,7 @@
           <p>Start Scene <select v-model='settings.startScene'>
           	<option v-for='opt in sceneOptions' v-html='opt.name' v-bind:value='opt.id'></option>
           </select></p>
-          <p>Number of Containers in Inventory: <select v-model.number='settings.inventoryGridNum'>
+          <p>Number of Containers in Inventory <select v-model.number='settings.inventoryGridNum'>
           	<option v-for='opt in gridNumOptions' v-html='opt' v-bind:value='opt'></option>
           </select></p>
           <p>Game Resolution <select v-model='res' v-on:change='changeRes()'>
@@ -168,7 +168,7 @@
           </select></p> 
         </div>
         <div class="modal-footer">
-          <button type="button" id="close-button" data-dismiss="modal">Close</button>
+          <button type="button" id="close-button" data-dismiss="modal">Ok</button>
           <!--button type="button" id="save-button">Save changes</button-->
         </div>
       </div>
@@ -222,14 +222,15 @@
 							<li>
 								<!--label for="property-input">position </label-->
 								<div class="property-input">
-									x: <input  id="pos-x" v-model.number='object.sprite.x'>
-									y: <input id="pos-y" v-model.number='object.sprite.y'>
+									x  <input  id="pos-x" v-model.number='object.sprite.x'>
+									y  <input id="pos-y" v-model.number='object.sprite.y'>
 								</div>
 							</li>
 							<li> 
 								<div class="property-input">
-								width:<input id="scale-x" v-model.number='object.sprite.scale.x'>
-							    height:<input id="scale-y" v-model.number='object.sprite.scale.y'>
+								width <input id="scale-x" v-model.number='object.sprite.scale.x'>
+							    height <input id="scale-y" v-model.number='object.sprite.scale.y'>
+
 							  </div>
 						  </li>
 					
@@ -242,7 +243,8 @@
 							</li>
 							<li>
 								<label for="clickable">draggable</label>
-								<label class="switch"><input type="checkbox" v-model='object.draggable' id ="visible" ><span class="slider round"></span></label>						 
+								<label class="switch"><input type="checkbox" v-model='object.draggable' id ="visible" ><span class="slider round"></span></label>
+								<img id="object-delete" src="src/delete.png">						 
 							</li>
 							<!-- user properties -->
 							<!--li v-for='property in bindObj.properties'>
@@ -250,6 +252,7 @@
 								<input id="pos-x" v-model='property.value'>
 							</li-->
 						</ul>
+
 					</div>
 					<div v-if='showScene' class="property-info">
 					<ul><li><input style="width:80px" v-model='scene.name'/></li></ul>
@@ -424,47 +427,49 @@
 					<li>
 						<span v-if='ntra.event==null' style="opacity: 0.7;">Drag an event here</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 0'>
-              When 
+              When clicking
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-							</select> is clicked, 
+							</select> ,
 						</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 1'>
-              When
+              When using 
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 							</select> 
-							is used on
+							 on
 							<select v-model="ntra.event.args[1]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option> ,
-							</select> 
+							</select> ,
 						</span>              
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 2'>
-              When
+              <!-- OBSERVE COMMENTED OUT
+			  When
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 							</select> is observed, 
 						</span>              
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 3'>
-              When
+			  -->
+              When combining
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 							</select> 
-							is combined with
+							with
 							<select v-model="ntra.event.args[1]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 							</select> , 
 						</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 4'>
-              When State
+              When changing state
 							<select v-model="ntra.event.args[0]">
 									<option v-for="state in states" v-html="state.name" v-bind:value="state"></option>
 							</select> 
-							is changed to
+							to
 							<label class="switch"><input type="checkbox" v-model='ntra.event.args[1]'><span class="slider round"></span></label>
 						</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 5'>
-              When player entering scene
+              When player enters scene
 							<select v-model="ntra.event.args[0]">
 									<option v-for="scene in scenes" v-html="scene.name" v-bind:value="scene"></option>
 							</select> , 
@@ -513,24 +518,24 @@
 						</span>
 						
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 3'>
-								Remove 
+								Remove object
 								<select v-model="react.args[0]">
 										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> out of inventory
+								</select> 
 						</span>
 						
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 4'>
-								Make 
+								Show object 
 								<select v-model="react.args[0]">
 										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> visible
+								</select> 
 						</span>
 						
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 5'>
-								Make 
+								Hide object
 								<select v-model="react.args[0]">
 										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-								</select> invisible
+								</select> 
 						</span>
 						
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 6'>
@@ -548,7 +553,7 @@
 						</span>
 						
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 8'>
-								Show dialog
+								Show dialog: 
 								<input v-model='react.args[0]'/>
 						</span>
 
@@ -642,14 +647,20 @@
 				>
 			</div-->
 		</div>
-		<div  class="modal"  tabindex="-1" role="dialog" id="run-view" v-if='showRunView'>
-			<div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 80%;">
+		<div  class="modal"  tabindex="-1" role="dialog" id="run-view" v-if='showRunView'  data-backdrop="static" >
+			<div class="modal-dialog modal-dialog-centered modal-lg" role="document" >
 			<div class="modal-content" style="text-align: center">
-				<div class="modal-header">
-			<div ><button class="close" data-dismiss="modal" aria-label="Close" v-on:click='stop();'>stop</button></div>
+				<div class="modal-header"> <h5 class="modal-title" >Run</h5>
+			<div ><button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button></div>
 		</div>
-		<div class="modal-body">
-			<webview id="foo" v-bind:src='src' style="display:inline-flex; margin:0 !important; padding:0; width: 640px; height: 480px; overflow:visible !important;"></webview><!-- 640/480 -->
+		<div class="modal-body" id="run-modal-body">
+			
+			<webview id="foo" v-bind:src='src'> </webview><!-- 640/480 -->
+			<div id="run-buttons">
+				<button  data-dismiss="modal" aria-label="Close" v-on:click='stop();'>stop</button><button >replay</button>
+			</div>
 		</div>
 			</div>
 			</div>

@@ -40,13 +40,13 @@ IEvent.Library = [
 	}, 
     {
         type: 4,
-        name: "State A change to V",
+        name: "Change State",
         inputObjNum: 2, 
         template: ''
     }, 
     {
         type: 5,
-        name: "Enter scene A",
+        name: "Enter Scene",
         inputObjNum: 1, 
         template: ''
     }, 
