@@ -445,15 +445,13 @@
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option> ,
 							</select> ,
 						</span>              
-						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 2'>
-              <!-- OBSERVE COMMENTED OUT
+						<!--span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 2'>
 			  When
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 							</select> is observed, 
-						</span>              
+						</span-->              
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 3'>
-			  -->
               When combining
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
@@ -650,19 +648,19 @@
 				>
 			</div-->
 		</div>
-		<div  class="modal"  tabindex="-1" role="dialog" id="run-view" v-if='showRunView'  data-backdrop="static" >
+		<div  class="modal"  tabindex="-1" role="dialog" id="run-view" data-backdrop="static" >
 			<div class="modal-dialog modal-dialog-centered modal-lg" role="document" >
 			<div class="modal-content" style="text-align: center">
 				<div class="modal-header"> <h5 class="modal-title" >Run</h5>
-			<div ><button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close">
+			<div ><button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close" v-on:click='stop()'>
             <span aria-hidden="true">&times;</span>
           </button></div>
 		</div>
 		<div class="modal-body" id="run-modal-body">
 
-			<webview id="foo" v-bind:src='src'> </webview><!-- 640/480 -->
+			<webview v-if='showRunView' id="foo" style="margin: 0; border: 0;" v-bind:src='src'> </webview><!-- 640/480 -->
 			<div id="run-buttons">
-				<button  data-dismiss="modal" aria-label="Close" v-on:click='stop();'>stop</button><button >replay</button>
+				<button  data-dismiss="modal" aria-label="Close" v-on:click='stop();'>stop</button><button v-on:click='replay()'>replay</button>
 			</div>
 		</div>
 			</div>
