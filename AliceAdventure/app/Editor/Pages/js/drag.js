@@ -37,7 +37,7 @@ interact('.interaction-box').ignoreFrom('li');
    		console.log(minimizeSrc);
    		console.log(maxmizeSrc);
     if(target.getAttribute("max") === 'true'){
-    	target.setAttribute("max",'false');
+    	//target.setAttribute("max",'false');
     	targetImg.src = maxmizeSrc;
     	//console.log("let's minimize");
     	//console.log(target.max);
@@ -49,7 +49,7 @@ interact('.interaction-box').ignoreFrom('li');
     	target.style.width = '250px';
 
     } else if(target.getAttribute("max") === 'false'){
-    	target.setAttribute("max",'true');
+    	//target.setAttribute("max",'true');
     	targetImg.src = minimizeSrc;
 
     	target.style.width = null;

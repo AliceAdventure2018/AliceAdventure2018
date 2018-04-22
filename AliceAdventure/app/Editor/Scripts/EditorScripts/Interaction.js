@@ -8,7 +8,7 @@ const IReaction = require('./IReaction');
 var Interaction;
 
 // variables
-Interaction = function(_id, _title = "Title", _event = null, _conditionList = [], _reactionList = []){
+Interaction = function(_id, _title = "Title", _event = null, _conditionList = [], _reactionList = [], _max = true){
 	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
 	this.id = _id;
 
@@ -21,6 +21,7 @@ Interaction = function(_id, _title = "Title", _event = null, _conditionList = []
 	this.conditionList = _conditionList;
 	this.reactionList = _reactionList;
 
+    this.max = (_max == null) ? true: _max;
 	//GameProperties.AddInteraction(this);
 };
 
@@ -38,7 +39,7 @@ Interaction.LoadInteraction = function(_data){
         let react = IReaction.prototype.fromJsonObject(_data.reactionList[i]);
         reactionList.push(react);
     }    
-    GameProperties.AddInteraction(new Interaction(_data.id, _data.title, eve, _data.conditionList, reactionList));
+    GameProperties.AddInteraction(new Interaction(_data.id, _data.title, eve, _data.conditionList, reactionList, _data.max));
 };
 
 // functions
@@ -104,7 +105,7 @@ Interaction.prototype.toJsonObject = function() {
         //console.log(react);
         obj.reactionList.push(react.toJsonObject())
     })
-    
+    obj.max = this.max;
     return obj;
 };
 

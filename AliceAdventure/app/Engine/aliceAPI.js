@@ -60,17 +60,32 @@ function AliceReactionSystem(_game) {
         this.game.inventory.add(_obj);
     }
     
+    this.removeObject = function(_obj) {
+        if(!_obj.parent) return;
+        _obj.prevParent = _obj.parent;
+        _obj.prevParent.removeChild(_obj);
+        //_obj.inInventory = false;
+    }
+    
     this.removeFromInventory = function(_obj) {
         this.game.inventory.remove(_obj);
     }
     
     this.makeObjVisible = function(_obj) {
         _obj.visible = true;
+        if(_obj.inInventory) {
+            this.game.inventory.update();
+        }
     }
     
     this.makeObjInvisible = function(_obj) {
         _obj.visible = false;
+        if(_obj.inInventory) {
+            console.log(_obj.name +": hide")
+            this.game.inventory.update();
+        }
     }
+    
     
     this.makeInteractive = function(_obj) {
         if(_obj.interactive)
@@ -234,32 +249,77 @@ function Inventory(game) { //always on the top
     //tools container
     this.game = game;
     this.inventory_w = game.inventoryWidth;
+    this.gridStartY = game.inventoryWidth / 2;
+    
     this.inventory_size = game.inventorySize;
+    
     this.magic_scale = 0.8;
     
     this.objectList = [];
     this.baseX= game.screenWidth + this.inventory_w / 2;
-    this.baseY = game.screenHeight / this.inventory_size / 2;
+    this.baseY = game.screenHeight / (this.inventory_size+1) / 2 + this.gridStartY;
     
     //init//
     this.inventoryContainer = new PIXI.Container();
     this.inventoryBackgroundGrp = new PIXI.Container();
+    
+    var background_scale = this.inventory_w / 144;
+    
+    
+    var inventUp = Alice.Object.fromImage( baseURL.requireAssets+'up.png');
+    
+    inventUp.scale.set(background_scale);
+    inventUp.x = game.screenWidth;
+    inventUp.y = 0;
+    inventUp.interactive = true;
+    inventUp.buttonMode = true;
+    inventUp.on('click', prevPage);
+//    inventUp.on('pointerover',function() {
+//        this.alpha = 0.8;
+//    })
+//    
+//    inventUp.on('pointerout',function() {
+//        this.alpha = 1;
+//    })
+    
+    this.inventoryBackgroundGrp.addChild(inventUp);
+    
+    
     for(var i = 0; i < this.inventory_size; i++) {
         var inventBack = Alice.Object.fromImage( baseURL.requireAssets+'inventory.png');
-        
-        //scale
-        var background_scale = this.inventory_w/144;
         inventBack.scale.set(background_scale);
         inventBack.x = game.screenWidth;
-        inventBack.y = i*this.inventory_w;
+        inventBack.y = this.gridStartY + i*this.inventory_w;
         this.inventoryBackgroundGrp.addChild(inventBack); 
     }
     
+    var inventDown = Alice.Object.fromImage( baseURL.requireAssets+'down.png');
+    inventDown.scale.set(background_scale);
+    inventDown.x = game.screenWidth;
+    inventDown.y = this.gridStartY + this.inventory_size*this.inventory_w;
+    inventDown.interactive = true;
+    inventDown.buttonMode = true;
+    inventDown.on('click', nextPage);
+//    inventDown.on('pointerover',function() {
+//        this.alpha = 0.8;
+//    })
+//    
+//    
+//    inventDown.on('pointerout',function() {
+//        this.alpha = 1;
+//    })
+    this.inventoryBackgroundGrp.addChild(inventDown); 
+    
     ////////functions//////////
+    
+    this.page = 0;    
+    
+    this.init = function() {
+        //TODO
+    }
+    
     this.scaleDown = function(tool) {
         tool.scale.set(1);
-        //
-        
         var scale = Math.min(this.inventory_w/tool.width, this.inventory_w/tool.height)
         tool.scale.set(scale * this.magic_scale);
         
@@ -282,13 +342,8 @@ function Inventory(game) { //always on the top
         
         if(this.isInsideInventory(tool))
         {
-                //console.log("inside")
-                return;
+            return;
         }
-            
-        
-        //this.soundList.add.play();
-        //this.game.soundManager.play('add');
         
         //remove tool from the original scene and add to inventory container
         this.inventoryContainer.addChild(tool); //[INTERESTING: remove it from the original container]
@@ -299,37 +354,90 @@ function Inventory(game) { //always on the top
         //!???????????!
         this.game.reactionSystem.makeDraggable(tool);
         
-//        tool.interactive = true;
-//        tool.buttonMode = true;
-//        
-        //this.game.reactionSystem.makeUnClickable(tool);
-//        tool.off('pointerdown', tool.onClick);
-////        tool.on('rightclick', function(){myGame.inventory.inventoryObserved(tool)});
-//        
-//        //enable drag and drop
-//        tool
-//            .on('pointerdown', onDragStart)
-//            .on('pointerup', onDragEnd)
-//            .on('pointermove', onDragMove);
-
+        tool.inInventory = true;
+        this.page = Math.floor((this.countValidObj()-1) / 5)
         this.update();
     }
     
     this.remove = function(tool) {
         this.inventoryContainer.removeChild(tool);
+        tool.inInventory = false;
+        this.page = Math.floor((this.countValidObj()-1) / 5)
         this.update();
     }
     
     this.update = function() {
         var len  = this.inventoryContainer.children.length;
         //console.log("invent len = " + len);
+        var count = 0;
+        var start = this.page * this.inventory_size
         for(var i = 0; i < len ; i++) {
             var child = this.inventoryContainer.getChildAt(i);
-            child.x = this.baseX;
-            child.y = this.baseY + i * this.inventory_w;
-            child.inventPos = {x:child.x, y:child.y}
+            if(!child.visible) {
+                continue;
+            } else {
+                child.x = this.baseX;
+                var offset = count % 5;
+                var inPage = Math.floor(count/5);
+                child.y = this.baseY + offset * this.inventory_w - (this.page - inPage) * this.game.screenHeight;
+                child.inventPos = {x:child.x, y:child.y}
+                count++;
+            }
+        }
+        debug.log(this.page)
+    }
+    
+    this.countValidObj = function() {
+        var count = 0;
+        for(var i = 0; i < this.inventoryContainer.children.length; i ++) {
+            var child = this.inventoryContainer.getChildAt(i);
+            if(child.visible)
+                count++;
+        }
+        return count;
+    }
+    
+    this.hasNextPage = function() {
+        var count = 0;
+        
+        for(var i = 0; i < this.inventoryContainer.children.length; i ++) {
+            var child = this.inventoryContainer.getChildAt(i);
+            if(!child.visible) {
+                continue;
+            }else {
+                count ++;
+                if(count > (this.page+1) * this.inventory_size) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+        
+    }
+    
+    this.hasPrevPage = function() {
+        if(this.page > 0) {
+            return true;
+        } else {
+            return false;
         }
     }
+    
+    // turn page
+    this.nextPage = function() {
+        if(this.hasNextPage()) {
+            this.page += 1;
+            this.update();
+        }
+    }
+    
+    this.prevPage = function() {
+        if(this.hasPrevPage()) {
+            this.page -= 1;
+            this.update();
+        }
+    } 
     
     
     this.inventoryObserved = function(tool) {
@@ -554,7 +662,7 @@ function GameManager() {
         this.screenHeight = height;
 
         this.inventorySize = invent_size;
-        this.inventoryWidth = height/invent_size
+        this.inventoryWidth = height/(invent_size+1)
         
         this.size = [this.screenWidth + this.inventoryWidth, this.screenHeight];
         this.ratio = this.size[0] / this.size[1];
@@ -765,7 +873,7 @@ function MessageBox(background, avatarEnable, game) {
     
     this.defaltStyle = new PIXI.TextStyle({
         fontFamily: 'Arial',
-        fontSize: 23 * scale,
+        fontSize: 46 * scale,
         fontWeight: 'bold',
         wordWrap: true,
         wordWrapWidth: 1051 * scale * 0.8
@@ -975,6 +1083,11 @@ function onMouseMove() {
     }
 }
 
+function backToOrigin(obj,x,y) {
+    obj.x = x;
+    obj.y = y;
+}
+
 
 function onMouseUp() {
     
@@ -1012,13 +1125,13 @@ function onMouseUp() {
             var message = this.name + myGame.eventSystem.template.use + item.name;
             if(myGame.eventSystem.checkEventExist(message)){
                 myGame.eventSystem.callEvent(message);
-                return;
+                //return;
             }
             
             message = this.name + myGame.eventSystem.template.combine + item.name;
             if(myGame.eventSystem.checkEventExist(message)){
                 myGame.eventSystem.callEvent(message);
-                return;
+                //return;
             }
         }
         
@@ -1030,7 +1143,7 @@ function onMouseUp() {
             if(myGame.eventSystem.checkEventExist(message)){
                 myGame.soundManager.play('good');
                 myGame.eventSystem.callEvent(message);
-                return;
+                //return;
             }
             
             message = this.name + myGame.eventSystem.template.combine + item.name;
@@ -1039,24 +1152,31 @@ function onMouseUp() {
             if(myGame.eventSystem.checkEventExist(message)){
                 myGame.soundManager.play('good');
                 myGame.eventSystem.callEvent(message);
-                return;
+                //return;
             }
         }
         
         
         
-        myGame.soundManager.play('bad');
-        this.x = this.original[0];
-        this.y = this.original[1];
+        //myGame.soundManager.play('bad');
+        backToOrigin(this,this.original[0],this.original[1]);
+//        this.x = this.original[0];
+//        this.y = this.original[1];
         
     }
-    
-    
-    
+  
 }
 
-//droped on the event target: do something
-//droped on not event target: back to place
+function nextPage() {
+    myGame.inventory.nextPage();
+}
+
+function prevPage() {
+    myGame.inventory.prevPage();
+}
+
+
+
 
 
 
