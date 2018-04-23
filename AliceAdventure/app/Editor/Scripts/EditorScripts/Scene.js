@@ -1,6 +1,6 @@
 'use strict';
 
-const {PIXI, ID, Event} = require('./Utilities/Utilities');
+const {PIXI, ID, Event, Debug} = require('./Utilities/Utilities');
 const GameProperties = require('./GameProperties');
 
 // class
@@ -46,40 +46,41 @@ Scene.removeObj = function(_obj){
     }
 }
 
-
-/*Scene.Selection = { // only 1 selection is supported 
-	scene: null, // Dont set this directly
-	hasSelection: function(){ return (this.scene != null); }, 
-	select: function(_scene){ 
-		if (_scene instanceof Scene) {
-			if (this.scene != null){
-				this.scene.container.visible = false;
-			}
-			_scene.container.visible = true;
-			this.scene = _scene;
-			Event.Broadcast("update-selected-scene");
-		}
-	}, 
-	cancel: function(){ 
-		if (this.scene != null){
-			this.scene.container.visible = false;
-		}
-		this.scene = null;
-		Event.Broadcast("update-selected-scene");
-	}
-};*/
-
-
-
 // functions
 Scene.prototype.InitContainer = function(){
 	this.container = new PIXI.Container();
 	this.container.visible = false;
+};
+
+Scene.prototype.SetAsStartScene = function(){
+	if (!GameProperties.ProjectLoaded()) return;
+	GameProperties.instance.settings.startScene = this.id;
 }
 
 Scene.prototype.DeleteThis = function(){
+	if (!GameProperties.ProjectLoaded()) return;
+	if (GameProperties.GetSceneLength() <= 1) {
+		Debug.LogError("You have to keep at least one scene!");
+		return false;
+	}
+	// Delete objects in scene
+	let objToDelete = [];
+	GameProperties.instance.objectList.forEach((obj)=>{
+		if (obj.bindScene == this){
+			objToDelete.push(obj);
+		}
+	});
+	objToDelete.forEach((obj)=>{
+		obj.DeleteThis();
+	});
+	// Delete scene
+	if (this.container != null){
+		if (this.container.parent != null) this.container.parent.removeChild(this.container);
+		this.container.destroy();
+	}
 	GameProperties.DeleteScene(this);
-}
+	Event.Broadcast('delete-scene', this.id);
+};
 
 Scene.prototype.SelectOn = function(){
 	this.selected = true;

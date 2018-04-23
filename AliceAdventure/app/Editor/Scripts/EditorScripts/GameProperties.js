@@ -100,6 +100,16 @@ GameProperties.showObjNames = function(){
 }
 
 GameProperties.updateOrderByScene = function(_scene) {   
+	if (!GameProperties.ProjectLoaded()) return;
+	/*let origGood = true;
+	let origTable = "";
+    GameProperties.instance.objectList.forEach((obj, i)=>{
+    	if (obj == null){
+    		origGood = false;
+    	} else {
+    		origTable += "{" + i + ": " + obj.name + ", " + obj.bindScene.name + "}\n";
+    	}
+    });*/
     var objInScene = _scene.container.children;
     
     var original = [];
@@ -124,7 +134,23 @@ GameProperties.updateOrderByScene = function(_scene) {
             index++;
         }
     }
-    
+    /*let outputProblem = false;
+    let problemTable = "";
+    GameProperties.instance.objectList.forEach((obj, i)=>{
+    	if (obj == null && origGood){
+    		outputProblem = true;
+    		problemTable += "{" + i + ": null}\n"
+    	} else {
+    		problemTable += "{" + i + ": " + obj.name + ", " + obj.bindScene.name + "}\n";
+    	}
+    });
+    if (outputProblem){
+    	console.log("before: \n" + origTable);
+    	console.log(objInScene);
+    	console.log(original);
+    	console.log(organized);
+    	console.log("after: \n" + problemTable);
+    }*/    
 }
 
 
@@ -147,6 +173,10 @@ GameProperties.GetSceneById = function(_id){
 		}
 	}
 	return null;
+};
+GameProperties.GetSceneLength = function(){
+	if (!GameProperties.ProjectLoaded()) return -1;
+	return GameProperties.instance.sceneList.length;
 };
 GameProperties.GetObjectById = function(_id){
 	if (!GameProperties.ProjectLoaded()) return null;

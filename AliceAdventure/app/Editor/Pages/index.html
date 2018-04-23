@@ -145,7 +145,7 @@
 
 
 				<!-- Modal -->
-  <div class="modal" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle" aria-hidden="true">
+  <div class="modal" id="setting" tabindex="-1" role="dialog" aria-labelledby="settingTitle"  data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" id="game-setting">
       <div class="modal-content">
         <div class="modal-header">
@@ -244,7 +244,7 @@
 							<li>
 								<label for="clickable">draggable</label>
 								<label class="switch"><input type="checkbox" v-model='object.draggable' id ="visible" ><span class="slider round"></span></label>
-								<img id="object-delete" src="src/delete.png">						 
+								<img id="object-delete" src="src/delete.png" v-on:click='deleteObject()'>						 
 							</li>
 							<!-- user properties -->
 							<!--li v-for='property in bindObj.properties'>
@@ -255,7 +255,10 @@
 
 					</div>
 					<div v-if='showScene' class="property-info">
-					<ul><li><input style="width:80px" v-model='scene.name'/></li></ul>
+					<ul>
+					<li><input style="width:80px" v-model='scene.name'/></li>
+					<li><img id="object-delete" src="src/delete.png" v-on:click='deleteScene()'></li>
+					</ul>
 					</div>
 				</div>
 			</div>
@@ -291,7 +294,7 @@
 							<div id="backdrop-asset" style="display: block;">
 								<div class="assets">
 									<ul>
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.backdrop" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.backdrop" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 									</ul>
 								</div>
@@ -300,7 +303,7 @@
 							<div id="character-asset" style="display: none;">
 								<div class="assets">
 									<ul>
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.character" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.character" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 									</ul>
 								</div>
@@ -309,7 +312,7 @@
 							<div id="item-asset" style="display: none;">
 								<div class="assets">
 									<ul>
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.item" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.item" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 									</ul>
 								</div>
@@ -318,7 +321,7 @@
 							<div id="other-asset" style="display: none;">
 								<div class="assets">
 									<ul>
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.other" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.other" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 									</ul>
 								</div>
@@ -327,7 +330,7 @@
 							<div id="imported-asset" style="display: none;">
 								<div class="assets">
 									<ul>
-										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="chooseObj(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+										<li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
 										</li>
 									</ul>
 								</div>
@@ -337,9 +340,9 @@
 								<div class="assets">
 									<ul>
                   <!-- bind the gallery data -->
-                    <li v-for="sound in sounds"> <div class="asset"><img v-bind:src="sound.src"> </div><p v-html='sound.name'></p>
+                    <li v-for="sound in sounds"> <div class="asset"><img src='../../Assets/audio.png'> </div><p v-html='sound.name'></p>
                     </li>
-                    <li v-for="sound in importedSounds"> <div class="asset"><img v-bind:src='sound.src'> </div><p v-html='sound.name'></p>
+                    <li v-for="sound in importedSounds"> <div class="asset"><img src='../../Assets/audio.png'> </div><p v-html='sound.name'></p>
                     </li>  
                   </ul>
 								</div>
@@ -363,7 +366,7 @@
         				<input type="checkbox" /> -->
         				<i class="down" onclick="showListView(event)"></i>
                         
-                        <button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)" v-on:dragstart='sceneDragStart(event, scene); isDraggingScene=true;' v-on:dragend='isDraggingScene=false;' draggable="true"></button>
+                        <button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)" v-on:dragstart='sceneDragStart(event, scene); isDraggingScene=true;' v-on:dragend='isDraggingScene=false;' draggable="true"></button><img class="start-star" src="src/star.png" v-if='scene.id==settings.startScene'/>
                         
       					<ol class="object_label" style="display:block;">
                             <hr class="obj-top" style="height: 5px !important; margin: 0px" v-show="isDraggingObject" v-on:drop='objectDrop(event,scene);isDraggingObject=false;' v-on:dragover='objectDragover(event)' v-on:dragenter='event.target.style.height="35px"' v-on:dragleave='event.target.style.height="5px"'>
@@ -375,7 +378,7 @@
                                 
                                 <hr class="obj" style="height: 5px !important; margin: 0px" v-show="isDraggingObject" v-on:drop='objectDrop(event,scene,object);' v-on:dragover='objectDragover(event)' v-on:dragenter='event.target.style.height="30px"' v-on:dragleave='event.target.style.height="5px"' >
                                 
-      						</li>
+      						</li> 
       					</ol>
                         
                         <hr class="sce" style="height: 5px !important; margin: 0px" v-show="isDraggingScene" v-on:drop='sceneDrop(event,scene);' v-on:dragover='sceneDragover(event)' v-on:dragenter='event.target.style.height="30px"' v-on:dragleave='event.target.style.height="5px"'>
@@ -425,7 +428,7 @@
 				<h6 id="event-box-title" class="window-title" >Event</h6>
 				<ul class="event-box" v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'>
 					<li>
-						<span v-if='ntra.event==null' style="opacity: 0.7;">Drag an event here</span>
+						<span v-if='ntra.event==null' style="opacity: 0.5;">Drag an event here</span>
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 0'>
               When clicking
 							<select v-model="ntra.event.args[0]">
@@ -442,15 +445,13 @@
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option> ,
 							</select> ,
 						</span>              
-						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 2'>
-              <!-- OBSERVE COMMENTED OUT
+						<!--span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 2'>
 			  When
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 							</select> is observed, 
-						</span>              
+						</span-->              
 						<span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 3'>
-			  -->
               When combining
 							<select v-model="ntra.event.args[0]">
 									<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
@@ -647,14 +648,20 @@
 				>
 			</div-->
 		</div>
-		<div  class="modal"  tabindex="-1" role="dialog" id="run-view" v-if='showRunView'>
-			<div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 80%;">
+		<div  class="modal"  tabindex="-1" role="dialog" id="run-view" data-backdrop="static" >
+			<div class="modal-dialog modal-dialog-centered modal-lg" role="document" >
 			<div class="modal-content" style="text-align: center">
-				<div class="modal-header">
-			<div ><button class="close" data-dismiss="modal" aria-label="Close" v-on:click='stop();'>stop</button></div>
+				<div class="modal-header"> <h5 class="modal-title" >Run</h5>
+			<div ><button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close" v-on:click='stop()'>
+            <span aria-hidden="true">&times;</span>
+          </button></div>
 		</div>
-		<div class="modal-body">
-			<webview id="foo" v-bind:src='src' style="display:inline-flex; margin:0 !important; padding:0; width: 640px; height: 480px; overflow:visible !important;"></webview><!-- 640/480 -->
+		<div class="modal-body" id="run-modal-body">
+
+			<webview v-if='showRunView' id="foo" style="margin: 0; border: 0;" v-bind:src='src'> </webview><!-- 640/480 -->
+			<div id="run-buttons">
+				<button  data-dismiss="modal" aria-label="Close" v-on:click='stop();'>stop</button><button v-on:click='replay()'>replay</button>
+			</div>
 		</div>
 			</div>
 			</div>
