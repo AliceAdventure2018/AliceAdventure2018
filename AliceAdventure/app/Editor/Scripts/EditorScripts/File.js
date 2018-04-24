@@ -55,8 +55,19 @@ File.NewEmptyProject = function(callback){ // TUT
 				new File(null, new GameProperties());
 				File.instance.gameProperties.settings.projectName = _name;
 				// Default settings
-				let firstScene = Scene.AddScene("New scene");
-				//firstScene.SelectOn();			
+				let firstScene = Scene.AddScene("new scene");
+				firstScene.SetAsStartScene();
+				firstScene.SelectOn();
+				Sound.NewSound("correct", "./Assets/sound/correct.mp3");
+				Sound.NewSound("wrong", "./Assets/sound/wrong.wav");
+				Sound.NewSound("lock", "./Assets/sound/lock.wav");
+				Sound.NewSound("unlock", "./Assets/sound/unlock.wav");
+				Sound.NewSound("put", "./Assets/sound/put.wav");
+				Sound.NewSound("win", "./Assets/sound/win.wav");
+				Sound.NewSound("door", "./Assets/sound/door.wav");
+				Sound.NewSound("meow_1", "./Assets/sound/meow_happy.wav");
+				Sound.NewSound("meow_2", "./Assets/sound/meow_unhappy.wav");
+							
 				Event.Broadcast("reload-project");
 				if (typeof callback == "function"){
 					callback(_name);
@@ -82,8 +93,18 @@ File.NewProject = function(_template = null){ // TODO: load from template
 				new File(null, new GameProperties());
 				File.instance.gameProperties.settings.projectName = _name;
 				// Default settings
-				let firstScene = Scene.AddScene("First scene");
+				let firstScene = Scene.AddScene("default scene");
+				firstScene.SetAsStartScene();
 				firstScene.SelectOn();
+				Sound.NewSound("correct", "./Assets/sound/correct.mp3");
+				Sound.NewSound("wrong", "./Assets/sound/wrong.wav");
+				Sound.NewSound("lock", "./Assets/sound/lock.wav");
+				Sound.NewSound("unlock", "./Assets/sound/unlock.wav");
+				Sound.NewSound("put", "./Assets/sound/put.wav");
+				Sound.NewSound("win", "./Assets/sound/win.wav");
+				Sound.NewSound("door", "./Assets/sound/door.wav");
+				Sound.NewSound("meow_1", "./Assets/sound/meow_happy.wav");
+				Sound.NewSound("meow_2", "./Assets/sound/meow_unhappy.wav");
 				
 				Event.Broadcast("reload-project");
 			}
@@ -386,6 +407,9 @@ File.OpenFromPath = function(_path){
 
 	// ProjData
 	ID.setCounter(data.projectData.idCounter);
+
+	// Init operation
+	GameProperties.GetSceneById(GameProperties.instance.settings.startScene).SelectOn();
 
 	Event.Broadcast("reload-project");
 }

@@ -8,12 +8,12 @@ const Resizer = require('./Resizer');
 var SceneObject;
 
 // variables
-SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = null, _clickable = true, _draggable = false){
+SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = {id:0, name:'inventory'}, _clickable = true, _draggable = false){
 	if (_id == null) _id = ID.newID; // NEVER MODIFY THIS
 	this.id = _id;
 	this.name = _name;
 	this.src = _src; // "Assets/xxx"
-	//this.isDefault = true; // TODO
+	//this.isDefault = true;
 	this.bindScene = _bindScene;
 	this.clickable = _clickable;
 	this.draggable = _draggable;
@@ -24,17 +24,32 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = n
 	this.drag = { on: false, eventData: {}, offset: {x: 0, y: 0} };
 
 	//this.properties = [];
+	this.isCharacter = false;
 	this.sprite = null;
 	this.filter = pixiFilters.outlineFilterGreen;
 };
 
 // static properties
 SceneObject.AddEmptyObject = function(_name, _bindScene){
+	if (GameProperties.instance == null) return null; // no proj loaded
 	let _defaultObj = {
-		src: '../../Assets/inventory.png',
+		src: '../../Assets/placeholder.png',
 		name: _name
 	};
-	return SceneObject.AddObject(_defaultObj, _bindScene);
+	let index = GameProperties.instance.objectList.length;
+	let xStep = 80, yStep = 72, xNum = 5, yNum = 4;
+	let defaultPos = {
+		x: (index % xNum + 1) * xStep,
+		y: (Math.floor(index / xNum) % yNum + 1) * yStep
+	}
+	if (_bindScene == null){
+		_bindScene = GameProperties.instance.sceneList[0];
+	}
+	let _obj = new SceneObject(null, _defaultObj.name, _defaultObj.src, _bindScene);
+	GameProperties.AddObject(_obj);
+	_obj.InitSprite(_defaultObj.src);
+	_obj.SetSprite(null, defaultPos);
+	return _obj;
 }
 
 SceneObject.AddObject = function(_objInfo, _bindScene){
@@ -50,7 +65,8 @@ SceneObject.LoadObject = function(_data){
 	if (GameProperties.instance == null) return null; // no proj loaded
 	let _obj = new SceneObject(_data.id, _data.name, _data.src, GameProperties.GetSceneById(_data.bindScene), _data.clickable, _data.draggable);
 	GameProperties.AddObject(_obj);
-	_obj.SetSprite(_data.src, _data.pos, _data.scale, _data.anchor, _data.active);
+	_obj.InitSprite(_data.src);
+	_obj.SetSprite(null, _data.pos, _data.scale, _data.anchor, _data.active);
 	return _obj;
 };
 
@@ -67,23 +83,17 @@ var pixiFilters = { // private
 SceneObject.prototype.InitSprite = function(_url){
 	if (!(this instanceof SceneObject)) return;
 	this.sprite = PIXI.Sprite.fromImage(_url);
+	if (this.bindScene.container != null) this.bindScene.container.addChild(this.sprite);
 	this.SpriteInfoDefault();
 };
 
 SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active){
+	if (this.sprite == null) {console.log('sprite not inited');return}; // must be initiated before
 	if (_url != null){
 		this.src = _url;
-		if (this.sprite == null){ // no sprite
-			this.sprite = PIXI.Sprite.fromImage(_url);
-		} else {
-			let parent = this.sprite.parent;
-			if (parent != null) parent.removeChild(this.sprite);
-			this.sprite.destroy();
-			this.sprite = PIXI.Sprite.fromImage(_url);
-			if (parent != null) parent.addChild(this.sprite);
-		}
+		this.sprite.setTexture(PIXI.Texture.fromImage(_url));
 	}
-	this.SpriteInfoDefault();
+	//this.SpriteInfoDefault();
 	if (_pos != null){
 		this.sprite.x = _pos.x;
 		this.sprite.y = _pos.y;		
@@ -116,6 +126,7 @@ SceneObject.prototype.SpriteInfoDefault = function(){
 
 SceneObject.prototype.SwitchScene = function(toScene, aboveObj) {
 	if (toScene.id == 0){ // inventory
+		console.log('to inv');
 		if (this.sprite.parent != null){
 			this.sprite.parent.removeChild(this.sprite);
 		}
@@ -175,8 +186,12 @@ SceneObject.prototype.ToggleLock = function(){
 }
 
 SceneObject.prototype.DeleteThis = function(){
-	this.sprite.destroy();
+	if (this.sprite != null){
+		if (this.sprite.parent != null) this.sprite.parent.removeChild(this.sprite);
+		this.sprite.destroy();
+	}
 	GameProperties.DeleteObject(this);
+	Event.Broadcast('delete-object', this.id);
 };
 
 /*SceneObject.prototype.AddUserProperty = function(_key, _type, _value){

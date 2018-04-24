@@ -39,6 +39,12 @@ InteractionView.prototype.InitView = function(){
             isDraggingReact: false,
 		}, 
 		methods: {
+            initBox:(ntra, el) => {
+                                    console.log(el);
+                                   //InteractionView.prototype.initBox(ntra, el)
+                                  },
+            
+            resizeClick: (ev, ntra) => {InteractionView.prototype.minimizeWindow(ev,ntra)},
             editTitle: (ev, ntra) => {InteractionView.prototype.editInPlace(ev,ntra)},
 			eventDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.IEvent);},
 			eventDrop: (ev, ntra)=>{View.HandleDrop(ev, View.DragInfo.IEvent, (data)=>{ntra.SetIEvent(data);});}, 
@@ -76,6 +82,7 @@ InteractionView.prototype.InitView = function(){
 		}
 	});
 
+    
 	// events
 	Event.AddListener("reload-project", ()=>{this.ReloadView();});
 };
@@ -107,6 +114,73 @@ InteractionView.prototype.AddNewInteraction = function(){
 		Interaction.NewInteraction();
 	}
 };
+
+InteractionView.prototype.initBox = function(elem, ntra) {
+    console.log(elem)
+//        var eventTarget = event.target.parentNode;
+//  		var targetImg = event.target.closest('#interaction-box-minimize');
+//  		var target = eventTarget.closest('.interaction-box');
+//    	var targetChildren = target.childNodes;
+//   		var minimizeSrc = document.getElementById("interaction-box-minimize").getAttribute("min-src");
+//   		var maxmizeSrc = document.getElementById("interaction-box-minimize").getAttribute("max-src");
+//    
+//        if(ntra.max == true){
+//            targetImg.src = minimizeSrc;
+//    	    target.style.width = null;
+//            for(var k=0;k<targetChildren.length;k++){
+//                if(targetChildren[k].tagName === 'UL' || targetChildren[k].tagName === 'H6'){
+//                    targetChildren[k].style.display = 'block';
+//                }
+//            }
+//            
+//        }else {
+//            targetImg.src = maxmizeSrc;
+//            for(var i=0;i<targetChildren.length;i++){
+//                if(targetChildren[i].tagName === 'UL' || targetChildren[i].tagName === 'H6'){
+//                    targetChildren[i].style.display = 'none';
+//                }
+//            }
+//    	   target.style.width = '250px'; 
+//        }
+    
+        console.log("here")
+}
+
+InteractionView.prototype.minimizeWindow = function(event, ntra){
+  		var eventTarget = event.target.parentNode;
+  		var targetImg = event.target.closest('#interaction-box-minimize');
+  		var target = eventTarget.closest('.interaction-box');
+    	var targetChildren = target.childNodes;
+   		var minimizeSrc = document.getElementById("interaction-box-minimize").getAttribute("min-src");
+   		var maxmizeSrc = document.getElementById("interaction-box-minimize").getAttribute("max-src");
+    
+    if(ntra.max == true){
+    	//target.setAttribute("max",'false');
+    	ntra.max = false;
+        targetImg.src = maxmizeSrc;
+    	//console.log("let's minimize");
+    	//console.log(target.max);
+    	for(var i=0;i<targetChildren.length;i++){
+    		if(targetChildren[i].tagName === 'UL' || targetChildren[i].tagName === 'H6'){
+    			targetChildren[i].style.display = 'none';
+    		}
+    	}
+    	target.style.width = '250px';
+
+    } else{
+    	//target.setAttribute("max",'true');
+        ntra.max = true;
+    	targetImg.src = minimizeSrc;
+    	target.style.width = null;
+
+    	//console.log("let's maxmize");
+    	for(var k=0;k<targetChildren.length;k++){
+    		if(targetChildren[k].tagName === 'UL' || targetChildren[k].tagName === 'H6'){
+    			targetChildren[k].style.display = 'block';
+    		}
+    	}
+    }
+  }
 
 InteractionView.prototype.editInPlace = function(event, ntra){
 			

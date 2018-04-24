@@ -480,6 +480,8 @@ Parser = function (jsonPath, buildPath){
 	//   9   play music         [soundID]             play music of this ID
 	//  10   show inventory     []                    show inventory
 	//  11   hide inventory     []                    show inventory
+	//	12   moveObjToScene		[obj, sceneIndex, x, y] move object # to scene # at (x, y)
+	//  13	 setObjLocation		[obj, x, y]			  move object # to (x, y)
 	function interactionListParser(callback){
 
 		var toReturn = "";
@@ -705,6 +707,16 @@ Parser = function (jsonPath, buildPath){
 
 				if (toReturn === false) return false;
 				else return toReturn;
+			case 12:
+				toReturn = translate_reactionType_12.call(this,reaction.args, callback);
+
+				if (toReturn === false) return false;
+				else return toReturn;
+			case 13:
+				toReturn = translate_reactionType_13.call(this,reaction.args, callback);
+
+				if (toReturn === false) return false;
+				else return toReturn;
 			default:
 				callback("WRONG REACTION TYPE");
 				return false;
@@ -883,7 +895,7 @@ Parser = function (jsonPath, buildPath){
 	function translate_reactionType_8( args, callback){
 		if (args.length == 1){
 	
-			return "myGame.messageBox.startConversation(['" + args[0] + "'], function(){\n";
+			return "myGame.messageBox.startConversation(['" + args[0].replace(/\\/g,"/").replace(/"|'/g, "\"") + "'], function(){\n";
 
 		}else{
 			callback("JSON Format ERROR: reaction type 9 (show messageBox) should have ONE argument.");
@@ -929,8 +941,60 @@ Parser = function (jsonPath, buildPath){
 			return "reaction.hideInventory();\n";
 
 		}else{
-			callback("JSON Format ERROR: reaction type 10 (hide inventory) should have ZERO argument.");
+			callback("JSON Format ERROR: reaction type 11 (hide inventory) should have ZERO argument.");
 			return false;
+		}
+	}
+
+	function translate_reactionType_12(args, callback){
+		if (args.length != 4){
+			var obj = findObjectByID.call(this, args[0]);
+			if (obj === false){
+				callback("Compiler ERROR: cannot find object of id: " + args[0]);
+				return false;
+			}
+
+			var sceneIndex = findSceneByID.call(this, args[1]);
+			if (sceneIndex === false) {
+				callback("Compiler ERROR: cannot find scene of id: " + args[1]);
+				return false;
+			}
+
+			var x = 0; var y = 0;
+			if (!isNaN(args[2]) && typeof (args[2]) === "number"){
+				x = args[2] * this.scalarX;
+			}
+			if (!isNaN(args[3]) && typeof (args[3]) === "number"){
+				y =  args[3] * this.scalarY;
+			}
+			return "reaction.moveObjectToScene(" +obj + ", " + sceneIndex + ", " + x + ", " + y + ");\n";
+			
+
+		}else{
+			callback("JSON Format ERROR: reaction type 12(moveObjToScene) should have 4 arguments(obj, sceneIndex, x, y).");
+			return false;
+		}
+	}
+
+	function translate_reactionType_13(args, callback){
+		if (args.length == 3){
+			var obj = findObjectByID.call(this, args[0]);
+			if (obj === false){
+				callback("Compiler ERROR: cannot find object of id: " + args[0]);
+				return false;
+			}
+
+			var x = 0; var y = 0;
+			if (!isNaN(args[1]) && typeof (args[1]) === "number"){
+				x = args[1] * this.scalarX;
+			}
+			if (!isNaN(args[2]) && typeof (args[2]) === "number"){
+				y =  args[2] * this.scalarY;
+			}
+			return "reaction.setObjectLocation(" + obj + ", " + x + ", " + y +");\n";
+
+		}else{
+			callback("JSON Format ERROR: reaction type 13(setObjLocation) must have 3 arguments(obj, x, y)");
 		}
 	}
 
@@ -1013,7 +1077,7 @@ Parser = function (jsonPath, buildPath){
 			var objName = findObjectByID.call(this, args[0]);
 
 			if (objName === false){
-				callback("Compile ERROR: Cannot find the object of ID: " + objID + ".") ;
+				callback("Compile ERROR: Cannot find the object of ID: " + args[0] + ".") ;
 				return false;
 			}else{
 				return "\n//--------------Click--------------\n" +  objName + ".DIY_CLICK = function(){\n";		

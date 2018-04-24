@@ -31,7 +31,8 @@ RunView.prototype.InitView = function(){
 			src: null
 		}, 
 		methods: {
-			stop: ()=>{this.Terminate();}
+			stop: ()=>{this.Terminate();},
+			replay: ()=>{this.Replay()}
 		}
 	});
 
@@ -54,6 +55,9 @@ RunView.prototype.Terminate = function(){
 	this.vModel.src = null;
 };
 
-
+RunView.prototype.Replay = function(){
+	this.vModel.showRunView = false;
+	window.setTimeout(()=>{this.vModel.showRunView = true}, 10);
+};
 
 module.exports = RunView;

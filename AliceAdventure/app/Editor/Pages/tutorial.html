@@ -83,7 +83,7 @@
   margin-top:1%;
    color:#fff;
    font-weight: 480;
-   font-size: 1.8em;
+   font-size: 1.5em;
 }
 
 .sys-button:focus{
@@ -116,7 +116,7 @@
       <tbody>
         <tr v-for='(scene, index) in sceneList'>
           
-          <td> <input type="text" v-model='scene.name'> <img src="src/delete.png" class="tutorial-delete" v-on:click='deleteThing(scene)'/>
+          <td> <input type="text" v-model='scene.name'> <img src="src/delete.png" class="tutorial-delete" v-on:click='deleteScene(scene)'/>
           </td>
         </tr>
       </tbody>
@@ -144,12 +144,12 @@
         <tr v-for='(obj, index) in objectList' v-if='obj.isCharacter'>
           
          
-          <td> <input type="text" v-model='obj.name'><img src="src/delete.png" class="tutorial-delete" v-on:click='deleteThing(obj)'/>
+          <td> <input type="text" v-model='obj.name'><img src="src/delete.png" class="tutorial-delete" v-on:click='deleteObject(obj)'/>
           </td>
            <td>
             <select v-model='obj.bindScene' v-on:change='changeScene(obj, obj.bindScene)'>
               <option v-for='scene in sceneList' v-bind:value='scene' v-html='scene.name'></option>
-              <option v-bind:value='{id: 0}'> Inventory </option>
+              <!--option v-bind:value='{id: 0}'> Inventory </option-->
             </select>
           </td>
         </tr>
@@ -176,12 +176,12 @@
         <tr v-for='(obj, index) in objectList' v-if='!obj.isCharacter'>
         
           
-          <td> <input type="text" v-model='obj.name'><img src="src/delete.png" class="tutorial-delete" v-on:click='deleteThing(obj)'/>
+          <td> <input type="text" v-model='obj.name'><img src="src/delete.png" class="tutorial-delete" v-on:click='deleteObject(obj)'/>
           </td>
           <td>
             <select v-model='obj.bindScene' v-on:change='changeScene(obj, obj.bindScene)'>
               <option v-for='scene in sceneList' v-bind:value='scene' v-html='scene.name'></option>
-              <option v-bind:value='{id: 0}'> Inventory </option>
+              <!--option v-bind:value='{id: 0}'> Inventory </option-->
             </select>
           </td>
         </tr>
@@ -204,20 +204,10 @@
   ">
   
   <p>
-    <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;">Let's decorate the scenes!</h6> 
+    <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.2em !important;">Let's decorate the scenes! <u>Click</u> on the object and <u>select</u> the picture to replace the object!</h6> 
    </p>
    <div style="margin-right:100px;">
-   <div id="design-editor" style=" float: left;margin:10px; position: relative !important; display: inline-block !important; height:480px; width: 48% !important;">
-            <h6 class="window-title">SCENE EDITOR</h6>            
-        <!--DO NOT DELETE THIS, for canvas initialization. Can add style for it-->
-        <div id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'></div>
-
-        <!--div id="add-scene">
-          <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene()'> Add Scene</button></div-->
-      </div>
-     
-
-      <div id="gallery" style="float: left; position: relative !important; display: inline-block !important; height:480px !important; width: 30% !important; margin:10px;">
+    <div id="gallery" style="float: left; position: relative !important; display: inline-block !important; height:480px !important; width: 30% !important; margin:10px;">
             <h6 class="window-title" >GALLERY</h6>
             <div id="tabList">
               <ul >
@@ -238,7 +228,7 @@
             </div>
             <div id="tabContent">
               <div id="backdrop-asset" style="display: block;">
-                <div class="assets">
+                <div class="tutorial-assets">
                   <ul>
                     <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.backdrop" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                     </li>
@@ -247,7 +237,7 @@
               </div>
 
               <div id="character-asset" style="display: none;">
-                <div class="assets">
+                <div class="tutorial-assets">
                   <ul>
                     <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.character" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                     </li>
@@ -256,7 +246,7 @@
               </div>
 
               <div id="item-asset" style="display: none;">
-                <div class="assets">
+                <div class="tutorial-assets">
                   <ul>
                     <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.item" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                     </li>
@@ -265,7 +255,7 @@
               </div>
 
               <div id="other-asset" style="display: none;">
-                <div class="assets">
+                <div class="tutorial-assets">
                   <ul>
                     <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.other" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                     </li>
@@ -274,7 +264,7 @@
               </div>
 
               <div id="imported-asset" style="display: none;">
-                <div class="assets">
+                <div class="tutorial-assets">
                   <ul>
                     <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                     </li>
@@ -283,28 +273,39 @@
               </div>
 
               <div id="key-asset" style="display: none;">
-                <div class="assets">
+                <div class="tutorial-assets">
                   <ul>
                   <!-- bind the gallery data -->
-                    <li v-for="sound in sounds"> <div class="asset"><img v-bind:src="sound.src"> </div><p v-html='sound.name'></p>
+                    <li v-for="sound in sounds"> <div class="asset"><img src="../../Assets/audio.png"> </div><p v-html='sound.name'></p>
                     </li>
-                    <li v-for="sound in importedSounds"> <div class="asset"><img v-bind:src='sound.src'> </div><p v-html='sound.name'></p>
+                    <li v-for="sound in importedSounds"> <div class="asset"><img src='../../Assets/audio.png'> </div><p v-html='sound.name'></p>
                     </li>  
                   </ul>
                 </div>
               </div>
             </div>
           </div>
+   <div id="design-editor" style=" float: left;margin:10px; position: relative !important; display: inline-block !important; height:480px; width: 48% !important;">
+            <h6 class="window-title">SCENE EDITOR</h6>            
+        <!--DO NOT DELETE THIS, for canvas initialization. Can add style for it-->
+        <div id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'></div>
+
+        <!--div id="add-scene">
+          <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene()'> Add Scene</button></div-->
+      </div>
+     
+
+      
           <div id="object-list" style="float:left; margin:10px; position: relative !important; display: inline-block !important;  height:480px !important; width: 15% !important; left:0 !important;" >
             <h6 class="window-title" >OBJECT LIST</h6>
             <!-- if show object list on -->
-            <ol v-if='projectLoaded' class="object-tree">
+            <ol v-if='projectLoaded' class="tutorial-object-tree">
                     
               <li v-for="scene in sceneList">
                 <!-- loop all scenes and objects 
                 <label class="object_label" v-html="scene.name"></label>
                 <input type="checkbox" /> -->
-                <i class="down" onclick="showListView(event)"></i><button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)"></button>
+                <i class="down" onclick="showListView(event)"></i><button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)"></button><img class="start-star" src="src/star.png" v-if='scene.id==settings.startScene'/>
                   <hr style="height: 0.5px !important; margin: 1px" v-show="true" v-on:drop='objectDrop(event,scene)' v-on:dragover='objectDragover(event)'>
                 <ol class="object_label" style="display:block;">
                   <li v-for="object in objectList" v-on:click="onObjectSelect(object)" v-if="object.bindScene.id == scene.id" >
@@ -335,7 +336,7 @@
   margin-left:2%;
 
   ">
-  <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;">Let's create the first interaction box! Think about how to win or finish the game.</h6> 
+  <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.2em !important;">Let's create the first interaction box! Think about how to <b><u>win or finish</u></b> the game.<br> Then, think about how to <u>navigate</u> between scenes if you have more than one scene!</h6> 
   <div>
     <div id="interaction-editor" style="top:0; float:left; display: inline-block !important; position: relative !important; width:65%; height: 500px; margin:10px;">
         <h6 class="window-title">INTERACTION EDITOR</h6>
@@ -351,48 +352,49 @@
         <ul class="event-box" v-on:drop='eventDrop(event, ntra)' v-on:dragover='eventDragover(event)'>
           <li>
             <span v-if='ntra.event==null'>Drag an event to here</span>
+            span v-if='ntra.event==null' style="opacity: 0.7;">Drag an event here</span>
             <span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 0'>
-              When 
+              When clicking
               <select v-model="ntra.event.args[0]">
                   <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
-              </select> is clicked, 
+              </select> ,
             </span>
             <span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 1'>
-              When
+              When using 
               <select v-model="ntra.event.args[0]">
                   <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
               </select> 
-              is used on
+               on
               <select v-model="ntra.event.args[1]">
                   <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option> ,
-              </select> 
+              </select> ,
             </span>              
-            <span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 2'>
-              When
+            <!--span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 2'>
+        When
               <select v-model="ntra.event.args[0]">
                   <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
               </select> is observed, 
-            </span>              
+            </span-->              
             <span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 3'>
-              When
+              When combining
               <select v-model="ntra.event.args[0]">
                   <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
               </select> 
-              is combined with
+              with
               <select v-model="ntra.event.args[1]">
                   <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
               </select> , 
             </span>
             <span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 4'>
-              When State
+              When changing state
               <select v-model="ntra.event.args[0]">
                   <option v-for="state in states" v-html="state.name" v-bind:value="state"></option>
               </select> 
-              is changed to
+              to
               <label class="switch"><input type="checkbox" v-model='ntra.event.args[1]'><span class="slider round"></span></label>
             </span>
             <span class="badge badge-pill badge-event" v-else-if='ntra.event.type == 5'>
-              When player entering scene
+              When player enters scene
               <select v-model="ntra.event.args[0]">
                   <option v-for="scene in scenes" v-html="scene.name" v-bind:value="scene"></option>
               </select> , 
@@ -405,8 +407,8 @@
             <span class="badge badge-pill badge-state">
               if <span v-html='cond.name'></span> is 
               <label class="switch"><input type="checkbox" v-model='cond.value'><span class="slider round"></span></label>
-            </span>
-          </li>
+            </span></li><span style="text-align: center;opacity: 0.7;">Drag any state here</span>
+       
 
          
         </ul>
@@ -491,7 +493,27 @@
             <span class="badge badge-pill badge-reaction" v-if='react.type == 11'>
                 Hide the inventory
             </span>
-          </li>
+
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 12'>
+                Move object 
+                <select v-model="react.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> to scene
+                <select v-model="react.args[1]">
+                    <option v-for="scn in scenes" v-html="scn.name" v-bind:value="scn"></option>
+                </select>
+            </span>
+            
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 13'>
+                Move object 
+                <select v-model="react.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> to position 
+                (X: <input style="width:35px" v-model.number="react.args[1]">
+                Y: <input style="width:35px" v-model.number="react.args[2]">)
+            </span>
+          </li><span style="text-align: center;opacity: 0.7;">Drag any reaction here</span>
+       
         </ul>
       </div>
        <div id="add-interaction">

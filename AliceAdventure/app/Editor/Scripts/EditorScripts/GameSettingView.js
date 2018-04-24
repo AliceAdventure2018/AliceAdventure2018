@@ -47,6 +47,7 @@ GameSettingView.prototype.InitView = function(){
 
 	// events
 	Event.AddListener("reload-project", ()=>{this.ReloadView();});
+	Event.AddListener("delete-scene", (id)=>{this.HandleDeleteScene(id);});
 };
 
 GameSettingView.prototype.ReloadView = function(){
@@ -59,7 +60,14 @@ GameSettingView.prototype.ReloadView = function(){
 		this.vModel.projLoaded = true;
 		this.vModel.sceneOptions = GameProperties.instance.sceneList;
 		this.vModel.settings = GameProperties.instance.settings;
+		this.vModel.res = {w: GameProperties.instance.settings.resWidth, h: GameProperties.instance.settings.resHeight}
 	}
-}
+};
+
+GameSettingView.prototype.HandleDeleteScene = function(_id){
+	if (GameProperties.instance.settings.startScene == _id){
+		GameProperties.instance.settings.startScene = GameProperties.instance.sceneList[0].id;
+	}
+};
 
 module.exports = GameSettingView;
