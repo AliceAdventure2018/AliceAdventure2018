@@ -1,5 +1,5 @@
 'use strict';
-
+const ELECTRON = require('electron').remote;
 const IPC = require('electron').ipcRenderer;
 //const AliceEngine = require('../../Engine/AliceEngine');
 
@@ -70,6 +70,20 @@ function InitAllViews(){
 	InitInteractionView();
 	InitILibraryView();
 	InitGameSettingView();
+	window.addEventListener('beforeunload', (event)=>{return handleClose(event)});
+}
+
+function handleClose(event){
+	if (AliceEditor.File.instance == null) return;
+	let choice = ELECTRON.dialog.showMessageBox(ELECTRON.getCurrentWindow(), {
+		type: 'question',
+		buttons: ['Save', 'Don\'t save'], 
+		title: 'Close', 
+		message: 'Save the project before close it?'
+	});
+	if(choice == 0){
+		AliceEditor.File.SaveProject();
+	}
 }
 
 function InitSceneView(){
