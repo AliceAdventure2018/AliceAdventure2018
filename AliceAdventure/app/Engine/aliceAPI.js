@@ -158,8 +158,8 @@ function AliceReactionSystem(_game) {
     }
     
     this.setObjectLocation = function(_obj, _x, _y) {
-        _obj.x = x;
-        _obj.y = y;
+        _obj.x = _x;
+        _obj.y = _y;
     }
     
 }
