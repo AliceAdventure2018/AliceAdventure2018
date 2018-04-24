@@ -509,8 +509,8 @@
                 <select v-model="react.args[0]">
                     <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
                 </select> to position 
-                (X: <input style="width:35px" v-model:number="react.args[1]">
-                Y: <input style="width:35px" v-model:number="react.args[2]">)
+                (X: <input style="width:35px" v-model.number="react.args[1]">
+                Y: <input style="width:35px" v-model.number="react.args[2]">)
             </span>
           </li><span style="text-align: center;opacity: 0.7;">Drag any reaction here</span>
        

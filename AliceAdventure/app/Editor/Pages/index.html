@@ -588,8 +588,8 @@
 								<select v-model="react.args[0]">
 										<option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
 								</select> to position 
-								(X: <input style="width:35px" v-model:number="react.args[1]">
-								Y: <input style="width:35px" v-model:number="react.args[2]">)
+								(X: <input style="width:35px" v-model.number="react.args[1]">
+								Y: <input style="width:35px" v-model.number="react.args[2]">)
 						</span>
 						
             <hr class="react" style="height: 5px !important; margin: 0px" v-show="isDraggingReact" v-on:drop='reactDrop(event, reactIndex, ntra);' v-on:dragover='reactDragover(event)' v-on:dragenter='event.target.style.height="35px"' v-on:dragleave='event.target.style.height="5px"'>
