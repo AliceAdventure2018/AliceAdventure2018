@@ -97,7 +97,6 @@ function AliceReactionSystem(_game) {
         _obj
             .on('pointerdown', _game.utilities.onMouseDown)
             .on('pointerup', _game.utilities.onMouseUp)
-            //.on('pointerupoutside', onMouseUp)
             .on('pointermove', _game.utilities.onMouseMove);
     }
     
@@ -107,9 +106,6 @@ function AliceReactionSystem(_game) {
         
         _obj.interactive = false;
         _obj.buttonMode = false;
-        
-        //var utility = _game.utilities;
-        
         _obj
             .off('pointerdown', _game.utilities.onMouseDown)
             .off('pointerup', _game.utilities.onMouseUp)
@@ -143,8 +139,12 @@ function AliceReactionSystem(_game) {
     }
    
     
-    this.playAudio = function(_audio) {
-        this.game.soundManager.play(_audio);
+    this.playAudio = function(_audio, loop = false) {
+        this.game.soundManager.play(_audio, loop);
+    }
+    
+    this.stopAudio = function(_audio) {
+        this.game.soundManager.stop(_audio);
     }
     
     this.showInventory = function() {
@@ -266,9 +266,7 @@ function Inventory(game) { //always on the top
     
     //init//
     this.inventoryContainer = new PIXI.Container();
-    //this.inventoryContainer.interactive = true;
 
-    
     this.inventoryBackgroundGrp = new PIXI.Container();
     
     var background_scale = this.inventory_w / 144;
@@ -504,16 +502,18 @@ function SoundManager() {
     this.sound = PIXI.sound;
     this.baseURL = './Resources/Assets/require/sound/';
     
-    
-    
     this.initSystemSound = function() {
         this.sound.add('add', this.baseURL + 'add.wav');
         this.sound.add('good', this.baseURL + 'use_good.wav');
         this.sound.add('bad', this.baseURL + 'use_bad.wav');
     }
     
-    this.play = function(_name) {
-        this.sound.play(_name);
+    this.play = function(_name, _loop) {
+        this.sound.play(_name,{loop:_loop});
+    }
+    
+    this.stop = function(_name) {
+        this.sound.stop(_name);
     }
     
     this.load = function(_name, _url) {
@@ -603,12 +603,13 @@ function SceneManager(game) {
 
 function GameManager() {
     
-    //game
+    //window canvas
     this.screenWidth;
     this.screenHeight;
     this.inventorySize;
     this.inventoryWidth;
     
+    //game
     this.app;
     this.inventory;
     this.sceneManager;
@@ -620,8 +621,6 @@ function GameManager() {
     this.soundManager;
     this.utilities;
     
-    //sound
-    this.sound = PIXI.sound;
     
     this.init = function(width,height,invent_size = 5) {
         if(invent_size < 5)
@@ -629,7 +628,6 @@ function GameManager() {
         
         this.screenWidth = width;
         this.screenHeight = height;
-
         this.inventorySize = invent_size;
         this.inventoryWidth = height/(invent_size+1)
         
@@ -637,14 +635,10 @@ function GameManager() {
         this.ratio = this.size[0] / this.size[1];
         this.stage = new PIXI.Stage(0x333333, true);
         this.renderer = PIXI.autoDetectRenderer(this.size[0], this.size[1], null);
-        
-        //this.app = new Alice.Application(this.screenWidth + this.inventoryWidth, this.screenHeight, {backgroundColor : 0x1099bb});
-        
-        //this.app.rende
-        
         document.body.appendChild(this.renderer.view);
-    
                
+        
+        //init all module
         this.sceneManager = new SceneManager(this);
         this.inventory = new Inventory(this);
         this.topContainer = new Alice.Container();
@@ -662,6 +656,7 @@ function GameManager() {
         this.soundManager = new SoundManager();
         this.utilities = new Utilities(this);
         
+        // add containers into stage
         this.stage.addChild(this.sceneManager.sceneContainer);
         this.stage.addChild(this.inventory.inventoryBackgroundGrp); 
         this.stage.addChild(this.inventory.inventoryContainer);
@@ -704,8 +699,6 @@ function GameManager() {
     }
     
     this.start = function(index) {
-        //console.log("in start");
-        
         this.resize();
         this.sceneManager.start(index);
         this.awake();
@@ -831,6 +824,7 @@ function MessageBox(background, avatarEnable, game) {
     
     this.game = game;
     
+    
     this.holder = new Alice.Container();
     
     //the original background asset is built for 1280*720 screen
@@ -936,7 +930,6 @@ function MessageBox(background, avatarEnable, game) {
             this.currentMsgIndex = 0;
             this.holder.visible = false;
             this.callBack = function(){};
-
     }
 }
 

@@ -16,6 +16,7 @@ myGame.initStateManager({cat_is_feeded:false});
 //myGame.sound.add('win', baseURL.nomalAssets + 'win.wav');
 
 myGame.soundManager.load('meow_unhappy', baseURL.nomalAssets + 'meow_unhappy.wav');
+myGame.soundManager.load('bgm', baseURL.nomalAssets + 'bgm.wav');
 myGame.soundManager.load('meow_happy', baseURL.nomalAssets + 'meow_happy.wav');
 myGame.soundManager.load('door', baseURL.nomalAssets + 'door.wav');
 myGame.soundManager.load('win', baseURL.nomalAssets + 'win.wav');
@@ -256,6 +257,7 @@ cat.DIY_CLICK = function() {
 
 door.DIY_CLICK = function(){
     reaction.playAudio('door');
+    reaction.stopAudio('meow_unhappy');
     reaction.transitToScene(1);
 };
 
