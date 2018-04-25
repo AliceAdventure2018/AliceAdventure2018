@@ -28,7 +28,7 @@ _Backdrop_17.anchor.set(0.5, 0.5);
 _Backdrop_17.x = 640;
 _Backdrop_17.y = 480;
 _Backdrop_17.scale.set(1.3333333333333333, 1.3333333333333333);
-reaction.makeClickable( _Backdrop_17 );
+//reaction.makeClickable( _Backdrop_17 );
 reaction.makeUnDraggable( _Backdrop_17 );
 _Backdrop_17.visible = true;
 myGame.scene(0).addChild(_Backdrop_17);
@@ -83,7 +83,7 @@ myGame.scene(1).addChild(_Room_19);
 //-------------USE--------------
 myGame.eventSystem.addUsedEvent(_toast_12, _monster_11, function(){
 	if ((myGame.stateManager.states.hungry_14==true)){
-		myGame.messageBox.startConversation([' This is delicious!'], function(){
+		myGame.messageBox.startConversation(['This is delicious!'], function(){
 			});//messageBox end
 		return;
 	}//if statement end
@@ -98,7 +98,7 @@ _Carblue_15.DIY_CLICK = function(){
 
 //--------------Click--------------
 _toast_12.DIY_CLICK = function(){
-	reaction.addToInventory(_toast_12);
+	//reaction.addToInventory(_toast_12);
 }//interaction end
 
 myGame.start(0);

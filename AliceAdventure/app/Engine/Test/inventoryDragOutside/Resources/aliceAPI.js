@@ -158,8 +158,8 @@ function AliceReactionSystem(_game) {
     }
     
     this.setObjectLocation = function(_obj, _x, _y) {
-        _obj.x = x;
-        _obj.y = y;
+        _obj.x = _x;
+        _obj.y = _y;
     }
     
 }
@@ -264,6 +264,9 @@ function Inventory(game) { //always on the top
     
     //init//
     this.inventoryContainer = new PIXI.Container();
+    //this.inventoryContainer.interactive = true;
+
+    
     this.inventoryBackgroundGrp = new PIXI.Container();
     
     var background_scale = this.inventory_w / 144;
@@ -276,6 +279,15 @@ function Inventory(game) { //always on the top
     inventUp.y = 0;
     inventUp.interactive = true;
     inventUp.buttonMode = true;
+    
+    var nextPage = function() {
+        this.nextPage();
+    }
+
+    var prevPage = function() {
+        this.prevPage();
+    }
+    
     inventUp.on('click', prevPage);
     this.inventoryBackgroundGrp.addChild(inventUp);
     
@@ -1056,7 +1068,7 @@ function onMouseDown(event) {
     if(this.mouseIsDown)
         return;
     this.data = event.data;
-    this.alpha = 0.5;
+    //this.alpha = 0.5;
     
     this.mouseIsDown = true;
     this.original = [this.x,this.y]
@@ -1106,14 +1118,14 @@ function onMouseUp(e) {
     this.mouseIsDown = false;
     this.data = null;
     
-    debug.log("mouseUp")
+    //debug.log("mouseUp")
     
     
     if(!this.dragStart)
     {
         this.x = this.original[0];
         this.y = this.original[1];
-        debug.log("click");
+        debug.log("click: " + this.name);
         if(this.clickable) {
             if(this.DIY_CLICK != undefined)
                 this.DIY_CLICK();
