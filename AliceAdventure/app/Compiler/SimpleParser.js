@@ -477,11 +477,12 @@ Parser = function (jsonPath, buildPath){
 	//   6   make interactive   [objID]               make object of this ID interactive
 	//   7   make UNinteractive [objID]               make object of this ID UNinteractive
 	//   8   show message box   [string]              show message box 
-	//   9   play music         [soundID]             play music of this ID
+	//   9   play music         [soundID, bool]       play music of this ID
 	//  10   show inventory     []                    show inventory
 	//  11   hide inventory     []                    show inventory
 	//	12   moveObjToScene		[obj, sceneIndex, x, y] move object # to scene # at (x, y)
 	//  13	 setObjLocation		[obj, x, y]			  move object # to (x, y)
+	//  14   stop music         [soundID]
 	function interactionListParser(callback){
 
 		var toReturn = "";
@@ -582,12 +583,22 @@ Parser = function (jsonPath, buildPath){
 		var toReturn = "	if (";
 		for (let i = 0; i < conditionList.length; i++){
 
+			if (conditionList[i].id == null){
+				callback("ERROR:  for condition of Interaction Box: " + title + ", you cannot add a condition without filling the pamameters")
+				return false;
+			}
+
 			var state = findStateByID.call(this,conditionList[i].id);
 			var value = conditionList[i].value;
 
 			if (state === false){
-				callback("ERROR: conditionList: cannot find state of id : " + conditionList[i].id);
+				callback("ERROR: for condition of Interaction Box: " + title + ", cannot find state of id : " + conditionList[i].id);
 				return false;
+			}
+			else if (value == null){
+				callback("ERROR:  for condition of Interaction Box: " + title + ", you cannot add a condition without filling the pamameters")
+				return false;
+
 			}else{
 				if (i == conditionList.length -1){
 					toReturn += "(myGame.stateManager.states." + state + "==" + value + ")){\n";
@@ -719,6 +730,12 @@ Parser = function (jsonPath, buildPath){
 
 				if (toReturn === false) return false;
 				else return toReturn;
+
+			case 14:
+				toReturn = translate_reactionType_14.call(this, title, reaction.args, callback);
+
+				if (toReturn === false) return false;
+				else return toReturn;			
 			default:
 				callback("WRONG REACTION TYPE");
 				return false;
@@ -732,12 +749,12 @@ Parser = function (jsonPath, buildPath){
 			var state = findStateByID.call(this, args[0]);
 
 			if (state === false ){
-				callback("ERROR: for reaction type 0 cannot find state of id: " + args[0] + ".");
+				callback("ERROR: for reaction in Interaction Box: " + title + ", cannot find the specified state.");
 				return false;
 
 			}else if ( typeof (args[1]) !== "boolean"){
 
-				callback("ERROR: the right-handside of the equation must be a boolean, not null.");
+				callback("ERROR: for reaction in Interaction Box: " + title + ", the right-handside of the equation must be a boolean, not null.");
 				return false;
 
 			}else{
@@ -758,7 +775,7 @@ Parser = function (jsonPath, buildPath){
 			var sceneIndex = findSceneByID.call(this, args[0]);
 
 			if (sceneIndex === false){
-				callback("ERROR: cannot find scene of id for reaction type 1: " + args[0] + ".");
+				callback("ERROR: for reaction in Interaction Box: " + title + ", cannot find scene of id for reaction type 1: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -778,7 +795,7 @@ Parser = function (jsonPath, buildPath){
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: for reaction in Interaction Box: " + title + ", cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -798,7 +815,7 @@ Parser = function (jsonPath, buildPath){
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: for reaction in Interaction Box: " + title + ", cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -819,7 +836,7 @@ Parser = function (jsonPath, buildPath){
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: for reaction in Interaction Box: " + title + ", cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -840,7 +857,7 @@ Parser = function (jsonPath, buildPath){
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: for reaction in Interaction Box: " + title + ", cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -860,7 +877,7 @@ Parser = function (jsonPath, buildPath){
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: for reaction in Interaction Box: " + title + ", cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -880,7 +897,7 @@ Parser = function (jsonPath, buildPath){
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: for reaction in Interaction Box: " + title + ", cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -908,7 +925,7 @@ Parser = function (jsonPath, buildPath){
 
 	//play sound
 	function translate_reactionType_9(title,  args, callback){
-		if (args.length == 1){
+		if (args.length == 2){
 
 			var sound = findSoundByID.call(this, args[0]);
 
@@ -917,7 +934,12 @@ Parser = function (jsonPath, buildPath){
 				return false;
 
 			}else{
-				return "reaction.playAudio(\'" + sound + "\');\n";
+				if (typeof (args[1]) == "boolean"){
+					return "reaction.playAudio(\'" + sound + "\', " + args[1] + ");\n";
+				}else{
+					callback("ERROR: In interaction box: " + title + ", you must set whether to loop over this audio: " + sound + ".");
+					return false;
+				}
 			}
 
 		}else{
@@ -953,13 +975,13 @@ Parser = function (jsonPath, buildPath){
 		if (args.length != 4){
 			var obj = findObjectByID.call(this, args[0]);
 			if (obj === false){
-				callback("Compiler ERROR: cannot find object of id: " + args[0]);
+				callback("ERROR: for reaction in Interaction Box: " + title + ", cannot find object of id: " + args[0]);
 				return false;
 			}
 
 			var sceneIndex = findSceneByID.call(this, args[1]);
 			if (sceneIndex === false) {
-				callback("Compiler ERROR: cannot find scene of id: " + args[1]);
+				callback("ERROR: for reaction in Interaction Box: " + title + ", cannot find scene of id: " + args[1]);
 				return false;
 			}
 
@@ -983,7 +1005,7 @@ Parser = function (jsonPath, buildPath){
 		if (args.length == 3){
 			var obj = findObjectByID.call(this, args[0]);
 			if (obj === false){
-				callback("Compiler ERROR: cannot find object of id: " + args[0]);
+				callback("ERROR: cannot find object specified in the reaction of Interaction Box: " + title + "." );
 				return false;
 			}
 
@@ -1001,12 +1023,34 @@ Parser = function (jsonPath, buildPath){
 		}
 	}
 
+	function translate_reactionType_14(title,  args, callback){
+		if (args.length == 1){
+
+			var sound = findSoundByID.call(this, args[0]);
+
+			if (sound === false){
+				callback("ERROR: In interaction box: " + title + ", one REACTION cannot find sound requested: " + args[0] + ".");
+				return false;
+
+			}else{
+				
+				return "reaction.stopAudio(\'" + sound + "\');\n";
+				
+			}
+
+		}else{
+			callback("JSON Format ERROR: reaction type 14 (stop sound) of (title: " + title + " ) should have ONE argument.");
+			return false;
+		}
+
+	}
+
 
 //-------------------------EVENT----------------------------------------------
 	function eventListParser(eventList, callback){
 
 		if(eventList.length == 0){
-			callback("Compiler ERROR: for an interaction, it MUST have one or more events.");
+			callback("ERROR: for an interaction, it MUST have one or more events.");
 			return false;
 		}
 
@@ -1026,6 +1070,11 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	function eventParser(title, event, callback){
+
+		if(event == null){
+			callback("ERROR: Interaction Box: " + title + ", must have one event to compile. If you don't need this interaction box, please delete it.")
+			return false;
+		}
 
 		if (event.hasOwnProperty("type") && event.hasOwnProperty("args")){
 			var toReturn = "";
@@ -1080,7 +1129,7 @@ Parser = function (jsonPath, buildPath){
 			var objName = findObjectByID.call(this, args[0]);
 
 			if (objName === false){
-				callback("ERROR: Cannot find the object of ID: " + args[0] + ".") ;
+				callback("ERROR: for event of Interaction Box: " + title + ", cannot find the object of ID: " + args[0] + ".") ;
 				return false;
 			}else{
 				return "\n//--------------Click--------------\n" +  objName + ".DIY_CLICK = function(){\n";		
@@ -1102,7 +1151,7 @@ Parser = function (jsonPath, buildPath){
 				return "\n//-------------USE--------------\nmyGame.eventSystem.addUsedEvent(" + obj1 + ", " + obj2 + ", function(){\n";
 
 			}else{
-				callback("ERROR: cannot find object of id: " + obj1 + " or " + obj2 + ".");
+				callback("ERROR: for event of Interaction Box: " + title + ", cannot find object of id: " + obj1 + " or " + obj2 + ".");
 				return false;
 			}
 		}else{
@@ -1139,7 +1188,7 @@ Parser = function (jsonPath, buildPath){
 				return "\n//-------------COMBINE--------------\nmyGame.eventSystem.addCombineEvent(" + obj1 + ", " + obj2 + ", function(){\n";
 
 			}else{
-				callback("ERROR: cannot find object of id: " + obj1 + " or " + obj2 + ".");
+				callback("ERROR: for event of Interaction Box: " + title + ", cannot find object of id: " + obj1 + " or " + obj2 + ".");
 				return false;
 			}
 
@@ -1156,8 +1205,8 @@ Parser = function (jsonPath, buildPath){
 
 			if (state === false ){
 
-				if (args[1] == null) callback("JSON ERROR: state_to_be of event Type 4 ( when state A is changed to state B) cannnot be null");
-				else callback("ERROR: For event Type 4, cannot find state of id : " + args[0] + ".");
+				if (args[1] == null) callback("ERROR: the event of Interaction Box: " + title + "cannot be null");
+				else callback("ERROR: for event of Interaction Box: " + title + ", cannot find state of id : " + args[0] + ".");
 				return false;
 			}else{
 				return "\n//----------------When State A --> B----------------------\nmyGame.eventSystem.addStateEvent( '" + state + "', " + args[1] + ", function(){\n";
@@ -1175,7 +1224,7 @@ Parser = function (jsonPath, buildPath){
 			var sceneIndex = findSceneByID.call(this, args[0]);
 
 			if (sceneIndex === false){
-				callback("ERROR: for event type 5(sceneTransitEvent), cannot find scene id： " + args[0] +".");
+				callback("ERROR: for event of Interaction Box: " + title + ",  cannot find scene id： " + args[0] +".");
 				return false;
 			}
 			else{

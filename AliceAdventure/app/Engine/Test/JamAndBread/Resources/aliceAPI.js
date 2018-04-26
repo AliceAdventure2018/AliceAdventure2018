@@ -81,7 +81,7 @@ function AliceReactionSystem(_game) {
     this.makeObjInvisible = function(_obj) {
         _obj.visible = false;
         if(_obj.inInventory) {
-            console.log(_obj.name +": hide")
+            //console.log(_obj.name +": hide")
             this.game.inventory.update();
         }
     }
@@ -95,10 +95,9 @@ function AliceReactionSystem(_game) {
         _obj.buttonMode = true;
         
         _obj
-            .on('pointerdown', onMouseDown)
-            .on('pointerup', onMouseUp)
-            //.on('pointerupoutside', onMouseUp)
-            .on('pointermove', onMouseMove);
+            .on('pointerdown', _game.utilities.onMouseDown)
+            .on('pointerup', _game.utilities.onMouseUp)
+            .on('pointermove', _game.utilities.onMouseMove);
     }
     
     this.makeNonInteractive = function(_obj) {
@@ -107,11 +106,10 @@ function AliceReactionSystem(_game) {
         
         _obj.interactive = false;
         _obj.buttonMode = false;
-        
         _obj
-            .off('pointerdown', onMouseDown)
-            .off('pointerup', onMouseUp)
-            .off('pointermove', onMouseMove);
+            .off('pointerdown', _game.utilities.onMouseDown)
+            .off('pointerup', _game.utilities.onMouseUp)
+            .off('pointermove', _game.utilities.onMouseMove);
     }
     
     this.makeClickable = function(_obj) {
@@ -141,8 +139,12 @@ function AliceReactionSystem(_game) {
     }
    
     
-    this.playAudio = function(_audio) {
-        this.game.soundManager.play(_audio);
+    this.playAudio = function(_audio, loop = false) {
+        this.game.soundManager.play(_audio, loop);
+    }
+    
+    this.stopAudio = function(_audio) {
+        this.game.soundManager.stop(_audio);
     }
     
     this.showInventory = function() {
@@ -158,8 +160,8 @@ function AliceReactionSystem(_game) {
     }
     
     this.setObjectLocation = function(_obj, _x, _y) {
-        _obj.x = x;
-        _obj.y = y;
+        _obj.x = _x;
+        _obj.y = _y;
     }
     
 }
@@ -264,6 +266,7 @@ function Inventory(game) { //always on the top
     
     //init//
     this.inventoryContainer = new PIXI.Container();
+
     this.inventoryBackgroundGrp = new PIXI.Container();
     
     var background_scale = this.inventory_w / 144;
@@ -276,7 +279,10 @@ function Inventory(game) { //always on the top
     inventUp.y = 0;
     inventUp.interactive = true;
     inventUp.buttonMode = true;
-    inventUp.on('click', prevPage);
+    
+    inventUp.on('click', function() {
+        game.inventory.prevPage();
+    });
     this.inventoryBackgroundGrp.addChild(inventUp);
     
     
@@ -287,14 +293,18 @@ function Inventory(game) { //always on the top
         inventBack.y = this.gridStartY + i*this.inventory_w;
         this.inventoryBackgroundGrp.addChild(inventBack); 
     }
-    
+
     var inventDown = Alice.Object.fromImage( baseURL.requireAssets+'down.png');
     inventDown.scale.set(background_scale);
     inventDown.x = game.screenWidth;
     inventDown.y = this.gridStartY + this.inventory_size*this.inventory_w;
     inventDown.interactive = true;
     inventDown.buttonMode = true;
-    inventDown.on('click', nextPage);
+    inventDown.on('click', function() {
+        game.inventory.nextPage();
+    });
+    
+    
     this.inventoryBackgroundGrp.addChild(inventDown); 
     
     
@@ -412,8 +422,7 @@ function Inventory(game) { //always on the top
             return false;
         }
     }
-    
-    // turn page
+       
     this.nextPage = function() {
         if(this.hasNextPage()) {
             this.page += 1;
@@ -429,17 +438,6 @@ function Inventory(game) { //always on the top
     } 
     
     this.updateArrow = function() {
-//        if(this.hasPrevPage()) {
-//            inventUp.alpha = 1
-//        }else {
-//            inventUp.alpha = 0.8
-//        }
-//        
-//        if(this.hasNextPage()) {
-//            inventDown.alpha = 1
-//        }else {
-//            inventDown.alpha = 0.8
-//        }
         inventUp.interactive = this.hasPrevPage();
         inventDown.interactive = this.hasNextPage();
     }
@@ -496,39 +494,6 @@ function Inventory(game) { //always on the top
         this.inventoryContainer.addChild(tool);
     }
     
-    this.getCollisionMap = function(tool) {
-        var SceneCollideList = [];
-        var objectsInCurrentScene = this.game.sceneManager.getCurrentScene().children;
-        //console.log(objectsInCurrentScene)
-        objectsInCurrentScene.forEach(function(obj) {
-            if(obj.visible && hitTestRectangle(tool,obj)) {
-                //debug.log(obj.name);
-                SceneCollideList.push(obj);
-            }
-        });
-        
-        var InventoryCollideList = [];
-        var objectsInInventory = this.inventoryContainer.children;
-        //console.log(objectsInInventory);
-        objectsInInventory.forEach(function(obj) {
-            if(obj.name!=tool.name && obj.visible && hitTestRectangle(tool,obj)) {
-                //console.log(obj.name);
-                InventoryCollideList.push(obj);
-            }
-        });
-        var sceneObjName = [];
-        SceneCollideList.forEach(function(obj){
-            sceneObjName.push(obj.name);
-        })
-        
-        var invObjName = [];
-        InventoryCollideList.forEach(function(obj){
-            invObjName.push(obj.name);
-        })
-
-        return {scene:SceneCollideList,inventory:InventoryCollideList};
-    }
-    
     this.update();
     
 }
@@ -537,16 +502,18 @@ function SoundManager() {
     this.sound = PIXI.sound;
     this.baseURL = './Resources/Assets/require/sound/';
     
-    
-    
     this.initSystemSound = function() {
         this.sound.add('add', this.baseURL + 'add.wav');
         this.sound.add('good', this.baseURL + 'use_good.wav');
         this.sound.add('bad', this.baseURL + 'use_bad.wav');
     }
     
-    this.play = function(_name) {
-        this.sound.play(_name);
+    this.play = function(_name, _loop) {
+        this.sound.play(_name,{loop:_loop});
+    }
+    
+    this.stop = function(_name) {
+        this.sound.stop(_name);
     }
     
     this.load = function(_name, _url) {
@@ -636,23 +603,24 @@ function SceneManager(game) {
 
 function GameManager() {
     
-    //game
+    //window canvas
     this.screenWidth;
     this.screenHeight;
     this.inventorySize;
     this.inventoryWidth;
     
+    //game
     this.app;
     this.inventory;
     this.sceneManager;
+    this.topContainer;
     this.messageBox;
     this.stateManager;
     this.eventSystem;
     this.reactionSystem;
     this.soundManager;
+    this.utilities;
     
-    //sound
-    this.sound = PIXI.sound;
     
     this.init = function(width,height,invent_size = 5) {
         if(invent_size < 5)
@@ -660,7 +628,6 @@ function GameManager() {
         
         this.screenWidth = width;
         this.screenHeight = height;
-
         this.inventorySize = invent_size;
         this.inventoryWidth = height/(invent_size+1)
         
@@ -668,16 +635,14 @@ function GameManager() {
         this.ratio = this.size[0] / this.size[1];
         this.stage = new PIXI.Stage(0x333333, true);
         this.renderer = PIXI.autoDetectRenderer(this.size[0], this.size[1], null);
-        
-        //this.app = new Alice.Application(this.screenWidth + this.inventoryWidth, this.screenHeight, {backgroundColor : 0x1099bb});
-        
-        //this.app.rende
-        
         document.body.appendChild(this.renderer.view);
-    
                
+        
+        //init all module
         this.sceneManager = new SceneManager(this);
         this.inventory = new Inventory(this);
+        this.topContainer = new Alice.Container();
+        
         this.messageBox = new MessageBox({w:width,
                                           h:height,
                                           scale:1, 
@@ -689,16 +654,14 @@ function GameManager() {
         this.eventSystem = new AliceEventSystem();
         this.reactionSystem = new AliceReactionSystem(this);
         this.soundManager = new SoundManager();
+        this.utilities = new Utilities(this);
         
-//        this.app.stage.addChild(this.sceneManager.sceneContainer);
-//        this.app.stage.addChild(this.inventory.inventoryBackgroundGrp); 
-//        this.app.stage.addChild(this.inventory.inventoryContainer);
-//        this.app.stage.addChild(this.messageBox.holder);
- 
+        // add containers into stage
         this.stage.addChild(this.sceneManager.sceneContainer);
         this.stage.addChild(this.inventory.inventoryBackgroundGrp); 
         this.stage.addChild(this.inventory.inventoryContainer);
         this.stage.addChild(this.messageBox.holder);
+        this.stage.addChild(this.topContainer);
         
     }
 
@@ -736,8 +699,6 @@ function GameManager() {
     }
     
     this.start = function(index) {
-        //console.log("in start");
-        
         this.resize();
         this.sceneManager.start(index);
         this.awake();
@@ -755,26 +716,72 @@ function GameManager() {
         this.renderer.view.style.height = h + 'px';
     }
     
+    this.emitDropEventOfObj = function(obj) {
+        var res = this.getCollisionMap(obj);
+        var sceneCollider = res.scene;
+        var inventoryCollider = res.inventory;
+
+        for(var i in inventoryCollider) {
+            var item = inventoryCollider[i];
+
+            var message = obj.name + this.eventSystem.template.use + item.name;
+            if(this.eventSystem.checkEventExist(message)){
+                this.eventSystem.callEvent(message);
+                //return;
+            }
+
+            message = obj.name + this.eventSystem.template.combine + item.name;
+            if(this.eventSystem.checkEventExist(message)){
+                this.eventSystem.callEvent(message);
+                //return;
+            }
+        }
+
+        for(var i in sceneCollider) {
+            var item = sceneCollider[i];
+            var message = obj.name + this.eventSystem.template.use + item.name;
+            //console.log(message);
+            if(myGame.eventSystem.checkEventExist(message)){
+                myGame.soundManager.play('good');
+                myGame.eventSystem.callEvent(message);
+                //return;
+            }
+
+            message = obj.name + this.eventSystem.template.combine + item.name;
+            //console.log("combine msg: " + message)
+            if(myGame.eventSystem.checkEventExist(message)){
+                myGame.soundManager.play('good');
+                myGame.eventSystem.callEvent(message);
+                //return;
+            }
+        }
+
+    }
+    
     this.getCollisionMap = function(tool) {
         var SceneCollideList = [];
         var objectsInCurrentScene = this.sceneManager.getCurrentScene().children;
         //console.log(objectsInCurrentScene)
-        objectsInCurrentScene.forEach(function(obj) {
-            if(obj.visible && hitTestRectangle(tool,obj) && tool.name!=obj.name ) {
-                debug.log(obj.name);
+        
+        for(var i = 0; i < objectsInCurrentScene.length; i++) {
+             var obj = objectsInCurrentScene[i];
+             if(obj.visible && tool.name!=obj.name && this.utilities.hitTestRectangle(tool,obj)) {
+                //debug.log(obj.name);
                 SceneCollideList.push(obj);
             }
-        });
+        }
         
         var InventoryCollideList = [];
         var objectsInInventory = this.inventory.inventoryContainer.children;
         //console.log(objectsInInventory);
-        objectsInInventory.forEach(function(obj) {
-            if(obj.name!=tool.name && obj.visible && hitTestRectangle(tool,obj)) {
-                //console.log(obj.name);
+        
+        for(var i = 0; i < objectsInInventory.length; i++) {
+             var obj = objectsInInventory[i];
+             if(obj.name!=tool.name && obj.visible && this.utilities.hitTestRectangle(tool,obj)) {
                 InventoryCollideList.push(obj);
             }
-        });
+        }
+        
         var sceneObjName = [];
         SceneCollideList.forEach(function(obj){
             sceneObjName.push(obj.name);
@@ -784,15 +791,9 @@ function GameManager() {
         InventoryCollideList.forEach(function(obj){
             invObjName.push(obj.name);
         })
-//        console.log("sceneObjName:");
-//        console.log(sceneObjName);
-//        console.log("invObjName:");
-//        console.log(invObjName);
         
         return {scene:SceneCollideList,inventory:InventoryCollideList};
     }
-    
-    
 
 }
 
@@ -822,6 +823,7 @@ the original settings for 1280*720 screen
 function MessageBox(background, avatarEnable, game) {
     
     this.game = game;
+    
     
     this.holder = new Alice.Container();
     
@@ -865,7 +867,12 @@ function MessageBox(background, avatarEnable, game) {
 
     }
     
-    this.backgronud.on('pointerdown', messageBoxOnClick);
+
+    this.backgronud.on('pointerdown', function() {
+        if(game.messageBox) {
+            game.messageBox.nextConversation();
+        }
+    });
     
     this.holder.addChild(this.backgronud);
     this.holder.visible = false;
@@ -923,74 +930,209 @@ function MessageBox(background, avatarEnable, game) {
             this.currentMsgIndex = 0;
             this.holder.visible = false;
             this.callBack = function(){};
-
     }
 }
 
+function Utilities(_game) {
+    this.game = _game;
+    
+    this.checkObjInsideWindow = function(obj) {    
+        if(obj.x > 0 && obj.x < this.game.size[0] && obj.y > 0 && obj.y < this.game.size[1])
+            return true;
+        else
+            return false;
+    }
+    
+    this.distance = function(x1,y1,x2,y2) {
+        return Math.pow((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2), 0.5);
+    }
 
+    /*
+        2D collision detection
+    */
+    this.hitTestRectangle = function(r1, r2){
 
-/*
-    2D collision detection
-*/
-function hitTestRectangle(r1, r2) {
+      //Define the variables we'll need to calculate
+      let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
 
-  //Define the variables we'll need to calculate
-  let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
-
-  //hit will determine whether there's a collision
-  hit = false;
-
-  //Find the center points of each sprite
-  r1.centerX = r1.x + r1.width / 2; 
-  r1.centerY = r1.y + r1.height / 2; 
-  r2.centerX = r2.x + r2.width / 2; 
-  r2.centerY = r2.y + r2.height / 2; 
-
-  //Find the half-widths and half-heights of each sprite
-  r1.halfWidth = r1.width / 2;
-  r1.halfHeight = r1.height / 2;
-  r2.halfWidth = r2.width / 2;
-  r2.halfHeight = r2.height / 2;
-
-  //Calculate the distance vector between the sprites
-  vx = r1.centerX - r2.centerX;
-  vy = r1.centerY - r2.centerY;
-
-  //Figure out the combined half-widths and half-heights
-  combinedHalfWidths = r1.halfWidth + r2.halfWidth;
-  combinedHalfHeights = r1.halfHeight + r2.halfHeight;
-
-  //Check for a collision on the x axis
-  if (Math.abs(vx) < combinedHalfWidths) {
-
-    //A collision might be occuring. Check for a collision on the y axis
-    if (Math.abs(vy) < combinedHalfHeights) {
-
-      //There's definitely a collision happening
-      hit = true;
-    } else {
-
-      //There's no collision on the y axis
+      //hit will determine whether there's a collision
       hit = false;
+
+      //Find the center points of each sprite
+      r1.centerX = r1.x //+ r1.width / 2; 
+      r1.centerY = r1.y //+ r1.height / 2; 
+      r2.centerX = r2.x //+ r2.width / 2; 
+      r2.centerY = r2.y //+ r2.height / 2; 
+
+      //Find the half-widths and half-heights of each sprite
+      r1.halfWidth = r1.width / 2;
+      r1.halfHeight = r1.height / 2;
+      r2.halfWidth = r2.width / 2;
+      r2.halfHeight = r2.height / 2;
+
+      //Calculate the distance vector between the sprites
+      vx = r1.centerX - r2.centerX;
+      vy = r1.centerY - r2.centerY;
+
+      //Figure out the combined half-widths and half-heights
+      combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+      combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+
+      //Check for a collision on the x axis
+      if (Math.abs(vx) < combinedHalfWidths) {
+
+        //A collision might be occuring. Check for a collision on the y axis
+        if (Math.abs(vy) < combinedHalfHeights) {
+
+          //There's definitely a collision happening
+          hit = true;
+        } else {
+
+          //There's no collision on the y axis
+          hit = false;
+        }
+      } else {
+
+        //There's no collision on the x axis
+        hit = false;
+      }
+
+      //`hit` will be either `true` or `false`
+      return hit;
+    };
+    
+    
+    /*
+        Layer Control
+    */
+    
+    this.toFrontLayer = function(obj) {
+        obj.temp = new Alice.Object();
+        obj.originalParent = obj.parent;
+        obj.originalParent.addChild(obj.temp);
+        obj.originalParent.swapChildren(obj,obj.temp)
+        myGame.topContainer.addChild(obj);
     }
-  } else {
+    
+    this.toOriginalLayer = function(obj) {
+        //console.log(obj.originalParent)
+        obj.originalParent.addChild(obj);
+        obj.originalParent = null;
+        obj.parent.swapChildren(obj, obj.temp)
+        obj.parent.removeChild(obj.temp)
+        obj.temp = null;
+    }
+    
+    
+    /*
+        click and drag mouse events
+    */
+    this.onMouseDown = function(event) {
+    
+        if(this.mouseIsDown)
+            return;
+        this.data = event.data;
 
-    //There's no collision on the x axis
-    hit = false;
-  }
+        this.mouseIsDown = true;
+        this.original = [this.x,this.y]
+        this.offset = {
+            x: this.data.getLocalPosition(this.parent).x - this.x,
+            y: this.data.getLocalPosition(this.parent).y - this.y
+        }
+        this.dragStart = false;
 
-  //`hit` will be either `true` or `false`
-  return hit;
-};
+    }
 
-function distance(x1,y1,x2,y2) {
-    return Math.pow((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2), 0.5);
+    
+    this.onMouseMove = function() {
+        if (this.mouseIsDown && this.dragable) {
+            this.newPosition = this.data.getLocalPosition(this.parent);
+            this.x = this.newPosition.x - this.offset.x;
+            this.y = this.newPosition.y - this.offset.y;
+
+            if(_game.utilities.distance(this.x,this.y, this.original[0],this.original[1]) > 0.3) {
+                this.alpha = 0.5;
+                if(!this.dragStart) {
+                    this.dragStart = true;
+                    _game.utilities.toFrontLayer(this);
+                    if(this.DIY_DRAG != undefined)
+                        this.DIY_DRAG();
+                }
+            }
+        }
+    }
+    
+    this.onMouseUp = function(e) {
+        if(!this.mouseIsDown)
+            return;
+
+        if(this.dragStart)
+            _game.utilities.toOriginalLayer(this)
+
+        this.alpha = 1;
+        this.mouseIsDown = false;
+        this.data = null;
+
+        //debug.log("mouseUp")
+
+        if(!this.dragStart)
+        {
+            this.x = this.original[0];
+            this.y = this.original[1];
+            debug.log("click: " + this.name);
+            if(this.clickable) {
+                if(this.DIY_CLICK != undefined)
+                    this.DIY_CLICK();
+            }
+        }
+        else {
+            _game.emitDropEventOfObj(this);
+            
+            this.x = this.original[0];
+            this.y = this.original[1];
+            myGame.inventory.update();
+        }
+
+    }
+    
+    //
+    
+    this.pointInArea = function(p, area) {
+        if(p.x > area.x1 && p.x < area.x2 && p.y > area.y1 && p.y < area.y2)
+            return true;
+        else {
+            return false;
+        }
+    }
+
+    this.registerBasicEvents = function() {
+        //1.mouse wheel for scolling inventory
+        document.addEventListener('mousewheel', (ev) => {
+            if(ev.wheelDelta > 0) {
+                this.game.inventory.prevPage()
+            } else if(ev.wheelDelta < 0) {
+                this.game.inventory.nextPage()
+            }
+
+        });
+        
+        //2.window resize
+        window.onresize = function(event) {
+            _game.resize();
+        };
+    }
+    
+    this.init = function() {
+        this.registerBasicEvents();
+    }
+    
+    this.init();
+
 }
 
 
-// game instances //
+// ------ game instances  ------//
 var myGame = new GameManager();
-
 
 var animate = function() {
     requestAnimationFrame(animate);
@@ -998,202 +1140,6 @@ var animate = function() {
 }
 
 requestAnimationFrame(animate);
-
-
-window.onresize = function(event) {
-    myGame.resize();
-};
-
-function messageBoxOnClick() {
-    if(myGame.messageBox) {
-        myGame.messageBox.nextConversation();
-    }
-}
-
-
-//
-function onDragStart(event) {
-    myGame.inventory.popUp(this);
-    this.data = event.data;
-    this.alpha = 0.5;
-    this.dragging = true;
-}
-
-function onDragMove() {
-    if (this.dragging) {
-        var newPosition = this.data.getLocalPosition(this.parent);
-        this.x = newPosition.x;
-        this.y = newPosition.y;
-    }
-}
-
-function onDragEnd() {
-    this.alpha = 1;
-    this.dragging = false;
-    this.data = null;
-    
-    if(myGame.inventory) {
-        myGame.inventory.inventoryUse(this);
-    }  
-}
-
-function toFrontLayer(obj) {
-    obj.temp = new Alice.Object;
-    //obj.layer = obj.parent.getChildIndex(obj);
-    var localparent = obj.parent;
-    localparent.addChild(obj.temp);
-    localparent.swapChildren(obj,obj.temp)
-
-}
-
-function toOriginalLayer(obj) {
-    var localparent = obj.parent;
-    localparent.swapChildren(obj, obj.temp)
-    localparent.removeChild(obj.temp)
-    obj.temp = null;
-}
-
-function onMouseDown(event) {
-    //myGame.inventory.popUp(this);
-    this.data = event.data;
-    ///this.alpha = 0.5;
-    this.mouseIsDown = true;
-    this.original = [this.x,this.y]
-    this.offset = {
-        x: this.data.getLocalPosition(this.parent).x - this.x,
-        y: this.data.getLocalPosition(this.parent).y - this.y
-    }
-    this.dragStart = false;
-    
-    toFrontLayer(this);
-}
-
-function onMouseMove() {
-    if (this.mouseIsDown && this.dragable) {
-        this.newPosition = this.data.getLocalPosition(this.parent);
-        this.x = this.newPosition.x - this.offset.x;
-        this.y = this.newPosition.y - this.offset.y;
-        
-        if(distance(this.x,this.y, this.original[0],this.original[1]) > 0.3) {
-            this.alpha = 0.5;
-            if(!this.dragStart) {
-                this.dragStart = true;
-                if(this.DIY_DRAG != undefined)
-                    this.DIY_DRAG();
-            }
-        }
-    }
-}
-
-function backToOrigin(obj,x,y) {
-    myGame.inventory.update();
-}
-
-
-function onMouseUp(e) {
-    
-    if(!this.mouseIsDown)
-        return;
-    
-    toOriginalLayer(this)
-    this.alpha = 1;
-    this.mouseIsDown = false;
-    this.data = null;
-    
-    debug.log("mouseUp")
-    
-    
-    if(!this.dragStart)
-    {
-        this.x = this.original[0];
-        this.y = this.original[1];
-        debug.log("click");
-        if(this.clickable) {
-            if(this.DIY_CLICK != undefined)
-                this.DIY_CLICK();
-        }
-    }
-    else {
-        //debug.log("drag");
-        var res = myGame.getCollisionMap(this);
-        var sceneCollider = res.scene;
-        var inventoryCollider = res.inventory;
-        
-        for(var i in inventoryCollider) {
-        //if(inventoryCollider.length > 0) {
-            var item = inventoryCollider[i];
-            
-            var message = this.name + myGame.eventSystem.template.use + item.name;
-            if(myGame.eventSystem.checkEventExist(message)){
-                myGame.eventSystem.callEvent(message);
-                //return;
-            }
-            
-            message = this.name + myGame.eventSystem.template.combine + item.name;
-            if(myGame.eventSystem.checkEventExist(message)){
-                myGame.eventSystem.callEvent(message);
-                //return;
-            }
-        }
-        
-        for(var i in sceneCollider) {
-        //if(sceneCollider.length > 0) {
-            
-            var item = sceneCollider[i];
-            var message = this.name + myGame.eventSystem.template.use + item.name;
-            //console.log(message);
-            if(myGame.eventSystem.checkEventExist(message)){
-                myGame.soundManager.play('good');
-                myGame.eventSystem.callEvent(message);
-                //return;
-            }
-            
-            message = this.name + myGame.eventSystem.template.combine + item.name;
-            
-            //console.log("combine msg: " + message)
-            if(myGame.eventSystem.checkEventExist(message)){
-                myGame.soundManager.play('good');
-                myGame.eventSystem.callEvent(message);
-                //return;
-            }
-        }
-        
-        
-        
-        //myGame.soundManager.play('bad');
-        backToOrigin(this,this.original[0],this.original[1]);
-//        this.x = this.original[0];
-//        this.y = this.original[1];
-        
-    }
-  
-}
-
-function nextPage() {
-    myGame.inventory.nextPage();
-}
-
-function prevPage() {
-    myGame.inventory.prevPage();
-}
-
-//mousPos Point
-//area rectangular
-function mouseInArea(mousePos, area) {
-    if(mousePos.x > area.x1 && mousePos.x < area.x2 && mousePos.y > area.y1 && mousePos.y < area.y2)
-        return true;
-    else {
-        return false;
-    }
-}
-
-document.addEventListener('mousewheel', (ev) => {
-    if(ev.wheelDelta > 0) {
-        prevPage()
-    } else if(ev.wheelDelta < 0) {
-        nextPage()
-    }
-});
 
 
 
