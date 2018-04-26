@@ -137,7 +137,7 @@ Parser = function (jsonPath, buildPath){
 				}
 
 			}else{
-				callback("Compile ERROR: The soundList structure is not complete. It needs id, name , and a valid src path.");
+				callback("ERROR: The soundList structure is not complete. It needs id, name , and a valid src path.");
 				return  false;
 			}
 
@@ -231,7 +231,7 @@ Parser = function (jsonPath, buildPath){
 		if (object.hasOwnProperty("name")&& object.hasOwnProperty("id")){
 
 			// if (typeof (object.name) === "number"){
-			// 	error = "Compile ERROR: Name of the object:  " + object.name + " cannot be numbers. Must have letters.";
+			// 	error = "ERROR: Name of the object:  " + object.name + " cannot be numbers. Must have letters.";
 			// 	callback(error);
 			// 	return false;
 			// }else{
@@ -254,13 +254,13 @@ Parser = function (jsonPath, buildPath){
 						toReturn += setName(name,name);
 
 					}else{
-						error = "Compile ERROR: Object: " + object.name + " File path does not exist or the file extention does not match jpg/jpeg/png.\n **********Invalid Path: " + FileSys.getAbs(object.src) + '\n';
+						error = "ERROR: Object: " + object.name + " File path does not exist or the file extention does not match jpg/jpeg/png.\n **********Invalid Path: " + FileSys.getAbs(object.src) + '\n';
 						callback(error);	
 						return false;				
 					}
 				}
 				else{
-					error = "Compile ERROR: Object " + object.name + " does not have a sprite.";
+					error = "ERROR: Object " + object.name + " does not have a sprite.";
 					callback(error);
 					return false;
 				}//end src
@@ -291,12 +291,12 @@ Parser = function (jsonPath, buildPath){
 
 							toReturn += setPos.call(this, name, object.pos);
 					}else{
-						error = "Compile ERROR: x and y of the position must be defined as numbers.";
+						error = "ERROR: x and y of the position must be defined as numbers.";
 						callback(error);
 						return false;
 					}
 				}else{
-					error = "Compile ERROR: Object has not set the position.";
+					error = "ERROR: Object has not set the position.";
 					callback(error);
 					return false;
 				}//end pos
@@ -309,12 +309,12 @@ Parser = function (jsonPath, buildPath){
 
 							toReturn += setScale.call(this,name, object.scale);
 					}else{
-						error = "Compile ERROR: x and y of the scale must be defined as numbers.";
+						error = "ERROR: x and y of the scale must be defined as numbers.";
 						callback(error);
 						return false;
 					}
 				}else{
-					error = "Compile ERROR: Object has not set the scale.";
+					error = "ERROR: Object has not set the scale.";
 					callback(error);
 					return false;
 				}
@@ -326,12 +326,12 @@ Parser = function (jsonPath, buildPath){
 
 						toReturn += setClickable(name, object.clickable);
 					}else{
-						error = "Compile ERROR: The clickable value of the object must be a boolean.";
+						error = "ERROR: The clickable value of the object must be a boolean.";
 						callback(error);
 						return false;
 					}
 				}else{
-					error = "Compile ERROR: Object has not set the interativity.";
+					error = "ERROR: Object has not set the interativity.";
 					callback(error);
 					return false;
 				}//end clickable
@@ -343,12 +343,12 @@ Parser = function (jsonPath, buildPath){
 
 						toReturn += setDraggable(name, object.draggable);
 					}else{
-						error = "Compile ERROR: The draggable value of the object must be a boolean.";
+						error = "ERROR: The draggable value of the object must be a boolean.";
 						callback(error);
 						return false;
 					}
 				}else{
-					error = "Compile ERROR: Object has not set the [draggable] .";
+					error = "ERROR: Object has not set the [draggable] .";
 					callback(error);
 					return false;
 				}//end clickable
@@ -359,12 +359,12 @@ Parser = function (jsonPath, buildPath){
 					if(typeof object.active === 'boolean'){
 						toReturn+= setActive(name, object.active);
 					}else{
-						error = "Compile ERROR: The active value of the object must be a boolean.";
+						error = "ERROR: The active value of the object must be a boolean.";
 						callback(error);
 						return false;
 					}
 				}else{
-					error = "Compile ERROR: object has not set the active value.";
+					error = "ERROR: object has not set the active value.";
 					callback(error);
 					return false;
 				}//end active
@@ -375,13 +375,13 @@ Parser = function (jsonPath, buildPath){
 					var sceneIndex =findSceneByID.call(this,object.bindScene);
 					
 					if (sceneIndex === false){
-						//callback("Compile ERROR: cannot find scene id = " + object.bindScene  + ".");
+						//callback("ERROR: cannot find scene id = " + object.bindScene  + ".");
 						//return false;
 					}else{
 						toReturn+= addObjectToScene(name, sceneIndex);
 					}
 				}else{
-					error = "Compile ERROR: Object must be added to a scene.";
+					error = "ERROR: Object must be added to a scene.";
 					callback(error);
 					return false;
 				}
@@ -390,7 +390,7 @@ Parser = function (jsonPath, buildPath){
 			//}//end name
 
 		}else{
-			error = "Compile ERROR: Object must have a name !!"
+			error = "ERROR: Object must have a name !!"
 			callback(error);
 			return false;
 		}
@@ -480,6 +480,8 @@ Parser = function (jsonPath, buildPath){
 	//   9   play music         [soundID]             play music of this ID
 	//  10   show inventory     []                    show inventory
 	//  11   hide inventory     []                    show inventory
+	//	12   moveObjToScene		[obj, sceneIndex, x, y] move object # to scene # at (x, y)
+	//  13	 setObjLocation		[obj, x, y]			  move object # to (x, y)
 	function interactionListParser(callback){
 
 		var toReturn = "";
@@ -503,35 +505,37 @@ Parser = function (jsonPath, buildPath){
 		var conditions = "";
 		var reactions = "";
 		var indent = 0;
+		var title = "";
 
-
-		if (interaction.hasOwnProperty("event") && interaction.hasOwnProperty("conditionList") && interaction.hasOwnProperty("reactionList")){
+		if (interaction.hasOwnProperty("title") && interaction.hasOwnProperty("event") && interaction.hasOwnProperty("conditionList") && interaction.hasOwnProperty("reactionList")){
 
 			var hasCondition = (interaction.conditionList.length > 0);
+			title = interaction.title;
 
-			var eventList = eventParser.call(this, interaction.event, callback);
+			var eventList = eventParser.call(this, title, interaction.event, callback);
 			if (eventList === false) return false;
 
 			
 			if (hasCondition){
 				indent++;
-				conditions  = conditionListParser.call(this, interaction.conditionList, callback);
+				conditions  = conditionListParser.call(this, title, interaction.conditionList, callback);
 				if (conditions === false ) return false;
 			}
 
 
-			reactions = reactionListParser.call(this, interaction.reactionList, indent, callback);
+
+			reactions = reactionListParser.call(this, title, interaction.reactionList, indent, callback);
 			if (reactions === false) return false;
 
 			if (hasCondition) reactions += "		return;\n	}//if statement end\n"; //if statementend
 
 
 			this.iTree.putNode(eventList, interaction.event.type, interaction.event.args, conditions + reactions);
-			//this.eventListAddNode.call(this, eventList, conditions + reactions);
+			
 			return true;
 
 		}else{
-			callback("JSON Format ERROR: interaction must have: event, conditionList, reactionList");
+			callback("JSON Format ERROR: interaction must have: event, conditionList, reactionList, and title");
 			return false;
 		}
 		// if (interaction.hasOwnProperty("eventList") && interaction.hasOwnProperty("conditionList") && interaction.hasOwnProperty("reactionList")){
@@ -574,7 +578,7 @@ Parser = function (jsonPath, buildPath){
 	}
 //-------------------------CONDITION----------------------------------------
 
-	function conditionListParser(conditionList, callback){
+	function conditionListParser(title, conditionList, callback){
 		var toReturn = "	if (";
 		for (let i = 0; i < conditionList.length; i++){
 
@@ -582,7 +586,7 @@ Parser = function (jsonPath, buildPath){
 			var value = conditionList[i].value;
 
 			if (state === false){
-				callback("Compile ERROR: conditionList: cannot find state of id : " + conditionList[i].id);
+				callback("ERROR: conditionList: cannot find state of id : " + conditionList[i].id);
 				return false;
 			}else{
 				if (i == conditionList.length -1){
@@ -599,12 +603,12 @@ Parser = function (jsonPath, buildPath){
 
 
 //-------------------------REACTION------------------------------------------
-	function reactionListParser(reactionList, ind, callback){
+	function reactionListParser(title, reactionList, ind, callback){
 		var toReturn = "";
 		var indentCounter = 1 + ind;
 		var messageBoxParenCounter = 0;
 		for (let i = 0; i < reactionList.length; i++){
-			var result = reactionParser.call(this,reactionList[i], callback);
+			var result = reactionParser.call(this, title, reactionList[i], callback);
 
 			//if messageBox, all the following reaction is included in the call-back function.
 			//console.log("reaction type is " + reactionList[i].type + "\n");
@@ -639,69 +643,79 @@ Parser = function (jsonPath, buildPath){
 
 	}
 
-	function reactionParser(reaction, callback){
+	function reactionParser(title, reaction, callback){
 		var type = reaction.type;
 		var toReturn = "";
 
 		switch(type){
 			case 0:
-				toReturn = translate_reactionType_0.call(this,reaction.args, callback);
+				toReturn = translate_reactionType_0.call(this,title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 1:
-				toReturn = translate_reactionType_1.call(this,reaction.args, callback);
+				toReturn = translate_reactionType_1.call(this,title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 2:
-				toReturn = translate_reactionType_2.call(this, reaction.args, callback);
+				toReturn = translate_reactionType_2.call(this, title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 3:
-				toReturn = translate_reactionType_3.call(this, reaction.args, callback);
+				toReturn = translate_reactionType_3.call(this, title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 4:
-				toReturn = translate_reactionType_4.call(this,reaction.args, callback);
+				toReturn = translate_reactionType_4.call(this, title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 5:
-				toReturn = translate_reactionType_5.call(this,reaction.args, callback);
+				toReturn = translate_reactionType_5.call(this, title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 6:
-				toReturn = translate_reactionType_6.call(this,reaction.args, callback);
+				toReturn = translate_reactionType_6.call(this, title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 7:
-				toReturn = translate_reactionType_7.call(this,reaction.args, callback);
+				toReturn = translate_reactionType_7.call(this, title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 8:
-				toReturn = translate_reactionType_8.call(this,reaction.args, callback);
+				toReturn = translate_reactionType_8.call(this, title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 
 			case 9:
-				toReturn = translate_reactionType_9.call(this,reaction.args, callback);
+				toReturn = translate_reactionType_9.call(this, title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 10:
-				toReturn = translate_reactionType_10.call(this,reaction.args, callback);
+				toReturn = translate_reactionType_10.call(this, title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
 			case 11:
-				toReturn = translate_reactionType_11.call(this,reaction.args, callback);
+				toReturn = translate_reactionType_11.call(this, title, reaction.args, callback);
+
+				if (toReturn === false) return false;
+				else return toReturn;
+			case 12:
+				toReturn = translate_reactionType_12.call(this, title, reaction.args, callback);
+
+				if (toReturn === false) return false;
+				else return toReturn;
+			case 13:
+				toReturn = translate_reactionType_13.call(this, title, reaction.args, callback);
 
 				if (toReturn === false) return false;
 				else return toReturn;
@@ -712,18 +726,18 @@ Parser = function (jsonPath, buildPath){
 
 	}
 	//state changer
-	function translate_reactionType_0( args, callback){
+	function translate_reactionType_0( title, args, callback){
 		if (args.length == 2){
 
 			var state = findStateByID.call(this, args[0]);
 
 			if (state === false ){
-				callback("Compile ERROR: for reaction type 0 cannot find state of id: " + args[0] + ".");
+				callback("ERROR: for reaction type 0 cannot find state of id: " + args[0] + ".");
 				return false;
 
 			}else if ( typeof (args[1]) !== "boolean"){
 
-				callback("Compile ERROR: the right-handside of the equation must be a boolean, not null.");
+				callback("ERROR: the right-handside of the equation must be a boolean, not null.");
 				return false;
 
 			}else{
@@ -738,13 +752,13 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//transit to scene
-	function translate_reactionType_1( args, callback){
+	function translate_reactionType_1( title, args, callback){
 		if (args.length == 1){
 
 			var sceneIndex = findSceneByID.call(this, args[0]);
 
 			if (sceneIndex === false){
-				callback("Compile ERROR: cannot find scene of id for reaction type 1: " + args[0] + ".");
+				callback("ERROR: cannot find scene of id for reaction type 1: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -758,13 +772,13 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//put into Inventory
-	function translate_reactionType_2( args, callback){
+	function translate_reactionType_2(title, args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -778,13 +792,13 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//remove out of inventory
-	function translate_reactionType_3( args, callback){
+	function translate_reactionType_3(title, args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -799,13 +813,13 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//make visible
-	function translate_reactionType_4( args, callback){
+	function translate_reactionType_4(title, args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -813,19 +827,20 @@ Parser = function (jsonPath, buildPath){
 			}
 
 		}else{
+
 			callback("JSON Format ERROR: reaction type 4 (make A visible) should have ONE argument.");
 			return false;
 		}
 	}
 
 	//make invisible
-	function translate_reactionType_5( args, callback){
+	function translate_reactionType_5(title, args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -839,13 +854,13 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//make interactive
-	function translate_reactionType_6( args, callback){
+	function translate_reactionType_6(title,  args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -859,13 +874,13 @@ Parser = function (jsonPath, buildPath){
 
 	}
 	//make UNinteractive
-	function translate_reactionType_7( args, callback){
+	function translate_reactionType_7( title, args, callback){
 		if (args.length == 1){
 
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
-				callback("Compile ERROR: cannot find object of id: " + args[0] + ".");
+				callback("ERROR: cannot find object of id: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -880,7 +895,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 		//show message box
-	function translate_reactionType_8( args, callback){
+	function translate_reactionType_8(title,  args, callback){
 		if (args.length == 1){
 	
 			return "myGame.messageBox.startConversation(['" + args[0].replace(/\\/g,"/").replace(/"|'/g, "\"") + "'], function(){\n";
@@ -892,13 +907,13 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//play sound
-	function translate_reactionType_9( args, callback){
+	function translate_reactionType_9(title,  args, callback){
 		if (args.length == 1){
 
 			var sound = findSoundByID.call(this, args[0]);
 
 			if (sound === false){
-				callback("Compile ERROR: cannot find sound of id: " + args[0] + ".");
+				callback("ERROR: In interaction box: " + title + ", one REACTION cannot find sound requested: " + args[0] + ".");
 				return false;
 
 			}else{
@@ -912,7 +927,7 @@ Parser = function (jsonPath, buildPath){
 
 	}
 
-	function translate_reactionType_10( args, callback){
+	function translate_reactionType_10(title, args, callback){
 		if (args.length == 0){
 	
 			return "reaction.showInventory();\n";
@@ -923,14 +938,66 @@ Parser = function (jsonPath, buildPath){
 		}
 	}
 
-	function translate_reactionType_11( args, callback){
+	function translate_reactionType_11(title, args, callback){
 		if (args.length == 0){
 	
 			return "reaction.hideInventory();\n";
 
 		}else{
-			callback("JSON Format ERROR: reaction type 10 (hide inventory) should have ZERO argument.");
+			callback("JSON Format ERROR: reaction type 11 (hide inventory) should have ZERO argument.");
 			return false;
+		}
+	}
+
+	function translate_reactionType_12(title, args, callback){
+		if (args.length != 4){
+			var obj = findObjectByID.call(this, args[0]);
+			if (obj === false){
+				callback("Compiler ERROR: cannot find object of id: " + args[0]);
+				return false;
+			}
+
+			var sceneIndex = findSceneByID.call(this, args[1]);
+			if (sceneIndex === false) {
+				callback("Compiler ERROR: cannot find scene of id: " + args[1]);
+				return false;
+			}
+
+			var x = 0; var y = 0;
+			if (!isNaN(args[2]) && typeof (args[2]) === "number"){
+				x = args[2] * this.scalarX;
+			}
+			if (!isNaN(args[3]) && typeof (args[3]) === "number"){
+				y =  args[3] * this.scalarY;
+			}
+			return "reaction.moveObjectToScene(" +obj + ", " + sceneIndex + ", " + x + ", " + y + ");\n";
+			
+
+		}else{
+			callback("JSON Format ERROR: reaction type 12(moveObjToScene) should have 4 arguments(obj, sceneIndex, x, y).");
+			return false;
+		}
+	}
+
+	function translate_reactionType_13(title, args, callback){
+		if (args.length == 3){
+			var obj = findObjectByID.call(this, args[0]);
+			if (obj === false){
+				callback("Compiler ERROR: cannot find object of id: " + args[0]);
+				return false;
+			}
+
+			var x = 0; var y = 0;
+			if (!isNaN(args[1]) && typeof (args[1]) === "number"){
+				x = args[1] * this.scalarX;
+			}
+			if (!isNaN(args[2]) && typeof (args[2]) === "number"){
+				y =  args[2] * this.scalarY;
+			}
+			return "reaction.setObjectLocation(" + obj + ", " + x + ", " + y +");\n";
+
+		}else{
+			callback("JSON Format ERROR: reaction type 13(setObjLocation) must have 3 arguments(obj, x, y)");
 		}
 	}
 
@@ -958,7 +1025,7 @@ Parser = function (jsonPath, buildPath){
 		return toReturn; 
 	}
 
-	function eventParser(event, callback){
+	function eventParser(title, event, callback){
 
 		if (event.hasOwnProperty("type") && event.hasOwnProperty("args")){
 			var toReturn = "";
@@ -966,12 +1033,12 @@ Parser = function (jsonPath, buildPath){
 
 			switch(type){
 				case 0: 
-					toReturn = translate_eventType_0.call(this, event.args, callback);
+					toReturn = translate_eventType_0.call(this, title, event.args, callback);
 
 					if (toReturn === false) return false;
 					else return toReturn;
 				case 1:
-					toReturn = translate_eventType_1.call(this, event.args, callback);
+					toReturn = translate_eventType_1.call(this, title, event.args, callback);
 
 					if (toReturn === false) return false;
 					else return toReturn;
@@ -981,17 +1048,17 @@ Parser = function (jsonPath, buildPath){
 				// 	if (toReturn === false) return false;
 				//	else return toReturn;
 				case 3:
-					toReturn = translate_eventType_3.call(this, event.args, callback);
+					toReturn = translate_eventType_3.call(this, title, event.args, callback);
 
 					if (toReturn === false) return false;
 					else return toReturn;
 				case 4:
-					toReturn = translate_eventType_4.call(this, event.args, callback);
+					toReturn = translate_eventType_4.call(this, title, event.args, callback);
 
 					if (toReturn === false) return false;
 					else return toReturn;
 				case 5:
-					toReturn = translate_eventType_5.call(this, event.args, callback);
+					toReturn = translate_eventType_5.call(this, title, event.args, callback);
 
 					if (toReturn === false) return false;
 					else return toReturn;
@@ -1008,12 +1075,12 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//click on A
-	function translate_eventType_0(args, callback){
+	function translate_eventType_0(title, args, callback){
 		if (args.length == 1){
 			var objName = findObjectByID.call(this, args[0]);
 
 			if (objName === false){
-				callback("Compile ERROR: Cannot find the object of ID: " + args[0] + ".") ;
+				callback("ERROR: Cannot find the object of ID: " + args[0] + ".") ;
 				return false;
 			}else{
 				return "\n//--------------Click--------------\n" +  objName + ".DIY_CLICK = function(){\n";		
@@ -1026,7 +1093,7 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//use A on B
-	function translate_eventType_1(args, callback){
+	function translate_eventType_1(title, args, callback){
 		if (args.length == 2){
 			var obj1 = findObjectByID.call(this, args[0]);
 			var obj2 = findObjectByID.call(this, args[1]);
@@ -1035,7 +1102,7 @@ Parser = function (jsonPath, buildPath){
 				return "\n//-------------USE--------------\nmyGame.eventSystem.addUsedEvent(" + obj1 + ", " + obj2 + ", function(){\n";
 
 			}else{
-				callback("Compile ERROR: cannot find object of id: " + obj1 + " or " + obj2 + ".");
+				callback("ERROR: cannot find object of id: " + obj1 + " or " + obj2 + ".");
 				return false;
 			}
 		}else{
@@ -1051,7 +1118,7 @@ Parser = function (jsonPath, buildPath){
 	// 		var objName = findObjectByID.call(this,objID);
 
 	// 		if (objName === false){
-	// 			callback("Compile ERROR: Cannot find the object of ID: " + objID + ".") ;
+	// 			callback("ERROR: Cannot find the object of ID: " + objID + ".") ;
 	// 			return false;
 	// 		}else{
 	// 			return "\n//--------------Observe--------------\n" + objName + ".on('pointerdown', function(){\n";		
@@ -1063,7 +1130,7 @@ Parser = function (jsonPath, buildPath){
 	// 	}
 	// }
 
-	function translate_eventType_3(args, callback){
+	function translate_eventType_3(title, args, callback){
 		if (args.length == 2){
 			var obj1 = findObjectByID.call(this, args[0]);
 			var obj2 = findObjectByID.call(this, args[1]);
@@ -1072,7 +1139,7 @@ Parser = function (jsonPath, buildPath){
 				return "\n//-------------COMBINE--------------\nmyGame.eventSystem.addCombineEvent(" + obj1 + ", " + obj2 + ", function(){\n";
 
 			}else{
-				callback("Compile ERROR: cannot find object of id: " + obj1 + " or " + obj2 + ".");
+				callback("ERROR: cannot find object of id: " + obj1 + " or " + obj2 + ".");
 				return false;
 			}
 
@@ -1083,14 +1150,14 @@ Parser = function (jsonPath, buildPath){
 	}
 
 	//when state A is changed to state B
-	function translate_eventType_4(args, callback){
+	function translate_eventType_4(title, args, callback){
 		if (args.length == 2){
 			var state = findStateByID.call(this, args[0]);
 
 			if (state === false ){
 
 				if (args[1] == null) callback("JSON ERROR: state_to_be of event Type 4 ( when state A is changed to state B) cannnot be null");
-				else callback("Compile ERROR: For event Type 4, cannot find state of id : " + args[0] + ".");
+				else callback("ERROR: For event Type 4, cannot find state of id : " + args[0] + ".");
 				return false;
 			}else{
 				return "\n//----------------When State A --> B----------------------\nmyGame.eventSystem.addStateEvent( '" + state + "', " + args[1] + ", function(){\n";
@@ -1103,12 +1170,12 @@ Parser = function (jsonPath, buildPath){
 		}
 	}
 
-	function translate_eventType_5(args, callback){
+	function translate_eventType_5(title, args, callback){
 		if (args.length == 1){
 			var sceneIndex = findSceneByID.call(this, args[0]);
 
 			if (sceneIndex === false){
-				callback("Compile ERROR: for event type 5(sceneTransitEvent), cannot find scene id： " + args[0] +".");
+				callback("ERROR: for event type 5(sceneTransitEvent), cannot find scene id： " + args[0] +".");
 				return false;
 			}
 			else{

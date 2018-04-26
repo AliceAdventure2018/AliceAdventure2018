@@ -79,8 +79,9 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 		return false;
 	}
 
-	jsonPath = path.dirname(jsonPath);
-	var buildPath = path.join(jsonPath, 'Build');
+	var rootP = path.dirname(jsonPath);
+	//console.log(jsonPath + ": \n" + path.basename(jsonPath));
+	var buildPath = path.join(rootP, path.basename(jsonPath).slice(0,-4) + '-Build');
 	var resourcesDest = path.join(buildPath, 'Resources');
 
 	var assetSrc = 'Assets';

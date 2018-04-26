@@ -1188,13 +1188,11 @@ function mouseInArea(mousePos, area) {
 }
 
 document.addEventListener('mousewheel', (ev) => {
-
     if(ev.wheelDelta > 0) {
         prevPage()
     } else if(ev.wheelDelta < 0) {
         nextPage()
     }
-    
 });
 
 

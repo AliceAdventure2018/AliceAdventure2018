@@ -158,8 +158,8 @@ function AliceReactionSystem(_game) {
     }
     
     this.setObjectLocation = function(_obj, _x, _y) {
-        _obj.x = x;
-        _obj.y = y;
+        _obj.x = _x;
+        _obj.y = _y;
     }
     
 }
@@ -1065,7 +1065,8 @@ function onMouseDown(event) {
     }
     this.dragStart = false;
     
-    toFrontLayer(this);
+    
+    //toFrontLayer(this);
 }
 
 function onMouseMove() {
@@ -1078,6 +1079,7 @@ function onMouseMove() {
             this.alpha = 0.5;
             if(!this.dragStart) {
                 this.dragStart = true;
+                toFrontLayer(this);
                 if(this.DIY_DRAG != undefined)
                     this.DIY_DRAG();
             }
@@ -1094,8 +1096,8 @@ function onMouseUp(e) {
     
     if(!this.mouseIsDown)
         return;
-    
-    toOriginalLayer(this)
+    if(this.dragStart)
+        toOriginalLayer(this)
     this.alpha = 1;
     this.mouseIsDown = false;
     this.data = null;
@@ -1162,6 +1164,8 @@ function onMouseUp(e) {
         
         //myGame.soundManager.play('bad');
         backToOrigin(this,this.original[0],this.original[1]);
+        //console.log()
+        //toOriginalLayer(this)
 //        this.x = this.original[0];
 //        this.y = this.original[1];
         

@@ -493,6 +493,25 @@
             <span class="badge badge-pill badge-reaction" v-if='react.type == 11'>
                 Hide the inventory
             </span>
+
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 12'>
+                Move object 
+                <select v-model="react.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> to scene
+                <select v-model="react.args[1]">
+                    <option v-for="scn in scenes" v-html="scn.name" v-bind:value="scn"></option>
+                </select>
+            </span>
+            
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 13'>
+                Move object 
+                <select v-model="react.args[0]">
+                    <option v-for="obj in objects" v-html="obj.name" v-bind:value="obj"></option>
+                </select> to position 
+                (X: <input style="width:35px" v-model.number="react.args[1]">
+                Y: <input style="width:35px" v-model.number="react.args[2]">)
+            </span>
           </li><span style="text-align: center;opacity: 0.7;">Drag any reaction here</span>
        
         </ul>

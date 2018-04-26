@@ -4,8 +4,6 @@ const GameProperties = require('./GameProperties');
 // class
 var IReaction;
 
-
-
 // variables
 IReaction = function(_type = 0, _args = []){
     this.type = _type;
@@ -109,7 +107,7 @@ IReaction.Library = [
         inputTypes: [],
         template: "Hide inventory"
     },
-    /*{
+    {
         type: 12,
         name: "Move object to scene", 
         inputLength: 2, 
@@ -120,9 +118,9 @@ IReaction.Library = [
         type: 13,
         name: "Move object to position", 
         inputLength: 3, 
-        inputTypes: [],
+        inputTypes: [], 
         template: "Move object to position"
-    },*/
+    },
 ];
 
 // functions
@@ -133,39 +131,48 @@ IReaction.prototype.toJsonObject = function() {
     let args = [];
     switch(obj.type) {
         case 0:
-            args[0] = this.args[0].id;
-            args[1] = (this.args[1] == null)? false:this.args[1];
+            args[0] = (this.args[0])? this.args[0].id: null;
+            args[1] = (this.args[1])? this.args[1]: false;
             break;
         case 1:
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;
         case 2:
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;
         case 3:
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;
         case 4:
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;            
         case 5:
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;            
         case 6:
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;            
         case 7:
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;
         case 8:
             args[0] = this.args[0];
             break;
         case 9:
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;
         case 10:
             break;
         case 11:
+            break;
+        case 12:
+            args[0] = (this.args[0])? this.args[0].id: null;
+            args[1] = (this.args[1])? this.args[1].id: null;
+            break;
+        case 13:
+            args[0] = (this.args[0])? this.args[0].id: null;
+            args[1] = this.args[1];
+            args[2] = this.args[2];
             break;
         default:
             args = [];
@@ -214,6 +221,15 @@ IReaction.prototype.fromJsonObject = function(data) {
         case 10:
             break;
         case 11:
+            break;
+        case 12:
+            args[0] = GameProperties.GetObjectById(data.args[0]);
+            args[1] = GameProperties.GetSceneById(data.args[1]);
+            break;
+        case 13:
+            args[0] = GameProperties.GetObjectById(data.args[0]);
+            args[1] = data.args[1];
+            args[2] = data.args[2];
             break;
         default:
             args = [];
