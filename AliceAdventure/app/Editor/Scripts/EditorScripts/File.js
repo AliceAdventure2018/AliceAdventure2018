@@ -82,11 +82,11 @@ File.NewEmptyProject = function(callback){ // TUT
 	}
 };
 
-File.NewProject = function(_template = null){ // TODO: load from template
+File.NewProject = function(callback){ // TODO: load from template
 	let func = function(){
 		PROMPT({
 			title: "New project", 
-			label: "Input project name: ", 
+			label: "Give it a name: ", 
 			value: "my-project", 
 		}).then((_name)=>{
 			if (_name != null) {
@@ -107,6 +107,10 @@ File.NewProject = function(_template = null){ // TODO: load from template
 				Sound.NewSound("meow_2", "./Assets/sound/meow_unhappy.wav");
 				
 				Event.Broadcast("reload-project");
+				
+				if (typeof callback == "function"){
+					callback(_name);
+				}
 			}
 		});
 	}

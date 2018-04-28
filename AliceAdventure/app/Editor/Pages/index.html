@@ -183,7 +183,7 @@
         		<h6 class="window-title" style="display: inline-block;">SCENE EDITOR</h6> 
 					<button type="button"   id="add-scene-button" v-on:click='addScene()'> Add Scene</button>    		
 				<!--DO NOT DELETE THIS, for canvas initialization. Can add style for it-->
-				<div style="text-align: center; margin-top:10px;" id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'>
+				<div style="text-align: center; margin-top:10px;" id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)' v-on:keydown.delete="deleteSelected()">
 					
 				</div>
 
@@ -353,12 +353,11 @@
 
             
       		<div id="object-list" >
-<!--                <div id="placeholder">placeholder</div>-->
       			<h6 class="window-title" >OBJECT LIST</h6>
       			<!-- if show object list on -->
-      			<ol v-if='projectLoaded' class="object-tree">
+      			<ol v-if='projectLoaded' v-on:keydown.delete="deleteSelected()" class="object-tree">
                     
-                    <hr class="sce-top" style="height: 5px !important; margin: 0px" v-show="isDraggingScene" v-on:drop='sceneDrop(event);' v-on:dragover='sceneDragover(event)' v-on:dragenter='event.target.style.height="35px"' v-on:dragleave='event.target.style.height="5px"'>
+             <hr class="sce-top" style="height: 5px !important; margin: 0px" v-show="isDraggingScene" v-on:drop='sceneDrop(event);' v-on:dragover='sceneDragover(event)' v-on:dragenter='event.target.style.height="35px"' v-on:dragleave='event.target.style.height="5px"'>
                     
       				<li v-for="scene in sceneList">
         				<!-- loop all scenes and objects 
@@ -366,7 +365,7 @@
         				<input type="checkbox" /> -->
         				<i class="down" onclick="showListView(event)"></i>
                         
-                        <button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)" v-on:dragstart='sceneDragStart(event, scene); isDraggingScene=true;' v-on:dragend='isDraggingScene=false;' draggable="true"></button><img class="start-star" src="src/star.png" v-if='scene.id==settings.startScene'/>
+                  <button v-bind:class="{'object-selected': scene.selected}" v-html="scene.name" v-on:click="onSceneSelect(scene)" v-on:dragstart='sceneDragStart(event, scene); isDraggingScene=true;' v-on:dragend='isDraggingScene=false;' draggable="true"></button><img class="start-star" src="src/star.png" v-if='scene.id==settings.startScene'/>
                         
       					<ol class="object_label" style="display:block;">
                             <hr class="obj-top" style="height: 5px !important; margin: 0px" v-show="isDraggingObject" v-on:drop='objectDrop(event,scene);isDraggingObject=false;' v-on:dragover='objectDragover(event)' v-on:dragenter='event.target.style.height="35px"' v-on:dragleave='event.target.style.height="5px"'>
@@ -560,6 +559,14 @@
 
 						<span class="badge badge-pill badge-reaction" v-if='react.type == 9'>
 								Play sound
+								<select v-model="react.args[0]">
+										<option v-for="sound in sounds" v-html="sound.name" v-bind:value="sound"></option>
+								</select>
+								: loop <label class="switch"><input type="checkbox" v-model='react.args[1]'><span class="slider round"></span></label>
+						</span>
+
+						<span class="badge badge-pill badge-reaction" v-if='react.type == 14'>
+								Stop sound
 								<select v-model="react.args[0]">
 										<option v-for="sound in sounds" v-html="sound.name" v-bind:value="sound"></option>
 								</select>

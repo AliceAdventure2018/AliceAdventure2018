@@ -288,7 +288,7 @@
    <div id="design-editor" style=" float: left;margin:10px; position: relative !important; display: inline-block !important; height:480px; width: 48% !important;">
             <h6 class="window-title">SCENE EDITOR</h6>            
         <!--DO NOT DELETE THIS, for canvas initialization. Can add style for it-->
-        <div id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'></div>
+        <div id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)' v-on:keydown.delete="deleteSelected()"></div>
 
         <!--div id="add-scene">
           <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene()'> Add Scene</button></div-->
@@ -299,7 +299,7 @@
           <div id="object-list" style="float:left; margin:10px; position: relative !important; display: inline-block !important;  height:480px !important; width: 15% !important; left:0 !important;" >
             <h6 class="window-title" >OBJECT LIST</h6>
             <!-- if show object list on -->
-            <ol v-if='projectLoaded' class="tutorial-object-tree">
+            <ol v-if='projectLoaded' v-on:keydown.delete="deleteSelected()" class="tutorial-object-tree">
                     
               <li v-for="scene in sceneList">
                 <!-- loop all scenes and objects 
@@ -481,6 +481,14 @@
 
             <span class="badge badge-pill badge-reaction" v-if='react.type == 9'>
                 Play sound
+                <select v-model="react.args[0]">
+                    <option v-for="sound in sounds" v-html="sound.name" v-bind:value="sound"></option>
+                </select>
+                : loop <label class="switch"><input type="checkbox" v-model='react.args[1]'><span class="slider round"></span></label>
+            </span>
+
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 14'>
+                Stop sound
                 <select v-model="react.args[0]">
                     <option v-for="sound in sounds" v-html="sound.name" v-bind:value="sound"></option>
                 </select>

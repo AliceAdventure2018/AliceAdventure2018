@@ -88,14 +88,14 @@ View.Selection = (function(){ // WORKING ON: MOVE TO GLOBAL
 		scn.SelectOn();
 	};
 	Event.AddListener("delete-scene", (_id)=>{
-		if (_scn.id == _id){
+		if (_scn && _scn.id == _id){
 			_objOff();
 			_scnOff();
 			Event.Broadcast("update-selection");
 		}
 	});
 	Event.AddListener("delete-object", (_id)=>{
-		if (_obj.id == _id){
+		if (_obj && _obj.id == _id){
 			_objOff();
 			Event.Broadcast("update-selection");
 		}

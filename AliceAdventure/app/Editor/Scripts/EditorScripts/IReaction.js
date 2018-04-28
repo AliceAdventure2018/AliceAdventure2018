@@ -89,10 +89,17 @@ IReaction.Library = [
 	{
 		type: 9,
 		name: "Play sound", 
-		inputLength: 1, 
+		inputLength: 2, 
 		inputTypes: [IReaction.InputModel.Audio],
 		template: "Play audio"
-	}, 
+	},     
+    {
+        type: 14,
+        name: "Stop sound", 
+        inputLength: 1, 
+        inputTypes: [], 
+        template: "Move object to position"
+    },
     {
         type: 10,
         name: "Show inventory", 
@@ -156,10 +163,11 @@ IReaction.prototype.toJsonObject = function() {
             args[0] = (this.args[0])? this.args[0].id: null;
             break;
         case 8:
-            args[0] = this.args[0];
+            args[0] = (this.args[0])? this.args[0]: "";
             break;
         case 9:
             args[0] = (this.args[0])? this.args[0].id: null;
+            args[1] = (this.args[1])? this.args[1]: false;
             break;
         case 10:
             break;
@@ -173,6 +181,9 @@ IReaction.prototype.toJsonObject = function() {
             args[0] = (this.args[0])? this.args[0].id: null;
             args[1] = this.args[1];
             args[2] = this.args[2];
+            break;
+        case 14:
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;
         default:
             args = [];
@@ -217,6 +228,7 @@ IReaction.prototype.fromJsonObject = function(data) {
             break;
         case 9:
             args[0] = GameProperties.GetSoundById(data.args[0]);
+            args[1] = data.args[1];
             break;
         case 10:
             break;
@@ -230,6 +242,9 @@ IReaction.prototype.fromJsonObject = function(data) {
             args[0] = GameProperties.GetObjectById(data.args[0]);
             args[1] = data.args[1];
             args[2] = data.args[2];
+            break;
+        case 14:
+            args[0] = GameProperties.GetSoundById(data.args[0]);
             break;
         default:
             args = [];
