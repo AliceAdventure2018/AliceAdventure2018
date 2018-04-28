@@ -5,6 +5,13 @@
     cursor:pointer;
 }
 
+.tutorial-picture {
+     opacity: 0.5;
+    margin:-5px;
+    max-width: 40px;
+    max-height: 40px;
+    cursor:pointer;
+}
 .interaction-box select{
     border-style:none;
     border-radius: 20px;
@@ -1210,20 +1217,24 @@ input:checked + .slider:before {
 
 @media only screen and (min-width: 1500px) and (min-height: 1200px) {
     .tutorial-assets{
-        height: 420px !important;
+        height: 380px !important;
+        width: 600px;
     }
 
     .tutorial-object-tree{
         height: 420px;
+        width: 92%;
     }
 }
 
 @media only screen and (max-height: 1000px){
      .tutorial-assets{
-        height: 420px;
+        height: 380px;
+           width: 600px;
     }
 
     .tutorial-object-tree{
+       width: 92%;
         height: 420px;
     }
 }
