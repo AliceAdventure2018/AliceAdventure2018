@@ -224,15 +224,15 @@ Parser = function (jsonPath, buildPath){
 
 	function translateObj_properties(object, callback){
 		
-		var error;
+		var ERROR;
 		var toReturn = '';
 		
 		// src, anchor, scale, interactive, buttonMode, pos, name, sceneParent, ID
 		if (object.hasOwnProperty("name")&& object.hasOwnProperty("id")){
 
 			// if (typeof (object.name) === "number"){
-			// 	error = "ERROR: Name of the object:  " + object.name + " cannot be numbers. Must have letters.";
-			// 	callback(error);
+			// 	ERROR = "ERROR: Name of the object:  " + object.name + " cannot be numbers. Must have letters.";
+			// 	callback(ERROR);
 			// 	return false;
 			// }else{
 
@@ -254,14 +254,14 @@ Parser = function (jsonPath, buildPath){
 						toReturn += setName(name,name);
 
 					}else{
-						error = "ERROR: Object: " + object.name + " File path does not exist or the file extention does not match jpg/jpeg/png.\n **********Invalid Path: " + FileSys.getAbs(object.src) + '\n';
-						callback(error);	
+						ERROR = "ERROR: Object: " + object.name + " File path does not exist or the file extention does not match jpg/jpeg/png.\n **********Invalid Path: " + FileSys.getAbs(object.src) + '\n';
+						callback(ERROR);	
 						return false;				
 					}
 				}
 				else{
-					error = "ERROR: Object " + object.name + " does not have a sprite.";
-					callback(error);
+					ERROR = "ERROR: Object " + object.name + " does not have a sprite.";
+					callback(ERROR);
 					return false;
 				}//end src
 
@@ -273,13 +273,13 @@ Parser = function (jsonPath, buildPath){
 
 						toReturn += setAnchor(name, object.anchor);
 					}else{
-						error =  "Object " + object.name + ": x and y of anchor must be defined as numbers.";
-						callback(error);
+						ERROR =  "Object " + object.name + ": x and y of anchor must be defined as numbers.";
+						callback(ERROR);
 						return false;
 					}
 				}else{
-					error="Object " + object.name + " has not set the anchor.";
-					callback(error);
+					ERROR="Object " + object.name + " has not set the anchor.";
+					callback(ERROR);
 					return false;
 				}//end anchor
 
@@ -291,13 +291,13 @@ Parser = function (jsonPath, buildPath){
 
 							toReturn += setPos.call(this, name, object.pos);
 					}else{
-						error = "ERROR: x and y of the position must be defined as numbers.";
-						callback(error);
+						ERROR = "ERROR: x and y of the position must be defined as numbers.";
+						callback(ERROR);
 						return false;
 					}
 				}else{
-					error = "ERROR: Object has not set the position.";
-					callback(error);
+					ERROR = "ERROR: Object has not set the position.";
+					callback(ERROR);
 					return false;
 				}//end pos
 
@@ -309,13 +309,13 @@ Parser = function (jsonPath, buildPath){
 
 							toReturn += setScale.call(this,name, object.scale);
 					}else{
-						error = "ERROR: x and y of the scale must be defined as numbers.";
-						callback(error);
+						ERROR = "ERROR: x and y of the scale must be defined as numbers.";
+						callback(ERROR);
 						return false;
 					}
 				}else{
-					error = "ERROR: Object has not set the scale.";
-					callback(error);
+					ERROR = "ERROR: Object has not set the scale.";
+					callback(ERROR);
 					return false;
 				}
 
@@ -326,13 +326,13 @@ Parser = function (jsonPath, buildPath){
 
 						toReturn += setClickable(name, object.clickable);
 					}else{
-						error = "ERROR: The clickable value of the object must be a boolean.";
-						callback(error);
+						ERROR = "ERROR: The clickable value of the object must be a boolean.";
+						callback(ERROR);
 						return false;
 					}
 				}else{
-					error = "ERROR: Object has not set the interativity.";
-					callback(error);
+					ERROR = "ERROR: Object has not set the interativity.";
+					callback(ERROR);
 					return false;
 				}//end clickable
 
@@ -343,13 +343,13 @@ Parser = function (jsonPath, buildPath){
 
 						toReturn += setDraggable(name, object.draggable);
 					}else{
-						error = "ERROR: The draggable value of the object must be a boolean.";
-						callback(error);
+						ERROR = "ERROR: The draggable value of the object must be a boolean.";
+						callback(ERROR);
 						return false;
 					}
 				}else{
-					error = "ERROR: Object has not set the [draggable] .";
-					callback(error);
+					ERROR = "ERROR: Object has not set the [draggable] .";
+					callback(ERROR);
 					return false;
 				}//end clickable
 
@@ -359,13 +359,13 @@ Parser = function (jsonPath, buildPath){
 					if(typeof object.active === 'boolean'){
 						toReturn+= setActive(name, object.active);
 					}else{
-						error = "ERROR: The active value of the object must be a boolean.";
-						callback(error);
+						ERROR = "ERROR: The active value of the object must be a boolean.";
+						callback(ERROR);
 						return false;
 					}
 				}else{
-					error = "ERROR: object has not set the active value.";
-					callback(error);
+					ERROR = "ERROR: object has not set the active value.";
+					callback(ERROR);
 					return false;
 				}//end active
 
@@ -381,8 +381,8 @@ Parser = function (jsonPath, buildPath){
 						toReturn+= addObjectToScene(name, sceneIndex);
 					}
 				}else{
-					error = "ERROR: Object must be added to a scene.";
-					callback(error);
+					ERROR = "ERROR: Object must be added to a scene.";
+					callback(ERROR);
 					return false;
 				}
 
@@ -390,8 +390,8 @@ Parser = function (jsonPath, buildPath){
 			//}//end name
 
 		}else{
-			error = "ERROR: Object must have a name !!"
-			callback(error);
+			ERROR = "ERROR: Object must have a name !!"
+			callback(ERROR);
 			return false;
 		}
 
@@ -745,7 +745,11 @@ Parser = function (jsonPath, buildPath){
 	//state changer
 	function translate_reactionType_0( title, args, callback){
 		if (args.length == 2){
-
+			
+			if (args[0] == null || args[1] == null){
+				callback("ERROR: for reaction[Change state] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
 			var state = findStateByID.call(this, args[0]);
 
 			if (state === false ){
@@ -772,6 +776,10 @@ Parser = function (jsonPath, buildPath){
 	function translate_reactionType_1( title, args, callback){
 		if (args.length == 1){
 
+			if (args[0] == null){
+				callback("ERROR: for reaction[transit to scene] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
 			var sceneIndex = findSceneByID.call(this, args[0]);
 
 			if (sceneIndex === false){
@@ -792,6 +800,10 @@ Parser = function (jsonPath, buildPath){
 	function translate_reactionType_2(title, args, callback){
 		if (args.length == 1){
 
+			if (args[0] == null){
+				callback("ERROR: for reaction[Put into inventory] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
@@ -811,7 +823,10 @@ Parser = function (jsonPath, buildPath){
 	//remove out of inventory
 	function translate_reactionType_3(title, args, callback){
 		if (args.length == 1){
-
+			if (args[0] == null){
+				callback("ERROR: for reaction[Remove Object our of inventory] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
@@ -833,6 +848,10 @@ Parser = function (jsonPath, buildPath){
 	function translate_reactionType_4(title, args, callback){
 		if (args.length == 1){
 
+			if (args[0] == null){
+				callback("ERROR: for reaction[Make visible] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
@@ -854,6 +873,10 @@ Parser = function (jsonPath, buildPath){
 	function translate_reactionType_5(title, args, callback){
 		if (args.length == 1){
 
+			if (args[0] == null){
+				callback("ERROR: for reaction[Make invisible] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
@@ -873,7 +896,10 @@ Parser = function (jsonPath, buildPath){
 	//make interactive
 	function translate_reactionType_6(title,  args, callback){
 		if (args.length == 1){
-
+			if (args[0] == null){
+				callback("ERROR: for reaction[Make Interactive] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
@@ -894,6 +920,10 @@ Parser = function (jsonPath, buildPath){
 	function translate_reactionType_7( title, args, callback){
 		if (args.length == 1){
 
+			if (args[0] == null){
+				callback("ERROR: for reaction[Make Uninteractive] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
 			var obj= findObjectByID.call(this, args[0]);
 
 			if (obj === false){
@@ -926,6 +956,11 @@ Parser = function (jsonPath, buildPath){
 	//play sound
 	function translate_reactionType_9(title,  args, callback){
 		if (args.length == 2){
+			
+			if (args[0] == null || args[1] == null){
+				callback("ERROR: for reaction[Play Sound] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
 
 			var sound = findSoundByID.call(this, args[0]);
 
@@ -937,7 +972,7 @@ Parser = function (jsonPath, buildPath){
 				if (typeof (args[1]) == "boolean"){
 					return "reaction.playAudio(\'" + sound + "\', " + args[1] + ");\n";
 				}else{
-					callback("ERROR: In interaction box: " + title + ", you must set whether to loop over this audio: " + sound + ".");
+					callback("ERROR: In reaction[Play Sound] of Interaction Box: " + title + ", you must set whether to loop over this audio: " + sound + ".");
 					return false;
 				}
 			}
@@ -971,8 +1006,15 @@ Parser = function (jsonPath, buildPath){
 		}
 	}
 
+	//move obj to scene # at location (x, y)
 	function translate_reactionType_12(title, args, callback){
 		if (args.length != 4){
+
+			if (args[0] == null || args[1] == null || args[2] == null || args[3] == null){
+				callback("ERROR: for reaction[Move Object to Scene] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
+
 			var obj = findObjectByID.call(this, args[0]);
 			if (obj === false){
 				callback("ERROR: for reaction in Interaction Box: " + title + ", cannot find object of id: " + args[0]);
@@ -1003,6 +1045,12 @@ Parser = function (jsonPath, buildPath){
 
 	function translate_reactionType_13(title, args, callback){
 		if (args.length == 3){
+
+			if (args[0] == null || args[1] == null || args[2] == null){
+				callback("ERROR: for reaction[Set Location] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
+
 			var obj = findObjectByID.call(this, args[0]);
 			if (obj === false){
 				callback("ERROR: cannot find object specified in the reaction of Interaction Box: " + title + "." );
@@ -1023,8 +1071,14 @@ Parser = function (jsonPath, buildPath){
 		}
 	}
 
+	//stop audio
 	function translate_reactionType_14(title,  args, callback){
 		if (args.length == 1){
+
+			if (args[0] == null){
+				callback("ERROR: for reaction[Stop Audio] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
 
 			var sound = findSoundByID.call(this, args[0]);
 
@@ -1126,10 +1180,14 @@ Parser = function (jsonPath, buildPath){
 	//click on A
 	function translate_eventType_0(title, args, callback){
 		if (args.length == 1){
+			if (args[0] == null){
+				callback("ERROR: for event[Click on] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
 			var objName = findObjectByID.call(this, args[0]);
 
 			if (objName === false){
-				callback("ERROR: for event of Interaction Box: " + title + ", cannot find the object of ID: " + args[0] + ".") ;
+				callback("ERROR: for event[Click on]  of Interaction Box: " + title + ", cannot find the object specified.") ;
 				return false;
 			}else{
 				return "\n//--------------Click--------------\n" +  objName + ".DIY_CLICK = function(){\n";		
@@ -1144,6 +1202,12 @@ Parser = function (jsonPath, buildPath){
 	//use A on B
 	function translate_eventType_1(title, args, callback){
 		if (args.length == 2){
+
+			if (args[0] == null || args[1] == null){
+				callback("ERROR: for event[Use A on B] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
+
 			var obj1 = findObjectByID.call(this, args[0]);
 			var obj2 = findObjectByID.call(this, args[1]);
 
@@ -1151,7 +1215,7 @@ Parser = function (jsonPath, buildPath){
 				return "\n//-------------USE--------------\nmyGame.eventSystem.addUsedEvent(" + obj1 + ", " + obj2 + ", function(){\n";
 
 			}else{
-				callback("ERROR: for event of Interaction Box: " + title + ", cannot find object of id: " + obj1 + " or " + obj2 + ".");
+				callback("ERROR: for event[Use A on B] of Interaction Box: " + title + ", cannot find object of id: " + obj1 + " or " + obj2 + ".");
 				return false;
 			}
 		}else{
@@ -1181,6 +1245,12 @@ Parser = function (jsonPath, buildPath){
 
 	function translate_eventType_3(title, args, callback){
 		if (args.length == 2){
+
+			if (args[0] == null || args[1] == null){
+				callback("ERROR: for event[Combine A and B] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
+
 			var obj1 = findObjectByID.call(this, args[0]);
 			var obj2 = findObjectByID.call(this, args[1]);
 
@@ -1188,7 +1258,7 @@ Parser = function (jsonPath, buildPath){
 				return "\n//-------------COMBINE--------------\nmyGame.eventSystem.addCombineEvent(" + obj1 + ", " + obj2 + ", function(){\n";
 
 			}else{
-				callback("ERROR: for event of Interaction Box: " + title + ", cannot find object of id: " + obj1 + " or " + obj2 + ".");
+				callback("ERROR: for event[Combine A and B] of Interaction Box: " + title + ", cannot find object of id: " + obj1 + " or " + obj2 + ".");
 				return false;
 			}
 
@@ -1201,12 +1271,16 @@ Parser = function (jsonPath, buildPath){
 	//when state A is changed to state B
 	function translate_eventType_4(title, args, callback){
 		if (args.length == 2){
+
+			if (args[0] == null || args[1] == null){
+				callback("ERROR: for event[When state A is changed to B] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
+
 			var state = findStateByID.call(this, args[0]);
 
 			if (state === false ){
-
-				if (args[1] == null) callback("ERROR: the event of Interaction Box: " + title + "cannot be null");
-				else callback("ERROR: for event of Interaction Box: " + title + ", cannot find state of id : " + args[0] + ".");
+				callback("ERROR: for event[When state A is changed to B] of Interaction Box: " + title + ", cannot find state of id : " + args[0] + ".");
 				return false;
 			}else{
 				return "\n//----------------When State A --> B----------------------\nmyGame.eventSystem.addStateEvent( '" + state + "', " + args[1] + ", function(){\n";
@@ -1223,8 +1297,13 @@ Parser = function (jsonPath, buildPath){
 		if (args.length == 1){
 			var sceneIndex = findSceneByID.call(this, args[0]);
 
+			if (args[0] == null){
+				callback("ERROR: for event[When scene transit to] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
+				return false;
+			}
+
 			if (sceneIndex === false){
-				callback("ERROR: for event of Interaction Box: " + title + ",  cannot find scene id： " + args[0] +".");
+				callback("ERROR: for event[When scene transit to] of Interaction Box: " + title + ",  cannot find scene id： " + args[0] +".");
 				return false;
 			}
 			else{
