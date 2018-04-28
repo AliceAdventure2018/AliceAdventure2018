@@ -2,7 +2,7 @@ var x =0, y=0;
 interact('.interaction-box')
   .draggable({
     // enable inertial throwing
-    inertia: false,
+    inertia: true,
     snap: {
       targets: [
         interact.createSnapGrid({ x: 30, y: 30 })
@@ -14,13 +14,13 @@ interact('.interaction-box')
     onmove: dragMoveListener,
     // keep the element within the area of it's parent
     restrict: {
-    // restriction: "parent",
+     restriction: "parent",
 
-    //  endOnly: true,
-      elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+    // endOnly: true,
+    elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
     },
     // enable autoScroll
-   // autoScroll: true,
+   autoScroll: false,
 
   });
 
