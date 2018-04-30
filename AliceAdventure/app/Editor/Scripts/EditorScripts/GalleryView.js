@@ -119,8 +119,9 @@ GalleryView.prototype.InitView = function(){
 				character: true, 
 				item: true,
 				others: true,
-				imported: true,
-				sound: true,
+				sound: false, // TODO
+				myImage: true,
+				mySound: true,
 			},
 		}, 
 		methods: {

@@ -34,7 +34,7 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = {
 SceneObject.AddEmptyObject = function(_name, _bindScene, _assignedPos = true){
 	if (GameProperties.instance == null) return null; // no proj loaded
 	let _defaultObj = {
-		src: '../../Assets/placeholder.png',
+		src: '../../Assets/picture.png',
 		name: _name
 	};
 	let index = GameProperties.instance.objectList.length;

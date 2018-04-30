@@ -275,17 +275,23 @@
             <h6 class="window-title" >GALLERY</h6>
       			<div id="tabList">
         			<ul >
-    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#backdrop-asset" aria-controls="backdrop-asset" class="selected">
-    						Backdrops</a></li>
-    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#character-asset" aria-controls="character-asset" class="unselecteds">
-    						Characters</a></li>
-    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#item-asset" aria-controls="item-asset" class="unselecteds">
-    						Items</a></li>
-    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#other-asset" aria-controls="other-asset" class="unselecteds">
-    						Others</a></li>
-    						<li class="nav-item"><a onclick="switchCategoryView()"  href="#imported-asset" aria-controls="imported-asset" class="unselecteds">
-    						Imported</a></li>
-    						<li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
+    						<li v-if='showCategory.backdrop' class="nav-item"><a onclick="switchCategoryView()"  href="#backdrop-asset" aria-controls="backdrop-asset" class="selected">
+                  Backdrops</a></li>
+                  <li v-if='showCategory.character' class="nav-item"><a onclick="switchCategoryView()"  href="#character-asset" aria-controls="character-asset" class="unselecteds">
+                  Characters</a></li>
+                  <li v-if='showCategory.item' class="nav-item"><a onclick="switchCategoryView()"  href="#item-asset" aria-controls="item-asset" class="unselecteds">
+                  Items</a></li>
+                  <li v-if='showCategory.others' class="nav-item"><a onclick="switchCategoryView()"  href="#other-asset" aria-controls="other-asset" class="unselecteds">
+                  Others</a></li>
+                  
+                  <li v-if='showCategory.sound' class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
+
+                  <div id="import-nav">
+                  <li v-if='showCategory.myImage' class="nav-item"><a onclick="switchCategoryView()"  href="#imported-image" aria-controls="imported-image" class="unselecteds">
+                  My Image</a></li>
+                  <li v-if='showCategory.mySound' class="nav-item"><a onclick="switchCategoryView()"  href="#imported-sound" aria-controls="imported-sound" class="unselecteds">
+                  My Sound</a></li>
+                  </div>
           			<!--<div class="tab-list" id="tabList">
           			<ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical"-->
               </ul>
@@ -342,11 +348,30 @@
                   <!-- bind the gallery data -->
                     <li v-for="sound in sounds" v-on:dblclick='previewSound(sound)'> <div class="asset"><img src='../../Assets/audio.png'> </div><p v-html='sound.name'></p>
                     </li>
-                    <li v-for="sound in importedSounds" v-on:dblclick='previewSound(sound)'> <div class="asset"><img src='../../Assets/audio.png'> </div><p v-html='sound.name'></p>
-                    </li>  
                   </ul>
 								</div>
 							</div>
+
+              <div v-if='showCategory.myImage' id="imported-image" style="display: none;">
+                <div class="assets">
+                  <ul>
+                    <li ><div class="asset-add" ><img src="src/add.png" onclick="AliceEditor.File.ImportImage()"></div><p>import</p></li>
+                    <li v-if='showCategory.myImage' draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div v-if='showCategory.mySound' id="imported-sound" style="display: none;">
+                <div class="assets">
+                  <ul>
+                    <li><div class="asset-add"><img src="src/add.png" onclick="AliceEditor.File.ImportSound()"></div><p>import</p></li>
+                    <li v-if='showCategory.sound' v-for="sound in importedSounds"> <div class="asset"><img src='../../Assets/audio.png'> </div><p v-html='sound.name'></p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
 						</div>
 		      </div>
 
