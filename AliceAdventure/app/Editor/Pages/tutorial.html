@@ -103,7 +103,7 @@
   ">  
   <h2 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;" v-html='projectName'></h2>
   <p> 
-    <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;">Where does the story happen?</h6> <img v-on:click='addScene();' style="cursor: pointer; width:30px; height: 30px; margin-left:1%; display: inline-block;" src="src/plus.png"/>
+    <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;">Where does the story happen?</h6> <img v-on:click='addSceneWithBG();' style="cursor: pointer; width:30px; height: 30px; margin-left:1%; display: inline-block;" src="src/plus.png"/>
     <div class="table-responsive">
     <table class="table table-bordered" id="table1">
       <thread>
@@ -111,12 +111,16 @@
         
         <th  >background name
         </th>
+        <th>select the picture
+        </th>
       </tr>
       </thread>
       <tbody>
         <tr v-for='(scene, index) in sceneList'>
           
           <td> <input type="text" v-model='scene.name'> <img src="src/delete.png" class="tutorial-delete" v-on:click='deleteScene(scene)'/>
+          </td>
+          <td> <img v-bind:src="scene.bgSrc" v-on:click='util.selectBackdrop();selectSceneBG(scene)' class="tutorial-picture" data-toggle="modal" data-target="#gallery-modal" >
           </td>
         </tr>
       </tbody>
@@ -136,12 +140,14 @@
         </th>
         <th> where is the character?
         </th>
+        <th>select the picture
+        </th>
       </tr>
      
        
       </thread>
       <tbody>
-        <tr v-for='(obj, index) in objectList' v-if='obj.isCharacter'>
+        <tr v-for='(obj, index) in objectList' v-if='obj.isCharacter && !obj.isBackdrop'>
           
          
           <td> <input type="text" v-model='obj.name'><img src="src/delete.png" class="tutorial-delete" v-on:click='deleteObject(obj)'/>
@@ -152,6 +158,7 @@
               <!--option v-bind:value='{id: 0}'> Inventory </option-->
             </select>
           </td>
+          <td><img v-bind:src='obj.src' v-on:click='util.selectCharacter();selectObjectPic(obj)' class="tutorial-picture" data-toggle="modal" data-target="#gallery-modal" ></td>
         </tr>
       </tbody>
     </table>
@@ -170,10 +177,12 @@
         </th>
         <th  > where is the item?
         </th>
+        <th>select the picture
+        </th>
       </tr>
       </thread>
       <tbody>
-        <tr v-for='(obj, index) in objectList' v-if='!obj.isCharacter'>
+        <tr v-for='(obj, index) in objectList' v-if='!obj.isCharacter && !obj.isBackdrop'>
         
           
           <td> <input type="text" v-model='obj.name'><img src="src/delete.png" class="tutorial-delete" v-on:click='deleteObject(obj)'/>
@@ -184,6 +193,7 @@
               <!--option v-bind:value='{id: 0}'> Inventory </option-->
             </select>
           </td>
+          <td><img v-bind:src='obj.src' v-on:click='util.selectItem();selectObjectPic(obj)' class="tutorial-picture" data-toggle="modal" data-target="#gallery-modal" ></td>
         </tr>
       </tbody>
     </table>
@@ -196,6 +206,105 @@
  </div>
 
 
+        <!-- Modal -->
+  <div class="modal" id="gallery-modal" tabindex="-1" role="dialog" aria-labelledby="settingTitle"  data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" >Select the picture</h5>
+          <button type="button" id="close-icon-button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+               <div id="gallery" style="float: left; position: relative !important; display: inline-block !important; height:430px !important; ">
+              
+              <div id="tabList">
+                <ul >
+                 <li v-if='showCategory.backdrop' class="nav-item"><a onclick="switchCategoryView()"  href="#backdrop-asset" aria-controls="backdrop-asset" class="selected">
+                  Backdrops</a></li>
+                  <li v-if='showCategory.character' class="nav-item"><a onclick="switchCategoryView()"  href="#character-asset" aria-controls="character-asset" class="unselecteds">
+                  Characters</a></li>
+                  <li v-if='showCategory.item' class="nav-item"><a onclick="switchCategoryView()"  href="#item-asset" aria-controls="item-asset" class="unselecteds">
+                  Items</a></li>
+                  <li v-if='showCategory.others' class="nav-item"><a onclick="switchCategoryView()"  href="#other-asset" aria-controls="other-asset" class="unselecteds">
+                  Others</a></li>
+                  <li v-if='showCategory.imported' class="nav-item"><a onclick="switchCategoryView()"  href="#imported-asset" aria-controls="imported-asset" class="unselecteds">
+                  Imported</a></li>
+                  <li v-if='showCategory.sound' class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
+                  <!--<div class="tab-list" id="tabList">
+                  <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical"-->
+                </ul>
+              </div>
+              <div id="tabContent">
+                <div v-if='showCategory.backdrop' id="backdrop-asset" style="display: block;">
+                  <div class="tutorial-assets">
+                    <ul>
+                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.backdrop" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div v-if='showCategory.character' id="character-asset" style="display: block;">
+                  <div class="tutorial-assets">
+                    <ul>
+                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.character" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div v-if='showCategory.item' id="item-asset" style="display: block;">
+                  <div class="tutorial-assets">
+                    <ul>
+                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.item" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div v-if='showCategory.others' id="other-asset" style="display: block;">
+                  <div class="tutorial-assets">
+                    <ul>
+                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.other" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div v-if='showCategory.imported' id="imported-asset" style="display: block;">
+                  <div class="tutorial-assets">
+                    <ul>
+                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div v-if='showCategory.sound' id="key-asset" style="display: block;">
+                  <div class="tutorial-assets">
+                    <ul>
+                    <!-- bind the gallery data -->
+                      <li v-for="sound in sounds" v-on:dblclick='previewSound(sound)'> <div class="asset"><img src="../../Assets/audio.png"> </div><p v-html='sound.name'></p>
+                      </li>
+                      <li v-for="sound in importedSounds" v-on:dblclick='previewSound(sound)'> <div class="asset"><img src='../../Assets/audio.png'> </div><p v-html='sound.name'></p>
+                      </li>  
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="close-button" data-dismiss="modal">Ok</button>
+          <!--button type="button" id="save-button">Save changes</button-->
+        </div>
+      </div>
+    </div>
+  </div>
+
+
  <div id="step_2" style="
   display: none;
   margin-top:1%;
@@ -204,102 +313,59 @@
   ">
   
   <p>
-    <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.2em !important;">Let's decorate the scenes! <u>Click</u> on the object and <u>select</u> the picture to replace the object!</h6> 
+    <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.2em !important;">Let's decorate the scenes! </h6> 
    </p>
-   <div style="margin-right:100px;">
-    <div id="gallery" style="float: left; position: relative !important; display: inline-block !important; height:480px !important; width: 30% !important; margin:10px;">
-            <h6 class="window-title" >GALLERY</h6>
-            <div id="tabList">
-              <ul >
-               <li class="nav-item"><a onclick="switchCategoryView()"  href="#backdrop-asset" aria-controls="backdrop-asset" class="selected">
-                Backdrops</a></li>
-                <li class="nav-item"><a onclick="switchCategoryView()"  href="#character-asset" aria-controls="character-asset" class="unselecteds">
-                Characters</a></li>
-                <li class="nav-item"><a onclick="switchCategoryView()"  href="#item-asset" aria-controls="item-asset" class="unselecteds">
-                Items</a></li>
-                <li class="nav-item"><a onclick="switchCategoryView()"  href="#other-asset" aria-controls="other-asset" class="unselecteds">
-                Others</a></li>
-                <li class="nav-item"><a onclick="switchCategoryView()"  href="#imported-asset" aria-controls="imported-asset" class="unselecteds">
-                Imported</a></li>
-                <li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
-                <!--<div class="tab-list" id="tabList">
-                <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical"-->
-              </ul>
-            </div>
-            <div id="tabContent">
-              <div id="backdrop-asset" style="display: block;">
-                <div class="tutorial-assets">
-                  <ul>
-                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.backdrop" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div id="character-asset" style="display: none;">
-                <div class="tutorial-assets">
-                  <ul>
-                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.character" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div id="item-asset" style="display: none;">
-                <div class="tutorial-assets">
-                  <ul>
-                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.item" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div id="other-asset" style="display: none;">
-                <div class="tutorial-assets">
-                  <ul>
-                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in images.other" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div id="imported-asset" style="display: none;">
-                <div class="tutorial-assets">
-                  <ul>
-                    <li draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div id="key-asset" style="display: none;">
-                <div class="tutorial-assets">
-                  <ul>
-                  <!-- bind the gallery data -->
-                    <li v-for="sound in sounds"> <div class="asset"><img src="../../Assets/audio.png"> </div><p v-html='sound.name'></p>
-                    </li>
-                    <li v-for="sound in importedSounds"> <div class="asset"><img src='../../Assets/audio.png'> </div><p v-html='sound.name'></p>
-                    </li>  
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-   <div id="design-editor" style=" float: left;margin:10px; position: relative !important; display: inline-block !important; height:480px; width: 48% !important;">
+   <div style="margin-right:100px; width: 900px; height: 500px;">
+   <!-- gallery -->
+   <div id="design-editor" style=" float: left;margin:10px; position: relative !important; display: inline-block !important; height:480px; width: 480px !important;">
+      <div id="scene-editor">
             <h6 class="window-title">SCENE EDITOR</h6>            
         <!--DO NOT DELETE THIS, for canvas initialization. Can add style for it-->
-        <div id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)'></div>
+        <div id="canvas-container" v-on:dragover='assetDragover(event)' v-on:drop='assetDrop(event)' v-on:keydown.delete="deleteSelected()"></div>
+      </div>
+      <div id="design-property">
+        <!--h6 class="window-title">PROPERTIES</h6-->
+        <!-- bind img src -->
+        <div v-if='projectLoaded'>
+          <!--div v-if='showObject' class="property-img-bg"> <img class="property-img" v-bind:src="object.src"></div-->
+          <!-- bind info -->
+          <div v-if='showObject' class="property-info">
+            <ul>
+              <li><span contenteditable="true"/></span><input style="width:80px" v-model='object.name'/>
+                <a v-on:click='toggleLock()'><img id="img-lock" v-if='object.dragAllowed' src="src/unlocked.png"><img id="img-lock" v-if='!object.dragAllowed' src="src/locked.png"></a>
+              </li>
 
-        <!--div id="add-scene">
-          <button type="button"  class="btn btn-outline-success btn-sm" id="add-scene-button" v-on:click='addScene()'> Add Scene</button></div-->
+              <!--<input v-model='bindObj.name'/>-->
+              <li>
+                <!--label for="property-input">position </label-->
+                <div class="property-input">
+                  x  <input  id="pos-x" v-model.number='object.sprite.x'>
+                  y  <input id="pos-y" v-model.number='object.sprite.y'>
+                </div>
+              </li>
+              <li> 
+                <div class="property-input">
+                width <input id="scale-x" v-model.number='object.sprite.scale.x'>
+                  height <input id="scale-y" v-model.number='object.sprite.scale.y'>
+
+                </div>
+              </li>          
+            </ul>
+          </div>
+          <div v-if='showScene' class="property-info">
+          <ul>
+          <li><input style="width:80px" v-model='scene.name'/></li>
+          <li><img id="object-delete" src="src/delete.png" v-on:click='deleteScene()'></li>
+          </ul>
+          </div>
+        </div>
+      </div>
       </div>
      
-
-      
-          <div id="object-list" style="float:left; margin:10px; position: relative !important; display: inline-block !important;  height:480px !important; width: 15% !important; left:0 !important;" >
+          <div id="object-list" style="float:left; margin-left:30px; margin-top:10px; margin-bottom:10px; margin-right:10px;position: relative !important; display: inline-block !important;  height:480px !important; width: 35% !important; left:0 !important;" >
             <h6 class="window-title" >OBJECT LIST</h6>
             <!-- if show object list on -->
-            <ol v-if='projectLoaded' class="tutorial-object-tree">
+            <ol v-if='projectLoaded' v-on:keydown.delete="deleteSelected()" class="tutorial-object-tree">
                     
               <li v-for="scene in sceneList">
                 <!-- loop all scenes and objects 
@@ -326,9 +392,12 @@
           </div>
 
         </div>
+      
+     
    <button class="sys-button" onclick="goSkip();transit.skip()"> Skip </button>
    <button class="sys-button" onclick="goToNext();transit.next()" > Next </button>
    <button class="sys-button" onclick="goBack();transit.back();"> Back </button> 
+
  </div>
 
 
@@ -481,6 +550,14 @@
 
             <span class="badge badge-pill badge-reaction" v-if='react.type == 9'>
                 Play sound
+                <select v-model="react.args[0]">
+                    <option v-for="sound in sounds" v-html="sound.name" v-bind:value="sound"></option>
+                </select>
+                : loop <label class="switch"><input type="checkbox" v-model='react.args[1]'><span class="slider round"></span></label>
+            </span>
+
+            <span class="badge badge-pill badge-reaction" v-if='react.type == 14'>
+                Stop sound
                 <select v-model="react.args[0]">
                     <option v-for="sound in sounds" v-html="sound.name" v-bind:value="sound"></option>
                 </select>

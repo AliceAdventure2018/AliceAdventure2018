@@ -38,6 +38,7 @@ SceneView.prototype.InitView = function(){
 			addScene: ()=>{this.AddScene();},
 			assetDragover: (ev)=>{View.HandleDragover(ev, View.DragInfo.GalleryImage);},
 			assetDrop: (ev)=>{View.HandleDrop(ev, View.DragInfo.GalleryImage, (data)=>{this.AddObject(data);});},
+			deleteSelected: ()=>{this.DeleteSelected()},
 		}
 	});
 	// Init app
@@ -120,6 +121,25 @@ SceneView.prototype.SelectObject = function(_obj){
 SceneView.prototype.SelectScene = function(_scn){
 	// Select this object
 	View.Selection.selectScene(_scn);
+};
+
+SceneView.prototype.DeleteObject = function(obj){
+    if(confirm("Are you sure you want to delete the object?")) 
+        obj.DeleteThis();
+};
+
+SceneView.prototype.DeleteScene = function(scn){
+    if(confirm("Are you sure you want to delete the scene?\n\nDeleting the scene will also delete every object in it.")) 
+        scn.DeleteThis();
+};
+
+SceneView.prototype.DeleteSelected = function(){
+    if (!GameProperties.ProjectLoaded()) return;
+    if (View.Selection.object != null){
+        this.DeleteObject(View.Selection.object);
+    } else if (View.Selection.scene != null){
+        this.DeleteScene(View.Selection.scene);
+    }
 };
 
 module.exports = SceneView;
