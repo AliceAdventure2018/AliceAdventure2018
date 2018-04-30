@@ -628,6 +628,15 @@ input:checked + .slider:before {
      height: 80px;
 }
 
+.asset-add {
+    cursor: pointer;
+    margin:7px; /* 5px */
+    border-radius: 10px;
+
+     width:80px;
+     height: 80px;
+}
+
 .tutorial-assets{
     border-radius: 10px;
     background-color: #eee;
@@ -641,7 +650,9 @@ input:checked + .slider:before {
     overflow-y: auto;
 
 }
-
+#import-nav {
+    margin-top:50px;
+}
 .tutorial-assets ul{
     margin:0;
 }
