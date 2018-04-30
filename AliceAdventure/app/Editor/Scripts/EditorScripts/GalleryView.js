@@ -114,6 +114,14 @@ GalleryView.prototype.InitView = function(){
 			sounds: GalleryView.SoundLibrary,
 			importedImages: null,
 			importedSounds: null,
+			showCategory: {
+				backdrop: true, 
+				character: true, 
+				item: true,
+				others: true,
+				imported: true,
+				sound: true,
+			},
 		}, 
 		methods: {
 			imageDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.GalleryImage, d);},

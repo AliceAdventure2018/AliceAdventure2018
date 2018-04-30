@@ -56,6 +56,7 @@ File.NewEmptyProject = function(callback){ // TUT
 				File.instance.gameProperties.settings.projectName = _name;
 				// Default settings
 				let firstScene = Scene.AddScene("new scene");
+				let bg = SceneObject.AddEmptyObject("backdrop", firstScene, false);
 				firstScene.SetAsStartScene();
 				firstScene.SelectOn();
 				Sound.NewSound("correct", "./Assets/sound/correct.mp3");
@@ -94,6 +95,7 @@ File.NewProject = function(callback){ // TODO: load from template
 				File.instance.gameProperties.settings.projectName = _name;
 				// Default settings
 				let firstScene = Scene.AddScene("default scene");
+				let bg = SceneObject.AddEmptyObject("backdrop", firstScene, false);
 				firstScene.SetAsStartScene();
 				firstScene.SelectOn();
 				Sound.NewSound("correct", "./Assets/sound/correct.mp3");

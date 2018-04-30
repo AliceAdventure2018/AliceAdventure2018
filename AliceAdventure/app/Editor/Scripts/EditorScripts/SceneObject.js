@@ -24,23 +24,27 @@ SceneObject = function(_id = null, _name = "untitled", _src = "", _bindScene = {
 	this.drag = { on: false, eventData: {}, offset: {x: 0, y: 0} };
 
 	//this.properties = [];
-	this.isCharacter = false;
+	this.isBackdrop = false; // TODO remove this
+	this.isCharacter = false; // TODO remove this
 	this.sprite = null;
 	this.filter = pixiFilters.outlineFilterGreen;
 };
 
 // static properties
-SceneObject.AddEmptyObject = function(_name, _bindScene){
+SceneObject.AddEmptyObject = function(_name, _bindScene, _assignedPos = true){
 	if (GameProperties.instance == null) return null; // no proj loaded
 	let _defaultObj = {
 		src: '../../Assets/placeholder.png',
 		name: _name
 	};
 	let index = GameProperties.instance.objectList.length;
-	let xStep = 80, yStep = 72, xNum = 5, yNum = 4;
-	let defaultPos = {
-		x: (index % xNum + 1) * xStep,
-		y: (Math.floor(index / xNum) % yNum + 1) * yStep
+	let defaultPos = {x: 240, y: 180}; // center
+	if (_assignedPos){
+		let xStep = 80, yStep = 72, xNum = 5, yNum = 4;
+		defaultPos = {
+			x: (index % xNum + 1) * xStep,
+			y: (Math.floor(index / xNum) % yNum + 1) * yStep
+		}
 	}
 	if (_bindScene == null){
 		_bindScene = GameProperties.instance.sceneList[0];
@@ -67,6 +71,11 @@ SceneObject.LoadObject = function(_data){
 	GameProperties.AddObject(_obj);
 	_obj.InitSprite(_data.src);
 	_obj.SetSprite(null, _data.pos, _data.scale, _data.anchor, _data.active);
+
+	if (_obj.bindScene.GetFirstObject().id == _obj.id) { // TODO get rid of this shit
+		_obj.isBackdrop = true; 
+		_obj.bindScene.bgSrc = _obj.src;
+	}
 	return _obj;
 };
 
@@ -104,6 +113,10 @@ SceneObject.prototype.SetSprite = function(_url, _pos, _scale, _anchor, _active)
 		this.sprite.anchor.set(_anchor.x, _anchor.y);
 	if (_active != null)
 		this.sprite.visible = _active;
+
+	if (this.bindScene.GetFirstObject().id == this.id){ // TODO get rid of this shit
+		this.bindScene.bgSrc = _url;
+	}
 };
 
 SceneObject.prototype.SpriteInfoDefault = function(){

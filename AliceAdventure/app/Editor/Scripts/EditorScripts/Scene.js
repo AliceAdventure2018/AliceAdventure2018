@@ -14,6 +14,7 @@ Scene = function(_id, _name = "untitledScene"){
 
 	this.container = null;
 	this.selected = false;
+	this.bgSrc = "src/picture.png"; // TODO replace that
     
     this.objectList = [];
 
@@ -80,6 +81,16 @@ Scene.prototype.DeleteThis = function(){
 	}
 	GameProperties.DeleteScene(this);
 	Event.Broadcast('delete-scene', this.id);
+};
+
+Scene.prototype.GetFirstObject = function(){ // TODO: replace this with BG sprite
+	if (!GameProperties.ProjectLoaded()) return null;
+	for (var i in GameProperties.instance.objectList){
+		if (GameProperties.instance.objectList[i].bindScene.id == this.id){
+			return GameProperties.instance.objectList[i]; 
+		}
+	};
+	return null;
 };
 
 Scene.prototype.SelectOn = function(){

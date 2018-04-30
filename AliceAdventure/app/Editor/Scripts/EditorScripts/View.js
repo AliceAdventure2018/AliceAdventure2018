@@ -79,13 +79,17 @@ View.Selection = (function(){ // WORKING ON: MOVE TO GLOBAL
 	};
 	var _objOn = function(obj){
 		_objOff();
-		_obj = obj;
-		obj.SelectOn();
+		if (obj != null){
+			_obj = obj;
+			obj.SelectOn();
+		}
 	};
 	var _scnOn = function(scn){
 		_scnOff();
-		_scn = scn;
-		scn.SelectOn();
+		if (scn != null){
+			_scn = scn;
+			scn.SelectOn();
+		}
 	};
 	Event.AddListener("delete-scene", (_id)=>{
 		if (_scn && _scn.id == _id){
