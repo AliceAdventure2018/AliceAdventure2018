@@ -30,10 +30,17 @@ WelcomeView.prototype.InitView = function(){
 		data: {
 		}, 
 		methods: {
+			newWiz: ()=>{
+				File.NewEmptyProject(()=>{
+					File.SaveAsNewProject((path)=>{
+						IPC.send('new-wiz', path);
+					});
+				});
+			}, 
 			newProj: ()=>{
 				File.NewEmptyProject(()=>{
 					File.SaveAsNewProject((path)=>{
-						IPC.send('new-proj', path);
+						IPC.send('open-proj', path);
 					});
 				});
 			}, 

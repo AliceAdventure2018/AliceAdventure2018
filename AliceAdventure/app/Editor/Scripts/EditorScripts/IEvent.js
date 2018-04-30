@@ -65,25 +65,25 @@ IEvent.prototype.toJsonObject = function() {
     let args = [];
     switch(obj.type) {
         case 0://click
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;
         case 1://use a on b
-            args[0] = this.args[0].id;
-            args[1] = this.args[1].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
+            args[1] = (this.args[1])? this.args[1].id: null;
             break;
         case 2://observe a
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;
         case 3://combine a and b
-            args[0] = this.args[0].id;
-            args[1] = this.args[1].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
+            args[1] = (this.args[1])? this.args[1].id: null;
             break;
         case 4://state A change to V
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             args[1] = (this.args[1] != null)?this.args[1]:false;
             break;
         case 5://enter scene A
-            args[0] = this.args[0].id;
+            args[0] = (this.args[0])? this.args[0].id: null;
             break;
         default:
             break;
