@@ -15,7 +15,7 @@ Debug.Log = function(something){
 
 Debug.LogError = function(something){
 	console.log("ERROR: " + something);
-	alert("ERROR: " + something);
+	alert(something);
 	// TODO: Reserved for later output functionality
 }
 

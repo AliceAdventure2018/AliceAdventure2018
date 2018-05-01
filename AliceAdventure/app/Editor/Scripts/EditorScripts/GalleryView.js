@@ -129,7 +129,7 @@ GalleryView.prototype.InitView = function(){
 			soundDragstart: (ev, d)=>{View.HandleDragstart(ev, View.DragInfo.GallerySound, d);},
 			chooseObj: (_obj)=>{this.ChooseObj(_obj)},
 			setImage: (img)=>{this.SetImage(img)},
-			previewSound: (sound)=>{(new Audio('../.' + sound.src)).play();}, // TODO: compatible path with both imported and default
+			previewSound: (sound)=>{(new Audio(sound.src)).play();}, // TODO: compatible path with both imported and default
 		}
 	});
 
