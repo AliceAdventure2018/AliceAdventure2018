@@ -18,9 +18,11 @@ GalleryView.prototype = new View();
 
 GalleryView.ImageLibrary = {
 	backdrop:[
-		{name:'Backdrop', src:'../../Assets/backdrop/backdrop.png'},
+		{name:'Day', src:'../../Assets/backdrop/backdrop.png'},
+		{name:'Night', src:'../../Assets/backdrop/night.png'},
 		{name:'Beach', src:'../../Assets/backdrop/beach_org.png'},
 		{name:'Kitchen', src:'../../Assets/backdrop/kitchen.png'},
+		{name:'Bathroom', src:'../../Assets/backdrop/bathroom.png'},
 		{name:'Mountain view', src:'../../Assets/backdrop/mountainView.png'},
 		{name:'Room', src:'../../Assets/backdrop/room_basic.png'},
 		{name:'Win', src:'../../Assets/backdrop/win.png'},
@@ -31,13 +33,18 @@ GalleryView.ImageLibrary = {
 		{name:'Cat', src:'../../Assets/character/cat.png'},
 		{name:'Cat sad', src:'../../Assets/character/cat_sad.png'},
 		{name:'Dog happy', src:'../../Assets/character/dog_happy.png'},
-		{name:'Girl unhappy', src:'../../Assets/character/girl_unhappy.png'},
+		{name:'Wizard1', src:'../../Assets/character/wizard_student.png'},
+		{name:'Wizard2', src:'../../Assets/character/wizard_student2.png'},
+		{name:'Wizard3', src:'../../Assets/character/wizard_student3.png'},
+		{name:'Boy', src:'../../Assets/character/boy.png'},
+		{name:'BusinessMan', src:'../../Assets/character/businessman.png'},
 		{name:'Mad hat', src:'../../Assets/character/mad_hat.png'},
 		{name:'Monster1', src:'../../Assets/character/monster1.png'},
 		{name:'Monster2', src:'../../Assets/character/monster2.png'},
 		{name:'Orange cat', src:'../../Assets/character/orange_cat.png'},
 		{name:'Robot', src:'../../Assets/character/robot.png'},
 		{name:'Tweedle dee', src:'../../Assets/character/tweedle_dee.png'},
+		{name:'Girl unhappy', src:'../../Assets/character/girl_unhappy.png'},
 		// {...}
 	],
 	item:[
