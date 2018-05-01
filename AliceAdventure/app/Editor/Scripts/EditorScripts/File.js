@@ -431,6 +431,6 @@ File.Build = function(successCallback){
 }
 
 File.Run = function(){
-	Event.Broadcast('run-in-editor', PATH.join(PATH.dirname(File.instance.path), 'Build/index.html'));
+	Event.Broadcast('run-in-editor', PATH.join(PATH.dirname(File.instance.path), PATH.basename(File.instance.path, PATH.extname(File.instance.path)) + '-Build/index.html'));
 }
 module.exports = File;
