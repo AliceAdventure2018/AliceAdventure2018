@@ -26,6 +26,7 @@
   },
   "build": {
     "appId": "com.aliceadventure.app",
+    "productName": "Alice's Adventure",
     "directories": {
       "output": "../dist"
     }

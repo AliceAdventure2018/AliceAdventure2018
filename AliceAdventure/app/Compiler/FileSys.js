@@ -3,8 +3,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const pixi = 'Resources/pixi/pixi.js';
 const pixi_sound = 'Resources/pixi/pixi-sound.js';
-const aliceAPI = 'Engine/aliceAPI.js';
-const bat = 'Engine/bat/chrome.bat';	
+const aliceAPI = 'Engine/aliceAPI.js';	
 const pixi_sound_map_src = 'Resources/pixi/pixi-sound.js.map';
 
 
@@ -100,8 +99,6 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	var requireSrc = path.join(assetSrc, 'require');
 	var requireDest = path.join(assetDest, 'require');
 
-	var batDest = path.join(buildPath, 'chrome.bat');
-
 	FileSys.createBuildFolder(buildPath);
 	FileSys.createBuildFolder(resourcesDest);
 	FileSys.createBuildFolder(assetDest);
@@ -114,7 +111,7 @@ FileSys.ensureAndCreate = function(jsonPath, callback){
 	FileSys.copyFileOrFolder(pixi_sound, soundDest);
 	FileSys.copyFileOrFolder(pixi_sound_map_src, pixi_sound_map_dest),
 	FileSys.copyFileOrFolder(requireSrc,requireDest);
-	FileSys.copyFileOrFolder(bat, batDest);
+
 	//copy inventory and textbox.
 	FileSys.copyFileOrFolder(FileSys.merge(assetSrc, 'inventory.png'), FileSys.merge(assetDest, 'inventory.png'));
 	FileSys.copyFileOrFolder(FileSys.merge(assetSrc, 'textbox.png'), FileSys.merge(assetDest, 'textbox.png'));

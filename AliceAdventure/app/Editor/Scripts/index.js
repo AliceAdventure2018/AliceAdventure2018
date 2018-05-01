@@ -29,12 +29,13 @@ function InitWelcomePage(){
 }
 
 // tutorial page
-var transit; // temp
+var transit, util; // temp
 function InitTutorialPage(){
 	let views = {
 		tutorialView: AliceEditor.TutorialView.NewView('step_1'),
-    	sceneView: AliceEditor.SceneView.NewView('design-editor'),
-		galleryView: AliceEditor.GalleryView.NewView('gallery'),
+    	sceneView: AliceEditor.SceneView.NewView('scene-editor'),
+		propertyView: AliceEditor.PropertyView.NewView('design-property'),
+		galleryView: AliceEditor.GalleryView.NewView('gallery-modal'),
 		objectListView: AliceEditor.ObjectListView.NewView('object-list'),
 		interactionView: AliceEditor.InteractionView.NewView('interaction-editor'),
 		iLibraryView: AliceEditor.ILibraryView.NewView('interaction-library'),
@@ -45,7 +46,37 @@ function InitTutorialPage(){
 		skip: ()=>{views.tutorialView.vModel.skip()},
 		finish: ()=>{views.tutorialView.vModel.finish()},
 		exit: ()=>{views.tutorialView.vModel.exit()}
-	}
+	};
+	util = {
+		selectBackdrop: ()=>{views.galleryView.vModel.showCategory = {
+				backdrop: true, 
+				character: false, 
+				item: false,
+				others: false,
+				sound: false,
+				myImage: true,
+				mySound: false,
+			}}, 
+		selectCharacter: ()=>{views.galleryView.vModel.showCategory = {
+				backdrop: false, 
+				character: true, 
+				item: false,
+				others: false,
+				sound: false,
+				myImage: true,
+				mySound: false,
+			}}, 
+		selectItem: ()=>{views.galleryView.vModel.showCategory = {
+				backdrop: false, 
+				character: false, 
+				item: true,
+				others: false,
+				sound: false,
+				myImage: true,
+				mySound: false,
+			}}, 
+	};
+
 	return views;
 }
 

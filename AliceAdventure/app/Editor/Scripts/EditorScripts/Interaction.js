@@ -98,7 +98,7 @@ Interaction.prototype.toJsonObject = function() {
     let obj = {};
     obj.id = this.id;
     obj.title = this.title;
-    obj.event = this.event.toJsonObject();    
+    obj.event = (this.event)?this.event.toJsonObject(): null;    
     obj.conditionList = this.conditionList;        
     obj.reactionList = [];
     this.reactionList.forEach(function(react) {

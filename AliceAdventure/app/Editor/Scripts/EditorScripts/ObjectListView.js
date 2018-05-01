@@ -57,8 +57,9 @@ ObjectListView.prototype.InitView = function(){
           
 	  	onObjectSelect: (obj)=>{View.Selection.selectObject(obj);}, 
 	  	onSceneSelect: (scn)=>{View.Selection.selectScene(scn);}, 
-	  	deleteObject: (obj)=>{if(confirm("Are you sure you want to delete the object?")) obj.DeleteThis();},
-	  	deleteScene: (scn)=>{if(confirm("Are you sure you want to delete the scene?\n\nDeleting the scene will also delete every object in it.")) scn.DeleteThis();},
+	  	deleteObject: (obj)=>{this.DeleteObject(obj)},
+	  	deleteScene: (scn)=>{this.DeleteScene(scn)},
+        deleteSelected: ()=>{this.DeleteSelected()},
 	  }
 	});
 
@@ -80,6 +81,25 @@ ObjectListView.prototype.ReloadView = function(){
 	    this.vModel.objectList = GameProperties.instance.objectList; 
         this.vModel.settings = GameProperties.instance.settings;
 	}
+};
+
+ObjectListView.prototype.DeleteObject = function(obj){
+    if(confirm("Are you sure you want to delete the object?")) 
+        obj.DeleteThis();
+};
+
+ObjectListView.prototype.DeleteScene = function(scn){
+    if(confirm("Are you sure you want to delete the scene?\n\nDeleting the scene will also delete every object in it.")) 
+        scn.DeleteThis();
+};
+
+ObjectListView.prototype.DeleteSelected = function(){
+    if (!GameProperties.ProjectLoaded()) return;
+    if (View.Selection.object != null){
+        this.DeleteObject(View.Selection.object);
+    } else if (View.Selection.scene != null){
+        this.DeleteScene(View.Selection.scene);
+    }
 };
 
 /*ObjectListView.prototype.updateOrder = function(dragedObj, toScene, aboveObj) {

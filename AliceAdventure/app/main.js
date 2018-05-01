@@ -70,7 +70,7 @@ function createMainWin(path){
   });
 }
 
-ipcMain.on('new-proj', (event, data)=>{
+ipcMain.on('new-wiz', (event, data)=>{
 	if (tutWin == null)	createTutWin(data);
 	if (welWin != null) welWin.close();
 });

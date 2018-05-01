@@ -37,11 +37,14 @@ TutorialView.prototype.InitView = function(){
 		}, 
 		methods: {
 			addScene: ()=>{this.AddScene("new scene")},
+			addSceneWithBG: ()=>{this.AddScene("new scene", true)},
 			addObject: ()=>{this.AddEmptyObject("new object")}, 
 			addCharacter: ()=>{this.AddEmptyObject("new object", true)}, 
 			deleteObject: (object)=>{this.DeleteObject(object);},
 			deleteScene: (scene)=>{this.DeleteScene(scene)},
 
+			selectSceneBG: (scene)=>{View.Selection.selectObject(scene.GetFirstObject())},
+			selectObjectPic: (obj)=>{View.Selection.selectObject(obj)},
 			changeName: (event, thing)=>{if (thing.name != null) thing.name = event.target.innerHTML}, 
 			changeScene: (obj, toScene)=>{obj.SwitchScene(toScene);},
 
@@ -75,8 +78,13 @@ TutorialView.prototype.AddEmptyObject = function(_name, _isCharacter = false){
 	_obj.isCharacter = _isCharacter;
 };
 
-TutorialView.prototype.AddScene = function(_name){
+TutorialView.prototype.AddScene = function(_name, _withBG = false){
 	var _scene = Scene.AddScene(_name);
+	if (_withBG){
+		var bg = SceneObject.AddEmptyObject("backdrop", _scene, false);
+		bg.isBackdrop = true;
+		_scene.bgSrc = bg.src;
+	}
 };
 
 TutorialView.prototype.DeleteObject = function(_object){
