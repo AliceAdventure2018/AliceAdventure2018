@@ -48,6 +48,18 @@ GalleryView.ImageLibrary = {
 		// {...}
 	],
 	item:[
+		{name:'Calendar', src:'../../Assets/item/calendar.png'},
+		{name:'Old photo', src:'../../Assets/item/old_photo.png'},
+		{name:'Clock', src:'../../Assets/item/clock.png'},
+		{name:'Eraser', src:'../../Assets/item/eraser.png'},
+		{name:'Pencil', src:'../../Assets/item/pencil.png'},
+		{name:'Bag', src:'../../Assets/item/bag.png'},
+		{name:'Magnifier', src:'../../Assets/item/magnifier.png'},
+		{name:'Window1', src:'../../Assets/item/window_day.png'},
+		{name:'Window2', src:'../../Assets/item/window_night.png'},
+		{name:'Money', src:'../../Assets/item/money.png'},
+		{name:'Wallet', src:'../../Assets/item/wallet.png'},
+		{name:'Magic wand', src:'../../Assets/item/magicwand.png'},
 		{name:'Blender', src:'../../Assets/item/blender.png'},
 		{name:'Bluepaint', src:'../../Assets/item/bluepaint.png'},
 		{name:'Book', src:'../../Assets/item/book.png'},
