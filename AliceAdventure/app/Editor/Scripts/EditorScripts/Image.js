@@ -24,9 +24,22 @@ Image.DeleteImage = function(_image){
 	return GameProperties.DeleteImage(_image);
 };
 
+Image.LoadImage = function(_data){
+	let image = new Image(_data.src, _data.name);
+	GameProperties.AddImage(image);
+	return image;
+};
+
 // function
 Image.prototype.DeleteThis = function(){
 	return Image.DeleteImage(this);
+};
+
+Image.prototype.toJsonObject = function(){
+	return {
+		src: this.src,
+		name: this.name,
+	};
 };
 
 module.exports = Image;

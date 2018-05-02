@@ -31,6 +31,7 @@ File.tempJsonObj = {
 	interactionList: [],
 	stateList: [],
     soundList: [],
+    imageList: [],
 	settings: {}, 
 	projectData: {}, 
 	reset: function(){
@@ -39,6 +40,7 @@ File.tempJsonObj = {
 		this.interactionList = [];
 		this.stateList = [];
 		this.soundList = [];
+		this.imageList = [];
 		this.settings = {};
 		this.projectData = {};
 	}
@@ -247,7 +249,7 @@ File.RunProject = function(){
 }
 
 File.OpenBuildFolder = function(){
-	var commandLine = "start " + PATH.join(PATH.dirname(File.instance.path), 'Build').replace(/\\/g, "\\\\");
+	var commandLine = "start " + PATH.join(PATH.dirname(File.instance.path), PATH.basename(File.instance.path, PATH.extname(File.instance.path)) + 'Build').replace(/\\/g, "\\\\");
 	require('child_process').exec(commandLine);
 }
 
@@ -337,6 +339,11 @@ File.SaveToPath = function(_path){
     GameProperties.instance.soundList.forEach(function(sound){
     	File.tempJsonObj.soundList.push(sound.toJsonObject());
     });
+
+    // imageList
+    GameProperties.instance.imageList.forEach(function(image){
+    	File.tempJsonObj.imageList.push(image.toJsonObject());
+    });
     
 	// settings
 	File.tempJsonObj.settings = GameProperties.instance.settings;
@@ -394,6 +401,13 @@ File.OpenFromPath = function(_path){
     if (data.soundList != null){
 	    data.soundList.forEach((sound)=>{
 	    	Sound.LoadSound(sound);
+	    });   
+	} 
+	    
+    // Image
+    if (data.imageList != null){
+	    data.imageList.forEach((image)=>{
+	    	Image.LoadImage(image);
 	    });   
 	} 
     
