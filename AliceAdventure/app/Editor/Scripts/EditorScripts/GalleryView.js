@@ -74,7 +74,6 @@ GalleryView.ImageLibrary = {
 		{name:'Couch', src:'../../Assets/item/couch.png'},
 		{name:'Cup', src:'../../Assets/item/cup.png'},
 		{name:'Door', src:'../../Assets/item/door.png'},
-		{name:'Door1 open', src:'../../Assets/item/door1_open.png'},
 		{name:'Door open', src:'../../Assets/item/door_open.png'},
 		{name:'Envelope', src:'../../Assets/item/envelope.png'},
 		{name:'Flashlight', src:'../../Assets/item/flashlight.png'},
