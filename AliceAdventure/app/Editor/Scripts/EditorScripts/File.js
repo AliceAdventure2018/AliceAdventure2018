@@ -249,7 +249,7 @@ File.RunProject = function(){
 }
 
 File.OpenBuildFolder = function(){
-	var commandLine = "start " + PATH.join(PATH.dirname(File.instance.path), PATH.basename(File.instance.path, PATH.extname(File.instance.path)) + 'Build').replace(/\\/g, "\\\\");
+	var commandLine = "start " + PATH.join(PATH.dirname(File.instance.path), PATH.basename(File.instance.path, PATH.extname(File.instance.path)) + '-Build').replace(/\\/g, "\\\\");
 	require('child_process').exec(commandLine);
 }
 
