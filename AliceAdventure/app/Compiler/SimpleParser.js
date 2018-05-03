@@ -1008,9 +1008,9 @@ Parser = function (jsonPath, buildPath){
 
 	//move obj to scene # at location (x, y)
 	function translate_reactionType_12(title, args, callback){
-		if (args.length != 4){
+		if (args.length == 2){
 
-			if (args[0] == null || args[1] == null || args[2] == null || args[3] == null){
+			if (args[0] == null || args[1] == null){
 				callback("ERROR: for reaction[Move Object to Scene] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
 				return false;
 			}
@@ -1027,18 +1027,11 @@ Parser = function (jsonPath, buildPath){
 				return false;
 			}
 
-			var x = 0; var y = 0;
-			if (!isNaN(args[2]) && typeof (args[2]) === "number"){
-				x = args[2] * this.scalarX;
-			}
-			if (!isNaN(args[3]) && typeof (args[3]) === "number"){
-				y =  args[3] * this.scalarY;
-			}
-			return "reaction.moveObjectToScene(" +obj + ", " + sceneIndex + ", " + x + ", " + y + ");\n";
+			return "reaction.moveObjectToScene(" +obj + ", " + sceneIndex + ");\n";
 			
 
 		}else{
-			callback("JSON Format ERROR: reaction type 12(moveObjToScene) should have 4 arguments(obj, sceneIndex, x, y).");
+			callback("JSON Format ERROR: reaction type 12(moveObjToScene) should have 2 arguments(obj, sceneIndex).");
 			return false;
 		}
 	}
