@@ -1010,7 +1010,6 @@ Parser = function (jsonPath, buildPath){
 	//move obj to scene # at location (x, y)
 	function translate_reactionType_12(title, args, callback){
 		if (args.length == 2 ){
-		if (args.length == 2){
 
 			if (args[0] == null || args[1] == null){
 				callback("ERROR: for reaction[Move Object to Scene] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
