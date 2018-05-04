@@ -1116,6 +1116,13 @@ function Utilities(_game) {
 
         });
         
+        //for message box
+        document.addEventListener('click', (ev) => {
+            //console.log("clicking...");
+            this.game.messageBox.nextConversation();
+
+        });
+        
         //2.window resize
         window.onresize = function(event) {
             _game.resize();
