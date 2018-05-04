@@ -243,7 +243,8 @@ Parser = function (jsonPath, buildPath){
 				if (object.hasOwnProperty("src")){
 
 					var src = object.src;
-					if (src.charAt(0) == ".")src = object.src.slice(4);
+					if (src.charAt(0) == ".") {src = object.src.slice(4); }
+
 					
 					if (fs.pathExistsSync(src)&& FileSys.filename(src).match(/\.(jpg|jpeg|png)$/) )
 					{	

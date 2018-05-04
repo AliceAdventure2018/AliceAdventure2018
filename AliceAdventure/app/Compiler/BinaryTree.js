@@ -21,7 +21,7 @@ function ITree(){
 ITree.prototype.putNode = function(eventString, eventType, args, condWithReact){
 
 	this.total += 1;
-	this.root = _putNode.call(this, this.root, eventString, eventType, args, condWithReact);
+	this.root = _putNode.call(this, this.root, eventString, eventType, args, condWithReact, 0);
 }
 
 ITree.prototype.getEverything = function () {
@@ -45,7 +45,8 @@ ITree.prototype.getEverything = function () {
 }
 
 
-function _putNode(n, eventString, eventType, args, condWithReact){
+function _putNode(n, eventString, eventType, args, condWithReact, x){
+	//add new ones
 	if (n == null){
 		var toReturn = new INode(eventString, eventType, args, condWithReact);
 		this.treeSize += 1;
@@ -56,12 +57,12 @@ function _putNode(n, eventString, eventType, args, condWithReact){
 		n.condWithReact += "\n" + condWithReact;
 		return n;
 	}
-	//add new ones
+
 	else{
 
-		if (n.left == null || (n.left != null && n.right != null)) n.left = _putNode.call(this, n.left, eventString, eventType, args, condWithReact);
+		if (args.length <= 1) n.right = _putNode.call(this, n.right, eventString, eventType, args, condWithReact, x +1);
 	
-		else n.right = _putNode.call(this, n.right, eventString, eventType, args, condWithReact);
+		else n.left = _putNode.call(this, n.left, eventString, eventType, args, condWithReact , x+1);
 
 		return n;
 	}
@@ -94,13 +95,15 @@ function sameTypeSameArg(n, eventType, args){
 
 // return true if types AND args are all the same
 function _sameTypeSameArg(e0, a0, e1, a1){
-	return (e0 === e1) && sameArg(a0, a1);
+//	if (e0 == 0 && e1 ==0) 
+	if (e0 == 0 && a0[0] == 95 && e1 == 0 &&a1[0] == 95) console.log("!");
+	return (e0 == e1) && sameArg(a0, a1);
 }
-
 // return true if the order and the elements in a0 and a1 are the same
 function sameArg(a0, a1){
-	if (a0.length != a1.length) return false;
+	if (a0.length != a1.length) {return false;} 
 	else if (a0.length == 0) return true; // need attention, since no event will have zero args now
+
 	else {
 		//order MATTERS
 		return (a0.toString() === a1.toString());
