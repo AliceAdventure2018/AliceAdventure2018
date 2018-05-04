@@ -1,4 +1,3 @@
-
 const fs = require('fs-extra');
 const path = require('path');
 const pixi = 'Libraries/pixi/pixi.js';
@@ -6,7 +5,6 @@ const pixi_sound = 'Libraries/pixi/pixi-sound.js';
 const aliceAPI = 'Libraries/aliceAPI.js';
 const bat = 'Libraries/bat/chrome.bat'	
 const pixi_sound_map_src = 'Libraries/pixi/pixi-sound.js.map';
-
 
 //1) create a build folder. If it already exists, delete all the files within
 //2) copy assets folder to build folder

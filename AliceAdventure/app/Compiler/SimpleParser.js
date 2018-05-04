@@ -243,7 +243,8 @@ Parser = function (jsonPath, buildPath){
 				if (object.hasOwnProperty("src")){
 
 					var src = object.src;
-					if (src.charAt(0) == ".")src = object.src.slice(4);
+					if (src.charAt(0) == ".") {src = object.src.slice(4); }
+
 					
 					if (fs.pathExistsSync(src)&& FileSys.filename(src).match(/\.(jpg|jpeg|png)$/) )
 					{	
@@ -1009,6 +1010,7 @@ Parser = function (jsonPath, buildPath){
 	//move obj to scene # at location (x, y)
 	function translate_reactionType_12(title, args, callback){
 		if (args.length == 2 ){
+		if (args.length == 2){
 
 			if (args[0] == null || args[1] == null){
 				callback("ERROR: for reaction[Move Object to Scene] of Interaction Box: " + title + ", you must fill the blank before run it. If you don't need this interaction box, please delete it.");
@@ -1031,7 +1033,7 @@ Parser = function (jsonPath, buildPath){
 			
 
 		}else{
-			callback("JSON Format ERROR: reaction type 12(moveObjToScene) should have 4 arguments(obj, sceneIndex, x, y).");
+			callback("JSON Format ERROR: reaction type 12(moveObjToScene) should have 2 arguments(obj, sceneIndex).");
 			return false;
 		}
 	}
