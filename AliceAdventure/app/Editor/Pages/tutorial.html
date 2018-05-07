@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="myApp">
 <head>
-	<title> Welcome to Alice's Adventure </title>  
-  <script>
-    /*window.onerror = function (errorMsg, url, lineNumber) {
-        alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
-    }*/
-  </script>
+	<title> Welcome to Alice's Adventure </title>
+
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -105,7 +101,8 @@
   margin-left:2%;
 
   ">  
-  <h2 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;" v-html='projectName'></h2>
+  <!--h2 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;" v-html='projectName'></h2-->
+  <h2 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;">Think about the game you want to create and answer the following questions.</h2>
   <p> 
     <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.5em !important;">Where does the story happen?</h6> <img v-on:click='addSceneWithBG();' style="cursor: pointer; width:30px; height: 30px; margin-left:1%; display: inline-block;" src="src/plus.png"/>
     <div class="table-responsive">
@@ -225,7 +222,7 @@
               
               <div id="tabList">
                 <ul >
-                 <li v-if='showCategory.backdrop' class="nav-item"><a onclick="switchCategoryView()"  href="#backdrop-asset" aria-controls="backdrop-asset" class="unselecteds">
+                 <li v-if='showCategory.backdrop' class="nav-item"><a onclick="switchCategoryView()"  href="#backdrop-asset" aria-controls="backdrop-asset" class="selected">
                   Backdrops</a></li>
                   <li v-if='showCategory.character' class="nav-item"><a onclick="switchCategoryView()"  href="#character-asset" aria-controls="character-asset" class="unselecteds">
                   Characters</a></li>
@@ -234,14 +231,14 @@
                   <li v-if='showCategory.others' class="nav-item"><a onclick="switchCategoryView()"  href="#other-asset" aria-controls="other-asset" class="unselecteds">
                   Others</a></li>
                   
-                  <li v-if='showCategory.sound' class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
+                  <li class="nav-item"><a onclick="switchCategoryView()" href="#key-asset"  aria-controls="key-asset" class="unselecteds">Sounds</a></li>
 
                   <div id="import-nav">
-                  <li v-if='showCategory.myImage' class="nav-item"><a onclick="switchCategoryView()"  href="#imported-image" aria-controls="imported-image" class="unselecteds">
+                  <li v-if='showCategory.imported' class="nav-item"><a onclick="switchCategoryView()"  href="#imported-image" aria-controls="imported-image" class="unselecteds">
                   My Image</a></li>
-                  <li v-if='showCategory.mySound' class="nav-item"><a onclick="switchCategoryView()"  href="#imported-sound" aria-controls="imported-sound" class="unselecteds">
+                  <li v-if='showCategory.sound' class="nav-item"><a onclick="switchCategoryView()"  href="#imported-sound" aria-controls="imported-sound" class="unselecteds">
                   My Sound</a></li>
-                  </div>
+                </div>
                   <!--<div class="tab-list" id="tabList">
                   <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical"-->
                 </ul>
@@ -250,7 +247,7 @@
                 <div v-if='showCategory.backdrop' id="backdrop-asset" style="display: block;">
                   <div class="tutorial-assets">
                     <ul>
-                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.backdrop" v-on:click="setImage(img)" data-dismiss="modal"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.backdrop" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                       </li>
                     </ul>
                   </div>
@@ -259,7 +256,7 @@
                 <div v-if='showCategory.character' id="character-asset" style="display: block;">
                   <div class="tutorial-assets">
                     <ul>
-                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.character" v-on:click="setImage(img)" data-dismiss="modal"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.character" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                       </li>
                     </ul>
                   </div>
@@ -268,43 +265,45 @@
                 <div v-if='showCategory.item' id="item-asset" style="display: block;">
                   <div class="tutorial-assets">
                     <ul>
-                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.item" v-on:click="setImage(img)" data-dismiss="modal"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.item" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                       </li>
                     </ul>
                   </div>
                 </div>
 
-                <div v-if='showCategory.others' id="other-asset" style="display: none;">
+                <div v-if='showCategory.others' id="other-asset" style="display: block;">
                   <div class="tutorial-assets">
                     <ul>
-                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.other" v-on:click="setImage(img)" data-dismiss="modal"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                      <li draggable="false" v-on:drag='imageDragstart(event, img)' v-for="img in images.other" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                       </li>
                     </ul>
                   </div>
                 </div>
 
-                <div v-if='showCategory.sound' id="key-asset" style="display: none;">
+                <div id="key-asset" style="display: none;">
                   <div class="tutorial-assets">
                     <ul>
                     <!-- bind the gallery data -->
                     
                       <li v-for="sound in sounds"> <div class="asset"><img src="../../Assets/audio.png"> </div><p v-html='sound.name'></p>
                       </li>
+                        
+
                     </ul>
                   </div>
                 </div>
 
-                <div v-if='showCategory.myImage' id="imported-image" style="display: none;">
+                <div id="imported-image" style="display: none;">
                   <div class="tutorial-assets">
                     <ul>
-                      <li><div class="asset-add" ><img src="src/add.png" onclick="AliceEditor.File.ImportImage()"></div><p>import</p></li>
-                      <li v-if='showCategory.myImage' draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="setImage(img)" data-dismiss="modal"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
+                      <li ><div class="asset-add" ><img src="src/add.png" onclick="AliceEditor.File.ImportImage()"></div><p>import</p></li>
+                      <li v-if='showCategory.imported' draggable="true" v-on:drag='imageDragstart(event, img)' v-for="img in importedImages" v-on:click="setImage(img)"> <div class="asset"><img draggable="false" v-bind:src="img.src"> </div><p v-html='img.name'></p>
                       </li>
                     </ul>
                   </div>
                 </div>
 
-                <div v-if='showCategory.mySound' id="imported-sound" style="display: none;">
+                <div id="imported-sound" style="display: none;">
                   <div class="tutorial-assets">
                     <ul>
                       <li><div class="asset-add"><img src="src/add.png" onclick="AliceEditor.File.ImportSound()"></div><p>import</p></li>
@@ -336,7 +335,7 @@
   ">
   
   <p>
-    <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.2em !important;">Let's decorate the scenes! </h6> 
+    <h6 class="window-title" style="display: inline-block; color:#ffc107; font-size: 1.2em !important;">Let's decorate the scenes! Drag and resize your assets. If you feel something is missing, you can always go back! </h6> 
    </p>
    <div style="margin-right:100px; width: 900px; height: 500px;">
    <!-- gallery -->
