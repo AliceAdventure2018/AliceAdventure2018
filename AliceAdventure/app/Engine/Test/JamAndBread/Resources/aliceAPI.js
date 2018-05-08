@@ -1119,7 +1119,7 @@ function Utilities(_game) {
         //for message box
         document.addEventListener('click', (ev) => {
             //console.log("clicking...");
-            this.game.messageBox.nextConversation();
+            //this.game.messageBox.nextConversation();
 
         });
         
