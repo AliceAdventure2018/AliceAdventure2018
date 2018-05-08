@@ -1050,11 +1050,13 @@ function Utilities(_game) {
     this.onMouseMove = function() {
         if (this.mouseIsDown && this.dragable) {
             this.newPosition = this.data.getLocalPosition(this.parent);
-            this.x = this.newPosition.x - this.offset.x;
-            this.y = this.newPosition.y - this.offset.y;
-
-            if(_game.utilities.distance(this.x,this.y, this.original[0],this.original[1]) > 0.3) {
+            var toX = this.newPosition.x - this.offset.x;
+            var toY = this.newPosition.y - this.offset.y;
+            
+            if(_game.utilities.distance(toX,toY, this.original[0],this.original[1]) > 5) {
                 this.alpha = 0.5;
+                this.x = this.newPosition.x - this.offset.x;
+                this.y = this.newPosition.y - this.offset.y;
                 if(!this.dragStart) {
                     this.dragStart = true;
                     _game.utilities.toFrontLayer(this);
