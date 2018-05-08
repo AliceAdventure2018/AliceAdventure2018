@@ -102,7 +102,7 @@ Parser = function (jsonPath, buildPath){
 	function createStates() {
 		var toReturn = 'myGame.initStateManager({'
 		for (let i = 0; i <this.stateList.length; i++){
-			toReturn += this.stateList[i].name + '_' + this.stateList[i].id + ' : ' + this.stateList[i].value;
+			toReturn += this.stateList[i].name.replace(/\W/g, "") + '_' + this.stateList[i].id + ' : ' + this.stateList[i].value;
 			
 			if (i < this.stateList.length - 1){
 				toReturn += ", ";
