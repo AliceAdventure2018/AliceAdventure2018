@@ -839,11 +839,20 @@ function MessageBox(background, avatarEnable, game) {
     var scale = (this.game.screenWidth / 1280) * 0.7;
     
     this.backgronud.scale.set(scale);
-    
     this.backgronud.y = background.h - (220 * scale)/2 - 10 * scale;
     
-    this.backgronud.interactive = true;
-    this.backgronud.buttonMode = true;
+    this.pointArea = new PIXI.Sprite();
+    this.pointArea.hitArea = new PIXI.Rectangle(0,0,this.game.screenWidth,this.game.screenHeight)
+    this.pointArea.interactive = true;
+    this.pointArea.buttonMode = true;
+    this.pointArea.on('pointerdown',function(){
+        if(game.messageBox) {
+            game.messageBox.nextConversation();
+        }
+    })
+    
+    this.holder.addChild(this.pointArea);
+
     
     this.messageBuffer = [];
     this.currentMsgIndex = 0;
@@ -867,12 +876,6 @@ function MessageBox(background, avatarEnable, game) {
 
     }
     
-
-    this.backgronud.on('pointerdown', function() {
-        if(game.messageBox) {
-            game.messageBox.nextConversation();
-        }
-    });
     
     this.holder.addChild(this.backgronud);
     this.holder.visible = false;
@@ -1115,14 +1118,7 @@ function Utilities(_game) {
             }
 
         });
-        
-        //for message box
-        document.addEventListener('click', (ev) => {
-            //console.log("clicking...");
-            this.game.messageBox.nextConversation();
 
-        });
-        
         //2.window resize
         window.onresize = function(event) {
             _game.resize();
